@@ -18,35 +18,35 @@ module.exports = {
   ],
 
   // required to lint *.vue files
-  plugins: [
-    'vue'
-  ],
+  plugins: ['vue'],
 
   globals: {
-    'ga': true, // Google Analytics
-    'cordova': true,
-    '__statics': true,
-    'process': true,
-    'Capacitor': true,
-    'chrome': true
+    ga: true, // Google Analytics
+    cordova: true,
+    __statics: true,
+    process: true,
+    Capacitor: true,
+    chrome: true
   },
 
   // add your custom rules here
   rules: {
     // allow async-await
     'generator-star-spacing': 'off',
+    'template-curly-spacing': 'off',
     // allow paren-less arrow functions
     'no-useless-escape': 'off',
     'arrow-parens': 'off',
     'one-var': 'off',
+    indent: 'off',
     'no-unused-vars': 'off',
     'no-redeclare': 'off',
     'handle-callback-err': 'off',
     'import/first': 'off',
     'import/named': 'error',
     'import/namespace': 'off',
-    'import/default': 'error',
-    'import/export': 'error',
+    'import/default': 'off',
+    'import/export': 'off',
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
     'import/no-extraneous-dependencies': 'off',
@@ -58,9 +58,10 @@ module.exports = {
     'no-extend-native': 'off',
     'vue/require-prop-type-constructor': 'off',
     'vue/valid-v-bind': 'off',
+    semi: 'off',
     // allow console.log during development only
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
-}
+};

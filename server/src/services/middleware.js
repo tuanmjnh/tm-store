@@ -45,7 +45,7 @@ module.exports.login = (req, res, next) => {
 //   }
 // }
 
-module.exports.verify = (req, res, secret) => {
+module.exports.verify = (req, res, next) => {
   try {
     const baseUrl = process.env.BASE_URL.trimChars('/'); // .replace(/\/$/, '');
     const reqPath = req.path.trimChars('/');
@@ -54,18 +54,19 @@ module.exports.verify = (req, res, secret) => {
       (reqPath === `${baseUrl}/api/auth` && req.method.toUpperCase() === 'POST')
     ) {
       next();
-      return null;
-    }
-    const secret = process.env.SECRET;
-    let token = req.headers['x-access-token'] || req.headers.authorization; // Express headers are auto converted to lowercase
-    if (!token) {
-      res.status(401).json({ msg: 'no_exist_token' });
       return;
+    } else {
+      const secret = process.env.SECRET;
+      let token = req.headers['x-access-token'] || req.headers.authorization; // Express headers are auto converted to lowercase
+      if (!token) {
+        res.status(401).json({ msg: 'no_exist_token' });
+        return;
+      }
+      // Remove Bearer from string
+      if (token.startsWith('Bearer ')) token = token.slice(7, token.length);
+      req.verify = { ...jwt.verify(token, secret), ...{ token, secret } };
+      next();
     }
-    // Remove Bearer from string
-    if (token.startsWith('Bearer ')) token = token.slice(7, token.length);
-    req.verify = { ...jwt.verify(token, secret), ...{ token, secret } };
-    next();
   } catch (e) {
     res.status(402).json({ msg: 'invalid_token' });
     return;

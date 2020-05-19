@@ -1,21 +1,23 @@
 <template>
-  <div class="drawer-item" v-if="!item.meta||!item.meta.hidden">
-    <q-expansion-item v-if="isExpansion(item.children)" expand-separator :default-opened="isOpen()" :dense="dense"
-      :header-class="[onActive(item.name)?'text-primary':'']">
+  <div class="drawer-item" v-if="!item || !item.meta || !item.meta.hidden">
+    <q-expansion-item v-if="isExpansion(item.children)" expand-separator :default-opened="isOpen()"
+      :dense="dense" :header-class="[onActive(item.name) ? 'text-primary' : '']">
       <template v-slot:header>
         <q-item-section avatar>
           <q-icon v-if="isIcon" :color="iconColor" :name="item.meta.icon" />
         </q-item-section>
-        <q-item-section>{{$t(`route.${item.meta.title}`)}}</q-item-section>
+        <q-item-section>{{ $t(`route.${item.meta.title}`) }}</q-item-section>
       </template>
-      <drawer-item v-for="(e,i) in item.children" :key="i" :dense="dense" :item="e" :active="onActive(item.name)"
-        :base-path="`${basePath?`${basePath}/`:''}${item.path}`" :isIcon="e.level<3" />
+      <drawer-item v-for="(e, i) in item.children" :key="i" :dense="dense" :item="e"
+        :active="onActive(item.name)" :base-path="`${basePath ? `${basePath}/` : ''}${item.path}`"
+        :isIcon="!e.level || e.level < 3" />
     </q-expansion-item>
-    <q-item v-else clickable v-ripple @click="onRouterLink(item.path)" :active="onActive(item.name)" :dense="dense">
+    <q-item v-else clickable v-ripple @click="onRouterLink(item.path)" :active="onActive(item.name)"
+      :dense="dense">
       <q-item-section avatar>
         <q-icon v-if="isIcon" :name="item.meta.icon" :color="iconColor" />
       </q-item-section>
-      <q-item-section>{{$t(`route.${item.meta.title}`)}}</q-item-section>
+      <q-item-section>{{ $t(`route.${item.meta.title}`) }}</q-item-section>
     </q-item>
   </div>
 </template>

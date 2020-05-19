@@ -5,6 +5,8 @@ const MUser = require('../../models/users'),
   crypto = require('../../utils/crypto'),
   constantCommon = require('../../config/common');
 
+const name = 'auth';
+module.exports.name = name;
 const generateRoutes_children = (routes, rolesRoutes) => {
   const rs = [];
   console.log(routes);
@@ -54,9 +56,10 @@ const getAuthRoutes = async (authRoles) => {
     helpers.pushIfNotExist(authRoutes, e.routes);
   });
   // Routes
-  const routes = await MRoute.where({ flag: 1 }).sort({ dependent: 1, orders: 1 });
+  // const routes = await MRoute.where({ flag: 1 }).sort({ dependent: 1, orders: 1 });
   // console.log(routes)
-  return generateRoutes(routes, authRoutes);
+  // return generateRoutes(routes, authRoutes);
+  return authRoutes;
 };
 const getConstantRoutes = async () => {
   const routes = await MRole.distinct('routes');
@@ -65,17 +68,18 @@ const getConstantRoutes = async () => {
 
 module.exports.get = async function (req, res, next) {
   try {
+    console.log(req.verify);
     // constant account
     let rs = constantCommon.users.find((x) => x._id === req.verify._id);
     let routes = [];
     // database account
     if (rs) {
-      routes = await this.getConstantRoutes();
+      routes = await getConstantRoutes();
     } else {
       rs = await MUser.findOne({ _id: req.verify._id });
       if (!rs) return res.status(402).json({ msg: 'token_invalid' });
       // Routes
-      routes = await this.getAuthRoutes(rs.roles);
+      routes = await getAuthRoutes(rs.roles);
     }
     return res.status(200).json({ user: rs, routes });
     // return res.status(200).json({ data: req.verify._id as any });
@@ -97,7 +101,7 @@ module.exports.post = async function (req, res, next) {
     );
     let routes = [];
     if (rs) {
-      routes = await this.getConstantRoutes();
+      routes = await getConstantRoutes();
     } else {
       // throw new Error('wrong')
       rs = await MUser.findOne({ username: req.body.username });
@@ -110,7 +114,7 @@ module.exports.post = async function (req, res, next) {
       // check lock
       if (!rs.enable) return res.status(504).json({ msg: 'locked' });
       // Routes
-      routes = await this.getAuthRoutes(rs.roles);
+      routes = await getAuthRoutes(rs.roles);
       // Update last login
       await MUser.updateOne(
         { _id: rs._id },
@@ -126,6 +130,7 @@ module.exports.post = async function (req, res, next) {
     if (rs) return res.status(200).json({ token, user: rs, routes });
     else return res.status(401).json({ msg: 'wrong' });
   } catch (e) {
+    console.log(e);
     return res.status(500).send('invalid');
   }
 };

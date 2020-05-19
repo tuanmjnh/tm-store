@@ -1,8 +1,8 @@
 const Model = require('../../models/users/settings');
 
-const path = 'user-settings';
-module.exports.path = path;
-module.exports.select = async function (req, res, next) {
+const name = 'user-setting';
+module.exports.name = name;
+module.exports.get = async function (req, res, next) {
   try {
     const find = await Model.find({ user_id: req.verify._id });
     if (find && find.length) return res.status(200).json(find[0]);
@@ -15,7 +15,7 @@ module.exports.select = async function (req, res, next) {
   }
 };
 
-module.exports.update = async function (req, res, next) {
+module.exports.put = async function (req, res, next) {
   try {
     // if (!req.params.id) return res.status(500).send('Incorrect Id!')
     if (!req.body || Object.keys(req.body).length < 1) return res.status(500).send('invalid');

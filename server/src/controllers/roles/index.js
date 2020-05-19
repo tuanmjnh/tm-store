@@ -3,9 +3,9 @@ const mongoose = require('mongoose'),
   request = require('../../utils/request'),
   Logger = require('../../services/logger');
 
-const path = 'products';
-module.exports.path = path;
-module.exports.select = async function (req, res, next) {
+const name = 'roles';
+module.exports.name = name;
+module.exports.get = async function (req, res, next) {
   try {
     let conditions = { $and: [{ flag: req.query.flag ? req.query.flag : 1 }] };
     if (req.query.filter) {
@@ -57,7 +57,7 @@ module.exports.find = async function (req, res, next) {
   }
 };
 
-module.exports.insert = async function (req, res, next) {
+module.exports.post = async function (req, res, next) {
   try {
     if (
       !req.body ||
@@ -75,7 +75,7 @@ module.exports.insert = async function (req, res, next) {
     data.save((e, rs) => {
       if (e) return res.status(500).send(e);
       // Push logs
-      Logger.set(req, path, rs._id, 'insert');
+      Logger.set(req, name, rs._id, 'insert');
       return res.status(201).json(rs);
     });
   } catch (e) {
@@ -83,7 +83,7 @@ module.exports.insert = async function (req, res, next) {
   }
 };
 
-module.exports.update = async function (req, res, next) {
+module.exports.put = async function (req, res, next) {
   try {
     // if (!req.params.id) return res.status(500).send('Incorrect Id!')
     if (!req.body || Object.keys(req.body).length < 1) return res.status(500).send('invalid');
@@ -103,7 +103,7 @@ module.exports.update = async function (req, res, next) {
           // { multi: true, new: true },
           if (e) return res.status(500).send(e);
           // Push logs
-          Logger.set(req, path, req.body._id, 'update');
+          Logger.set(req, name, req.body._id, 'update');
           return res.status(202).json(rs);
         },
       );
@@ -115,7 +115,7 @@ module.exports.update = async function (req, res, next) {
   }
 };
 
-module.exports.lock = async function (req, res, next) {
+module.exports.patch = async function (req, res, next) {
   try {
     let rs = { success: [], error: [] };
     for await (let _id of req.body._id) {
@@ -125,7 +125,7 @@ module.exports.lock = async function (req, res, next) {
         if (_x.nModified) {
           rs.success.push(_id);
           // Push logs
-          Logger.set(req, path, _id, x.flag === 1 ? 'lock' : 'unlock');
+          Logger.set(req, name, _id, x.flag === 1 ? 'lock' : 'unlock');
         } else rs.error.push(_id);
       }
     }
@@ -157,7 +157,7 @@ module.exports.delete = async function (req, res, next) {
       Model.deleteOne({ _id: req.params._id }, (e, rs) => {
         if (e) return res.status(500).send(e);
         // Push logs
-        Logger.set(req, path, req.params._id, 'delete');
+        Logger.set(req, name, req.params._id, 'delete');
         return res.status(204).json(rs);
       });
     } else {

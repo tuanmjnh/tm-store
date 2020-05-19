@@ -131,14 +131,15 @@ export default {
     title: 'Thông báo',
     warning: 'Cảnh báo',
     confirm: 'Xác nhận',
-    trash: 'Các bản ghi này sẽ được chuyển vào thùng rác. Bạn có chắc chắn muốn tiếp tục không?',
+    trash:
+      'Các bản ghi này sẽ được chuyển vào thùng rác. Bạn có chắc chắn muốn tiếp tục không?',
     delete: 'Bạn có chắc chắn muốn xóa bản ghi này không?',
     recover: 'Bạn có chắc chắn muốn khôi phục bản các bản ghi này không?',
     remove: 'Bạn có chắc chắn muốn xóa các bản ghi này mãi mãi không?',
     lock: 'Bạn có chắc chắn muốn khóa các bản ghi này không?',
     unlock: 'Bạn có chắc chắn muốn mở khóa các bản ghi này không?',
-    reset_password: 'Bạn có chắc chắn muốn đặt lại mật khẩu cho tài khoản {username} không?'
-
+    reset_password:
+      'Bạn có chắc chắn muốn đặt lại mật khẩu cho tài khoản {username} không?'
   },
   navbar: {
     dashboard: 'Dashboard',
@@ -154,7 +155,7 @@ export default {
   login: {
     title: 'Đăng nhập hệ thống',
     login: 'Đăng nhập',
-    username: 'Tài khoản email',
+    username: 'Tài khoản',
     password: 'Mật khẩu',
     show_password: 'Xem mật khẩu',
     remember: 'Ghi nhớ',
@@ -168,7 +169,8 @@ export default {
     auth_invalid_email: 'Tài khoản sai định dạng!',
     auth_user_not_found: 'Tài khoản không tồn tại!',
     auth_wrong_password: 'Mật khẩu không đúng!',
-    auth_too_many_requests: 'Quá nhiều lần thử đăng nhập không thành công. Vui lòng xác minh reCaptcha hoặc thử lại sau!',
+    auth_too_many_requests:
+      'Quá nhiều lần thử đăng nhập không thành công. Vui lòng xác minh reCaptcha hoặc thử lại sau!',
     network_request_failed: 'Lỗi kết nối mạng. Vui lòng thử lại!',
     login_with: 'Đăng nhập bằng'
   },
@@ -389,4 +391,4 @@ export default {
     '3': 'Quý 3',
     '4': 'Quý 4'
   }
-}
+};

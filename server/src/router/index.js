@@ -1,134 +1,58 @@
-const express = require('express')
-const router = express.Router()
-// Controller
-const fileManager = require('../controllers/file-manager')
-const auth = require('../controllers/auth')
-const users = require('../controllers/users')
-const userSetting = require('../controllers/users/settings')
-const roles = require('../controllers/roles')
-const routes = require('../controllers/routes')
-const types = require('../controllers/types')
-const categories = require('../controllers/categories')
-const news = require('../controllers/news')
-const products = require('../controllers/products')
-const productImports = require('../controllers/warehouse/imports')
-const productExports = require('../controllers/warehouse/exports')
-const productReports = require('../controllers/warehouse/reports')
+const express = require('express');
+const router = express.Router();
 
-// upload data
-// router
-//   .route('/filemanager/')
-//   .get(filemanager.get)
-//   .post(filemanager.upload, filemanager.post)
+// Map router
+const mapRouter = (controller) => {
+  const route = router.route(`/${controller.name}`);
+  if (controller.get) route.get(controller.get);
+  if (controller.post) route.post(controller.post);
+  if (controller.put) route.put(controller.put);
+  if (controller.patch) route.patch(controller.patch);
+  if (controller.delete) route.delete(controller.delete);
+  // Extras
+  if (controller.find) router.route(`/${controller.name}/find`).get(controller.find);
+  if (controller.exist) router.route(`/${controller.name}/exist`).get(controller.exist);
+  if (controller.getKey) router.route(`/${controller.name}/get-key`).get(controller.getKey);
+  if (controller.getMeta) router.route(`/${controller.name}/get-meta`).get(controller.getMeta);
+  if (controller.import) router.route(`/${controller.name}/import`).post(controller.import);
+  if (controller.updateOrder)
+    router.route(`/${controller.name}/update-order`).put(controller.updateOrder);
+  // Extras users
+  if (controller.verified) router.route(`/${controller.name}/verified`).post(controller.verified);
+  if (controller.resetPassword)
+    router.route(`/${controller.name}/reset-password`).post(controller.resetPassword);
+  if (controller.changePassword)
+    router.route(`/${controller.name}/change-password`).post(controller.changePassword);
+};
+
+// Import routers
+mapRouter(require('../controllers/routes'));
+mapRouter(require('../controllers/users'));
+mapRouter(require('../controllers/users/settings'));
+mapRouter(require('../controllers/roles'));
+mapRouter(require('../controllers/auth'));
+mapRouter(require('../controllers/types'));
+mapRouter(require('../controllers/categories'));
+mapRouter(require('../controllers/news'));
+mapRouter(require('../controllers/products'));
+mapRouter(require('../controllers/store/imports'));
+mapRouter(require('../controllers/store/exports'));
+// Controller Store report
+const StoreReportsController = require('../controllers/store/reports');
+router.route(`/${StoreReportsController.name}`).get(StoreReportsController.date);
+router.route(`/${StoreReportsController.name}/weekly`).get(StoreReportsController.weekly);
+router.route(`/${StoreReportsController.name}/month`).get(StoreReportsController.month);
+router.route(`/${StoreReportsController.name}/quarter`).get(StoreReportsController.quarter);
+router.route(`/${StoreReportsController.name}/year`).get(StoreReportsController.year);
+router.route(`/${StoreReportsController.name}/five-year`).get(StoreReportsController.fiveYear);
+// Controller FileManager
+const FileManagerController = require('../controllers/file-manager');
+mapRouter(FileManagerController);
 router
-  .route('/file-manager/')
-  .get(fileManager.get)
-  .post(fileManager.post)
-router.route('/file-manager/directories').get(fileManager.getDirectories)
-router.route('/file-manager/files').get(fileManager.getFiles)
-// auth
-router
-  .route('/auth/:id?')
-  .get(auth.get)
-  .post(auth.post)
+  .route(`/${FileManagerController.name}/directories`)
+  .get(FileManagerController.getDirectories);
+router.route(`/${FileManagerController.name}/files`).get(FileManagerController.getFiles);
+// Test
+mapRouter(require('../controllers/test'));
 
-// User
-router.route('/users')
-  .get(users.select)
-  .post(users.insert)
-  .put(users.update)
-  .patch(users.lock)
-  .delete(users.delete)
-router.route('/users/find').get(users.find)
-router.route('/users/verified').post(users.verified)
-router.route('/users/reset-password').post(users.resetPassword)
-router.route('/users/change-password').post(users.changePassword)
-
-// User
-router.route('/user-setting')
-  .get(userSetting.select)
-  .put(userSetting.update)
-
-// Roles
-router.route('/roles')
-  .get(roles.select)
-  .post(roles.insert)
-  .put(roles.update)
-  .patch(roles.lock)
-  .delete(roles.delete)
-router.route('/roles/find').get(roles.find)
-
-// Routes
-router.route('/routes')
-  .get(routes.select)
-  .post(routes.insert)
-  .put(routes.update)
-  .patch(routes.lock)
-  .delete(routes.delete)
-router.route('/routes/find').get(routes.find)
-router.route('/routes/get-meta').get(routes.getMeta)
-// router.route('/routes/template').get(routes.insertTemplate)
-router.route('/routes/update-order').put(routes.updateOrder)
-// Types
-router.route('/types')
-  .get(types.select)
-  .post(types.insert)
-  .put(types.update)
-  .patch(types.lock)
-  .delete(types.delete)
-router.route('/types/find').get(types.find)
-router.route('/types/get-key').get(types.getKey)
-router.route('/types/get-meta').get(types.getMeta)
-// Categories
-router.route('/categories')
-  .get(categories.select)
-  .post(categories.insert)
-  .put(categories.update)
-  .patch(categories.lock)
-  .delete(categories.delete)
-router.route('/categories/find').get(categories.find)
-router.route('/categories/get-attr').get(categories.getAttr)
-router.route('/categories/update-order').put(categories.updateOrder)
-// News
-router.route('/news')
-  .get(news.select)
-  .post(news.insert)
-  .put(news.update)
-  .patch(news.lock)
-  .delete(news.delete)
-router.route('/news/find').get(news.find)
-router.route('/news/get-attr').get(news.getAttr)
-// Products
-router.route('/products')
-  .get(products.select)
-  .post(products.insert)
-  .put(products.update)
-  .patch(products.lock)
-  .delete(products.delete)
-router.route('/products/find').get(products.find)
-router.route('/products/exist').get(products.exist)
-router.route('/products/get-attr').get(products.getAttr)
-// product imports
-router.route('/product-imports').get(productImports.select)
-router.route('/product-imports').post(productImports.finds)
-router.route('/product-imports').put(productImports.imports)
-// product exports
-router.route('/product-exports').get(productExports.select)
-router.route('/product-exports').post(productExports.finds)
-router.route('/product-exports').put(productExports.exports)
-// product report
-router.route('/product-reports').get(productReports.date)
-router.route('/product-reports/weekly').get(productReports.weekly)
-router.route('/product-reports/month').get(productReports.month)
-router.route('/product-reports/quarter').get(productReports.quarter)
-router.route('/product-reports/year').get(productReports.year)
-router.route('/product-reports/five-year').get(productReports.fiveYear)
-
-// router
-//   .route('/employees/:id?')
-//   .get(employees.get)
-//   .post(employees.post)
-//   .put(employees.put)
-//   .delete(employees.delete)
-
-module.exports = router
+module.exports = router;

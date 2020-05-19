@@ -11,19 +11,24 @@
         </q-card-section>
         <q-card-section>
           <div class="q-pl-md q-pr-md q-pt-md">
-            <q-input v-model.trim="form.username" type="email" :dense="$store.getters.dense.input" v-lowercase
+            <q-input v-model.trim="form.username" :dense="$store.getters.dense.input" v-lowercase
               :hint="$t('login.username')" :placeholder="$t('login.username')"
-              :rules="[v=>v&&v.length>0||$t('error.required'),v=>validEmail(v)||$t('error.email')]" />
+              :rules="[v=>v&&v.length>0||$t('error.required')]" />
           </div>
+
           <div class="q-pl-md q-pr-md q-pt-md">
-            <q-input v-model.trim="form.password" :type="passwordType" :dense="$store.getters.dense.input"
-              :hint="$t('login.password')" :placeholder="$t('login.password')" @keyup.native="checkCapslock"
-              @blur="capsTooltip=false" :rules="[v=>v&&v.length>0||$t('error.required')]" class="capsTooltip">
+            <q-input v-model.trim="form.password" :type="passwordType"
+              :dense="$store.getters.dense.input" :hint="$t('login.password')"
+              :placeholder="$t('login.password')" @keyup.native="checkCapslock"
+              @blur="capsTooltip=false" :rules="[v=>v&&v.length>0||$t('error.required')]"
+              class="capsTooltip">
               <template v-slot:append>
-                <q-icon v-if="passwordType==='password'" name="visibility_off" @click="passwordType='text'"
+                <q-icon v-if="passwordType==='password'" name="visibility_off"
+                  @click="passwordType='text'" class="cursor-pointer" />
+                <q-icon v-else name="visibility" @click="passwordType='password'"
                   class="cursor-pointer" />
-                <q-icon v-else name="visibility" @click="passwordType='password'" class="cursor-pointer" />
-                <q-tooltip v-model="capsTooltip" :no-parent-event="true" :offset="[10, 10]" content-class="bg-indigo">
+                <q-tooltip v-model="capsTooltip" :no-parent-event="true" :offset="[10, 10]"
+                  content-class="bg-indigo">
                   Caps lock
                 </q-tooltip>
               </template>
@@ -35,8 +40,9 @@
         </q-card-section>
         <!-- <q-separator dark inset /> -->
         <q-card-actions align="right">
-          <q-btn type="submit" flat :dense="$store.getters.dense.button" color="blue" :label="$t('login.login')"
-            :loading="$store.state.loading.post" @click.prevent="onSubmit">
+          <q-btn type="submit" flat :dense="$store.getters.dense.button" color="blue"
+            :label="$t('login.login')" :loading="$store.state.loading.post"
+            @click.prevent="onSubmit">
             <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
           </q-btn>
           <!-- <q-btn flat>Action 2</q-btn> -->
@@ -57,7 +63,7 @@ export default {
       form: {
         username: '',
         password: '',
-        remember: false
+        remember: true
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -85,11 +91,11 @@ export default {
     onSubmit() {
       this.$refs.form.validate().then(valid => {
         if (valid) {
-          this.loading = true
           api.login(this.form).then((x) => {
             if (x) {
               this.$store.dispatch('auth/login', x)
                 .then(() => {
+                  this.loading = true
                   routers.router.addRoutes(this.$store.state.auth.routes, { replace: true })
                 }).then(() => {
                   // Set user setting
@@ -117,7 +123,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         const query = route.query
         if (query) {
           this.redirect = query.redirect

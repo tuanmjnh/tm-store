@@ -47,6 +47,7 @@ Array.prototype.pushIfNotExist = function (element, key) {
       if (this.indexOf(element) < 0) this.push(element);
     }
   }
+  return this;
 };
 
 Array.prototype.pushIfNotExistUpdate = function (element, key) {
@@ -76,6 +77,7 @@ Array.prototype.pushIfNotExistUpdate = function (element, key) {
       if (this.indexOf(element) < 0) this.push(element);
     }
   }
+  return this;
 };
 
 Array.prototype.sum = function (prop) {

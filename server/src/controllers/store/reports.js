@@ -1,13 +1,13 @@
 const mongoose = require('mongoose'),
-  ModelImports = require('../../models/warehouse/imports'),
-  ModelExports = require('../../models/warehouse/exports'),
-  ModelItems = require('../../models/warehouse/export-items'),
+  ModelImports = require('../../models/store/imports'),
+  ModelExports = require('../../models/store/exports'),
+  ModelItems = require('../../models/store/export-items'),
   ModelProducts = require('../../models/products'),
   ModelCategories = require('../../models/categories'),
   moment = require('moment');
 
-const path = 'product-reports';
-module.exports.path = path;
+const name = 'store-reports';
+module.exports.name = name;
 module.exports.date = async function (req, res, next) {
   try {
     const result = {

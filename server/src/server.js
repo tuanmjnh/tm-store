@@ -12,7 +12,8 @@ const express = require('express'),
   // lusca = require('lusca'),
   router = require('./router'),
   mongoose = require('./services/mongoose'),
-  middleware = require('./services/middleware');
+  middleware = require('./services/middleware'),
+  package = require(process.env.PACKAGE);
 
 // console.log(process.env.ROOT_PATH)
 // if (process.env.NODE_ENV.toString() === 'development') dotenv.config({ path: '.env.development' })
@@ -81,7 +82,7 @@ app.use(flash());
 // }
 
 // middleware JWT
-app.use(middleware.verify);
+// app.use(middleware.verify);
 /**
  * Primary app routes.
  */
@@ -90,7 +91,7 @@ app.get(process.env.BASE_URL, function (req, res, next) {
   // res.render('index', { title: 'Express' })
   // var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
   // res.end('TM-Store Express Server api', { title: 'Express' });
-  res.end(`TM-Store Express Server api. version: ${process.env.npm_package_version}`); // process.env.npm_package_version
+  res.end(`TM-Store Express Server api. version: ${package.version}`); // process.env.npm_package_version
 });
 // Mount the router at /api so all its routes start with /api
 app.use(`${process.env.BASE_URL}api`, router);
@@ -100,7 +101,7 @@ app
   .listen(process.env.PORT) //, '192.168.1.10' // '127.0.0.1'
   .on('listening', () => {
     // process.env.HOST = `http://${server.address().address}:${port}`
-    console.log(`Web server listening on: ${process.env.PORT}`);
+    console.log(`Web server listening on: http://127.0.0.1:${process.env.PORT}`);
     console.log(`Mode: ${process.env.NODE_ENV}`);
     console.log(`Base URL: ${process.env.BASE_URL}`);
   })

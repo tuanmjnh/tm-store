@@ -1,49 +1,61 @@
-import * as routers from '@/router'
-import store from '@/store'
-import * as auth from '@/api/auth'
-import * as userSetting from '@/api/user-setting'
-import NProgress from 'nprogress' // progress bar
-import '@/css/nprogress.css' // progress bar style
+import * as routers from '@/router';
+import store from '@/store';
+import * as auth from '@/api/auth';
+// import * as userSetting from '@/api/user-setting'
+import NProgress from 'nprogress'; // progress bar
+import '@/css/nprogress.css'; // progress bar style
 
-NProgress.configure({ showSpinner: false, easing: 'ease', speed: 200, trickle: true, trickleSpeed: 200, minimum: 0.08 }) // NProgress Configuration
+NProgress.configure({
+  showSpinner: false,
+  easing: 'ease',
+  speed: 200,
+  trickle: true,
+  trickleSpeed: 200,
+  minimum: 0.08
+}); // NProgress Configuration
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login']; // no redirect whitelist
 routers.router.beforeEach(async (to, from, next) => {
   // start progress bar
-  NProgress.start()
+  NProgress.start();
 
-  const token = store.state.auth.token
+  const token = store.state.auth.token;
   if (token) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
-      next({ path: '/' })
-      NProgress.done()
+      next({ path: '/' });
+      NProgress.done();
     } else {
       // determine whether the user has obtained his permission roles through getInfo
       if (store.state.auth.user && store.state.auth.routes) {
         // console.log('a')
-        next()
+        next();
       } else {
         try {
           // get user info
-          const data = await auth.checkToken()
-          if (!data.user) store.dispatch('auth/logout') // || !data.routes.length
+          const data = await auth.checkToken();
+          if (!data.user) store.dispatch('auth/logout'); // || !data.routes.length
           // if (!store.state.userSetting.data) {
           //   const us = await userSetting.get()
           //   store.dispatch('userSetting/set', us)
           // }
-          store.dispatch('auth/login', { user: data.user, routes: data.routes })
-            .then(routers.router.addRoutes(store.state.auth.routes, { replace: true }))
-            .then(next(to.path))// next({ ...to, replace: true })
+          store
+            .dispatch('auth/login', { user: data.user, routes: data.routes })
+            .then(
+              routers.router.addRoutes(store.state.auth.routes, {
+                replace: true
+              })
+            )
+            .then(next(to.path)); // next({ ...to, replace: true })
         } catch (err) {
           // console.log(err)
           // remove token and go to login page to re-login
-          await store.dispatch('auth/logout')
+          await store.dispatch('auth/logout');
           // Message.error(error || 'Has Error')
           // console.log(err)
-          next(`/login?redirect=${to.path}`)
+          next(`/login?redirect=${to.path}`);
           // stop progress bar
-          NProgress.done()
+          NProgress.done();
         }
       }
       // // Check is added routes
@@ -66,16 +78,16 @@ routers.router.beforeEach(async (to, from, next) => {
     // has no token
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
-      next()
+      next();
     } else {
       // other pages that do not have permission to access are redirected to the login page.
-      next(`/login?redirect=${to.path}`)
-      NProgress.done()
+      next(`/login?redirect=${to.path}`);
+      NProgress.done();
     }
   }
-})
+});
 
 routers.router.afterEach(() => {
   // finish progress bar
-  NProgress.done()
-})
+  NProgress.done();
+});
