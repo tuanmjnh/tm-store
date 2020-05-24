@@ -1,7 +1,7 @@
 // import { SHA256 } from '../utils/crypto';
 module.exports.users = [
   {
-    _id: '4b5070b08ee04fbcbc6caffbf25f1bda',
+    _id: '5ec9dc4f50d47517fe4f0629',
     username: 'root',
     password: '2d15894b687a2e7230403d42ff111f5300c9643c818a96743803f53258a03cd4', // 43cb52f9
     salt: 'c1a41699367941a38d0e57ad4a69d2a2',

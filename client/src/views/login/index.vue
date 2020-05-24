@@ -54,7 +54,7 @@
 
 <script>
 import * as api from '@/api/auth'
-import * as apiUserSetting from '@/api/user-setting'
+import * as apiUserSetting from '@/api/users/setting'
 import * as routers from '@/router'
 export default {
   data() {

@@ -82,7 +82,7 @@ app.use(flash());
 // }
 
 // middleware JWT
-// app.use(middleware.verify);
+app.use(middleware.verify);
 /**
  * Primary app routes.
  */

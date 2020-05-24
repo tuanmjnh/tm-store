@@ -1,23 +1,25 @@
 const mongoose = require('mongoose');
 // const Schema = mongoose.Schema;
 const schema = new mongoose.Schema({
-  email: String,
-  password: String,
-  salt: String,
-  full_name: String,
-  phone: String,
-  person_number: String,
+  group: { type: String, default: null },
+  username: { type: String, required: true },
+  password: { type: String, required: true },
+  salt: { type: String, required: true },
+  fullName: { type: String, default: null },
+  email: { type: String, required: true },
+  phone: { type: String, default: null },
+  personNumber: { type: String, default: null },
   region: { type: String, default: 'vi-vn' },
   avatar: { type: String, default: null },
   note: { type: String, default: null },
-  date_birth: { type: Date, default: null },
-  gender: { type: mongoose.Schema.Types.ObjectId, ref: 'types' },
-  address: String,
+  dateBirth: { type: Date, default: null },
+  gender: { type: Number, default: 1 },
+  address: { type: String, default: null },
   roles: { type: Array, default: null },
   verified: { type: Boolean, default: false },
   enable: { type: Boolean, default: true },
-  last_login: { type: Date, default: null },
-  last_change_pass: { type: Date, default: null },
-  created: { type: Object, default: { at: new Date(), by: '', ip: '' } }
+  lastLogin: { type: Date, default: null },
+  lastChangePass: { type: Date, default: null },
+  created: { type: Object, default: { at: new Date(), by: '', ip: '' } },
 });
 module.exports = mongoose.model('users', schema);

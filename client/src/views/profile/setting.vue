@@ -16,11 +16,13 @@
           <q-space />
           <div class="col-8">
             <q-btn-dropdown flat no-caps :label="language.name_l" icon="g_translate"
-              :dense="$store.getters.dense.button" class="btn-setting" :color="$store.getters.darkMode?'':'blue-grey'">
+              :dense="$store.getters.dense.button" class="btn-setting"
+              :color="$store.getters.darkMode?'':'blue-grey'">
               <q-list dense>
                 <template v-for="(e,i) in languages">
                   <q-item clickable v-close-popup :key="i"
-                    :active="`${e.cc_iso}-${e.cc}`===$store.getters.language?true:false" @click="onSetLanguage(e)">
+                    :active="`${e.cc_iso}-${e.cc}`===$store.getters.language?true:false"
+                    @click="onSetLanguage(e)">
                     <q-item-section>{{e.name_l}}</q-item-section>
                   </q-item>
                 </template>
@@ -35,7 +37,8 @@
           <q-space />
           <div class="col-8">
             <q-toggle v-model="darkMode" color="blue-grey" style="white-space:nowrap"
-              :dense="$store.getters.dense.input" :class="$store.getters.darkMode?'':'q-toggle-setting'" />
+              :dense="$store.getters.dense.input"
+              :class="$store.getters.darkMode?'':'q-toggle-setting'" />
           </div>
         </div>
         <q-separator inset class="q-mt-md q-mb-md" />
@@ -45,12 +48,13 @@
           </div>
           <q-space />
           <div class="col-8">
-            <q-btn-dropdown flat no-caps :label="fontSize?$t(`size.${fontSize.key}`):''" icon="format_size"
-              :dense="$store.getters.dense.button" class="btn-setting" :color="$store.getters.darkMode?'':'blue-grey'">
+            <q-btn-dropdown flat no-caps :label="fontSize?$t(`size.${fontSize.key}`):''"
+              icon="format_size" :dense="$store.getters.dense.button" class="btn-setting"
+              :color="$store.getters.darkMode?'':'blue-grey'">
               <q-list dense>
                 <template v-for="(e,i) in font_size">
-                  <q-item clickable v-close-popup :key="i" :active="fontSize&&e.key===fontSize.key?true:false"
-                    @click="onSetFontSize(e)">
+                  <q-item clickable v-close-popup :key="i"
+                    :active="fontSize&&e.key===fontSize.key?true:false" @click="onSetFontSize(e)">
                     <q-item-section>{{$t(`size.${e.key}`)}}</q-item-section>
                   </q-item>
                 </template>
@@ -65,10 +69,12 @@
           <q-space />
           <div class="col-8">
             <q-btn-dropdown flat no-caps :label="fontFamily?fontFamily.key:''" icon="font_download"
-              :dense="$store.getters.dense.button" class="btn-setting" :color="$store.getters.darkMode?'':'blue-grey'">
+              :dense="$store.getters.dense.button" class="btn-setting"
+              :color="$store.getters.darkMode?'':'blue-grey'">
               <q-list dense>
                 <template v-for="(e,i) in font_family">
-                  <q-item clickable v-close-popup :key="i" :active="fontFamily&&e.key===fontFamily.key?true:false"
+                  <q-item clickable v-close-popup :key="i"
+                    :active="fontFamily&&e.key===fontFamily.key?true:false"
                     @click="onSetFontFamily(e)">
                     <q-item-section :style="{fontFamily:e.value}">{{e.key}}</q-item-section>
                   </q-item>
@@ -84,10 +90,12 @@
           <q-space />
           <div class="col-8">
             <q-btn-dropdown flat no-caps :label="fontColor?fontColor.key:''" icon="color_lens"
-              :dense="$store.getters.dense.button" class="btn-setting" :color="$store.getters.darkMode?'':'blue-grey'">
+              :dense="$store.getters.dense.button" class="btn-setting"
+              :color="$store.getters.darkMode?'':'blue-grey'">
               <q-list dense>
                 <template v-for="(e,i) in font_color">
-                  <q-item clickable v-close-popup :key="i" :active="fontColor&&e.key===fontColor.key?true:false"
+                  <q-item clickable v-close-popup :key="i"
+                    :active="fontColor&&e.key===fontColor.key?true:false"
                     @click="onSetFontColor(e)">
                     <q-item-section :style="{color:e.value}">{{e.key}}</q-item-section>
                   </q-item>
@@ -114,10 +122,12 @@
           <q-space />
           <div class="col-8">
             <q-btn-dropdown flat no-caps :label="formatDate?formatDate.key:''" icon="date_range"
-              :dense="$store.getters.dense.button" class="btn-setting" :color="$store.getters.darkMode?'':'blue-grey'">
+              :dense="$store.getters.dense.button" class="btn-setting"
+              :color="$store.getters.darkMode?'':'blue-grey'">
               <q-list dense>
                 <template v-for="(e,i) in format_date">
-                  <q-item clickable v-close-popup :key="i" :active="formatDate&&e.key===formatDate.key?true:false"
+                  <q-item clickable v-close-popup :key="i"
+                    :active="formatDate&&e.key===formatDate.key?true:false"
                     @click="onSetFormatDate(e)">
                     <q-item-section>{{e.key}}</q-item-section>
                   </q-item>
@@ -133,10 +143,12 @@
           <q-space />
           <div class="col-8">
             <q-btn-dropdown flat no-caps :label="formatTime?formatTime.key:''" icon="access_time"
-              :dense="$store.getters.dense.button" class="btn-setting" :color="$store.getters.darkMode?'':'blue-grey'">
+              :dense="$store.getters.dense.button" class="btn-setting"
+              :color="$store.getters.darkMode?'':'blue-grey'">
               <q-list dense>
                 <template v-for="(e,i) in format_time">
-                  <q-item clickable v-close-popup :key="i" :active="formatTime&&e.key===formatTime.key?true:false"
+                  <q-item clickable v-close-popup :key="i"
+                    :active="formatTime&&e.key===formatTime.key?true:false"
                     @click="onSetFormatTime(e)">
                     <q-item-section>{{e.key}}</q-item-section>
                   </q-item>
@@ -153,7 +165,8 @@
           <q-space />
           <div class="col-8">
             <q-toggle v-model="denseForm" color="blue-grey" style="white-space:nowrap"
-              :dense="$store.getters.dense.input" :class="$store.getters.darkMode?'':'q-toggle-setting'" />
+              :dense="$store.getters.dense.input"
+              :class="$store.getters.darkMode?'':'q-toggle-setting'" />
           </div>
         </div>
         <div class="row q-gutter-xs q-mb-sm">
@@ -163,7 +176,8 @@
           <q-space />
           <div class="col-8">
             <q-toggle v-model="denseTable" color="blue-grey" style="white-space:nowrap"
-              :dense="$store.getters.dense.input" :class="$store.getters.darkMode?'':'q-toggle-setting'" />
+              :dense="$store.getters.dense.input"
+              :class="$store.getters.darkMode?'':'q-toggle-setting'" />
           </div>
         </div>
         <div class="row q-gutter-xs q-mb-sm">
@@ -173,7 +187,8 @@
           <q-space />
           <div class="col-8">
             <q-toggle v-model="denseInput" color="blue-grey" style="white-space:nowrap"
-              :dense="$store.getters.dense.input" :class="$store.getters.darkMode?'':'q-toggle-setting'" />
+              :dense="$store.getters.dense.input"
+              :class="$store.getters.darkMode?'':'q-toggle-setting'" />
           </div>
         </div>
         <div class="row q-gutter-xs q-mb-sm">
@@ -183,7 +198,8 @@
           <q-space />
           <div class="col-8">
             <q-toggle v-model="denseButton" color="blue-grey" style="white-space:nowrap"
-              :dense="$store.getters.dense.input" :class="$store.getters.darkMode?'':'q-toggle-setting'" />
+              :dense="$store.getters.dense.input"
+              :class="$store.getters.darkMode?'':'q-toggle-setting'" />
           </div>
         </div>
         <div class="row q-gutter-xs q-mb-sm">
@@ -193,7 +209,8 @@
           <q-space />
           <div class="col-8">
             <q-toggle v-model="denseMenu" color="blue-grey" style="white-space:nowrap"
-              :dense="$store.getters.dense.input" :class="$store.getters.darkMode?'':'q-toggle-setting'" />
+              :dense="$store.getters.dense.input"
+              :class="$store.getters.darkMode?'':'q-toggle-setting'" />
           </div>
         </div>
       </q-card-section>
@@ -202,7 +219,7 @@
 </template>
 
 <script>
-import * as api from '@/api/user-setting'
+import * as api from '@/api/users/setting'
 import * as apiTypes from '@/api/types'
 export default {
   data() {
@@ -258,11 +275,11 @@ export default {
     // },
     darkMode: {
       // getter
-      get: function() {
+      get: function () {
         return this.$q.dark.isActive
       },
       // setter
-      set: function(val) {
+      set: function (val) {
         this.$q.dark.set(val)
         const data = JSON.parse(JSON.stringify(this.$store.state.userSetting.data))
         data.darkMode = val
@@ -271,8 +288,8 @@ export default {
       }
     },
     denseForm: {
-      get: function() { return this.$store.getters.dense.form },
-      set: function(val) {
+      get: function () { return this.$store.getters.dense.form },
+      set: function (val) {
         const data = JSON.parse(JSON.stringify(this.$store.state.userSetting.data))
         data.dense.form = val
         this.$store.dispatch('userSetting/set', data)
@@ -280,8 +297,8 @@ export default {
       }
     },
     denseButton: {
-      get: function() { return this.$store.getters.dense.button },
-      set: function(val) {
+      get: function () { return this.$store.getters.dense.button },
+      set: function (val) {
         const data = JSON.parse(JSON.stringify(this.$store.state.userSetting.data))
         data.dense.button = val
         this.$store.dispatch('userSetting/set', data)
@@ -289,8 +306,8 @@ export default {
       }
     },
     denseInput: {
-      get: function() { return this.$store.getters.dense.input },
-      set: function(val) {
+      get: function () { return this.$store.getters.dense.input },
+      set: function (val) {
         const data = JSON.parse(JSON.stringify(this.$store.state.userSetting.data))
         data.dense.input = val
         this.$store.dispatch('userSetting/set', data)
@@ -298,8 +315,8 @@ export default {
       }
     },
     denseTable: {
-      get: function() { return this.$store.getters.dense.table },
-      set: function(val) {
+      get: function () { return this.$store.getters.dense.table },
+      set: function (val) {
         const data = JSON.parse(JSON.stringify(this.$store.state.userSetting.data))
         data.dense.table = val
         this.$store.dispatch('userSetting/set', data)
@@ -307,8 +324,8 @@ export default {
       }
     },
     denseMenu: {
-      get: function() { return this.$store.getters.dense.menu },
-      set: function(val) {
+      get: function () { return this.$store.getters.dense.menu },
+      set: function (val) {
         const data = JSON.parse(JSON.stringify(this.$store.state.userSetting.data))
         data.dense.menu = val
         this.$store.dispatch('userSetting/set', data)

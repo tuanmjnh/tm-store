@@ -1,16 +1,16 @@
-import axios from 'axios'
-import { i18n } from '../boot/i18n'
-import store from '@/store'
+import axios from 'axios';
+import { i18n } from '../boot/i18n';
+import store from '@/store';
 // import { getToken } from './auth'
-import { Notify, colors } from 'quasar'
+import { Notify, colors } from 'quasar';
 // import getLocalIP from './local-ip'
-export const CANCEL_TOKEN = axios.CancelToken
+export const CANCEL_TOKEN = axios.CancelToken;
 
 // console.log(process.env)
 // create an axios instance
-export const API_MAIN = axios.create({
+export const axiosApi = axios.create({
   // uploadURL: 'http://localhost:8001/api/upload',
-  baseURL: process.env.API, // 'http://localhost:8001/api',
+  baseURL: process.env.API + '/', // 'http://localhost:8001/api',
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 10000 // request timeout
   // headers: {
@@ -19,28 +19,28 @@ export const API_MAIN = axios.create({
   //   // Remember: storageAuth.GetRemember(),
   //   LocalIP: document.getElementById('local-ip').value
   // }
-})
+});
 
 // request interceptor
-API_MAIN.interceptors.request.use(
+axiosApi.interceptors.request.use(
   async config => {
     // Loading start
     switch (config.method) {
       case 'get':
-        store.commit('SET_LOADING', { key: 'get', value: true })
-        break
+        store.commit('SET_LOADING', { key: 'get', value: true });
+        break;
       case 'post':
-        store.commit('SET_LOADING', { key: 'post', value: true })
-        break
+        store.commit('SET_LOADING', { key: 'post', value: true });
+        break;
       case 'put':
-        store.commit('SET_LOADING', { key: 'put', value: true })
-        break
+        store.commit('SET_LOADING', { key: 'put', value: true });
+        break;
       case 'patch':
-        store.commit('SET_LOADING', { key: 'patch', value: true })
-        break
+        store.commit('SET_LOADING', { key: 'patch', value: true });
+        break;
       case 'delete':
-        store.commit('SET_LOADING', { key: 'delete', value: true })
-        break
+        store.commit('SET_LOADING', { key: 'delete', value: true });
+        break;
     }
     // console.log(config.method)
     // do something before request is sent
@@ -49,34 +49,36 @@ API_MAIN.interceptors.request.use(
     // ['X-Token'] is a custom headers key
     // please modify it according to the actual situation
     // const authToken = await firebase.auth().currentUser.getIdToken(true)
-    if (store.state.auth.token) config.headers['x-access-token'] = `Bearer ${store.state.auth.token}`
+    if (store.state.auth.token) {
+      config.headers['x-access-token'] = `Bearer ${store.state.auth.token}`;
+    }
     // config.headers['userAgent'] = Platform.userAgent
     // config.headers['local-ip'] = await getLocalIP()
     // }
-    return config
+    return config;
   },
   error => {
     // do something with request error
     // console.log(error) // for debug
     // Loading end
-    store.commit('DONE_LOADING')
-    return Promise.reject(error)
+    store.commit('DONE_LOADING');
+    return Promise.reject(error);
   }
-)
+);
 
-let call
-export const API_MAIN_ONCE = (config = {}) => {
-  if (call) call.cancel('canceled')
-  call = axios.CancelToken.source()
-  config.cancelToken = call.token
-  return API_MAIN(config)
-}
+let call;
+export const axiosApiDebonce = (config = {}) => {
+  if (call) call.cancel('canceled');
+  call = axios.CancelToken.source();
+  config.cancelToken = call.token;
+  return axiosApi(config);
+};
 // response interceptor
-API_MAIN.interceptors.response.use(
+axiosApi.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
@@ -86,17 +88,24 @@ API_MAIN.interceptors.response.use(
   response => {
     switch (response.status) {
       case 201:
-        Notify.create({ message: i18n.t('success.insert'), color: 'positive' })
-        break
+        Notify.create({ message: i18n.t('success.insert'), color: 'positive' });
+        break;
       case 202:
-        Notify.create({ message: i18n.t('success.update'), color: 'positive' })
-        break
+        Notify.create({ message: i18n.t('success.update'), color: 'positive' });
+        break;
       case 203:
-        Notify.create({ message: response.data.success ? `${i18n.t('success.update')}: ${response.data.success.length} ${i18n.t('global.records')}` : i18n.t('success.update'), color: 'positive' })
-        break
+        Notify.create({
+          message: response.data.success
+            ? `${i18n.t('success.update')}: ${
+                response.data.success.length
+              } ${i18n.t('global.records')}`
+            : i18n.t('success.update'),
+          color: 'positive'
+        });
+        break;
       case 204:
-        Notify.create({ message: i18n.t('success.delete'), color: 'positive' })
-        break
+        Notify.create({ message: i18n.t('success.delete'), color: 'positive' });
+        break;
     }
     // if the custom code is not 20000, it is judged as an error.
     // if (response.status !== 200 && response.status !== 201) {
@@ -125,62 +134,83 @@ API_MAIN.interceptors.response.use(
     // } else {
 
     // Loading end
-    store.commit('DONE_LOADING')
+    store.commit('DONE_LOADING');
     // Return response
-    return response.data
+    return response.data;
     // }
   },
   error => {
     // console.log(error.response.status) // for debug
     // console.log(error)
-    var reg = /Error: timeout+/
+    var reg = /Error: timeout+/;
     if (reg.test(error.toString())) {
-      Notify.create({ message: i18n.t('error.timeout'), color: 'negative' })
+      Notify.create({ message: i18n.t('error.timeout'), color: 'negative' });
       // Loading end
-      store.commit('DONE_LOADING')
-      return
+      store.commit('DONE_LOADING');
+      return;
     }
     if (error.message === 'canceled') {
-      store.commit('DONE_LOADING')
-      return
+      store.commit('DONE_LOADING');
+      return;
     }
     if (!error.response) {
-      Notify.create({ message: i18n.t('error.system'), color: 'negative' })
+      Notify.create({ message: i18n.t('error.system'), color: 'negative' });
       // Loading end
-      store.commit('DONE_LOADING')
-      return
+      store.commit('DONE_LOADING');
+      return;
     }
     switch (error.response.status) {
       case 401:
-        Notify.create({ message: i18n.t('error.token_no_exist'), color: 'negative' })
-        break
+        Notify.create({
+          message: i18n.t('error.token_no_exist'),
+          color: 'negative'
+        });
+        break;
       case 402:
-        Notify.create({ message: i18n.t('error.token_invalid'), color: 'negative' })
-        break
+        Notify.create({
+          message: i18n.t('error.token_invalid'),
+          color: 'negative'
+        });
+        break;
       case 404:
-        Notify.create({ message: i18n.t('error.no_exist'), color: 'negative' })
-        break
+        Notify.create({ message: i18n.t('error.no_exist'), color: 'negative' });
+        break;
       case 500:
-        Notify.create({ message: i18n.t('error.system'), color: 'negative' })
-        break
+        Notify.create({ message: i18n.t('error.system'), color: 'negative' });
+        break;
       case 501:
-        Notify.create({ message: i18n.t('error.exist'), color: 'negative' })
-        break
+        Notify.create({ message: i18n.t('error.exist'), color: 'negative' });
+        break;
       case 502:
-        Notify.create({ message: i18n.t('error.account_no_exist'), color: 'negative' })
-        break
+        Notify.create({
+          message: i18n.t('error.account_no_exist'),
+          color: 'negative'
+        });
+        break;
       case 503:
-        Notify.create({ message: i18n.t('error.account_no_exist'), color: 'negative' })
-        break
+        Notify.create({
+          message: i18n.t('error.account_no_exist'),
+          color: 'negative'
+        });
+        break;
       case 504:
-        Notify.create({ message: i18n.t('error.account_locked'), color: 'negative' })
-        break
+        Notify.create({
+          message: i18n.t('error.account_locked'),
+          color: 'negative'
+        });
+        break;
       case 505:
-        Notify.create({ message: i18n.t('error.wrong_password'), color: 'negative' })
-        break
+        Notify.create({
+          message: i18n.t('error.wrong_password'),
+          color: 'negative'
+        });
+        break;
       default:
-        Notify.create({ message: `${i18n.t('error.error_code')}: ${error.response.status}`, color: 'negative' })
-        break
+        Notify.create({
+          message: `${i18n.t('error.error_code')}: ${error.response.status}`,
+          color: 'negative'
+        });
+        break;
     }
     // Notify.create({ message: error.response.data.error && error.response.data.error.message ? error.response.data.error.message : error.message || 'Error', color: 'negative' })
     // Message({
@@ -190,9 +220,9 @@ API_MAIN.interceptors.response.use(
     // })
 
     // Loading end
-    store.commit('DONE_LOADING')
-    return Promise.reject(error)
+    store.commit('DONE_LOADING');
+    return Promise.reject(error);
   }
-)
+);
 
-export default API_MAIN
+export default axiosApi;

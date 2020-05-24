@@ -15,8 +15,8 @@ module.exports.get = async function (req, res, next) {
       conditions.$and.push({
         $or: [
           { email: new RegExp(req.query.filter, 'i') },
-          { full_name: new RegExp(req.query.filter, 'i') },
-          { person_number: new RegExp(req.query.filter, 'i') },
+          { fullName: new RegExp(req.query.filter, 'i') },
+          { personNumber: new RegExp(req.query.filter, 'i') },
           { phone: new RegExp(req.query.filter, 'i') },
         ],
       });
@@ -71,7 +71,7 @@ module.exports.post = async function (req, res, next) {
     if (x) return res.status(501).send('exist');
     const password = crypto.NewGuid().split('-')[0];
     req.body.salt = crypto.NewGuid('n');
-    req.body.password = crypto.md5(password + req.body.salt);
+    req.body.password = crypto.SHA256(password + req.body.salt);
     req.body.created = { at: new Date(), by: req.verify._id, ip: request.ip(req) };
     const data = new Model(req.body);
     // data.validate()
@@ -83,6 +83,37 @@ module.exports.post = async function (req, res, next) {
       return res.status(201).json(rs);
     });
   } catch (e) {
+    return res.status(500).send('invalid');
+  }
+};
+
+module.exports.import = async function (req, res, next) {
+  if (!req.body || !req.body.length) return res.status(500).send('invalid');
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const rs = { success, error };
+    let i = 0;
+    for await (const e of req.body) {
+      i++;
+      const x = await MUser.findOne({ username: e.username });
+      if (x) {
+        rs.error.push(i);
+        continue;
+      }
+      e.salt = NewGuid('n');
+      e.password = SHA256(e.password + e.salt);
+      e.created = { at: new Date(), by: req.verify._id, ip: getIp(req) };
+      const item = new MUser(e);
+      const itemSave = await item.save();
+      if (itemSave) rs.success.push(i);
+      else rs.error.push(i);
+    }
+    return res.status(201).json(rs);
+  } catch (e) {
+    console.log(e);
+    await session.abortTransaction();
+    session.endSession();
     return res.status(500).send('invalid');
   }
 };
@@ -132,13 +163,14 @@ module.exports.put = async function (req, res, next) {
         { _id: req.body._id },
         {
           $set: {
-            full_name: req.body.full_name,
+            group: req.body.group,
+            fullName: req.body.fullName,
             phone: req.body.phone,
-            person_number: req.body.person_number,
+            personNumber: req.body.personNumber,
             region: req.body.region,
             avatar: req.body.avatar,
             note: req.body.note,
-            date_birth: req.body.date_birth,
+            dateBirth: req.body.dateBirth,
             gender: req.body.gender,
             address: req.body.address,
             roles: req.body.roles,
@@ -170,11 +202,11 @@ module.exports.resetPassword = async function (req, res, next) {
       const password = crypto.NewGuid().split('-')[0];
       Model.updateOne(
         { _id: req.body._id },
-        { $set: { password: crypto.md5(password + x.salt) } },
+        { $set: { password: crypto.SHA256(password + x.salt) } },
         (e, rs) => {
           if (e) return res.status(500).send(e);
           // Push logs
-          Logger.set(req, panameth, req.body._id, 'reset-password');
+          Logger.set(req, name, req.body._id, 'reset-password');
           res.status(206).json({ password: password });
         },
       );
@@ -192,12 +224,12 @@ module.exports.changePassword = async function (req, res, next) {
     const user = await Model.findOne({ _id: req.verify._id });
     if (!user) return res.status(404).send('no_exist');
     // check password
-    if (user.password !== crypto.md5(req.body.oldPassword + user.salt))
+    if (user.password !== crypto.SHA256(req.body.oldPassword + user.salt))
       return res.status(505).json({ msg: 'wrong_password' });
     // set new password
     Model.updateOne(
       { _id: req.verify._id },
-      { $set: { password: crypto.md5(req.body.newPassword + user.salt) } },
+      { $set: { password: crypto.SHA256(req.body.newPassword + user.salt) } },
       (e, rs) => {
         if (e) return res.status(500).send(e);
         // Push logs

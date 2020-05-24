@@ -68,7 +68,6 @@ const getConstantRoutes = async () => {
 
 module.exports.get = async function (req, res, next) {
   try {
-    console.log(req.verify);
     // constant account
     let rs = constantCommon.users.find((x) => x._id === req.verify._id);
     let routes = [];

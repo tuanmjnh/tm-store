@@ -4,8 +4,8 @@
       <div class="row">
         <div class="text-subtitle2 text-bold self-center">{{$t('profile.title')}}</div>
         <q-space />
-        <q-btn color="primary" :label="$t('global.update')" class="q-btn--square" :loading="$store.state.loading.put"
-          @click="onSubmit"></q-btn>
+        <q-btn color="primary" :label="$t('global.update')" class="q-btn--square"
+          :loading="$store.state.loading.put" @click="onSubmit"></q-btn>
       </div>
     </q-card-section>
     <q-separator />
@@ -19,8 +19,8 @@
           </div>
           <q-space />
           <div class="col-12 col-md-6">
-            <q-input v-model.trim="form.full_name" :dense="$store.getters.dense.input" :label="$t('users.full_name')"
-              :rules="[v=>v&&v.length>0||$t('error.required')]" />
+            <q-input v-model.trim="form.full_name" :dense="$store.getters.dense.input"
+              :label="$t('users.full_name')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
           </div>
         </div>
         <div class="row q-gutter-xs">
@@ -31,7 +31,8 @@
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy ref="dateBirth" transition-show="scale" transition-hide="scale">
-                    <q-date v-model="form.date_birth" today-btn @input="()=>$refs.dateBirth.hide()" />
+                    <q-date v-model="form.date_birth" today-btn
+                      @input="()=>$refs.dateBirth.hide()" />
                   </q-popup-proxy>
                 </q-icon>
               </template>
@@ -39,8 +40,9 @@
           </div>
           <q-space />
           <div class="col-12 col-md-6">
-            <q-input v-model.trim="form.person_number" type="number" :dense="$store.getters.dense.input"
-              :label="$t('users.person_number')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
+            <q-input v-model.trim="form.person_number" type="number"
+              :dense="$store.getters.dense.input" :label="$t('users.person_number')"
+              :rules="[v=>v&&v.length>0||$t('error.required')]" />
           </div>
         </div>
         <div class="row q-gutter-xs">
@@ -65,8 +67,9 @@
             </q-select>
           </div>
           <div class="col-6 col-md-5">
-            <q-input v-model.trim="form.phone" :hint="$t('users.phone')" :placeholder="$t('users.phone')"
-              :dense="$store.getters.dense.input" :rules="[v=>v&&v.length>0||$t('error.required')]">
+            <q-input v-model.trim="form.phone" :hint="$t('users.phone')"
+              :placeholder="$t('users.phone')" :dense="$store.getters.dense.input"
+              :rules="[v=>v&&v.length>0||$t('error.required')]">
               <template v-if="region" v-slot:prepend>
                 <span style="font-size:14px;line-height:0">+{{region.pc}}</span>
               </template>
@@ -74,14 +77,16 @@
           </div>
           <q-space />
           <div class="col-6 col-md-3">
-            <q-select v-model="gender" :options="genders" :hint="$t('users.gender')" option-value="_id"
-              :dense="$store.getters.dense.input" :options-dense="$store.getters.dense.input"
-              :option-label="v=>$t(`gender.${v.code}`)" :rules="[v=>v||$t('error.required')]" />
+            <q-select v-model="gender" :options="genders" :hint="$t('users.gender')"
+              option-value="_id" :dense="$store.getters.dense.input"
+              :options-dense="$store.getters.dense.input" :option-label="v=>$t(`gender.${v.code}`)"
+              :rules="[v=>v||$t('error.required')]" />
           </div>
         </div>
         <div class="row q-gutter-xs q-mb-sm">
           <div class="col-12">
-            <q-input v-model="form.address" :label="$t('users.address')" :dense="$store.getters.dense.input" />
+            <q-input v-model="form.address" :label="$t('users.address')"
+              :dense="$store.getters.dense.input" />
           </div>
         </div>
         <div class="row q-gutter-xs">

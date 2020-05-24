@@ -1,42 +1,46 @@
-import * as http from '@/utils/http-client'
-const collection = '/products'
+import * as http from '@/utils/http-client';
+const collection = '/products';
 
 export async function select(params) {
-  return http.API_MAIN.get(collection, { params })
+  return http.axiosApi.get(collection, { params });
 }
 
 export async function find(params) {
-  return http.API_MAIN.get(`${collection}/find`, { params })
+  return http.axiosApi.get(`${collection}/find`, { params });
 }
 
 export async function exist(params) {
-  return http.API_MAIN.get(`${collection}/exist`, { params })
+  return http.axiosApi.get(`${collection}/exist`, { params });
 }
 
 export async function getAttr(params) {
-  return http.API_MAIN_ONCE({ method: 'get', params: params, url: `${collection}/get-attr` })
+  return http.axiosApiDebonce({
+    method: 'get',
+    params: params,
+    url: `${collection}/get-attr`
+  });
 }
 
 export async function insert(params) {
-  return http.API_MAIN.post(collection, params)
+  return http.axiosApi.post(collection, params);
 }
 
 export async function update(params) {
-  return http.API_MAIN.put(collection, params)
+  return http.axiosApi.put(collection, params);
 }
 
 export async function lock(params) {
-  return http.API_MAIN.patch(collection, params)
+  return http.axiosApi.patch(collection, params);
 }
 
 export async function loadFileImport(params) {
-  return http.API_MAIN.post(`${collection}/load-file-import`, params)
+  return http.axiosApi.post(`${collection}/load-file-import`, params);
 }
 
 export async function finds(params) {
-  return http.API_MAIN.post(`${collection}/finds`, params)
+  return http.axiosApi.post(`${collection}/finds`, params);
 }
 
 export async function imports(params) {
-  return http.API_MAIN.post(`${collection}/imports`, params)
+  return http.axiosApi.post(`${collection}/imports`, params);
 }

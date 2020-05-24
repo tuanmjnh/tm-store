@@ -68,12 +68,13 @@
         <div class="text-h6 q-mb-md">{{$t('setting.title')}}</div>
         <q-list dense class="p-fix">
           <q-item>
-            <q-btn-dropdown flat no-caps :label="language.name_l" icon="g_translate" dense class="btn-setting"
-              :color="$store.getters.darkMode?'':'blue-grey'">
+            <q-btn-dropdown flat no-caps :label="language.name_l" icon="g_translate" dense
+              class="btn-setting" :color="$store.getters.darkMode?'':'blue-grey'">
               <q-list dense>
                 <template v-for="(e,i) in languages">
                   <q-item clickable v-close-popup :key="i"
-                    :active="`${e.cc_iso}-${e.cc}`===$store.getters.language?true:false" @click="onSetLanguage(e)">
+                    :active="`${e.cc_iso}-${e.cc}`===$store.getters.language?true:false"
+                    @click="onSetLanguage(e)">
                     <q-item-section>{{e.name_l}}</q-item-section>
                   </q-item>
                 </template>
@@ -95,16 +96,17 @@
           <q-item v-if="!$q.platform.is.mobile">
             <q-btn flat no-caps dense class="btn-setting"
               :label="$q.fullscreen.isActive ? $t('navbar.normal_screen') : $t('navbar.full_screen')"
-              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" @click="$q.fullscreen.toggle()"
-              :color="$store.getters.darkMode?'':'blue-grey'" v-close-popup>
+              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+              @click="$q.fullscreen.toggle()" :color="$store.getters.darkMode?'':'blue-grey'"
+              v-close-popup>
               <!-- <q-tooltip>
                   {{$q.fullscreen.isActive ? $t('navbar.normal_screen') : $t('navbar.full_screen')}}
                 </q-tooltip> -->
             </q-btn>
           </q-item>
           <q-item>
-            <q-toggle dense v-model="darkMode" label="Dark mode" size="xs" color="blue-grey" style="white-space:nowrap"
-              :class="$store.getters.darkMode?'':'q-toggle-setting'" />
+            <q-toggle dense v-model="darkMode" label="Dark mode" size="xs" color="blue-grey"
+              style="white-space:nowrap" :class="$store.getters.darkMode?'':'q-toggle-setting'" />
           </q-item>
         </q-list>
       </div>
@@ -121,15 +123,15 @@
             $t('global.undefined')}}
         </div>
         <!-- </router-link> -->
-        <q-btn :label="$t('navbar.log_out')" @click.prevent="onLogout" color="blue-grey" size="sm" class="q-btn--square"
-          style="white-space:nowrap" v-close-popup />
+        <q-btn :label="$t('navbar.log_out')" @click.prevent="onLogout" color="blue-grey" size="sm"
+          class="q-btn--square" style="white-space:nowrap" v-close-popup />
       </div>
     </div>
   </q-btn-dropdown>
 </template>
 
 <script>
-import * as api from '@/api/user-setting'
+import * as api from '@/api/users/setting'
 import { openURL } from 'quasar'
 import { isExternal } from '@/utils/validate'
 import { getLanguage, getAllLanguage } from '@/i18n'
@@ -160,11 +162,11 @@ export default {
     // },
     darkMode: {
       // getter
-      get: function() {
+      get: function () {
         return this.$q.dark.isActive
       },
       // setter
-      set: function(val) {
+      set: function (val) {
         this.$q.dark.set(val)
         const data = JSON.parse(JSON.stringify(this.$store.state.userSetting.data))
         data.darkMode = val

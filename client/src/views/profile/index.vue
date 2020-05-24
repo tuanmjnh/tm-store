@@ -12,7 +12,8 @@
         </q-card-section>
         <q-separator inset />
         <q-card-section>
-          <div v-if="$store.state.auth.user&&$store.state.auth.user.note" v-html="$store.state.auth.user.note"></div>
+          <div v-if="$store.state.auth.user&&$store.state.auth.user.note"
+            v-html="$store.state.auth.user.note"></div>
         </q-card-section>
       </q-card>
       <q-card flat bordered>

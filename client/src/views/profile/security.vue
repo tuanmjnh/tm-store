@@ -3,8 +3,8 @@
     <q-card-section class="row">
       <div class="text-subtitle2 text-bold self-center">{{$t('profile.security')}}</div>
       <q-space />
-      <q-btn color="primary" :label="$t('global.update')" class="q-btn--square" :loading="$store.state.loading.post"
-        @click="onSubmit"></q-btn>
+      <q-btn color="primary" :label="$t('global.update')" class="q-btn--square"
+        :loading="$store.state.loading.post" @click="onSubmit"></q-btn>
     </q-card-section>
     <q-separator />
     <q-form ref="form">
@@ -13,13 +13,15 @@
           <div class="col-12 col-md-6">
             <!-- <q-input v-model.trim="form.oldPassword" :dense="$store.getters.dense.input" :label="$t('users.old_password')"
               :rules="[v=>v&&v.length>0||$t('error.required')]" /> -->
-            <q-input v-model.trim="oldPassword.value" :type="oldPassword.type" :dense="$store.getters.dense.input"
-              :label="$t('users.old_password')" @keyup.native="oldPassword.caps=checkCapslock($event)"
-              @blur="oldPassword.caps=false" :rules="[v=>v&&v.length>0||$t('error.required')]" class="capsTooltip">
+            <q-input v-model.trim="oldPassword.value" :type="oldPassword.type"
+              :dense="$store.getters.dense.input" :label="$t('users.old_password')"
+              @keyup.native="oldPassword.caps=checkCapslock($event)" @blur="oldPassword.caps=false"
+              :rules="[v=>v&&v.length>0||$t('error.required')]" class="capsTooltip">
               <template v-slot:append>
-                <q-icon v-if="oldPassword.type==='password'" name="visibility_off" @click="oldPassword.type='text'"
+                <q-icon v-if="oldPassword.type==='password'" name="visibility_off"
+                  @click="oldPassword.type='text'" class="cursor-pointer" />
+                <q-icon v-else name="visibility" @click="oldPassword.type='password'"
                   class="cursor-pointer" />
-                <q-icon v-else name="visibility" @click="oldPassword.type='password'" class="cursor-pointer" />
                 <q-tooltip v-model="oldPassword.caps" :no-parent-event="true" :offset="[10, 10]"
                   content-class="bg-indigo">
                   Caps lock
@@ -32,13 +34,15 @@
           <div class="col-12 col-md-6">
             <!-- <q-input v-model.trim="form.newPassword" :dense="$store.getters.dense.input"
               :label="$t('users.new_password')" :rules="[v=>v&&v.length>0||$t('error.required')]" /> -->
-            <q-input v-model.trim="newPassword.value" :type="newPassword.type" :dense="$store.getters.dense.input"
-              :label="$t('users.new_password')" @keyup.native="newPassword.caps=checkCapslock($event)"
-              @blur="newPassword.caps=false" :rules="[v=>v&&v.length>0||$t('error.required')]" class="capsTooltip">
+            <q-input v-model.trim="newPassword.value" :type="newPassword.type"
+              :dense="$store.getters.dense.input" :label="$t('users.new_password')"
+              @keyup.native="newPassword.caps=checkCapslock($event)" @blur="newPassword.caps=false"
+              :rules="[v=>v&&v.length>0||$t('error.required')]" class="capsTooltip">
               <template v-slot:append>
-                <q-icon v-if="newPassword.type==='password'" name="visibility_off" @click="newPassword.type='text'"
+                <q-icon v-if="newPassword.type==='password'" name="visibility_off"
+                  @click="newPassword.type='text'" class="cursor-pointer" />
+                <q-icon v-else name="visibility" @click="newPassword.type='password'"
                   class="cursor-pointer" />
-                <q-icon v-else name="visibility" @click="newPassword.type='password'" class="cursor-pointer" />
                 <q-tooltip v-model="newPassword.caps" :no-parent-event="true" :offset="[10, 10]"
                   content-class="bg-indigo">
                   Caps lock
