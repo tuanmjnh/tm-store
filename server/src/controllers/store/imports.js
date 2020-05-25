@@ -46,7 +46,7 @@ module.exports.put = async function (req, res, next) {
       vat: Math.round(req.body.sum('amount') * 0.1, 0),
       created_at: new Date(),
       created_by: req.verify._id,
-      created_ip: request.ip(req),
+      created_ip: request.getIp(req),
       flag: 1,
     });
     // total.validate()

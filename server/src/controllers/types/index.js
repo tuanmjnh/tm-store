@@ -96,7 +96,7 @@ module.exports.post = async function (req, res, next) {
     // }
     const x = await Model.findOne({ key: req.body.key, code: req.body.code });
     if (x) return res.status(501).send('exist');
-    req.body.created = { at: new Date(), by: req.verify._id, ip: request.ip(req) };
+    req.body.created = { at: new Date(), by: req.verify._id, ip: request.getIp(req) };
     const data = new Model(req.body);
     // data.validate()
     data.save((e, rs) => {
@@ -106,6 +106,7 @@ module.exports.post = async function (req, res, next) {
       return res.status(201).json(rs);
     });
   } catch (e) {
+    console.log(e);
     return res.status(500).send('invalid');
   }
 };

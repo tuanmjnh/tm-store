@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="col-12 row">
-      <div class="col-xs-12 col-sm-auto q-table__title text-h6">{{$t(`category.title_${$route.meta.type}`)}}</div>
+      <div class="col-xs-12 col-sm-auto q-table__title text-h6">
+        {{$t(`category.title_${$route.meta.type}`)}}</div>
     </div>
     <div class="col-12 row">
       <div class="col">
@@ -45,13 +46,15 @@
     </q-tree>
     <q-separator></q-separator> -->
     <tm-tree :nodes="items" node-key="_id" node-label="label" :no-nodes-label="$t('table.no_data')"
-      :selected.sync="selected" :ticked.sync="ticked" :expanded.sync="expanded" tick-strategy="leaf-child"
-      :draggable="true" :filter-method="onFilter" :filter="pagination.filter" @on-drag-changed="onTreeDragChanged">
+      :selected.sync="selected" :ticked.sync="ticked" :expanded.sync="expanded"
+      tick-strategy="leaf-child" :draggable="true" :filter-method="onFilter"
+      :filter="pagination.filter" @on-drag-changed="onTreeDragChanged">
       <!-- <template v-slot:content-after="prop">
         {{ prop.node.label }} a
       </template> -->
       <template v-slot:content-after="prop">
-        <div class="row items-center" @mouseover="tooltipAction=prop.node._id" @mouseleave="tooltipAction=''">
+        <div class="row items-center" @mouseover="tooltipAction=prop.node._id"
+          @mouseleave="tooltipAction=''">
           <q-icon :name="prop.node.icon" color="blue-grey" size="20px" class="q-mr-sm" />
           <div :class="['node-label q-pr-md',prop.node.flag===1?'':'text-blue-grey-4']"
             :style="{color:prop.node.color?prop.node.color:'#009688'}">
@@ -60,11 +63,11 @@
           <template v-if="prop.node._id===tooltipAction">
             <q-icon v-if="isRoutes.add" name="add" color="blue" size="16px" class="q-pl-xs q-pr-xs"
               @click="onAdd(prop.node)" />
-            <q-icon v-if="isRoutes.edit" name="edit" color="light-green" size="16px" class="q-pl-xs q-pr-xs"
-              @click="onUpdate(prop.node)" />
+            <q-icon v-if="isRoutes.edit" name="edit" color="light-green" size="16px"
+              class="q-pl-xs q-pr-xs" @click="onUpdate(prop.node)" />
             <template v-if="isRoutes.trash">
-              <q-icon v-if="prop.node.flag===1" name="clear" color="negative" size="16px" class="q-pl-xs q-pr-xs"
-                @click="onTrash(prop.node)" />
+              <q-icon v-if="prop.node.flag===1" name="clear" color="negative" size="16px"
+                class="q-pl-xs q-pr-xs" @click="onTrash(prop.node)" />
               <q-icon v-else name="restore" color="amber" size="16px" class="q-pl-xs q-pr-xs"
                 @click="onTrash(prop.node)" />
             </template>
@@ -77,8 +80,8 @@
     <div class="row">expanded: {{expanded}}</div> -->
     <!-- Add dialog -->
     <q-dialog v-model="dialogAdd" persistent>
-      <template-add :dialog.sync="dialogAdd" :item.sync="item" :items.sync="items" :dependent="dependent"
-        :positions="positions" :expanded="expanded" />
+      <template-add :dialog.sync="dialogAdd" :item.sync="item" :items.sync="items"
+        :dependent="dependent" :positions="positions" :expanded="expanded" />
     </q-dialog>
   </div>
 </template>
@@ -181,8 +184,8 @@ export default {
     onTrash(item) {
       this.$q.dialog({
         // dark: this.dark,
-        title: this.$t('message_box.warning'),
-        message: item.flag ? this.$t('message_box.trash') : this.$t('message_box.recover'),
+        title: this.$t('messageBox.warning'),
+        message: item.flag ? this.$t('messageBox.trash') : this.$t('messageBox.recover'),
         cancel: true,
         persistent: true
       }).onOk(() => {

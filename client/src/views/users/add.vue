@@ -55,14 +55,14 @@
             <div class="col-12 col-md-5">
               <q-input v-model.trim="form.username" :dense="$store.getters.dense.input" v-lowercase
                 :label="$t('users.username')"
-                :rules="[v=>!!v||$t('error.required'),v=>v.length>4||$t('error.min_length',{min:5})]" />
+                :rules="[v=>!!v||$t('error.required'),v=>v.length>4||$t('error.minLength',{min:5})]" />
             </div>
             <q-space />
             <div class="col-12 col-md-6">
               <input type="password" class="hidden" />
               <q-input v-model.trim="form.password" :dense="$store.getters.dense.input"
                 :label="$t('users.password')" autocomplete="new-password" :type="passwordType"
-                :rules="[v=>!!v||$t('error.required'),v=>v.length>5||$t('error.min_length',{min:6})]">
+                :rules="[v=>!!v||$t('error.required'),v=>v.length>5||$t('error.minLength',{min:6})]">
                 <template v-slot:append>
                   <q-icon v-if="passwordType === 'password'" name="visibility_off"
                     @click="passwordType = 'text'" class="cursor-pointer" />
@@ -86,16 +86,12 @@
           </div>
           <div class="row q-gutter-xs">
             <div class="col-12 col-md-5">
-              <q-input :value="
-                  form.dateBirth
-                    ? $moment(form.dateBirth).format('DD/MM/YYYY')
-                    : ''
-                " :dense="$store.getters.dense.input" readonly :label="$t('users.dateBirth')"
-                :hint="`${$t('global.format')}: DD/MM/YYYY`">
+              <q-input :value="form.dateBirth" :dense="$store.getters.dense.input" readonly
+                :label="$t('users.dateBirth')" :hint="`${$t('global.format')}: DD/MM/YYYY`">
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy ref="dateBirth" transition-show="scale" transition-hide="scale">
-                      <q-date v-model="form.dateBirth" today-btn
+                      <q-date v-model="form.dateBirth" mask="DD/MM/YYYY" today-btn
                         @input="() => $refs.dateBirth.hide()" />
                     </q-popup-proxy>
                   </q-icon>
@@ -113,7 +109,7 @@
             <div class="col-3">
               <q-select v-model="selectedRegion" use-input hide-selected fill-input
                 input-debounce="0" :dense="$store.getters.dense.input" :options="regions"
-                @filter="onFilterRegion" :hint="$t('users.select_region')" option-value="id"
+                @filter="onFilterRegion" :hint="$t('users.selectRegion')" option-value="id"
                 option-label="name_l" :rules="[v=>!!v||$t('error.required')]">
                 <!-- <template v-slot:selected-item="scope">
                   <q-item-label v-html="scope.opt.name_l" />
@@ -140,7 +136,7 @@
                 <template v-slot:no-option>
                   <q-item>
                     <q-item-section class="text-grey">{{
-                      $t("table.no_data")
+                      $t("table.noData")
                     }}</q-item-section>
                   </q-item>
                 </template>
@@ -197,7 +193,7 @@
         <q-tab-panel name="roles">
           <q-tree ref="menu" class="col-12 col-sm-6" :nodes="roles"
             :dense="$store.getters.dense.input" :ticked.sync="form.roles" node-key="id"
-            tick-strategy="leaf" :no-nodes-label="$t('table.no_data')" />
+            tick-strategy="leaf" :no-nodes-label="$t('table.noData')" />
           <!-- <q-btn flat color="positive" icon="check_circle" :label="$t('global.add')" @click="onTicked">
           </q-btn> -->
         </q-tab-panel>
@@ -207,10 +203,12 @@
               <tm-upload :data.sync="form.avatar" :upload-url="uploadUrl" :headers="headers"
                 :max-file-size="1024 * 1024 * 2" accept=".jpg,.jpeg,.png,.gif" :multiple="false"
                 :view-type.sync="viewType" :size="121" :labelTitle="$t('files.title')"
-                :labelViewList="$t('files.View_list')" :labelViewBox="$t('files.view_box')"
-                :labelFileName="$t('files.file_name')" :labelFileSize="$t('files.file_size')"
-                :labelConfirmTitle="$t('message_box.confirm')"
-                :labelConfirmContent="$t('message_box.delete')">
+                :labelTitleUpload="$t('files.upload')" :labelTitleFiles="$t('files.title')"
+                :labelOpenFile="$t('files.openFile')" :labelOpenData="$t('files.openData')"
+                :labelViewList="$t('files.ViewList')" :labelViewBox="$t('files.viewBox')"
+                :labelFileName="$t('files.fileName')" :labelFileSize="$t('files.fileSize')"
+                :labelCancel="$t('global.cancel')" :labelConfirmTitle="$t('messageBox.confirm')"
+                :labelConfirmContent="$t('messageBox.delete')">
               </tm-upload>
             </div>
           </div>
@@ -263,7 +261,7 @@ export default {
         region: null,
         avatar: null,
         note: '',
-        dateBirth: this.$moment().format('YYYY/MM/DD'),
+        dateBirth: this.$moment().format('DD/MM/YYYY'),
         gender: null,
         address: null,
         roles: [],

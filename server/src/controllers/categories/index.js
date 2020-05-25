@@ -87,7 +87,7 @@ module.exports.post = async function (req, res, next) {
     const x = await Model.findOne({ code: req.body.code });
     console.log(x);
     if (x) return res.status(501).send('exist');
-    req.body.created = { at: new Date(), by: req.verify._id, ip: request.ip(req) };
+    req.body.created = { at: new Date(), by: req.verify._id, ip: request.getIp(req) };
     const data = new Model(req.body);
     // data.validate()
     data.save((e, rs) => {
@@ -135,8 +135,8 @@ module.exports.put = async function (req, res, next) {
             icon: req.body.icon,
             color: req.body.color,
             meta: req.body.meta,
-            start_at: req.body.start_at,
-            end_at: req.body.end_at,
+            startAt: req.body.startAt,
+            endAt: req.body.endAt,
             orders: req.body.orders,
             flag: req.body.flag,
           },

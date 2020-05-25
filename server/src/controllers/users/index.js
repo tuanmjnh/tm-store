@@ -72,7 +72,7 @@ module.exports.post = async function (req, res, next) {
     const password = crypto.NewGuid().split('-')[0];
     req.body.salt = crypto.NewGuid('n');
     req.body.password = crypto.SHA256(password + req.body.salt);
-    req.body.created = { at: new Date(), by: req.verify._id, ip: request.ip(req) };
+    req.body.created = { at: new Date(), by: req.verify._id, ip: request.getIp(req) };
     const data = new Model(req.body);
     // data.validate()
     data.save((e, rs) => {

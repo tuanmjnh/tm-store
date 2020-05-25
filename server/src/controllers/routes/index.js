@@ -101,7 +101,7 @@ module.exports.post = async function (req, res, next) {
     }
     const x = await Model.findOne({ name: req.body.name });
     if (x) return res.status(501).send('exist');
-    req.body.created = { at: new Date(), by: req.verify._id, ip: request.ip(req) };
+    req.body.created = { at: new Date(), by: req.verify._id, ip: request.getIp(req) };
     const data = new Model(req.body);
     if (!req.body.dependent) data.dependent = null;
     // data.validate()

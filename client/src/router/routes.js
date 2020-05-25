@@ -53,22 +53,22 @@ export const constant = [
 
 export const dynamic = [
   {
-    path: '/manager',
-    name: 'manager',
-    redirect: 'manager-users',
-    meta: { title: 'manager', icon: 'security' },
+    path: '/product',
+    name: 'product',
+    redirect: 'product-list',
+    meta: { title: 'product', icon: 'perm_media' },
     component: 'layout',
     children: [
       {
-        path: 'users',
-        name: 'manager-users',
-        meta: { title: 'users', icon: 'account_box' },
+        path: 'product-list',
+        name: 'product-list',
+        meta: { title: 'list', icon: 'account_box' },
         component: 'users/index',
         children: [
           {
-            path: 'list',
+            path: 'view',
             name: 'manager-users-view',
-            meta: { title: 'list', hidden: true, noCache: true, flag: 1 },
+            meta: { title: 'view', hidden: true, noCache: true, flag: 1 },
             component: 'users/index'
           },
           {
@@ -95,6 +95,52 @@ export const dynamic = [
             component: 'users/index'
           }
         ]
+      }
+    ]
+  },
+  {
+    path: '/manager',
+    name: 'manager',
+    redirect: 'manager-users',
+    meta: { title: 'manager', icon: 'security' },
+    component: 'layout',
+    children: [
+      {
+        path: 'users',
+        name: 'manager-users',
+        meta: { title: 'users', icon: 'account_box' },
+        component: 'users/index',
+        children: [
+          {
+            path: 'view',
+            name: 'manager-users-view',
+            meta: { title: 'view', hidden: true, noCache: true, flag: 1 },
+            component: 'users/index'
+          },
+          {
+            path: 'add',
+            name: 'manager-users-add',
+            meta: { title: 'add', hidden: true },
+            component: 'users/add'
+          },
+          {
+            path: 'edit/:?id',
+            name: 'manager-users-edit',
+            meta: {
+              title: 'edit',
+              hidden: true,
+              noCache: true,
+              activeMenu: '/users/view'
+            },
+            component: 'users/add'
+          },
+          {
+            path: 'trash',
+            name: 'manager-users-trash',
+            meta: { title: 'trash', hidden: true, noCache: true, flag: 0 },
+            component: 'users/index'
+          }
+        ]
       },
       {
         path: 'roles',
@@ -103,9 +149,9 @@ export const dynamic = [
         component: 'roles/index',
         children: [
           {
-            path: 'list',
+            path: 'view',
             name: 'manager-roles-view',
-            meta: { title: 'list', hidden: true, noCache: true, flag: 1 },
+            meta: { title: 'view', hidden: true, noCache: true, flag: 1 },
             component: 'roles/index'
           },
           {
@@ -121,7 +167,7 @@ export const dynamic = [
               title: 'edit',
               hidden: true,
               noCache: true,
-              activeMenu: '/roles/list'
+              activeMenu: '/roles/view'
             },
             component: 'roles/add'
           },
@@ -140,9 +186,9 @@ export const dynamic = [
         component: 'types/index',
         children: [
           {
-            path: 'list',
+            path: 'view',
             name: 'manager-types-view',
-            meta: { title: 'list', hidden: true, noCache: true, flag: 1 },
+            meta: { title: 'view', hidden: true, noCache: true, flag: 1 },
             component: 'types/index'
           },
           {
@@ -158,7 +204,7 @@ export const dynamic = [
               title: 'edit',
               hidden: true,
               noCache: true,
-              activeMenu: '/types/list'
+              activeMenu: '/types/view'
             },
             component: 'types/add'
           },

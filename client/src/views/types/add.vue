@@ -6,30 +6,34 @@
         {{this.item?$t('global.update'):$t('global.add')}}
         <span class="text-weight-bold">{{$t('roles.title')}}</span>
       </q-toolbar-title>
-      <q-btn flat round dense icon="close" v-close-popup :disable="loading_add||loading_drafts?true:false">
+      <q-btn flat round dense icon="close" v-close-popup
+        :disable="loading_add||loading_drafts?true:false">
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
     <q-separator />
     <q-form ref="form">
       <q-card-actions v-if="item" align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="offline_pin"
-          :label="$t('global.update')" :loading="loading_add" @click.prevent="onSubmit">
+        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
+          icon="offline_pin" :label="$t('global.update')" :loading="loading_add"
+          @click.prevent="onSubmit">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
       </q-card-actions>
       <q-card-actions v-else align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue" icon="check_circle"
-          :label="$t('global.add')" :loading="loading_add" :disable="loading_drafts" @click.prevent="onSubmit(1)">
+        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
+          icon="check_circle" :label="$t('global.add')" :loading="loading_add"
+          :disable="loading_drafts" @click.prevent="onSubmit(1)">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="receipt"
-          :label="$t('global.drafts')" :loading="loading_drafts" :disable="loading_add" @click.prevent="onSubmit(0)">
+          :label="$t('global.drafts')" :loading="loading_drafts" :disable="loading_add"
+          @click.prevent="onSubmit(0)">
           <!-- <q-tooltip>{{$t('global.drafts')}}</q-tooltip> -->
         </q-btn>
       </q-card-actions>
-      <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form" class="text-deep-purple"
-        align="justify">
+      <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form"
+        class="text-deep-purple" align="justify">
         <q-tab name="main" :label="$t('tabs.main')" />
         <q-tab name="attributes" :label="$t('global.attributes')" />
       </q-tabs>
@@ -44,8 +48,9 @@
               <!-- <q-select v-model="form.key" hide-selected fill-input use-input input-debounce="0" :dense="$store.getters.dense.input"
                 :options-dense="$store.getters.dense.input" @new-value="onAddKey" :options="keys" @filter="onFilterKey"
                 :hint="$t('types.hit_key')" :label="$t('global.types')" /> -->
-              <auto-complete v-model.trim="form.key" :data.sync="keys" :placeholder="$t('global.key')"
-                :label="$t('global.types')" is-no-data :no-data="$t('table.no_data')" @input="onFilterKey"
+              <auto-complete v-model.trim="form.key" :data.sync="keys"
+                :placeholder="$t('global.key')" :label="$t('global.types')" is-no-data
+                :no-data="$t('table.no_data')" @input="onFilterKey"
                 :rules="[v=>v&&v.length>0||$t('error.required')]" />
             </div>
             <q-space />
@@ -56,8 +61,8 @@
           </div>
           <div class="row q-gutter-xs">
             <div class="col-12 col-md-5">
-              <q-input v-model.trim="form.name" :dense="$store.getters.dense.input" :label="$t('global.name')"
-                :rules="[v=>v&&v.length>0||$t('error.required')]" />
+              <q-input v-model.trim="form.name" :dense="$store.getters.dense.input"
+                :label="$t('global.name')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
             </div>
             <q-space />
             <div class="col-12 col-md-6">
@@ -80,11 +85,14 @@
         <q-tab-panel name="attributes">
           <tm-attributes :data.sync="form.meta" :keys="metaKeys" :values="metaValues"
             :dense="$store.getters.dense.input" :labelTitle="$t('global.attributes')+':'"
-            :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')" :labelInputValue="$t('global.value')"
-            btnIcon="add" btnColor="blue" :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
-            :labelConfirmTitle="$t('message_box.confirm')" :labelConfirmContent="$t('message_box.delete')"
-            :labelWarningTitle="$t('message_box.warning')" :labelWarningContent="$t('error.required')"
-            :labelNoData="$t('table.no_data')" @on-filter-key="onFilterMetaKey" @on-filter-value="onFilterMetaValue">
+            :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')"
+            :labelInputValue="$t('global.value')" btnIcon="add" btnColor="blue"
+            :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
+            :labelConfirmTitle="$t('message_box.confirm')"
+            :labelConfirmContent="$t('message_box.delete')"
+            :labelWarningTitle="$t('message_box.warning')"
+            :labelWarningContent="$t('error.required')" :labelNoData="$t('table.no_data')"
+            @on-filter-key="onFilterMetaKey" @on-filter-value="onFilterMetaValue">
           </tm-attributes>
         </q-tab-panel>
       </q-tab-panels>
@@ -94,7 +102,7 @@
 </template>
 
 <script>
-import * as api from '@/api/types'
+import * as apiTypes from '@/api/types'
 import autoComplete from '@/components/auto-complete'
 import tmAttributes from '@/components/tm-attributes'
 export default {
@@ -142,7 +150,7 @@ export default {
   // },
   methods: {
     // onGetKey() {
-    //   api.getKey().then((x) => {
+    //   apiTypes.getKey().then((x) => {
     //     if (x) this.keys = x
     //   })
     // },
@@ -154,7 +162,7 @@ export default {
     },
     onFilterKey() {
       this.keys = []
-      api.getKey().then((x) => {
+      apiTypes.getKey().then((x) => {
         if (x) this.keys = x.data
       })
     },
@@ -162,7 +170,7 @@ export default {
       let data = { key: true }
       if (val) data.filter = val
       this.metaKeys = []
-      api.getMeta(data).then((x) => {
+      apiTypes.getMeta(data).then((x) => {
         if (x) this.metaKeys = x.data
       })
     },
@@ -170,7 +178,7 @@ export default {
       let data = {}
       if (val) data.filter = val
       this.metaValues = []
-      api.getMeta(data).then((x) => {
+      apiTypes.getMeta(data).then((x) => {
         if (x) this.metaValues = x.data
       })
     },
@@ -180,7 +188,7 @@ export default {
         if (valid) {
           if (this.item) {
             this.loading_add = true
-            api.update(this.form).then((x) => {
+            apiTypes.update(this.form).then((x) => {
               if (x.ok) {
                 const index = this.items.indexOf(this.item)
                 if (index > -1) this.items.splice(index, 1, this.form)
@@ -193,7 +201,7 @@ export default {
             this.form.flag = action
             if (action) this.loading_add = true
             else this.loading_drafts = true
-            api.insert(this.form).then((x) => {
+            apiTypes.insert(this.form).then((x) => {
               this.items.push(x)
               this.reset()
             }).finally(() => {

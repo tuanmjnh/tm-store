@@ -15,10 +15,10 @@ const schema = new mongoose.Schema({
   icon: { type: String, default: null },
   color: { type: String, default: null },
   meta: { type: Array, default: null },
-  start_at: { type: Date, default: null },
-  end_at: { type: Date, default: null },
+  startAt: { type: Date, default: null },
+  endAt: { type: Date, default: null },
   orders: { type: Number, default: 1 },
   flag: { type: Number, default: 1 },
-  created: { type: Object, default: { at: new Date(), by: '', ip: '' } }
+  created: { type: Object, default: { at: new Date(), by: '', ip: '' } },
 });
 module.exports = mongoose.model('categories', schema);

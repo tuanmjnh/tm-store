@@ -2,22 +2,24 @@
   <div>
     <tm-file-list :data="data" :view-type.sync="viewType" :size="121" :labelTitle="labelTitle"
       :labelViewList="labelViewList" :labelViewBox="labelViewBox" :labelFileName="labelFileName"
-      :labelFileSize="labelFileSize" :labelConfirmTitle="labelConfirmTitle" :labelConfirmContent="labelConfirmContent">
+      :labelFileSize="labelFileSize" :labelConfirmTitle="labelConfirmTitle"
+      :labelConfirmContent="labelConfirmContent">
       <template v-slot:tool-bar>
-        <q-btn round dense flat icon="cloud_upload" color="primary" @click="dialogUpload=!dialogUpload">
-          <q-tooltip v-if="!$q.platform.is.mobile">{{$t('files.upload')}}</q-tooltip>
+        <q-btn round dense flat icon="cloud_upload" color="primary"
+          @click="dialogUpload=!dialogUpload">
+          <q-tooltip v-if="!$q.platform.is.mobile">{{labelOpenFile}}</q-tooltip>
         </q-btn>
         <q-btn round dense flat icon="pageview" color="secondary" @click="dialogFiles=!dialogFiles">
-          <q-tooltip v-if="!$q.platform.is.mobile">{{$t('files.open_file')}}</q-tooltip>
+          <q-tooltip v-if="!$q.platform.is.mobile">{{labelOpenData}}</q-tooltip>
         </q-btn>
         <span class="q-pl-sm q-pr-sm">|</span>
         <q-btn dense flat icon="view_module" :color="viewType!=='list'?'indigo':'blue-grey'"
           @click="onChangeView('box')">
-          <q-tooltip v-if="!$q.platform.is.mobile">{{$t('files.open_file')}}</q-tooltip>
+          <q-tooltip v-if="!$q.platform.is.mobile">{{labelViewBox}}</q-tooltip>
         </q-btn>
         <q-btn dense flat icon="view_list" :color="viewType==='list'?'indigo':'blue-grey'"
           @click="onChangeView('list')">
-          <q-tooltip v-if="!$q.platform.is.mobile">{{$t('files.open_file')}}</q-tooltip>
+          <q-tooltip v-if="!$q.platform.is.mobile">{{labelViewList}}</q-tooltip>
         </q-btn>
       </template>
     </tm-file-list>
@@ -25,16 +27,17 @@
     <q-dialog v-model="dialogFiles">
       <q-card style="width:672px;max-width:80vw;">
         <q-toolbar>
-          <q-toolbar-title>{{$t('files.title')}}</q-toolbar-title>
+          <q-toolbar-title>{{labelTitleFiles}}</q-toolbar-title>
           <q-btn flat round dense icon="close" v-close-popup>
-            <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
+            <q-tooltip>{{labelCancel}}</q-tooltip>
           </q-btn>
         </q-toolbar>
         <q-separator />
         <q-card-section class="q-pa-sm">
-          <tm-files :selected.sync="selected" :accept="accept" :multiple="multiple" :view-type.sync="viewTypeFiles"
-            :url="uploadUrl" :headers="headers" :labelViewList="labelViewList" :labelAccept="labelAccept"
-            :labelViewBox="labelViewBox" :labelFileName="labelFileName" :labelFileSize="labelFileSize"
+          <tm-files :selected.sync="selected" :accept="accept" :multiple="multiple"
+            :view-type.sync="viewTypeFiles" :url="uploadUrl" :headers="headers"
+            :labelViewList="labelViewList" :labelAccept="labelAccept" :labelViewBox="labelViewBox"
+            :labelFileName="labelFileName" :labelFileSize="labelFileSize"
             @on-finish="onFinishBrowse">
           </tm-files>
         </q-card-section>
@@ -44,16 +47,16 @@
     <q-dialog v-model="dialogUpload">
       <q-card style="width:500px;max-width:80vw;">
         <q-toolbar>
-          <q-toolbar-title>{{$t('files.upload')}}</q-toolbar-title>
+          <q-toolbar-title>{{labelTitleUpload}}</q-toolbar-title>
           <q-btn flat round dense icon="close" v-close-popup>
-            <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
+            <q-tooltip>{{labelCancel}}</q-tooltip>
           </q-btn>
         </q-toolbar>
         <q-separator />
         <q-card-section>
-          <q-uploader ref="upload" square flat :multiple="multiple" :max-file-size="maxFileSize" :accept="accept"
-            style="width:100%" :url="uploadUrl" :headers="headers" @uploaded="onFinishUpload"
-            @finish="dialogUpload=false">
+          <q-uploader ref="upload" square flat :multiple="multiple" :max-file-size="maxFileSize"
+            :accept="accept" style="width:100%" :url="uploadUrl" :headers="headers"
+            @uploaded="onFinishUpload" @finish="dialogUpload=false">
           </q-uploader>
         </q-card-section>
       </q-card>
@@ -80,11 +83,16 @@ export default {
     size: { type: Number, default: 80 },
     viewType: { type: String, default: 'box' },
     labelTitle: { type: String, default: '' },
+    labelTitleUpload: { type: String, default: 'Upload' },
+    labelTitleFiles: { type: String, default: 'Files' },
     labelAccept: { type: String, default: 'Accept' },
+    labelOpenFile: { type: String, default: 'Open file' },
+    labelOpenData: { type: String, default: 'Open data' },
     labelViewList: { type: String, default: 'View list' },
     labelViewBox: { type: String, default: 'View box' },
     labelFileName: { type: String, default: 'File name' },
     labelFileSize: { type: String, default: 'Size' },
+    labelCancel: { type: String, default: 'Cancel' },
     labelConfirmTitle: { type: String, default: 'Warning' },
     labelConfirmContent: { type: String, default: 'Are you sure you want to delete this record?' }
   },

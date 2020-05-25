@@ -4,32 +4,37 @@
       <q-avatar :icon="$route.meta.icon" size="50px" />
       <q-toolbar-title>
         {{this.item?$t('global.update'):$t('global.add')}}
-        <span class="text-weight-bold">{{$t('route.category')}} {{$t(`route.${$route.meta.type}`)}}</span>
+        <span class="text-weight-bold">{{$t('route.category')}}
+          {{$t(`route.${$route.meta.type}`)}}</span>
       </q-toolbar-title>
-      <q-btn flat round dense icon="close" v-close-popup :disable="loading_add||loading_drafts?true:false">
+      <q-btn flat round dense icon="close" v-close-popup
+        :disable="loading_add||loading_drafts?true:false">
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
     <q-separator />
     <q-form ref="form">
       <q-card-actions v-if="item" align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="offline_pin"
-          :label="$t('global.update')" :loading="loading_add" @click.prevent="onSubmit">
+        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
+          icon="offline_pin" :label="$t('global.update')" :loading="loading_add"
+          @click.prevent="onSubmit">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
       </q-card-actions>
       <q-card-actions v-else align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue" icon="check_circle"
-          :label="$t('global.add')" :loading="loading_add" :disable="loading_drafts" @click.prevent="onSubmit(1)">
+        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
+          icon="check_circle" :label="$t('global.add')" :loading="loading_add"
+          :disable="loading_drafts" @click.prevent="onSubmit(1)">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="receipt"
-          :label="$t('global.drafts')" :loading="loading_drafts" :disable="loading_add" @click.prevent="onSubmit(0)">
+          :label="$t('global.drafts')" :loading="loading_drafts" :disable="loading_add"
+          @click.prevent="onSubmit(0)">
           <!-- <q-tooltip>{{$t('global.drafts')}}</q-tooltip> -->
         </q-btn>
       </q-card-actions>
-      <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form" class="text-deep-purple"
-        align="justify">
+      <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form"
+        class="text-deep-purple" align="justify">
         <q-tab name="main" :label="$t('tabs.main')" />
         <q-tab name="content" :label="$t('global.content')" />
         <q-tab name="images" :label="$t('global.images')" />
@@ -50,8 +55,9 @@
           </div>
           <div class="row q-gutter-xs">
             <div class="col-12 col-md-5">
-              <q-input v-model.trim="form.title" v-uppercaseFirst :dense="$store.getters.dense.input"
-                :label="$t('global.title')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
+              <q-input v-model.trim="form.title" v-uppercaseFirst
+                :dense="$store.getters.dense.input" :label="$t('global.title')"
+                :rules="[v=>v&&v.length>0||$t('error.required')]" />
             </div>
             <q-space />
             <div class="col-12 col-md-6">
@@ -62,7 +68,8 @@
           </div>
           <div class="row q-gutter-xs">
             <div class="col-12 col-md-5">
-              <q-input v-model.trim="form.url" :dense="$store.getters.dense.input" v-lowercase label="URL" />
+              <q-input v-model.trim="form.url" :dense="$store.getters.dense.input" v-lowercase
+                label="URL" />
             </div>
             <q-space />
             <div class="col-12 col-md-6">
@@ -80,18 +87,19 @@
             <q-space />
             <div class="col col-md-6 self-center">
               {{$t('global.color_pick')}}:
-              <q-badge :style="{backgroundColor:form.color}" @click="dialog_color_pick=true">{{form.color}}</q-badge>
+              <q-badge :style="{backgroundColor:form.color}" @click="dialog_color_pick=true">
+                {{form.color}}</q-badge>
             </div>
           </div>
           <div class="row q-gutter-xs">
             <div class="col-12 col-md-5">
-              <q-input :value="form.start_at?$moment(form.start_at).format('DD/MM/YYYY'):''"
-                :dense="$store.getters.dense.input" readonly :label="$t('global.start_date')"
-                :hint="`${$t('global.format')}: DD/MM/YYYY`">
+              <q-input :value="form.startAt" :dense="$store.getters.dense.input" readonly
+                :label="$t('global.start_date')" :hint="`${$t('global.format')}: DD/MM/YYYY`">
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy ref="startAt" transition-show="scale" transition-hide="scale">
-                      <q-date v-model="form.start_at" today-btn @input="()=>$refs.startAt.hide()" />
+                      <q-date v-model="form.startAt" mask="DD/MM/YYYY" today-btn
+                        @input="()=>$refs.startAt.hide()" />
                     </q-popup-proxy>
                   </q-icon>
                 </template>
@@ -99,13 +107,13 @@
             </div>
             <q-space />
             <div class="col col-md-6">
-              <q-input :value="form.end_at?$moment(form.end_at).format('DD/MM/YYYY'):''"
-                :dense="$store.getters.dense.input" readonly :label="$t('global.end_date')"
-                :hint="`${$t('global.format')}: DD/MM/YYYY`">
+              <q-input :value="form.endAt" :dense="$store.getters.dense.input" readonly
+                :label="$t('global.endDate')" :hint="`${$t('global.format')}: DD/MM/YYYY`">
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy ref="endAt" transition-show="scale" transition-hide="scale">
-                      <q-date v-model="form.end_at" today-btn @input="()=>$refs.endAt.hide()" />
+                      <q-date v-model="form.endAt" mask="DD/MM/YYYY" today-btn
+                        @input="()=>$refs.endAt.hide()" />
                     </q-popup-proxy>
                   </q-icon>
                 </template>
@@ -115,7 +123,8 @@
           <div class="row q-gutter-xs">
             <div class="col-3">
               <q-input v-model="form.orders" type="number" :dense="$store.getters.dense.input"
-                :label="$t('global.order')" :rules="[v=>v!==null&&v!==''||$t('error.required')]" class="col-md-4" />
+                :label="$t('global.order')" :rules="[v=>v!==null&&v!==''||$t('error.required')]"
+                class="col-md-4" />
             </div>
             <q-space v-if="item" />
             <div class="col-5 self-center" v-if="item">
@@ -124,7 +133,8 @@
             </div>
           </div>
           <div class="q-gutter-sm">
-            <q-input v-model.trim="form.desc" autogrow :dense="$store.getters.dense.input" :label="$t('global.desc')" />
+            <q-input v-model.trim="form.desc" autogrow :dense="$store.getters.dense.input"
+              :label="$t('global.desc')" />
           </div>
         </q-tab-panel>
         <q-tab-panel name="content">
@@ -134,10 +144,11 @@
           <div class="row">
             <div class="col-12 q-gutter-sm images">
               <tm-upload :data.sync="form.images" :upload-url="uploadUrl" :headers="headers"
-                :max-file-size="1024*1024*2" accept=".jpg,.jpeg,.png,.gif" :multiple="false" :view-type.sync="viewType"
-                :size="121" :labelTitle="$t('files.title')" :labelViewList="$t('files.View_list')"
-                :labelViewBox="$t('files.view_box')" :labelFileName="$t('files.file_name')"
-                :labelFileSize="$t('files.file_size')" :labelConfirmTitle="$t('message_box.confirm')"
+                :max-file-size="1024*1024*2" accept=".jpg,.jpeg,.png,.gif" :multiple="false"
+                :view-type.sync="viewType" :size="121" :labelTitle="$t('files.title')"
+                :labelViewList="$t('files.View_list')" :labelViewBox="$t('files.view_box')"
+                :labelFileName="$t('files.file_name')" :labelFileSize="$t('files.file_size')"
+                :labelConfirmTitle="$t('message_box.confirm')"
                 :labelConfirmContent="$t('message_box.delete')">
               </tm-upload>
             </div>
@@ -146,23 +157,28 @@
         <q-tab-panel name="attributes">
           <div class="q-pt-md q-pb-md">
             <span>{{$t('global.position')}}:</span>
-            <q-option-group v-model="form.position" :options="positions" color="green" type="checkbox" inline
-              :dense="$store.getters.dense.input" />
+            <q-option-group v-model="form.position" :options="positions" color="green"
+              type="checkbox" inline :dense="$store.getters.dense.input" />
           </div>
           <q-separator class="q-mt-md" />
-          <tm-tags :data.sync="form.tags" :dense="$store.getters.dense.input" :labelTitle="$t('global.keyword')+':'"
-            :labelBtnAdd="$t('global.add')" :labelInput="$t('global.tags')" btnIcon="add" btnColor="blue"
-            tagsColor="primary" tagsTextColor="white" :labelConfirmTitle="$t('message_box.confirm')"
-            :labelConfirmContent="$t('message_box.delete')" :labelWarningTitle="$t('message_box.warning')"
+          <tm-tags :data.sync="form.tags" :dense="$store.getters.dense.input"
+            :labelTitle="$t('global.keyword')+':'" :labelBtnAdd="$t('global.add')"
+            :labelInput="$t('global.tags')" btnIcon="add" btnColor="blue" tagsColor="primary"
+            tagsTextColor="white" :labelConfirmTitle="$t('message_box.confirm')"
+            :labelConfirmContent="$t('message_box.delete')"
+            :labelWarningTitle="$t('message_box.warning')"
             :labelWarningContent="$t('error.required')"></tm-tags>
           <q-separator class="q-mb-md q-mt-md" />
           <tm-attributes :data.sync="form.attr" :keys="attrKeys" :values="attrValues"
             :dense="$store.getters.dense.input" :labelTitle="$t('product.attributes')+':'"
-            :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')" :labelInputValue="$t('global.value')"
-            btnIcon="add" btnColor="blue" :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
-            :labelConfirmTitle="$t('message_box.confirm')" :labelConfirmContent="$t('message_box.delete')"
-            :labelWarningTitle="$t('message_box.warning')" :labelWarningContent="$t('error.required')"
-            :labelNoData="$t('table.no_data')" @on-filter-key="onFilterAttrKey" @on-filter-value="onFilterAttrValue">
+            :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')"
+            :labelInputValue="$t('global.value')" btnIcon="add" btnColor="blue"
+            :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
+            :labelConfirmTitle="$t('message_box.confirm')"
+            :labelConfirmContent="$t('message_box.delete')"
+            :labelWarningTitle="$t('message_box.warning')"
+            :labelWarningContent="$t('error.required')" :labelNoData="$t('table.no_data')"
+            @on-filter-key="onFilterAttrKey" @on-filter-value="onFilterAttrValue">
           </tm-attributes>
         </q-tab-panel>
       </q-tab-panels>
@@ -234,8 +250,8 @@ export default {
         icon: 'spa',
         color: '#009688',
         meta: null,
-        start_at: null, // this.$moment().format('YYYY/MM/DD'),
-        end_at: null, // this.$moment().format('YYYY/MM/DD'),
+        startAt: null, // this.$moment().format('YYYY/MM/DD'),
+        endAt: null, // this.$moment().format('YYYY/MM/DD'),
         orders: 1,
         flag: 1
       }

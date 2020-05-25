@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import * as api from '@/api/types'
+import * as apiTypes from '@/api/types'
 import templateAdd from './add'
 export default {
   components: { templateAdd },
@@ -191,12 +191,12 @@ export default {
   },
   methods: {
     onGetKey() {
-      api.getKey().then((x) => {
+      apiTypes.getKey().then((x) => {
         if (x) this.keys = x.data
       })
     },
     onSelect(props) {
-      api.select(props.pagination).then((x) => {
+      apiTypes.select(props.pagination).then((x) => {
         this.items = x.data
         this.pagination = props.pagination
         this.pagination.rowsNumber = x.rowsNumber
@@ -226,7 +226,7 @@ export default {
         persistent: true
       }).onOk(() => {
         if (item) this.selected = [item]
-        api.lock({ _id: this.selected.map(x => x._id) }).then((x) => {
+        apiTypes.lock({ _id: this.selected.map(x => x._id) }).then((x) => {
           x.success.forEach(e => {
             const index = this.items.findIndex(x => x._id === e)
             this.items.splice(index, 1)

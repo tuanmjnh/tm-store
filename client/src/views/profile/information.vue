@@ -14,7 +14,7 @@
         <div class="row q-gutter-xs">
           <div class="col-12 col-md-5">
             <q-input v-model.trim="form.email" :dense="$store.getters.dense.input" v-lowercase
-              :label="$t('users.email')" readonly
+              :label="$t('users.email')"
               :rules="[v=>v&&v.length>0||$t('error.required'),v=>validEmail(v)||$t('error.email')]" />
           </div>
           <q-space />
@@ -77,7 +77,7 @@
           </div>
           <q-space />
           <div class="col-6 col-md-3">
-            <q-select v-model="gender" :options="genders" :hint="$t('users.gender')"
+            <q-select v-model="gender" :options="$store.getters.genders" :hint="$t('users.gender')"
               option-value="_id" :dense="$store.getters.dense.input"
               :options-dense="$store.getters.dense.input" :option-label="v=>$t(`gender.${v.code}`)"
               :rules="[v=>v||$t('error.required')]" />
@@ -118,8 +118,8 @@
 </template>
 
 <script>
-import * as api from '@/api/users'
-import * as apiTypes from '@/api/types'
+import * as apiUsers from '@/api/users'
+// import * as apiTypes from '@/api/types'
 import regionData from '@/i18n/region'
 export default {
   data() {
@@ -134,13 +134,12 @@ export default {
         { name: 'x-access-token', value: `Bearer ${this.$store.state.auth.token}` }],
       regions: regionData,
       region: null,
-      genders: [],
       gender: null,
       form: { ...this.$store.state.auth.user }
     }
   },
   created() {
-    this.onGetGenders()
+    this.gender = this.$store.getters.genders.find(x => x.id === this.form.gender)
     if (this.form) {
       if (this.form.region) {
         this.region = this.regions.find(x => x.id === parseInt(this.form.region))
@@ -151,14 +150,14 @@ export default {
     }
   },
   methods: {
-    onGetGenders() {
-      this.genders = []
-      apiTypes.select({ key: 'gender' }).then(x => {
-        if (x && x.data) this.genders = x.data
-        if (this.form.gender) this.gender = this.genders.find(x => x._id === this.form.gender)
-        else this.gender = this.gender = this.genders[0]
-      })
-    },
+    // onGetGenders() {
+    //   this.genders = []
+    //   apiTypes.select({ key: 'gender' }).then(x => {
+    //     if (x && x.data) this.genders = x.data
+    //     if (this.form.gender) this.gender = this.genders.find(x => x._id === this.form.gender)
+    //     else this.gender = this.gender = this.genders[0]
+    //   })
+    // },
     onFilterRegion(val, update, abort) {
       update(() => {
         const needle = val.toLowerCase()
@@ -175,7 +174,7 @@ export default {
         if (valid) {
           this.form.region = this.region.id
           this.form.gender = this.gender._id
-          api.update(this.form).then(x => {
+          apiUsers.update(this.form).then(x => {
             if (x) {
               this.$store.commit('auth/SET_USER', { ...this.form })
             }

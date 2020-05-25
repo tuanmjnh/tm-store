@@ -83,7 +83,7 @@ module.exports.post = async function (req, res, next) {
     if (!req.body || Object.keys(req.body).length < 1 || !req.body.title) {
       return res.status(500).send('invalid');
     }
-    req.body.created = { at: new Date(), by: req.verify._id, ip: request.ip(req) };
+    req.body.created = { at: new Date(), by: req.verify._id, ip: request.getIp(req) };
     const data = new Model(req.body);
     // data.validate()
     data.save((e, rs) => {

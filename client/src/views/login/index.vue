@@ -96,7 +96,7 @@ export default {
               this.$store.dispatch('auth/login', x)
                 .then(() => {
                   this.loading = true
-                  routers.router.addRoutes(this.$store.state.auth.routes, { replace: true })
+                  // routers.router.addRoutes(this.$store.state.auth.routes, { replace: true })
                 }).then(() => {
                   // Set user setting
                   apiUserSetting.get().then(x => {

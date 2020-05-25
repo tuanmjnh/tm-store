@@ -1,7 +1,7 @@
 <template>
   <div class="dialog-categories">
-    <q-input :value="selectedLocal?selectedLocal.label:''" v-uppercaseFirst :dense="dense" :readonly="true"
-      :label="labelTitle" :rules="rules">
+    <q-input :value="selectedLocal?selectedLocal.label:''" v-uppercaseFirst :dense="dense"
+      :readonly="true" :label="labelTitle" :rules="rules">
       <template v-slot:after>
         <q-btn round dense flat icon="pageview" @click="dialog=!dialog">
           <q-tooltip>{{labelSelect}}</q-tooltip>
@@ -17,8 +17,9 @@
           </q-btn>
         </q-toolbar>
         <q-card-section>
-          <tm-tree :nodes="categoriesLocal" node-key="_id" node-label="label" :no-nodes-label="$t('table.no_data')"
-            :expanded-all="true" :selected.sync="selectedLocal" @on-selected="onSelected">
+          <tm-tree :nodes="categoriesLocal" node-key="_id" node-label="label"
+            :no-nodes-label="$t('table.noData')" :expanded-all="true" :selected.sync="selectedLocal"
+            @on-selected="onSelected">
             <template v-slot:content-after="prop">
               <div class="row items-center">
                 <q-icon :name="prop.node.icon" color="blue-grey" size="20px" class="q-mr-sm" />

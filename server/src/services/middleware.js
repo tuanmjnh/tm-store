@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 
-module.exports.sign = (params, secret) => {
+module.exports.sign = ({ params, secret, expires }) => {
   // expires in 24 hours
   secret = secret || process.env.SECRET;
-  return jwt.sign(params, secret, { expiresIn: '24h' });
+  return jwt.sign(params, secret, { expiresIn: expires || '24h' });
 };
 
 module.exports.login = (req, res, next) => {

@@ -2,9 +2,9 @@
   <div>
     <q-table :data="items" :columns="columns" row-key="_id" flat :visible-columns="visibleColumns"
       :loading="$store.state.loading.get || $store.state.loading.patch" :selected.sync="selected"
-      :dense="$store.getters.dense.table" selection="multiple" :no-data-label="$t('table.no_data')"
-      :rows-per-page-label="$t('table.row_per_page')"
-      :selected-rows-label="()=>`${selected.length} ${$t('table.row_selected')}`"
+      :dense="$store.getters.dense.table" selection="multiple" :no-data-label="$t('table.noData')"
+      :rows-per-page-label="$t('table.rowPerPage')"
+      :selected-rows-label="()=>`${selected.length} ${$t('table.rowSelected')}`"
       :rows-per-page-options="[10, 20, 50, 100, 200, 0]" :pagination.sync="pagination"
       @request="onSelect" :filter="pagination.filter" binary-state-sort>
       <template v-slot:top="props">
@@ -21,7 +21,7 @@
               </q-btn>
               <q-btn v-if="isRoutes.add" flat round dense icon="cloud_upload" color="indigo"
                 @click="dialogImport=true">
-                <q-tooltip v-if="!$q.platform.is.mobile">{{$t("files.open_file")}}</q-tooltip>
+                <q-tooltip v-if="!$q.platform.is.mobile">{{$t("files.openFile")}}</q-tooltip>
               </q-btn>
               <q-btn v-if="isRoutes.trash && selected.length > 0 && pagination.enable" flat round
                 dense color="negative" icon="delete" @click="onTrash()">
@@ -33,7 +33,7 @@
               </q-btn>
               <q-btn flat round dense :color="$store.getters.darkMode ? '' : 'grey-7'"
                 icon="menu_open">
-                <q-tooltip v-if="!$q.platform.is.mobile">{{ $t("table.display_columns")}}
+                <q-tooltip v-if="!$q.platform.is.mobile">{{ $t("table.displayColumns")}}
                 </q-tooltip>
                 <q-menu fit>
                   <q-list dense style="min-width:100px">
@@ -51,7 +51,7 @@
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 @click="props.toggleFullscreen">
                 <q-tooltip v-if="!$q.platform.is.mobile">
-                  {{props.inFullscreen? $t("table.normal_screen"): $t("table.full_screen")}}
+                  {{props.inFullscreen? $t("table.normalScreen"): $t("table.fullScreen")}}
                 </q-tooltip>
               </q-btn>
               <q-btn v-if="isRoutes.trash" flat round dense
@@ -74,13 +74,14 @@
           </div>
         </div>
         <div class="col-12 row">
-          <div class="col-xs-12 col-sm-5">
+          <div class="col-xs-12 col-sm-3">
             <q-select v-model="pagination.group" input-debounce="200"
-              :dense="$store.getters.dense.input" :options="groups" :label="$t('users.group')"
-              option-value="code" :option-label="opt=>opt.name" />
+              :dense="$store.getters.dense.input" :options-dense="$store.getters.dense.input"
+              :options="groups" :label="$t('users.group')" option-value="code"
+              :option-label="opt=>opt.name" />
           </div>
           <q-space />
-          <div class="col-xs-12 col-sm-5">
+          <div class="col-xs-12 col-sm-3">
             <q-input v-model="pagination.filter" :dense="$store.getters.dense.input" debounce="500"
               :placeholder="$t('global.search')">
               <template v-slot:append>
@@ -146,7 +147,7 @@
               :loading="loadingResetPassword" :size="$store.getters.dense.table ? 'sm' : 'md'"
               @click="onResetPassword(props.row)">
               <q-tooltip v-if="!$q.platform.is.mobile">{{
-                $t("users.reset_password")
+                $t("users.resetPassword")
               }}</q-tooltip>
             </q-btn>
             <q-btn v-if="isRoutes.edit" flat round dense icon="edit" color="light-green"
@@ -221,7 +222,7 @@ export default {
         rowsNumber: 1,
         enable: true
       },
-      visibleColumns: ['email', 'phone', 'roles', 'email_verified'],
+      visibleColumns: ['email', 'phone', 'roles', 'verified'],
       columns: [
         { name: 'username', field: 'username', label: 'users.username', align: 'left', sortable: true, required: true },
         { name: 'fullName', field: 'fullName', label: 'users.fullName', align: 'left', sortable: true, required: true },
@@ -235,7 +236,7 @@ export default {
   async created() {
     this.onSelect({ pagination: this.pagination })
     this.onSelectRoles()
-    this.groups = await this.onGetTypes({ key: 'users_group' })
+    this.groups = await this.onGetTypes({ key: 'user_group' })
     // this.onGetGenders()
   },
   watch: {
@@ -253,7 +254,7 @@ export default {
     },
     onGetTypes(params) {
       return apiTypes.select(params).then((x) => {
-        return x
+        return x.data
       })
     },
     // onGetGenders() {
@@ -291,8 +292,8 @@ export default {
     },
     onTrash(item) {
       this.$q.dialog({
-        title: this.$t('message_box.warning'),
-        message: this.pagination.enable ? this.$t('message_box.lock') : this.$t('message_box.unlock'),
+        title: this.$t('messageBox.warning'),
+        message: this.pagination.enable ? this.$t('messageBox.lock') : this.$t('messageBox.unlock'),
         cancel: true,
         persistent: true
       }).onOk(() => {
@@ -315,8 +316,8 @@ export default {
     },
     onResetPassword(item) {
       this.$q.dialog({
-        title: this.$t('message_box.warning'),
-        message: this.$t('message_box.reset_password', { username: item.email }),
+        title: this.$t('messageBox.warning'),
+        message: this.$t('messageBox.resetPassword', { username: item.email }),
         cancel: true,
         persistent: true
       }).onOk(() => {
@@ -326,7 +327,7 @@ export default {
           this.$q.notify({
             color: 'teal',
             timeout: 5000 * 60,
-            message: this.$t('users.msg_reset_password', { username: item.email, password: x.password })
+            message: this.$t('users.msgResetPassword', { username: item.email, password: x.password })
           })
         }).finally(() => {
           this.selected = []

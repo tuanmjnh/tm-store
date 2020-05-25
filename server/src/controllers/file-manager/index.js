@@ -46,7 +46,7 @@ module.exports.getDirectories = async function (req, res, next) {
 module.exports.getFiles = async function (req, res, next) {
   try {
     req.query.dir = req.query.dir || process.env.UPLOAD_PATH;
-    const result = io.getFiles({ dir: req.query.dir, host: request.host(req) });
+    const result = io.getFiles({ dir: req.query.dir, host: request.getHost(req) });
     if (result) res.status(201).json(result).end();
     else res.status(404).json({ msg: 'exist', params: 'data' }).end();
   } catch (e) {
@@ -103,9 +103,14 @@ module.exports.post = async function (req, res, next) {
         file = files[file];
         rs.push({
           name: file.name,
-          fullName: `${request.host(req)}/${process.env.UPLOAD_DIR}/${req.headers['upload-path']}/${
-            file.name
-          }`,
+          fullName:
+            request.getHost(req) +
+            '/' +
+            process.env.UPLOAD_DIR +
+            '/' +
+            req.headers['upload-path'] +
+            '/' +
+            file.name,
           size: file.size,
           ext: io.getExtention(file.name),
           icon: 'file',

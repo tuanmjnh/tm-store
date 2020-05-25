@@ -125,7 +125,7 @@ module.exports.post = async function (req, res, next) {
       );
     }
     // Token
-    const token = middleware.sign({ _id: rs._id, code: rs.username });
+    const token = middleware.sign({ params: { _id: rs._id, code: rs.username } });
     if (rs) return res.status(200).json({ token, user: rs, routes });
     else return res.status(401).json({ msg: 'wrong' });
   } catch (e) {
