@@ -53,7 +53,7 @@ const getAuthRoutes = async (authRoles) => {
   const roles = await MRole.where({ _id: { $in: authRoles } }).sort({ level: 1 });
   let authRoutes = [];
   roles.forEach((e) => {
-    helpers.pushIfNotExist(authRoutes, e.routes);
+    authRoutes.pushIfNotExist(e.routes);
   });
   // Routes
   // const routes = await MRoute.where({ flag: 1 }).sort({ dependent: 1, orders: 1 });

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const schema = new mongoose.Schema({
   // type: { type: String, default: null },
   categories: { type: mongoose.Schema.Types.ObjectId, ref: 'categories', required: true },
@@ -9,10 +9,10 @@ const schema = new mongoose.Schema({
   images: { type: Array, default: null },
   quantity: { type: Number, default: 0 },
   price: { type: Number, default: 0 },
-  price_discount: { type: Number, default: 0 },
-  price_import: { type: Number, default: 0 },
-  price_export: { type: Number, default: 0 },
-  price_unit: { type: String, default: null }, // { type: mongoose.Schema.Types.ObjectId, ref: 'types' },
+  priceDiscount: { type: Number, default: 0 },
+  priceImport: { type: Number, default: 0 },
+  priceExport: { type: Number, default: 0 },
+  priceUnit: { type: String, default: null }, // { type: mongoose.Schema.Types.ObjectId, ref: 'types' },
   unit: { type: String, default: null }, // { type: mongoose.Schema.Types.ObjectId, ref: 'types' },
   origin: { type: String, default: null },
   date: { type: String, default: null },
@@ -24,7 +24,7 @@ const schema = new mongoose.Schema({
   // end_at: { type: Date, default: null },
   order: { type: Number, default: 1 },
   flag: { type: Number, default: 1 },
-  created: { type: Object, default: { at: new Date(), by: '', ip: '' } }
-})
-module.exports = mongoose.model('products', schema)
-schema.index({ code: 'text', title: 'text', origin: 'text' })
+  created: { type: Object, default: { at: new Date(), by: '', ip: '' } },
+});
+module.exports = mongoose.model('products', schema);
+schema.index({ code: 'text', title: 'text', origin: 'text' });

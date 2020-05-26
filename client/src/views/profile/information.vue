@@ -19,19 +19,18 @@
           </div>
           <q-space />
           <div class="col-12 col-md-6">
-            <q-input v-model.trim="form.full_name" :dense="$store.getters.dense.input"
-              :label="$t('users.full_name')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
+            <q-input v-model.trim="form.fullName" :dense="$store.getters.dense.input"
+              :label="$t('users.fullName')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
           </div>
         </div>
         <div class="row q-gutter-xs">
           <div class="col-12 col-md-5">
-            <q-input :value="form.date_birth?$moment(form.date_birth).format('DD/MM/YYYY'):''"
-              :dense="$store.getters.dense.input" readonly :label="$t('users.date_birth')"
-              :hint="`${$t('global.format')}: DD/MM/YYYY`">
+            <q-input :value="form.dateBirth" :dense="$store.getters.dense.input" readonly
+              :label="$t('users.dateBirth')" :hint="`${$t('global.format')}: DD/MM/YYYY`">
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy ref="dateBirth" transition-show="scale" transition-hide="scale">
-                    <q-date v-model="form.date_birth" today-btn
+                    <q-date v-model="form.dateBirth" mask="DD/MM/YYYY" today-btn
                       @input="()=>$refs.dateBirth.hide()" />
                   </q-popup-proxy>
                 </q-icon>
@@ -40,8 +39,8 @@
           </div>
           <q-space />
           <div class="col-12 col-md-6">
-            <q-input v-model.trim="form.person_number" type="number"
-              :dense="$store.getters.dense.input" :label="$t('users.person_number')"
+            <q-input v-model.trim="form.personNumber" type="number"
+              :dense="$store.getters.dense.input" :label="$t('users.personNumber')"
               :rules="[v=>v&&v.length>0||$t('error.required')]" />
           </div>
         </div>
@@ -49,7 +48,7 @@
           <div class="col-3">
             <q-select v-model="region" use-input hide-selected fill-input input-debounce="0"
               :dense="$store.getters.dense.input" :options="regions" @filter="onFilterRegion"
-              :hint="$t('users.select_region')" option-value="id" option-label="name_l"
+              :hint="$t('users.selectRegion')" option-value="id" option-label="name_l"
               :rules="[v=>v||$t('error.required')]">
               <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
@@ -61,7 +60,7 @@
               </template>
               <template v-slot:no-option>
                 <q-item>
-                  <q-item-section class="text-grey">{{$t('table.no_data')}}</q-item-section>
+                  <q-item-section class="text-grey">{{$t('table.noData')}}</q-item-section>
                 </q-item>
               </template>
             </q-select>
@@ -141,6 +140,7 @@ export default {
   created() {
     this.gender = this.$store.getters.genders.find(x => x.id === this.form.gender)
     if (this.form) {
+      if (this.form.dateBirth) this.form.dateBirth = this.$moment(this.form.dateBirth).format('DD/MM/YYYY')
       if (this.form.region) {
         this.region = this.regions.find(x => x.id === parseInt(this.form.region))
       } else {

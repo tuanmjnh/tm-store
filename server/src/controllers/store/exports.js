@@ -22,7 +22,7 @@ module.exports.find = async function (req, res, next) {
     if (!req.body || req.body.length < 1) return res.status(404).send('no_exist');
     const rs = await ModelProducts.find(
       { code: { $in: req.body } },
-      '_id code title quantity price price_discount price_export price_unit unit',
+      '_id code title quantity price priceDiscount priceExport priceUnit unit',
     );
     return res.status(200).json(rs);
   } catch (e) {
@@ -44,9 +44,9 @@ module.exports.put = async function (req, res, next) {
       quantity: req.body.sum('quantity'),
       price: req.body.sum('amount'),
       vat: Math.round(req.body.sum('amount') * 0.1, 0),
-      created_at: new Date(),
-      created_by: req.verify._id,
-      created_ip: request.getIp(req),
+      createdAt: new Date(),
+      createdBy: req.verify._id,
+      createdIp: request.getIp(req),
       flag: 1,
     });
     // total.validate()
@@ -71,7 +71,7 @@ module.exports.put = async function (req, res, next) {
       ModelProducts.updateOne(
         { _id: e._id },
         {
-          $set: { price_export: parseInt(e.price) },
+          $set: { priceExport: parseInt(e.price) },
           $inc: { quantity: -parseInt(e.quantity) },
         },
       ).exec();

@@ -95,7 +95,7 @@
           </q-item> -->
           <q-item v-if="!$q.platform.is.mobile">
             <q-btn flat no-caps dense class="btn-setting"
-              :label="$q.fullscreen.isActive ? $t('navbar.normal_screen') : $t('navbar.full_screen')"
+              :label="$q.fullscreen.isActive ? $t('navbar.normalScreen') : $t('navbar.fullScreen')"
               :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
               @click="$q.fullscreen.toggle()" :color="$store.getters.darkMode?'':'blue-grey'"
               v-close-popup>
@@ -123,7 +123,7 @@
             $t('global.undefined')}}
         </div>
         <!-- </router-link> -->
-        <q-btn :label="$t('navbar.log_out')" @click.prevent="onLogout" color="blue-grey" size="sm"
+        <q-btn :label="$t('navbar.logOut')" @click.prevent="onLogout" color="blue-grey" size="sm"
           class="q-btn--square" style="white-space:nowrap" v-close-popup />
       </div>
     </div>

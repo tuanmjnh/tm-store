@@ -2,56 +2,68 @@
   <q-card flat bordered>
     <q-toolbar>
       <q-toolbar-title>{{$t('product.warehouse_import')}}</q-toolbar-title>
-      <q-btn v-if="!result&&items&&items.length" type="submit" :dense="$store.getters.dense.button" color="blue"
-        :label="$t('product.import')" :loading="loading" class="q-btn--square q-mr-sm" @click.prevent="onSubmit" />
+      <q-btn v-if="!result&&items&&items.length" type="submit" :dense="$store.getters.dense.button"
+        color="blue" :label="$t('product.import')" :loading="loading" class="q-btn--square q-mr-sm"
+        @click.prevent="onSubmit" />
       <!--icon="offline_pin" -->
-      <q-btn v-if="items&&items.length" type="submit" no-caps :dense="$store.getters.dense.button" color="blue-grey-4"
-        :label="$t('product.create_new')" :loading="loading" class="q-btn--square" @click.prevent="onCreateNew" />
+      <q-btn v-if="items&&items.length" type="submit" no-caps :dense="$store.getters.dense.button"
+        color="blue-grey-4" :label="$t('product.create_new')" :loading="loading"
+        class="q-btn--square" @click.prevent="onCreateNew" />
     </q-toolbar>
     <q-separator />
     <!-- <q-toolbar>
       <q-toolbar-title></q-toolbar-title>
     </q-toolbar> -->
     <q-form ref="form">
-      <q-table :data="items" :columns="columns" row-key="code" flat :visible-columns="visibleColumns"
-        :loading="$store.state.loading.get||$store.state.loading.patch" :selected.sync="selected" selection="multiple"
-        :dense="$store.getters.dense.table" :no-data-label="$t('table.no_data')"
-        :no-results-label="$t('table.no_filter_data')" :rows-per-page-label="$t('table.row_per_page')"
+      <q-table :data="items" :columns="columns" row-key="code" flat
+        :visible-columns="visibleColumns"
+        :loading="$store.state.loading.get||$store.state.loading.patch" :selected.sync="selected"
+        selection="multiple" :dense="$store.getters.dense.table"
+        :no-data-label="$t('table.no_data')" :no-results-label="$t('table.no_filter_data')"
+        :rows-per-page-label="$t('table.row_per_page')"
         :selected-rows-label="()=>`${selected.length} ${$t('table.row_selected')}`"
         :rows-per-page-options="[10, 20, 50 ,100, 200, 0]" :pagination.sync="pagination">
         <template v-slot:top="props">
           <div class="col-12 row">
             <div v-if="result" class="col-xs-12 col-sm-auto self-center">
-              <span>{{$t('product.import_success')}}</span><b class="text-positive">{{result.data.code}}</b>
+              <span>{{$t('product.import_success')}}</span><b
+                class="text-positive">{{result.data.code}}</b>
             </div>
             <q-space />
             <div class="col-xs-12 col-sm-auto self-center text-right">
               <div class="col-auto self-center">
-                <q-btn v-if="selected&&selected.length" flat round dense color="negative" icon="delete"
-                  @click="onRemove()">
+                <q-btn v-if="selected&&selected.length" flat round dense color="negative"
+                  icon="delete" @click="onRemove()">
                   <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.delete')}}</q-tooltip>
                 </q-btn>
                 <!-- <q-btn v-if="result" flat round dense color="indigo" icon="print" @click="onPrint">
                   <q-tooltip v-if="!$q.platform.is.mobile">{{$t('product.print')}}</q-tooltip>
                 </q-btn> -->
-                <printer-form v-if="result" :title="$t('product.import_ballot')" :label="$t('product.print')"
-                  :labelDate="$t('product.import_date')" :items="items" :result="result" />
-                <q-btn v-if="!result" flat round dense color="secondary" icon="find_in_page" @click="onOpenProductList">
+                <printer-form v-if="result" :title="$t('product.import_ballot')"
+                  :label="$t('product.print')" :labelDate="$t('product.import_date')" :items="items"
+                  :result="result" />
+                <q-btn v-if="!result" flat round dense color="secondary" icon="find_in_page"
+                  @click="onOpenProductList">
                   <q-tooltip v-if="!$q.platform.is.mobile">{{$t('product.select')}}</q-tooltip>
                 </q-btn>
-                <q-btn v-if="!result" flat round dense color="deep-purple" icon="post_add" @click="onOpenProductAdd">
+                <q-btn v-if="!result" flat round dense color="deep-purple" icon="post_add"
+                  @click="onOpenProductAdd">
                   <q-tooltip v-if="!$q.platform.is.mobile">{{$t('product.add')}}</q-tooltip>
                 </q-btn>
-                <q-btn v-if="!result" flat round dense color="indigo" icon="cloud_upload" @click="onOpenProductLoad">
+                <q-btn v-if="!result" flat round dense color="indigo" icon="cloud_upload"
+                  @click="onOpenProductLoad">
                   <q-tooltip v-if="!$q.platform.is.mobile">{{$t('files.open_file')}}</q-tooltip>
                 </q-btn>
-                <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'" icon="menu_open">
-                  <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.display_columns')}}</q-tooltip>
+                <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
+                  icon="menu_open">
+                  <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.display_columns')}}
+                  </q-tooltip>
                   <q-menu fit>
                     <q-list dense style="min-width:120px">
                       <template v-for="(item,index) in columns">
                         <q-item v-if="!item.required" clickable :key="index"
-                          :active="visibleColumns.indexOf(item.name)>-1||false" @click="onColumns(item.name)">
+                          :active="visibleColumns.indexOf(item.name)>-1||false"
+                          @click="onColumns(item.name)">
                           <q-item-section>{{$t(item.label)}}</q-item-section>
                         </q-item>
                       </template>
@@ -59,9 +71,11 @@
                   </q-menu>
                 </q-btn>
                 <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
-                  :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen">
+                  :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                  @click="props.toggleFullscreen">
                   <q-tooltip v-if="!$q.platform.is.mobile">
-                    {{props.inFullscreen?$t('table.normal_screen'):$t('table.full_screen')}}</q-tooltip>
+                    {{props.inFullscreen?$t('table.normal_screen'):$t('table.full_screen')}}
+                  </q-tooltip>
                 </q-btn>
               </div>
             </div>
@@ -86,8 +100,8 @@
         <template v-slot:header="props">
           <q-tr :props="props">
             <q-th auto-width>
-              <q-checkbox v-if="props.multipleSelect" v-model="props.selected" indeterminate-value="some"
-                :dense="$store.getters.dense.table" />
+              <q-checkbox v-if="props.multipleSelect" v-model="props.selected"
+                indeterminate-value="some" :dense="$store.getters.dense.table" />
             </q-th>
             <!-- <q-th auto-width>#</q-th> -->
             <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -100,7 +114,8 @@
         <template v-slot:body="props">
           <q-tr :props="props">
             <q-td auto-width>
-              <q-checkbox v-model="props.selected" color="primary" :dense="$store.getters.dense.table" />
+              <q-checkbox v-model="props.selected" color="primary"
+                :dense="$store.getters.dense.table" />
             </q-td>
             <!-- <q-td auto-width>
               {{props.row.index}}
@@ -114,47 +129,52 @@
             </q-td>
             <q-td key="price" :props="props">
               <div v-if="result">
-                <span class="q-pr-xs">{{ props.row.price|NumberFormat($store.getters.language) }}</span>
-                <q-badge v-html="props.row.price_unit" color="blue" transparent />
+                <span
+                  class="q-pr-xs">{{ props.row.price|NumberFormat($store.getters.language) }}</span>
+                <q-badge v-html="props.row.priceUnit" color="blue" transparent />
               </div>
-              <q-input v-else v-model="props.row.price" debounce="300" :label="$t('product.price_import')" type="number"
-                :dense="$store.getters.dense.input" class="no-error-icon no-arrows"
-                :rules="[v=>v!==null&&v!==''||$t('error.required'),v=>parseInt(v)>0||$t('error.min_quanity',{min:1})]">
+              <q-input v-else v-model="props.row.price" debounce="300"
+                :label="$t('product.priceImport')" type="number" :dense="$store.getters.dense.input"
+                class="no-error-icon no-arrows"
+                :rules="[v=>v!==null&&v!==''||$t('error.required'),v=>parseInt(v)>0||$t('error.minQuanity',{min:1})]">
                 <template v-slot:append>
-                  <q-icon name="refresh" class="cursor-pointer" @click="props.row.price=props.row.price_old" />
+                  <q-icon name="refresh" class="cursor-pointer"
+                    @click="props.row.price=props.row.priceOld" />
                 </template>
               </q-input>
             </q-td>
             <q-td key="quantity" :props="props">
               <div v-if="result">
-                <span class="q-pr-xs">{{ props.row.quantity|NumberFormat($store.getters.language) }}</span>
+                <span
+                  class="q-pr-xs">{{ props.row.quantity|NumberFormat($store.getters.language) }}</span>
                 <q-badge v-html="props.row.unit" color="orange" transparent />
               </div>
-              <q-input v-else v-model="props.row.quantity" debounce="300" :label="$t('product.quantity_import')"
-                type="number" :dense="$store.getters.dense.input" class="no-error-icon no-arrows"
-                :rules="[v=>v!==null&&v!==''||$t('error.required'),v=>parseInt(v)>0||$t('error.min_quanity',{min:1})]">
+              <q-input v-else v-model="props.row.quantity" debounce="300"
+                :label="$t('product.quantity_import')" type="number"
+                :dense="$store.getters.dense.input" class="no-error-icon no-arrows"
+                :rules="[v=>v!==null&&v!==''||$t('error.required'),v=>parseInt(v)>0||$t('error.minQuanity',{min:1})]">
               </q-input>
               <!-- <q-badge v-html="props.row.unit" color="orange" transparent /> -->
             </q-td>
             <q-td key="amount" :props="props">
               {{ props.row.amount=parseInt(props.row.price)*parseInt(props.row.quantity)|NumberFormat($store.getters.language) }}
-              <q-badge v-html="props.row.price_unit" color="blue" transparent />
+              <q-badge v-html="props.row.priceUnit" color="blue" transparent />
             </q-td>
             <q-td key="quantity_store" :props="props">
               {{ (result?parseInt(props.row.quantity)+parseInt(props.row.quantity_store):props.row.quantity)|NumberFormat($store.getters.language) }}
               <q-badge v-html="props.row.unit" color="orange" transparent />
             </q-td>
-            <q-td key="price_sale" :props="props">
-              {{ props.row.price_sale|NumberFormat($store.getters.language) }}
-              <q-badge v-html="props.row.price_unit" color="blue" transparent />
+            <q-td key="priceSale" :props="props">
+              {{ props.row.priceSale|NumberFormat($store.getters.language) }}
+              <q-badge v-html="props.row.priceUnit" color="blue" transparent />
             </q-td>
-            <q-td key="price_discount" :props="props">
-              {{ props.row.price_discount|NumberFormat($store.getters.language) }}
-              <q-badge v-html="props.row.price_unit" color="red" transparent />
+            <q-td key="priceDiscount" :props="props">
+              {{ props.row.priceDiscount|NumberFormat($store.getters.language) }}
+              <q-badge v-html="props.row.priceUnit" color="red" transparent />
             </q-td>
             <q-td auto-width class="text-center">
-              <q-btn flat round dense icon="close" color="red" :size="$store.getters.dense.table?'sm':'md'"
-                @click="onRemove(props.row)">
+              <q-btn flat round dense icon="close" color="red"
+                :size="$store.getters.dense.table?'sm':'md'" @click="onRemove(props.row)">
                 <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
               </q-btn>
             </q-td>
@@ -165,14 +185,15 @@
     <!-- <q-list v-if="success" dense bordered separator padding>
         <q-item v-for="(e,i) in items" :key="i">
           <q-item-section>{{e.code}} - {{e.title}}</q-item-section>
-          <q-item-section>{{e.price_import}}</q-item-section>
+          <q-item-section>{{e.priceImport}}</q-item-section>
           <q-item-section>{{e.quantity_import}}</q-item-section>
         </q-item>
       </q-list> -->
     <!-- Product list dialog -->
     <q-dialog v-model="dialogProductList" :maximized="maximizedView" persistent>
-      <p-list :categories="categories" :dialog.sync="dialogProductList" :maximized.sync="maximizedView"
-        :visible-columns.sync="visibleColumnsList" @on-selected="onSelectProduct" />
+      <p-list :categories="categories" :dialog.sync="dialogProductList"
+        :maximized.sync="maximizedView" :visible-columns.sync="visibleColumnsList"
+        @on-selected="onSelectProduct" />
     </q-dialog>
     <!-- Product add dialog -->
     <q-dialog v-model="dialogProductAdd" :maximized="maximizedView" persistent>
@@ -188,7 +209,8 @@
           <q-avatar :icon="$route.meta.icon" size="50px" />
           <q-toolbar-title>{{$t('files.data_file')}}</q-toolbar-title>
           <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
-            :icon="maximizedView?'fullscreen_exit':'fullscreen'" :disable="loading" @click="maximizedView=!maximized">
+            :icon="maximizedView?'fullscreen_exit':'fullscreen'" :disable="loading"
+            @click="maximizedView=!maximized">
             <q-tooltip v-if="!$q.platform.is.mobile">
               {{maximizedView?$t('table.normal_screen'):$t('table.full_screen')}}</q-tooltip>
           </q-btn>
@@ -198,8 +220,9 @@
         </q-toolbar>
         <q-separator />
         <q-card-section class="text-center">
-          <tm-load-files :button="true" :label="$t('files.open_file')" :placeholder="$t('files.choose_file')"
-            accept=".xls,.xlsx,.csv,.tsv,.txt,.json,.xml" @on-start="loading=true" @on-finish="onLoadedFile" />
+          <tm-load-files :button="true" :label="$t('files.open_file')"
+            :placeholder="$t('files.choose_file')" accept=".xls,.xlsx,.csv,.tsv,.txt,.json,.xml"
+            @on-start="loading=true" @on-finish="onLoadedFile" />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -232,7 +255,7 @@ export default {
       selected: [],
       items: Cookies.get('import-tmp') ? JSON.parse(Cookies.get('import-tmp')) : [],
       visibleColumns: [],
-      visibleColumnsList: ['quantity_store', 'price_sale', 'price_discount', 'price_import'],
+      visibleColumnsList: ['quantity_store', 'priceSale', 'priceDiscount', 'priceImport'],
       visibleColumnsPrint: [],
       pagination: {
         page: 1,
@@ -245,8 +268,8 @@ export default {
         { name: 'quantity', field: 'quantity', label: 'product.quantity_import', align: 'right', sortable: true, required: true },
         { name: 'amount', field: 'amount', label: 'product.amount', align: 'right', sortable: true, required: true },
         { name: 'quantity_store', field: 'quantity_store', label: 'product.quantity_store', align: 'right', sortable: true },
-        { name: 'price_sale', field: 'price_sale', label: 'product.price_sale', align: 'right', sortable: true },
-        { name: 'price_discount', field: 'price_discount', label: 'product.price_discount', align: 'right', sortable: true }
+        { name: 'priceSale', field: 'priceSale', label: 'product.priceSale', align: 'right', sortable: true },
+        { name: 'priceDiscount', field: 'priceDiscount', label: 'product.priceDiscount', align: 'right', sortable: true }
       ]
     }
   },
@@ -307,12 +330,12 @@ export default {
           code: selected[i].code.toUpperCase(),
           title: selected[i].title,
           quantity: selected[i].quantity_import || 0,
-          price: selected[i].price_import || 0,
-          price_old: selected[i].price_import || 0,
+          price: selected[i].priceImport || 0,
+          priceOld: selected[i].priceImport || 0,
           quantity_store: selected[i].quantity || 0,
-          price_sale: selected[i].price || 0,
-          price_discount: selected[i].price_discount || 0,
-          price_unit: selected[i].price_unit,
+          priceSale: selected[i].price || 0,
+          priceDiscount: selected[i].priceDiscount || 0,
+          priceUnit: selected[i].priceUnit,
           unit: selected[i].unit
         }, 'code')
       }
@@ -322,12 +345,12 @@ export default {
       //   code: item.code.toUpperCase(),
       //   title: item.title,
       //   quantity_import: item.quantity_import || 0,
-      //   price_import: item.price_import || 0,
-      //   price_import_old: item.price_import || 0,
+      //   priceImport: item.priceImport || 0,
+      //   priceImport_old: item.priceImport || 0,
       //   quantity: item.quantity || 0,
       //   price: item.price || 0,
-      //   price_discount: item.price_discount || 0,
-      //   price_unit: item.price_unit,
+      //   priceDiscount: item.priceDiscount || 0,
+      //   priceUnit: item.priceUnit,
       //   unit: item.unit
       // }))
       // this.items.pushIfNotExist(selected, 'code')
@@ -338,12 +361,12 @@ export default {
         code: item.code.toUpperCase(),
         title: item.title,
         quantity: item.quantity_import || 0,
-        price: item.price_import || 0,
-        price_old: item.price_import || 0,
+        price: item.priceImport || 0,
+        priceOld: item.priceImport || 0,
         quantity_store: item.quantity || 0,
-        price_sale: item.price || 0,
-        price_discount: item.price_discount || 0,
-        price_unit: item.price_unit,
+        priceSale: item.price || 0,
+        priceDiscount: item.priceDiscount || 0,
+        priceUnit: item.priceUnit,
         unit: item.unit
       }
       this.items.pushIfNotExist(item, 'code')
@@ -366,12 +389,12 @@ export default {
                 code: item.code.toUpperCase(),
                 title: item.title,
                 quantity: e.quantity_import || 0,
-                price: e.price_import || 0,
-                price_old: e.price_import || 0,
+                price: e.priceImport || 0,
+                priceOld: e.priceImport || 0,
                 quantity_store: item.quantity || 0,
-                price_sale: item.price || 0,
-                price_discount: item.price_discount || 0,
-                price_unit: item.price_unit,
+                priceSale: item.price || 0,
+                priceDiscount: item.priceDiscount || 0,
+                priceUnit: item.priceUnit,
                 unit: item.unit
               }, 'code')
             } else {
@@ -382,13 +405,13 @@ export default {
                 desc: e.desc,
                 content: e.content,
                 images: e.images,
-                price_sale: parseInt(e.price) || 0,
-                price_discount: parseInt(e.price_discount) || 0,
+                priceSale: parseInt(e.price) || 0,
+                priceDiscount: parseInt(e.priceDiscount) || 0,
                 quantity_store: 0,
-                price: parseInt(e.price_import) || 0,
-                price_old: parseInt(e.price_import) || 0,
+                price: parseInt(e.priceImport) || 0,
+                priceOld: parseInt(e.priceImport) || 0,
                 quantity: parseInt(e.quantity_import) || 0,
-                price_unit: e.price_unit,
+                priceUnit: e.priceUnit,
                 unit: e.unit,
                 origin: e.origin,
                 date: e.date,
@@ -440,7 +463,7 @@ export default {
             api.imports(this.items).then(x => {
               if (x) {
                 if (x.data) this.result = x
-                // this.result.total = this.result.data.sum('price_import')
+                // this.result.total = this.result.data.sum('priceImport')
                 // this.result.vat = Math.round(this.result.total * 0.1, 0)
                 // this.result.amount = this.result.total + this.result.vat
                 this.reset()

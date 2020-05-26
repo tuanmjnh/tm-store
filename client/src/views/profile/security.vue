@@ -11,10 +11,10 @@
       <q-card-section>
         <div class="row q-gutter-xs">
           <div class="col-12 col-md-6">
-            <!-- <q-input v-model.trim="form.oldPassword" :dense="$store.getters.dense.input" :label="$t('users.old_password')"
+            <!-- <q-input v-model.trim="form.oldPassword" :dense="$store.getters.dense.input" :label="$t('users.oldPassword')"
               :rules="[v=>v&&v.length>0||$t('error.required')]" /> -->
             <q-input v-model.trim="oldPassword.value" :type="oldPassword.type"
-              :dense="$store.getters.dense.input" :label="$t('users.old_password')"
+              :dense="$store.getters.dense.input" :label="$t('users.oldPassword')"
               @keyup.native="oldPassword.caps=checkCapslock($event)" @blur="oldPassword.caps=false"
               :rules="[v=>v&&v.length>0||$t('error.required')]" class="capsTooltip">
               <template v-slot:append>
@@ -33,9 +33,9 @@
         <div class="row q-gutter-xs">
           <div class="col-12 col-md-6">
             <!-- <q-input v-model.trim="form.newPassword" :dense="$store.getters.dense.input"
-              :label="$t('users.new_password')" :rules="[v=>v&&v.length>0||$t('error.required')]" /> -->
+              :label="$t('users.newPassword')" :rules="[v=>v&&v.length>0||$t('error.required')]" /> -->
             <q-input v-model.trim="newPassword.value" :type="newPassword.type"
-              :dense="$store.getters.dense.input" :label="$t('users.new_password')"
+              :dense="$store.getters.dense.input" :label="$t('users.newPassword')"
               @keyup.native="newPassword.caps=checkCapslock($event)" @blur="newPassword.caps=false"
               :rules="[v=>v&&v.length>0||$t('error.required')]" class="capsTooltip">
               <template v-slot:append>

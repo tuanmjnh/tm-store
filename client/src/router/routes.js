@@ -38,7 +38,7 @@ export const constant = [
       {
         path: 'setting',
         name: 'profile-setting',
-        meta: { title: 'user_setting', icon: 'settings', constant: true },
+        meta: { title: 'userSetting', icon: 'settings', constant: true },
         component: () => import('@/views/profile/setting')
       }
     ]
@@ -62,37 +62,50 @@ export const dynamic = [
       {
         path: 'product-list',
         name: 'product-list',
-        meta: { title: 'list', icon: 'account_box' },
-        component: 'users/index',
+        meta: { title: 'list', icon: 'collections' },
+        component: 'products/index',
         children: [
           {
             path: 'view',
-            name: 'manager-users-view',
-            meta: { title: 'view', hidden: true, noCache: true, flag: 1 },
-            component: 'users/index'
+            name: 'product-list-view',
+            meta: {
+              title: 'view',
+              icon: 'list',
+              hidden: true,
+              noCache: true,
+              flag: 1
+            },
+            component: 'products/index'
           },
           {
             path: 'add',
-            name: 'manager-users-add',
-            meta: { title: 'add', hidden: true },
-            component: 'users/add'
+            name: 'product-list-add',
+            meta: { title: 'add', icon: 'add', hidden: true },
+            component: 'products/add'
           },
           {
             path: 'edit/:?id',
-            name: 'manager-users-edit',
+            name: 'product-list-edit',
             meta: {
               title: 'edit',
+              icon: 'edit',
               hidden: true,
               noCache: true,
-              activeMenu: '/users/list'
+              activeMenu: '/product-list/view'
             },
-            component: 'users/add'
+            component: 'products/add'
           },
           {
             path: 'trash',
-            name: 'manager-users-trash',
-            meta: { title: 'trash', hidden: true, noCache: true, flag: 0 },
-            component: 'users/index'
+            name: 'product-list-trash',
+            meta: {
+              title: 'trash',
+              icon: 'delete',
+              hidden: true,
+              noCache: true,
+              flag: 0
+            },
+            component: 'products/index'
           }
         ]
       }

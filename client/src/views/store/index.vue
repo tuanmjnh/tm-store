@@ -5,21 +5,22 @@
       :dense="$store.getters.dense.table" selection="multiple" :no-data-label="$t('table.no_data')"
       :no-results-label="$t('table.no_filter_data')" :rows-per-page-label="$t('table.row_per_page')"
       :selected-rows-label="()=>`${selected.length} ${$t('table.row_selected')}`"
-      :rows-per-page-options="[10, 20, 50 ,100, 200]" :pagination.sync="pagination" @request="onSelect"
-      :filter="pagination.filter" binary-state-sort>
+      :rows-per-page-options="[10, 20, 50 ,100, 200]" :pagination.sync="pagination"
+      @request="onSelect" :filter="pagination.filter" binary-state-sort>
       <template v-slot:top="props">
         <div class="col-12 row">
-          <div class="col-xs-12 col-sm-auto q-table__title text-h6">{{$t('product.warehouse')}}</div>
+          <div class="col-xs-12 col-sm-auto q-table__title text-h6">{{$t('product.warehouse')}}
+          </div>
           <q-space />
           <div class="col-xs-12 col-sm-auto self-center row">
-            <q-chip v-if="isRoutes.add" clickable square icon="playlist_add" color="indigo" text-color="white"
-              @click="$router.push('import')">
+            <q-chip v-if="isRoutes.add" clickable square icon="playlist_add" color="indigo"
+              text-color="white" @click="$router.push('import')">
               {{$t('product.import')}}</q-chip>
-            <q-chip v-if="isRoutes.add" clickable square icon="double_arrow" color="green" text-color="white"
-              @click="$router.push('export')">
+            <q-chip v-if="isRoutes.add" clickable square icon="double_arrow" color="green"
+              text-color="white" @click="$router.push('export')">
               {{$t('product.export')}}</q-chip>
-            <q-btn v-if="isRoutes.add" flat dense no-caps color="blue" class="q-ml-sm" :label="$t('global.add')"
-              @click="$router.push('/products/collection/add')">
+            <q-btn v-if="isRoutes.add" flat dense no-caps color="blue" class="q-ml-sm"
+              :label="$t('global.add')" @click="$router.push('/products/collection/add')">
             </q-btn>
           </div>
           <div class="col-12 text-right">
@@ -29,27 +30,29 @@
                 <!-- <div class="q-pa-md"> -->
                 <div class="row no-wrap q-pb-sm q-pl-md q-pr-md" style="min-width:300px">
                   <div class="col-12">
-                    <q-input v-model="pagination.filter" :dense="$store.getters.dense.input" debounce="500"
-                      :placeholder="$t('global.search')">
+                    <q-input v-model="pagination.filter" :dense="$store.getters.dense.input"
+                      debounce="500" :placeholder="$t('global.search')">
                       <template v-slot:append>
                         <q-icon v-if="pagination.filter===''" name="search" />
-                        <q-icon v-else name="clear" class="cursor-pointer" @click="pagination.filter=''" />
+                        <q-icon v-else name="clear" class="cursor-pointer"
+                          @click="pagination.filter=''" />
                       </template>
                     </q-input>
                   </div>
                 </div>
                 <div class="row no-wrap q-pl-md q-pr-md">
                   <div class="col-12">
-                    <select-category :categories="categories" :selected.sync="pagination.categories" data-key="_id"
-                      data-all :dense="$store.getters.dense.input" :labelTitle="$t('category.title_product')"
+                    <select-category :categories="categories" :selected.sync="pagination.categories"
+                      data-key="_id" data-all :dense="$store.getters.dense.input"
+                      :labelTitle="$t('category.title_product')"
                       :labelSelect="$t('category.select')" :labelAll="$t('category.select_all')"
                       :labelClose="$t('global.cancel')" @on-selected="onSelectCategory" />
                   </div>
                 </div>
               </q-menu>
             </q-btn>
-            <q-btn v-if="isRoutes.trash&&selected.length>0&&!pagination.flag" flat round dense color="warning"
-              icon="restore_page" @click="onTrash()">
+            <q-btn v-if="isRoutes.trash&&selected.length>0&&!pagination.flag" flat round dense
+              color="warning" icon="restore_page" @click="onTrash()">
               <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.recover')}}</q-tooltip>
             </q-btn>
             <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'" icon="menu_open">
@@ -57,7 +60,8 @@
               <q-menu fit>
                 <q-list dense style="min-width:120px">
                   <template v-for="(item,index) in columns">
-                    <q-item clickable :key="index" v-if="!item.required" @click="onColumns(item.name)"
+                    <q-item clickable :key="index" v-if="!item.required"
+                      @click="onColumns(item.name)"
                       :active="visibleColumns.indexOf(item.name)>-1||false">
                       <q-item-section>{{$t(item.label)}}</q-item-section>
                     </q-item>
@@ -66,7 +70,8 @@
               </q-menu>
             </q-btn>
             <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
-              :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen">
+              :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+              @click="props.toggleFullscreen">
               <q-tooltip v-if="!$q.platform.is.mobile">
                 {{props.inFullscreen?$t('table.normal_screen'):$t('table.full_screen')}}</q-tooltip>
             </q-btn>
@@ -76,8 +81,8 @@
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th auto-width>
-            <q-checkbox v-if="props.multipleSelect" v-model="props.selected" indeterminate-value="some"
-              :dense="$store.getters.dense.table" />
+            <q-checkbox v-if="props.multipleSelect" v-model="props.selected"
+              indeterminate-value="some" :dense="$store.getters.dense.table" />
           </q-th>
           <q-th v-for="col in props.cols" :key="col.name" :props="props">
             <span v-if="$store.state.app.darkMode" class="text-bold">{{ $t(col.label) }}</span>
@@ -88,7 +93,8 @@
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td auto-width>
-            <q-checkbox v-model="props.selected" color="primary" :dense="$store.getters.dense.table" />
+            <q-checkbox v-model="props.selected" color="primary"
+              :dense="$store.getters.dense.table" />
           </q-td>
           <q-td key="title" :props="props">
             {{ props.row.title }}
@@ -97,24 +103,28 @@
             {{ props.row.code }}
           </q-td>
           <q-td key="quantity" :props="props">
-            <span class="q-pr-xs">{{ props.row.quantity|NumberFormat($store.getters.language) }}</span>
+            <span
+              class="q-pr-xs">{{ props.row.quantity|NumberFormat($store.getters.language) }}</span>
             <q-badge v-html="props.row.unit" color="orange" transparent />
           </q-td>
-          <q-td key="price_import" :props="props">
-            <span class="q-pr-xs">{{ props.row.price_import|NumberFormat($store.getters.language) }}</span>
-            <q-badge v-html="props.row.price_unit" color="teal" transparent />
+          <q-td key="priceImport" :props="props">
+            <span
+              class="q-pr-xs">{{ props.row.priceImport|NumberFormat($store.getters.language) }}</span>
+            <q-badge v-html="props.row.priceUnit" color="teal" transparent />
           </q-td>
-          <q-td key="price_export" :props="props">
-            <span class="q-pr-xs">{{ props.row.price_export|NumberFormat($store.getters.language) }}</span>
-            <q-badge v-html="props.row.price_unit" color="teal" transparent />
+          <q-td key="priceExport" :props="props">
+            <span
+              class="q-pr-xs">{{ props.row.priceExport|NumberFormat($store.getters.language) }}</span>
+            <q-badge v-html="props.row.priceUnit" color="teal" transparent />
           </q-td>
           <q-td key="price" :props="props">
             <span class="q-pr-xs">{{ props.row.price|NumberFormat($store.getters.language) }}</span>
-            <q-badge v-html="props.row.price_unit" color="blue" transparent />
+            <q-badge v-html="props.row.priceUnit" color="blue" transparent />
           </q-td>
-          <q-td key="price_discount" :props="props">
-            <span class="q-pr-xs">{{ props.row.price_discount|NumberFormat($store.getters.language) }}</span>
-            <q-badge v-html="props.row.price_unit" color="red" transparent />
+          <q-td key="priceDiscount" :props="props">
+            <span
+              class="q-pr-xs">{{ props.row.priceDiscount|NumberFormat($store.getters.language) }}</span>
+            <q-badge v-html="props.row.priceUnit" color="red" transparent />
           </q-td>
         </q-tr>
       </template>
@@ -153,15 +163,15 @@ export default {
         categories: null,
         flag: 1
       },
-      visibleColumns: ['price_import', 'price_export'],
+      visibleColumns: ['priceImport', 'priceExport'],
       columns: [
         { name: 'title', field: 'title', label: 'product.name', align: 'left', sortable: true, required: true }, // row => this.$t(`roles.${row.name}`)
         { name: 'code', field: 'code', label: 'product.code', align: 'left', sortable: true, required: true },
         { name: 'quantity', field: 'quantity', label: 'product.quantity_store', align: 'right', sortable: true, required: true },
-        { name: 'price_import', field: 'price_import', label: 'product.price_import', align: 'right', sortable: true },
-        { name: 'price_export', field: 'price_export', label: 'product.price_export', align: 'right', sortable: true },
-        { name: 'price', field: 'price', label: 'product.price_sale', align: 'right', sortable: true },
-        { name: 'price_discount', field: 'price_discount', label: 'product.price_discount', align: 'right', sortable: true }
+        { name: 'priceImport', field: 'priceImport', label: 'product.priceImport', align: 'right', sortable: true },
+        { name: 'priceExport', field: 'priceExport', label: 'product.priceExport', align: 'right', sortable: true },
+        { name: 'price', field: 'price', label: 'product.priceSale', align: 'right', sortable: true },
+        { name: 'priceDiscount', field: 'priceDiscount', label: 'product.priceDiscount', align: 'right', sortable: true }
       ]
     }
   },

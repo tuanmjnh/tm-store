@@ -1,0 +1,1304 @@
+[
+  {
+    "dependent": null,
+    "level": 1,
+    "redirect": "",
+    "orders": 1,
+    "meta": [
+      { "key": "title", "value": "dashboard" },
+      { "key": "icon", "value": "dashboard" },
+      { "key": "hidden", "value": false }
+    ],
+    "flag": 1,
+    "children": [],
+    "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+    "_id": "5e01cdf98379ae1ea8163244",
+    "path": "/dashboard",
+    "name": "dashboard",
+    "component": "dashboard",
+    "__v": 0,
+    "label": "Dashboard",
+    "icon": "dashboard",
+    "hidden": false
+  },
+  {
+    "dependent": null,
+    "level": 1,
+    "redirect": "profile/information",
+    "orders": 2,
+    "meta": [
+      { "key": "hidden", "value": true },
+      { "key": "title", "value": "profile" },
+      { "key": "icon", "value": "assignment_ind" }
+    ],
+    "flag": 1,
+    "children": [
+      {
+        "dependent": "5e00654db680da0bc08c2f65",
+        "level": 2,
+        "redirect": "",
+        "orders": 1,
+        "meta": [
+          { "key": "title", "value": "information" },
+          { "key": "hidden", "value": "true" },
+          { "key": "icon", "value": "assignment" }
+        ],
+        "flag": 1,
+        "children": [],
+        "created": {
+          "at": "2020-02-27T07:36:55.992Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e577197d9224632bc8c9ce3",
+        "path": "information",
+        "name": "profile-information",
+        "component": "profile/information",
+        "__v": 0,
+        "label": "Thông tin",
+        "hidden": "true",
+        "icon": "assignment"
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f65",
+        "level": 2,
+        "redirect": "",
+        "orders": 1,
+        "meta": [
+          { "key": "title", "value": "security" },
+          { "key": "icon", "value": "security" },
+          { "key": "hidden", "value": "true" }
+        ],
+        "flag": 1,
+        "children": [],
+        "created": {
+          "at": "2020-02-27T08:10:15.512Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e577967d9224632bc8c9ce9",
+        "path": "security",
+        "name": "profile-security",
+        "component": "profile/security",
+        "__v": 0,
+        "label": "Bảo mật",
+        "icon": "security",
+        "hidden": "true"
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f65",
+        "level": 2,
+        "redirect": "",
+        "orders": 1,
+        "meta": [
+          { "key": "hidden", "value": "true" },
+          { "key": "icon", "value": "settings" },
+          { "key": "title", "value": "user_setting" }
+        ],
+        "flag": 1,
+        "children": [],
+        "created": {
+          "at": "2020-03-01T07:56:20.826Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e5b6aa4ea95de0e246a25d5",
+        "path": "setting",
+        "name": "profile-setting",
+        "component": "profile/setting",
+        "__v": 0,
+        "hidden": "true",
+        "icon": "settings",
+        "label": "route.user_setting"
+      }
+    ],
+    "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+    "_id": "5e00654db680da0bc08c2f65",
+    "path": "/profile",
+    "name": "profile",
+    "component": "profile",
+    "hidden": true,
+    "label": "Hồ sơ",
+    "icon": "assignment_ind"
+  },
+  {
+    "dependent": null,
+    "level": 1,
+    "redirect": null,
+    "orders": 3,
+    "meta": [
+      { "key": "title", "value": "product" },
+      { "key": "icon", "value": "perm_media" },
+      { "key": "hidden", "value": false }
+    ],
+    "flag": 1,
+    "children": [
+      {
+        "dependent": "5e00654db680da0bc08c2f66",
+        "level": 2,
+        "redirect": "",
+        "orders": 1,
+        "meta": [
+          { "key": "title", "value": "collection" },
+          { "key": "icon", "value": "collections" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [
+          {
+            "dependent": "5e4401a0601fb55660f5ce72",
+            "level": 3,
+            "redirect": "",
+            "orders": 1,
+            "meta": [
+              { "key": "title", "value": "view" },
+              { "key": "icon", "value": "list" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e023b46aa407706309af325",
+            "path": "list",
+            "name": "products-view",
+            "component": "products",
+            "__v": 0,
+            "label": "Xem",
+            "icon": "list",
+            "hidden": true
+          },
+          {
+            "dependent": "5e4401a0601fb55660f5ce72",
+            "level": 3,
+            "redirect": "",
+            "orders": 2,
+            "meta": [
+              { "key": "title", "value": "add" },
+              { "key": "icon", "value": "add" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2020-01-01T10:23:08.561Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e0c730c54ee7d10b0211908",
+            "path": "add",
+            "name": "products-add",
+            "component": "products/add",
+            "__v": 0,
+            "label": "Thêm mới",
+            "icon": "add",
+            "hidden": true
+          },
+          {
+            "dependent": "5e4401a0601fb55660f5ce72",
+            "level": 3,
+            "redirect": "",
+            "orders": 3,
+            "meta": [
+              { "key": "title", "value": "edit" },
+              { "key": "icon", "value": "edit" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2020-01-01T10:23:48.980Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e0c733454ee7d10b021190a",
+            "path": "edit",
+            "name": "products-edit",
+            "component": "products/add",
+            "__v": 0,
+            "label": "Sửa",
+            "icon": "edit",
+            "hidden": true
+          },
+          {
+            "dependent": "5e4401a0601fb55660f5ce72",
+            "level": 3,
+            "redirect": "",
+            "orders": 4,
+            "meta": [
+              { "key": "title", "value": "trash" },
+              { "key": "icon", "value": "delete" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2020-01-01T10:24:28.912Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e0c735c54ee7d10b021190c",
+            "path": "trash",
+            "name": "products-trash",
+            "component": "products",
+            "__v": 0,
+            "label": "Đã xóa",
+            "icon": "delete",
+            "hidden": true
+          }
+        ],
+        "created": {
+          "at": "2020-02-12T13:46:08.471Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e4401a0601fb55660f5ce72",
+        "path": "collection",
+        "name": "products-collection",
+        "component": "products",
+        "__v": 0,
+        "label": "Danh sách",
+        "icon": "collections",
+        "hidden": false
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f66",
+        "level": 2,
+        "redirect": "",
+        "orders": 2,
+        "meta": [
+          { "key": "type", "value": "product" },
+          { "key": "title", "value": "category" },
+          { "key": "icon", "value": "category" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [
+          {
+            "dependent": "5e0870390d442c0f8c6e2db0",
+            "level": 3,
+            "redirect": "",
+            "orders": 1,
+            "meta": [
+              { "key": "title", "value": "view" },
+              { "key": "icon", "value": "list" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-30T13:24:26.301Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e09fa8aee2f80218459767a",
+            "path": "list",
+            "name": "category-product-view",
+            "component": "category",
+            "__v": 0,
+            "label": "Xem",
+            "icon": "list",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0870390d442c0f8c6e2db0",
+            "level": 3,
+            "redirect": "",
+            "orders": 2,
+            "meta": [
+              { "key": "title", "value": "add" },
+              { "key": "icon", "value": "add" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-30T13:25:11.650Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e09fab7ee2f80218459767c",
+            "path": "add",
+            "name": "category-product-add",
+            "component": "category/add",
+            "__v": 0,
+            "label": "Thêm mới",
+            "icon": "add",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0870390d442c0f8c6e2db0",
+            "level": 3,
+            "redirect": "",
+            "orders": 3,
+            "meta": [
+              { "key": "title", "value": "edit" },
+              { "key": "icon", "value": "edit" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-30T13:26:57.736Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e09fb21ee2f802184597680",
+            "path": "edit",
+            "name": "category-product-edit",
+            "component": "category/add",
+            "__v": 0,
+            "label": "Sửa",
+            "icon": "edit",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0870390d442c0f8c6e2db0",
+            "level": 3,
+            "redirect": "",
+            "orders": 4,
+            "meta": [
+              { "key": "title", "value": "trash" },
+              { "key": "icon", "value": "delete" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-30T13:27:15.207Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e09fb33ee2f802184597682",
+            "path": "trash",
+            "name": "category-product-trash",
+            "component": "category",
+            "__v": 0,
+            "label": "Đã xóa",
+            "icon": "delete",
+            "hidden": true
+          }
+        ],
+        "created": {
+          "at": "2019-12-29T09:22:01.520Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e0870390d442c0f8c6e2db0",
+        "path": "category",
+        "name": "product-category",
+        "component": "category/index",
+        "__v": 0,
+        "label": "Danh mục",
+        "icon": "category",
+        "hidden": false
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f66",
+        "level": 2,
+        "redirect": "",
+        "orders": 3,
+        "meta": [
+          { "key": "title", "value": "orders" },
+          { "key": "icon", "value": "class" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [],
+        "created": {
+          "at": "2020-03-04T07:57:00.571Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e5f5f4c43770f2660280b7f",
+        "path": "orders",
+        "name": "products-orders",
+        "component": "products/orders",
+        "__v": 0,
+        "label": "Đơn hàng",
+        "icon": "class",
+        "hidden": false
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f66",
+        "level": 2,
+        "redirect": "",
+        "orders": 4,
+        "meta": [
+          { "key": "title", "value": "warehouse" },
+          { "key": "icon", "value": "home_work" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [],
+        "created": {
+          "at": "2020-03-04T07:59:09.324Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e5f5fcd43770f2660280b81",
+        "path": "warehouse",
+        "name": "products-warehouse",
+        "component": "products/warehouse",
+        "__v": 0,
+        "label": "Kho hàng",
+        "icon": "home_work",
+        "hidden": false
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f66",
+        "level": 2,
+        "redirect": "",
+        "orders": 5,
+        "meta": [
+          { "key": "title", "value": "import" },
+          { "key": "icon", "value": "playlist_add" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [],
+        "created": {
+          "at": "2020-03-04T07:34:25.757Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e5f5a0143770f2660280b77",
+        "path": "import",
+        "name": "products-import",
+        "component": "products/import",
+        "__v": 0,
+        "label": "Nhập",
+        "icon": "playlist_add",
+        "hidden": false
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f66",
+        "level": 2,
+        "redirect": "",
+        "orders": 6,
+        "meta": [
+          { "key": "title", "value": "export" },
+          { "key": "icon", "value": "double_arrow" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [],
+        "created": {
+          "at": "2020-03-04T07:54:19.639Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e5f5eab43770f2660280b7a",
+        "path": "export",
+        "name": "products-export",
+        "component": "products/export",
+        "__v": 0,
+        "label": "Xuất",
+        "icon": "double_arrow",
+        "hidden": false
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f66",
+        "level": 2,
+        "redirect": "",
+        "orders": 8,
+        "meta": [
+          { "key": "title", "value": "report" },
+          { "key": "icon", "value": "pie_chart" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [],
+        "created": {
+          "at": "2020-03-04T08:04:58.433Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e5f612a43770f2660280b84",
+        "path": "report",
+        "name": "products-report",
+        "component": "products/report",
+        "__v": 0,
+        "label": "Báo cáo",
+        "icon": "pie_chart",
+        "hidden": false
+      }
+    ],
+    "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+    "_id": "5e00654db680da0bc08c2f66",
+    "path": "/products",
+    "name": "products",
+    "component": "layout",
+    "label": "Sản phẩm",
+    "icon": "perm_media",
+    "hidden": false
+  },
+  {
+    "dependent": null,
+    "level": 1,
+    "redirect": null,
+    "orders": 3,
+    "meta": [
+      { "key": "title", "value": "news" },
+      { "key": "icon", "value": "library_books" },
+      { "key": "hidden", "value": false }
+    ],
+    "flag": 1,
+    "children": [
+      {
+        "dependent": "5e00654db680da0bc08c2f67",
+        "level": 2,
+        "redirect": "",
+        "orders": 1,
+        "meta": [
+          { "key": "title", "value": "collection" },
+          { "key": "icon", "value": "collections_bookmark" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [
+          {
+            "dependent": "5e4404feccc2df43b4f839ac",
+            "level": 3,
+            "redirect": "",
+            "orders": 1,
+            "meta": [
+              { "key": "title", "value": "view" },
+              { "key": "icon", "value": "list" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2020-01-01T10:25:03.040Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e0c737f54ee7d10b021190e",
+            "path": "list",
+            "name": "news-view",
+            "component": "news",
+            "__v": 0,
+            "label": "Xem",
+            "icon": "list",
+            "hidden": true
+          },
+          {
+            "dependent": "5e4404feccc2df43b4f839ac",
+            "level": 3,
+            "redirect": "",
+            "orders": 2,
+            "meta": [
+              { "key": "title", "value": "add" },
+              { "key": "icon", "value": "add" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2020-01-01T10:25:27.428Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e0c739754ee7d10b0211910",
+            "path": "add",
+            "name": "news-add",
+            "component": "news/add",
+            "__v": 0,
+            "label": "Thêm mới",
+            "icon": "add",
+            "hidden": true
+          },
+          {
+            "dependent": "5e4404feccc2df43b4f839ac",
+            "level": 3,
+            "redirect": "",
+            "orders": 3,
+            "meta": [
+              { "key": "title", "value": "edit" },
+              { "key": "icon", "value": "edit" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2020-01-01T10:25:42.207Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e0c73a654ee7d10b0211912",
+            "path": "edit",
+            "name": "news-edit",
+            "component": "news/add",
+            "__v": 0,
+            "label": "Sửa",
+            "icon": "edit",
+            "hidden": true
+          },
+          {
+            "dependent": "5e4404feccc2df43b4f839ac",
+            "level": 3,
+            "redirect": "",
+            "orders": 4,
+            "meta": [
+              { "key": "title", "value": "trash" },
+              { "key": "icon", "value": "delete" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2020-01-01T10:25:57.870Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e0c73b554ee7d10b0211914",
+            "path": "trash",
+            "name": "news-trash",
+            "component": "news",
+            "__v": 0,
+            "label": "Đã xóa",
+            "icon": "delete",
+            "hidden": true
+          }
+        ],
+        "created": {
+          "at": "2020-02-12T14:00:30.056Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e4404feccc2df43b4f839ac",
+        "path": "collection",
+        "name": "news-collection",
+        "component": "news",
+        "__v": 0,
+        "label": "Danh sách",
+        "icon": "collections_bookmark",
+        "hidden": false
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f67",
+        "level": 2,
+        "redirect": "",
+        "orders": 2,
+        "meta": [
+          { "key": "type", "value": "news" },
+          { "key": "title", "value": "category" },
+          { "key": "icon", "value": "category" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [
+          {
+            "dependent": "5e08723c0d442c0f8c6e2db5",
+            "level": 3,
+            "redirect": "",
+            "orders": 1,
+            "meta": [
+              { "key": "title", "value": "view" },
+              { "key": "icon", "value": "list" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-30T13:27:43.939Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e09fb4fee2f802184597684",
+            "path": "list",
+            "name": "category-news-view",
+            "component": "category",
+            "__v": 0,
+            "label": "Xem",
+            "icon": "list",
+            "hidden": true
+          },
+          {
+            "dependent": "5e08723c0d442c0f8c6e2db5",
+            "level": 3,
+            "redirect": "",
+            "orders": 2,
+            "meta": [
+              { "key": "title", "value": "add" },
+              { "key": "icon", "value": "add" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-30T13:27:55.658Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e09fb5bee2f802184597686",
+            "path": "add",
+            "name": "category-news-add",
+            "component": "category/add",
+            "__v": 0,
+            "label": "Thêm mới",
+            "icon": "add",
+            "hidden": true
+          },
+          {
+            "dependent": "5e08723c0d442c0f8c6e2db5",
+            "level": 3,
+            "redirect": "",
+            "orders": 3,
+            "meta": [
+              { "key": "title", "value": "edit" },
+              { "key": "icon", "value": "edit" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-30T13:28:09.782Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e09fb69ee2f802184597688",
+            "path": "edit",
+            "name": "category-news-edit",
+            "component": "category/add",
+            "__v": 0,
+            "label": "Sửa",
+            "icon": "edit",
+            "hidden": true
+          },
+          {
+            "dependent": "5e08723c0d442c0f8c6e2db5",
+            "level": 3,
+            "redirect": "",
+            "orders": 4,
+            "meta": [
+              { "key": "title", "value": "trash" },
+              { "key": "icon", "value": "delete" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-30T13:28:21.616Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e09fb75ee2f80218459768a",
+            "path": "trash",
+            "name": "category-news-trash",
+            "component": "category",
+            "__v": 0,
+            "label": "Đã xóa",
+            "icon": "delete",
+            "hidden": true
+          }
+        ],
+        "created": {
+          "at": "2019-12-29T09:30:36.885Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e08723c0d442c0f8c6e2db5",
+        "path": "category",
+        "name": "news-category",
+        "component": "category/index",
+        "__v": 0,
+        "label": "Danh mục",
+        "icon": "category",
+        "hidden": false
+      }
+    ],
+    "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+    "_id": "5e00654db680da0bc08c2f67",
+    "path": "/news",
+    "name": "news",
+    "component": "layout",
+    "label": "Tin tức",
+    "icon": "library_books",
+    "hidden": false
+  },
+  {
+    "dependent": null,
+    "level": 1,
+    "redirect": null,
+    "orders": 3,
+    "meta": [
+      { "key": "title", "value": "manager" },
+      { "key": "icon", "value": "security" },
+      { "key": "hidden", "value": false }
+    ],
+    "flag": 1,
+    "children": [
+      {
+        "dependent": "5e00654db680da0bc08c2f68",
+        "level": 2,
+        "redirect": null,
+        "orders": 1,
+        "meta": [
+          { "key": "title", "value": "users" },
+          { "key": "icon", "value": "account_box" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [
+          {
+            "dependent": "5e0065c4b680da0bc08c2f69",
+            "level": 3,
+            "redirect": "",
+            "orders": 1,
+            "meta": [
+              { "key": "title", "value": "list" },
+              { "key": "icon", "value": "list" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e023eeaba38ba2ef0de3b76",
+            "path": "list",
+            "name": "manager-users-list",
+            "component": "users/index",
+            "__v": 0,
+            "label": "Danh sách",
+            "icon": "list",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0065c4b680da0bc08c2f69",
+            "level": 3,
+            "redirect": "",
+            "orders": 2,
+            "meta": [
+              { "key": "title", "value": "add" },
+              { "key": "icon", "value": "add" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e02e6c16911732d9cc57cb8",
+            "path": "add",
+            "name": "manager-users-add",
+            "component": "users/add",
+            "__v": 0,
+            "label": "Thêm mới",
+            "icon": "add",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0065c4b680da0bc08c2f69",
+            "level": 3,
+            "redirect": "",
+            "orders": 3,
+            "meta": [
+              { "key": "title", "value": "edit" },
+              { "key": "icon", "value": "edit" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e02c4376911732d9cc57cb7",
+            "path": "edit",
+            "name": "manager-users-edit",
+            "component": "users/add",
+            "__v": 0,
+            "label": "Sửa",
+            "icon": "edit",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0065c4b680da0bc08c2f69",
+            "level": 3,
+            "redirect": "",
+            "orders": 4,
+            "meta": [
+              { "key": "title", "value": "trash" },
+              { "key": "icon", "value": "delete" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e02e7906911732d9cc57cb9",
+            "path": "trash",
+            "name": "manager-users-trash",
+            "component": "users/index",
+            "__v": 0,
+            "label": "Đã xóa",
+            "icon": "delete",
+            "hidden": true
+          }
+        ],
+        "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+        "_id": "5e0065c4b680da0bc08c2f69",
+        "path": "users",
+        "name": "manager-users",
+        "component": "users/index",
+        "label": "Tài khoản",
+        "icon": "account_box",
+        "hidden": false
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f68",
+        "level": 2,
+        "redirect": null,
+        "orders": 2,
+        "meta": [
+          { "key": "title", "value": "roles" },
+          { "key": "icon", "value": "verified_user" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [
+          {
+            "dependent": "5e0065c4b680da0bc08c2f6a",
+            "level": 3,
+            "redirect": "",
+            "orders": 1,
+            "meta": [
+              { "key": "title", "value": "list" },
+              { "key": "icon", "value": "list" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e0328696911732d9cc57cba",
+            "path": "list",
+            "name": "manager-roles-list",
+            "component": "roles/index",
+            "__v": 0,
+            "label": "Danh sách",
+            "icon": "list",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0065c4b680da0bc08c2f6a",
+            "level": 3,
+            "redirect": "",
+            "orders": 2,
+            "meta": [
+              { "key": "title", "value": "add" },
+              { "key": "icon", "value": "add" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e0328a56911732d9cc57cbb",
+            "path": "add",
+            "name": "manager-roles-add",
+            "component": "roles/add",
+            "__v": 0,
+            "label": "Thêm mới",
+            "icon": "add",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0065c4b680da0bc08c2f6a",
+            "level": 3,
+            "redirect": "",
+            "orders": 3,
+            "meta": [
+              { "key": "title", "value": "edit" },
+              { "key": "icon", "value": "edit" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e0328c46911732d9cc57cbc",
+            "path": "edit",
+            "name": "manager-roles-edit",
+            "component": "roles/add",
+            "__v": 0,
+            "label": "Sửa",
+            "icon": "edit",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0065c4b680da0bc08c2f6a",
+            "level": 3,
+            "redirect": "",
+            "orders": 4,
+            "meta": [
+              { "key": "title", "value": "trash" },
+              { "key": "icon", "value": "delete" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e0328e06911732d9cc57cbd",
+            "path": "trash",
+            "name": "manager-roles-trash",
+            "component": "roles/index",
+            "__v": 0,
+            "label": "Đã xóa",
+            "icon": "delete",
+            "hidden": true
+          }
+        ],
+        "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+        "_id": "5e0065c4b680da0bc08c2f6a",
+        "path": "roles",
+        "name": "manager-roles",
+        "component": "roles/index",
+        "label": "Quyền",
+        "icon": "verified_user",
+        "hidden": false
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f68",
+        "level": 2,
+        "redirect": "",
+        "orders": 3,
+        "meta": [
+          { "key": "title", "value": "routes" },
+          { "key": "icon", "value": "vertical_split" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [
+          {
+            "dependent": "5e00d94685d1f71058b5359e",
+            "level": 3,
+            "redirect": "",
+            "orders": 1,
+            "meta": [
+              { "key": "title", "value": "list" },
+              { "key": "icon", "value": "list" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e03290f6911732d9cc57cbe",
+            "path": "list",
+            "name": "manager-routes-list",
+            "component": "routes",
+            "__v": 0,
+            "label": "Danh sách",
+            "icon": "list",
+            "hidden": true
+          },
+          {
+            "dependent": "5e00d94685d1f71058b5359e",
+            "level": 3,
+            "redirect": "",
+            "orders": 2,
+            "meta": [
+              { "key": "title", "value": "add" },
+              { "key": "icon", "value": "add" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e0329236911732d9cc57cbf",
+            "path": "add",
+            "name": "manager-routes-add",
+            "component": "routes/add",
+            "__v": 0,
+            "label": "Thêm mới",
+            "icon": "add",
+            "hidden": true
+          },
+          {
+            "dependent": "5e00d94685d1f71058b5359e",
+            "level": 3,
+            "redirect": "",
+            "orders": 3,
+            "meta": [
+              { "key": "title", "value": "edit" },
+              { "key": "icon", "value": "edit" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e0329346911732d9cc57cc0",
+            "path": "edit",
+            "name": "manager-routes-edit",
+            "component": "routes/add",
+            "__v": 0,
+            "label": "Sửa",
+            "icon": "edit",
+            "hidden": true
+          },
+          {
+            "dependent": "5e00d94685d1f71058b5359e",
+            "level": 3,
+            "redirect": "",
+            "orders": 4,
+            "meta": [
+              { "key": "title", "value": "trash" },
+              { "key": "icon", "value": "delete" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+            "_id": "5e0329486911732d9cc57cc1",
+            "path": "trash",
+            "name": "manager-routes-trash",
+            "component": "routes",
+            "__v": 0,
+            "label": "Đã xóa",
+            "icon": "delete",
+            "hidden": true
+          }
+        ],
+        "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+        "_id": "5e00d94685d1f71058b5359e",
+        "path": "routes",
+        "name": "manager-routes",
+        "component": "routes/index",
+        "__v": 0,
+        "label": "Routes",
+        "icon": "vertical_split",
+        "hidden": false
+      },
+      {
+        "dependent": "5e00654db680da0bc08c2f68",
+        "level": 2,
+        "redirect": "",
+        "orders": 4,
+        "meta": [
+          { "key": "title", "value": "types" },
+          { "key": "icon", "value": "merge_type" },
+          { "key": "hidden", "value": false }
+        ],
+        "flag": 1,
+        "children": [
+          {
+            "dependent": "5e0873d1351f5d2b600f5dda",
+            "level": 3,
+            "redirect": "",
+            "orders": 1,
+            "meta": [
+              { "key": "title", "value": "list" },
+              { "key": "icon", "value": "list" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-29T09:39:07.950Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e08743b351f5d2b600f5ddc",
+            "path": "list",
+            "name": "manager-types-list",
+            "component": "types",
+            "__v": 0,
+            "label": "Danh sách",
+            "icon": "list",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0873d1351f5d2b600f5dda",
+            "level": 3,
+            "redirect": "",
+            "orders": 2,
+            "meta": [
+              { "key": "title", "value": "add" },
+              { "key": "icon", "value": "add" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-29T09:39:41.003Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e08745d351f5d2b600f5dde",
+            "path": "add",
+            "name": "manager-types-add",
+            "component": "list/add",
+            "__v": 0,
+            "label": "Thêm mới",
+            "icon": "add",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0873d1351f5d2b600f5dda",
+            "level": 3,
+            "redirect": "",
+            "orders": 3,
+            "meta": [
+              { "key": "title", "value": "edit" },
+              { "key": "icon", "value": "edit" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-29T09:40:34.436Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e087492351f5d2b600f5de3",
+            "path": "edit",
+            "name": "manager-types-edit",
+            "component": "types/add",
+            "__v": 0,
+            "label": "Sửa",
+            "icon": "edit",
+            "hidden": true
+          },
+          {
+            "dependent": "5e0873d1351f5d2b600f5dda",
+            "level": 3,
+            "redirect": "",
+            "orders": 4,
+            "meta": [
+              { "key": "title", "value": "trash" },
+              { "key": "icon", "value": "delete" },
+              { "key": "hidden", "value": true }
+            ],
+            "flag": 1,
+            "children": [],
+            "created": {
+              "at": "2019-12-29T09:40:54.374Z",
+              "by": "5dda9d7f7703432d9c22be87",
+              "ip": "127.0.0.1"
+            },
+            "_id": "5e0874a6351f5d2b600f5de5",
+            "path": "trash",
+            "name": "manager-types-trash",
+            "component": "types",
+            "__v": 0,
+            "label": "Đã xóa",
+            "icon": "delete",
+            "hidden": true
+          }
+        ],
+        "created": {
+          "at": "2019-12-29T09:37:21.777Z",
+          "by": "5dda9d7f7703432d9c22be87",
+          "ip": "127.0.0.1"
+        },
+        "_id": "5e0873d1351f5d2b600f5dda",
+        "path": "types",
+        "name": "manager-types",
+        "component": "types",
+        "__v": 0,
+        "label": "Kiểu dữ liệu",
+        "icon": "merge_type",
+        "hidden": false
+      }
+    ],
+    "created": { "at": "2020-05-26T06:54:30.994Z", "by": "", "ip": "" },
+    "_id": "5e00654db680da0bc08c2f68",
+    "path": "/manager",
+    "name": "manager",
+    "component": "layout",
+    "label": "Quản trị",
+    "icon": "security",
+    "hidden": false
+  }
+]

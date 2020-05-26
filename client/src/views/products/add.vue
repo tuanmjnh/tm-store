@@ -6,30 +6,34 @@
         {{this.item?$t('global.update'):$t('global.add')}}
         <span class="text-weight-bold">{{$t('route.product')}}</span>
       </q-toolbar-title>
-      <q-btn flat round dense icon="close" v-close-popup :disable="loadingAdd||loadingDrafts?true:false">
+      <q-btn flat round dense icon="close" v-close-popup
+        :disable="loadingAdd||loadingDrafts?true:false">
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
     <q-separator />
     <q-form ref="form">
       <q-card-actions v-if="item" align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="offline_pin"
-          :label="$t('global.update')" :loading="loadingAdd" @click.prevent="onSubmit">
+        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
+          icon="offline_pin" :label="$t('global.update')" :loading="loadingAdd"
+          @click.prevent="onSubmit">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
       </q-card-actions>
       <q-card-actions v-else align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue" icon="check_circle"
-          :label="$t('global.add')" :loading="loadingAdd" :disable="loadingDrafts" @click.prevent="onSubmit(1)">
+        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
+          icon="check_circle" :label="$t('global.add')" :loading="loadingAdd"
+          :disable="loadingDrafts" @click.prevent="onSubmit(1)">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="receipt"
-          :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loadingAdd" @click.prevent="onSubmit(0)">
+          :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loadingAdd"
+          @click.prevent="onSubmit(0)">
           <!-- <q-tooltip>{{$t('global.drafts')}}</q-tooltip> -->
         </q-btn>
       </q-card-actions>
-      <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form" class="text-deep-purple"
-        align="justify">
+      <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form"
+        class="text-deep-purple" align="justify">
         <q-tab name="main" :label="$t('tabs.main')" />
         <q-tab name="about" :label="$t('tabs.about')" />
         <q-tab name="images" :label="$t('global.images')" />
@@ -41,21 +45,22 @@
         <q-tab-panel name="main">
           <div class="row q-gutter-xs">
             <div class="col-12">
-              <select-category :categories="categories" :selected.sync="form.categories" data-key="_id"
-                :dense="$store.getters.dense.input" :labelTitle="$t('category.title_product')"
-                :labelSelect="$t('category.select')" :labelClose="$t('global.cancel')"
-                @on-selected="onSelectCategory" />
+              <select-category :categories="categories" :selected.sync="form.categories"
+                data-key="_id" :dense="$store.getters.dense.input"
+                :labelTitle="$t('category.title_product')" :labelSelect="$t('category.select')"
+                :labelClose="$t('global.cancel')" @on-selected="onSelectCategory" />
             </div>
           </div>
           <div class="row q-gutter-xs">
             <div class="col-12 col-md-5">
-              <q-input v-model.trim="form.title" v-uppercaseFirst :dense="$store.getters.dense.input"
-                :label="$t('product.name')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
+              <q-input v-model.trim="form.title" v-uppercaseFirst
+                :dense="$store.getters.dense.input" :label="$t('product.name')"
+                :rules="[v=>v&&v.length>0||$t('error.required')]" />
             </div>
             <q-space />
             <div class="col-12 col-md-5">
-              <q-input v-model.trim="form.code" v-uppercase debounce="500" :dense="$store.getters.dense.input"
-                :label="$t('product.code')"
+              <q-input v-model.trim="form.code" v-uppercase debounce="500"
+                :dense="$store.getters.dense.input" :label="$t('product.code')"
                 :rules="[v=>v&&v.length>0||$t('error.required'),v=>!existCode||$t('error.exist')]" />
             </div>
           </div>
@@ -66,19 +71,19 @@
             </div>
             <q-space />
             <div class="col-5">
-              <q-input v-model="form.price_discount" type="number" :dense="$store.getters.dense.input"
-                :label="$t('product.price_discount')" />
+              <q-input v-model="form.priceDiscount" type="number"
+                :dense="$store.getters.dense.input" :label="$t('product.priceDiscount')" />
             </div>
           </div>
           <div class="row q-gutter-xs">
             <div class="col-5">
-              <q-input v-model="form.price_import" type="number" :dense="$store.getters.dense.input"
-                :label="$t('product.price_import')" />
+              <q-input v-model="form.priceImport" type="number" :dense="$store.getters.dense.input"
+                :label="$t('product.priceImport')" />
             </div>
             <q-space />
             <div class="col-5">
-              <q-input v-model="form.price_export" type="number" :dense="$store.getters.dense.input"
-                :label="$t('product.price_export')" />
+              <q-input v-model="form.priceExport" type="number" :dense="$store.getters.dense.input"
+                :label="$t('product.priceExport')" />
             </div>
           </div>
           <div class="row q-gutter-xs">
@@ -95,7 +100,8 @@
                   <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                     <q-item-section>
                       <q-item-label v-html="scope.opt.name" />
-                      <q-item-label v-if="scope.opt.desc" caption>{{`${scope.opt.desc}`}}</q-item-label>
+                      <q-item-label v-if="scope.opt.desc" caption>{{`${scope.opt.desc}`}}
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
                 </template>
@@ -107,16 +113,17 @@
               </q-select>
             </div>
             <div class="col-2">
-              <q-select v-model="unitPrice" :dense="$store.getters.dense.input" :options="unitsPriceLocal" use-input
-                hide-selected fill-input input-debounce="200" @filter="onFilterUnitPrice"
-                :hint="$t('product.price_unit')" option-value="_id" :option-label="opt=>opt.name.toHtml()"
-                :rules="[v=>v||$t('error.required')]">
+              <q-select v-model="unitPrice" :dense="$store.getters.dense.input"
+                :options="unitsPriceLocal" use-input hide-selected fill-input input-debounce="200"
+                @filter="onFilterUnitPrice" :hint="$t('product.priceUnit')" option-value="_id"
+                :option-label="opt=>opt.name.toHtml()" :rules="[v=>v||$t('error.required')]">
                 <template v-slot:option="scope">
                   <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                     <q-item-section>
                       <q-item-label v-html="scope.opt.name"></q-item-label>
                       <!-- <q-item-label>{{scope.opt.name.toHtml()}}</q-item-label> -->
-                      <q-item-label v-if="scope.opt.desc" caption>{{`${scope.opt.desc}`}}</q-item-label>
+                      <q-item-label v-if="scope.opt.desc" caption>{{`${scope.opt.desc}`}}
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
                 </template>
@@ -126,23 +133,26 @@
                   </q-item>
                 </template>
               </q-select>
-              <!-- <q-input v-model="form.price_unit" type="number" :dense="$store.getters.dense.input" :label="$t('global.price_unit')" /> -->
+              <!-- <q-input v-model="form.priceUnit" type="number" :dense="$store.getters.dense.input" :label="$t('global.priceUnit')" /> -->
             </div>
             <q-space />
             <div class="col-3">
               <q-input v-model="form.order" type="number" :dense="$store.getters.dense.input"
-                :label="$t('global.order')" :rules="[v=>v!==null&&v!==''||$t('error.required')]" class="col-md-4" />
+                :label="$t('global.order')" :rules="[v=>v!==null&&v!==''||$t('error.required')]"
+                class="col-md-4" />
             </div>
           </div>
         </q-tab-panel>
         <q-tab-panel name="about">
           <div class="row q-gutter-xs">
             <div class="col-12 col-md-5">
-              <q-input v-model.trim="form.origin" :dense="$store.getters.dense.input" :label="$t('product.origin')" />
+              <q-input v-model.trim="form.origin" :dense="$store.getters.dense.input"
+                :label="$t('product.origin')" />
             </div>
             <q-space />
             <div class="col-12 col-md-6">
-              <q-input v-model.trim="form.date" :dense="$store.getters.dense.input" :label="$t('product.date')" />
+              <q-input v-model.trim="form.date" :dense="$store.getters.dense.input"
+                :label="$t('product.date')" />
             </div>
           </div>
           <div class="row q-gutter-sm q-mb-lg">
@@ -154,8 +164,8 @@
           <div class="row q-gutter-sm">
             <div class="col-12">{{$t('global.content')}}</div>
             <div class="col-12">
-              <tm-editor :value.sync="form.content" :upload-url="uploadUrl" :headers="headers" multiple
-                :max-file-size="1024*1024*2" accept=".jpg,.jpeg,.png,.gif"></tm-editor>
+              <tm-editor :value.sync="form.content" :upload-url="uploadUrl" :headers="headers"
+                multiple :max-file-size="1024*1024*2" accept=".jpg,.jpeg,.png,.gif"></tm-editor>
               <!-- <q-editor v-model="form.content" min-height="5rem" /> -->
             </div>
           </div>
@@ -164,11 +174,13 @@
           <div class="row">
             <div class="col-12 q-gutter-sm images">
               <tm-upload :data.sync="form.images" :upload-url="uploadUrl" :headers="headers"
-                :max-file-size="1024*1024*2" accept=".jpg,.jpeg,.png,.gif" :multiple="true" :view-type.sync="viewType"
-                :size="121" :labelTitle="$t('files.title')" :labelAccept="$t('global.select')"
-                :labelViewList="$t('files.View_list')" :labelViewBox="$t('files.view_box')"
-                :labelFileName="$t('files.file_name')" :labelFileSize="$t('files.file_size')"
-                :labelConfirmTitle="$t('message_box.confirm')" :labelConfirmContent="$t('message_box.delete')">
+                :max-file-size="1024*1024*2" accept=".jpg,.jpeg,.png,.gif" :multiple="true"
+                :view-type.sync="viewType" :size="121" :labelTitle="$t('files.title')"
+                :labelAccept="$t('global.select')" :labelViewList="$t('files.View_list')"
+                :labelViewBox="$t('files.view_box')" :labelFileName="$t('files.file_name')"
+                :labelFileSize="$t('files.file_size')"
+                :labelConfirmTitle="$t('message_box.confirm')"
+                :labelConfirmContent="$t('message_box.delete')">
               </tm-upload>
             </div>
           </div>
@@ -182,19 +194,24 @@
             </div>
           </div>
           <q-separator class="q-mt-md" />
-          <tm-tags :data.sync="form.tags" :dense="$store.getters.dense.input" :labelTitle="$t('global.keyword')+':'"
-            :labelBtnAdd="$t('global.add')" :labelInput="$t('global.tags')" btnIcon="add" btnColor="blue"
-            tagsColor="primary" tagsTextColor="white" :labelConfirmTitle="$t('message_box.confirm')"
-            :labelConfirmContent="$t('message_box.delete')" :labelWarningTitle="$t('message_box.warning')"
+          <tm-tags :data.sync="form.tags" :dense="$store.getters.dense.input"
+            :labelTitle="$t('global.keyword')+':'" :labelBtnAdd="$t('global.add')"
+            :labelInput="$t('global.tags')" btnIcon="add" btnColor="blue" tagsColor="primary"
+            tagsTextColor="white" :labelConfirmTitle="$t('message_box.confirm')"
+            :labelConfirmContent="$t('message_box.delete')"
+            :labelWarningTitle="$t('message_box.warning')"
             :labelWarningContent="$t('error.required')"></tm-tags>
           <q-separator class="q-mb-md q-mt-md" />
           <tm-attributes :data.sync="form.attr" :keys="attrKeys" :values="attrValues"
             :dense="$store.getters.dense.input" :labelTitle="$t('product.attributes')+':'"
-            :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')" :labelInputValue="$t('global.value')"
-            btnIcon="add" btnColor="blue" :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
-            :labelConfirmTitle="$t('message_box.confirm')" :labelConfirmContent="$t('message_box.delete')"
-            :labelWarningTitle="$t('message_box.warning')" :labelWarningContent="$t('error.required')"
-            :labelNoData="$t('table.no_data')" @on-filter-key="onFilterAttrKey" @on-filter-value="onFilterAttrValue">
+            :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')"
+            :labelInputValue="$t('global.value')" btnIcon="add" btnColor="blue"
+            :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
+            :labelConfirmTitle="$t('message_box.confirm')"
+            :labelConfirmContent="$t('message_box.delete')"
+            :labelWarningTitle="$t('message_box.warning')"
+            :labelWarningContent="$t('error.required')" :labelNoData="$t('table.no_data')"
+            @on-filter-key="onFilterAttrKey" @on-filter-value="onFilterAttrValue">
           </tm-attributes>
         </q-tab-panel>
       </q-tab-panels>
@@ -253,10 +270,10 @@ export default {
         images: null,
         quantity: 0,
         price: 0,
-        price_discount: 0,
-        price_import: 0,
-        price_export: 0,
-        price_unit: null,
+        priceDiscount: 0,
+        priceImport: 0,
+        priceExport: 0,
+        priceUnit: null,
         unit: null,
         origin: null,
         date: null,
@@ -277,7 +294,7 @@ export default {
           this.form = { ...this.item }
           if (!this.form.content) this.form.content = ''
           this.form.unit = this.units.find(x => x._id === this.form.unit)
-          this.form.price_unit = this.unitsPrice.find(x => x._id === this.form.price_unit)
+          this.form.priceUnit = this.unitsPrice.find(x => x._id === this.form.priceUnit)
         }
       },
       deep: true,
@@ -337,7 +354,7 @@ export default {
     },
     onSubmit(action) {
       if (this.unit) this.form.unit = this.unit.name
-      if (this.unitPrice) this.form.price_unit = this.unitPrice.name
+      if (this.unitPrice) this.form.priceUnit = this.unitPrice.name
       // this.form.images = this.images.map(x => x.fullName)
       this.$refs.form.validate().then(valid => {
         if (valid) {

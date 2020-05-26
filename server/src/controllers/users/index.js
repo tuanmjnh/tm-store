@@ -2,7 +2,7 @@ const mongoose = require('mongoose'),
   Model = require('../../models/users'),
   validate = require('../../utils/validate'),
   crypto = require('../../utils/crypto'),
-  // moment = require('moment'),
+  moment = require('moment'),
   request = require('../../utils/request'),
   Logger = require('../../services/logger');
 
@@ -73,6 +73,7 @@ module.exports.post = async function (req, res, next) {
     req.body.salt = crypto.NewGuid('n');
     req.body.password = crypto.SHA256(password + req.body.salt);
     req.body.created = { at: new Date(), by: req.verify._id, ip: request.getIp(req) };
+    req.body.dateBirth = moment(req.body.dateBirth, 'DD/MM/YYYY');
     const data = new Model(req.body);
     // data.validate()
     data.save((e, rs) => {
@@ -83,6 +84,7 @@ module.exports.post = async function (req, res, next) {
       return res.status(201).json(rs);
     });
   } catch (e) {
+    console.log(e);
     return res.status(500).send('invalid');
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <q-card flat bordered class="my-card">
     <q-card-section class="row">
-      <div class="text-subtitle2 text-bold">{{$t('route.user_setting')}}</div>
+      <div class="text-subtitle2 text-bold">{{$t('route.userSetting')}}</div>
       <q-space />
       <!-- <q-btn color="primary" :label="$t('global.update')" class="q-btn--square" :loading="$store.state.loading.post"
         @click="onSubmit"></q-btn> -->
@@ -32,7 +32,7 @@
         </div>
         <div class="row q-gutter-xs">
           <div class="col self-center">
-            {{$t('setting.dark_mode')}}
+            {{$t('setting.darkMode')}}
           </div>
           <q-space />
           <div class="col-8">
@@ -44,7 +44,7 @@
         <q-separator inset class="q-mt-md q-mb-md" />
         <div class="row q-gutter-xs">
           <div class="col self-center">
-            {{$t('setting.font_size')}}
+            {{$t('setting.fontSize')}}
           </div>
           <q-space />
           <div class="col-8">
@@ -64,7 +64,7 @@
         </div>
         <div class="row q-gutter-xs">
           <div class="col self-center">
-            {{$t('setting.font_family')}}
+            {{$t('setting.fontFamily')}}
           </div>
           <q-space />
           <div class="col-8">
@@ -85,7 +85,7 @@
         </div>
         <div class="row q-gutter-xs">
           <div class="col self-center">
-            {{$t('setting.font_color')}}
+            {{$t('setting.fontColor')}}
           </div>
           <q-space />
           <div class="col-8">
@@ -117,7 +117,7 @@
         <q-separator inset class="q-mt-md q-mb-md" />
         <div class="row q-gutter-xs q-mb-sm">
           <div class="col self-center">
-            {{$t('setting.format_date')}}
+            {{$t('setting.formatDate')}}
           </div>
           <q-space />
           <div class="col-8">
@@ -138,7 +138,7 @@
         </div>
         <div class="row q-gutter-xs q-mb-sm">
           <div class="col self-center">
-            {{$t('setting.format_date')}}
+            {{$t('setting.formatDate')}}
           </div>
           <q-space />
           <div class="col-8">
@@ -160,7 +160,7 @@
         <q-separator inset class="q-mt-md q-mb-md" />
         <div class="row q-gutter-xs q-mb-sm">
           <div class="col self-center">
-            {{$t('setting.dense_form')}}
+            {{$t('setting.denseForm')}}
           </div>
           <q-space />
           <div class="col-8">
@@ -171,7 +171,7 @@
         </div>
         <div class="row q-gutter-xs q-mb-sm">
           <div class="col self-center">
-            {{$t('setting.dense_table')}}
+            {{$t('setting.denseTable')}}
           </div>
           <q-space />
           <div class="col-8">
@@ -182,7 +182,7 @@
         </div>
         <div class="row q-gutter-xs q-mb-sm">
           <div class="col self-center">
-            {{$t('setting.dense_input')}}
+            {{$t('setting.denseInput')}}
           </div>
           <q-space />
           <div class="col-8">
@@ -193,7 +193,7 @@
         </div>
         <div class="row q-gutter-xs q-mb-sm">
           <div class="col self-center">
-            {{$t('setting.dense_button')}}
+            {{$t('setting.denseButton')}}
           </div>
           <q-space />
           <div class="col-8">
@@ -204,7 +204,7 @@
         </div>
         <div class="row q-gutter-xs q-mb-sm">
           <div class="col self-center">
-            {{$t('setting.dense_menu')}}
+            {{$t('setting.denseMenu')}}
           </div>
           <q-space />
           <div class="col-8">
