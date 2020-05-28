@@ -7,7 +7,7 @@
         <span class="text-weight-bold">{{$t('roles.title')}}</span>
       </q-toolbar-title>
       <q-btn flat round dense icon="close" v-close-popup
-        :disable="loading_add||loading_drafts?true:false">
+        :disable="loadingAdd||loadingDrafts?true:false">
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
@@ -15,19 +15,19 @@
     <q-form ref="form">
       <q-card-actions v-if="item" align="right">
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
-          icon="offline_pin" :label="$t('global.update')" :loading="loading_add"
+          icon="offline_pin" :label="$t('global.update')" :loading="loadingAdd"
           @click.prevent="onSubmit">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
       </q-card-actions>
       <q-card-actions v-else align="right">
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
-          icon="check_circle" :label="$t('global.add')" :loading="loading_add"
-          :disable="loading_drafts" @click.prevent="onSubmit(1)">
+          icon="check_circle" :label="$t('global.add')" :loading="loadingAdd"
+          :disable="loadingDrafts" @click.prevent="onSubmit(1)">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="receipt"
-          :label="$t('global.drafts')" :loading="loading_drafts" :disable="loading_add"
+          :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loadingAdd"
           @click.prevent="onSubmit(0)">
           <!-- <q-tooltip>{{$t('global.drafts')}}</q-tooltip> -->
         </q-btn>
@@ -66,7 +66,7 @@
             <q-space />
             <div class="col self-center">
               {{$t('global.colorPick')}}:
-              <q-badge :style="{backgroundColor:form.color}" @click="dialog_color_pick=true">
+              <q-badge :style="{backgroundColor:form.color}" @click="dialogColorPick=true">
                 {{form.color}}</q-badge>
             </div>
           </div>
@@ -95,7 +95,7 @@
       <!-- </q-card-section> -->
     </q-form>
     <!-- Dialog color pick -->
-    <q-dialog v-model="dialog_color_pick">
+    <q-dialog v-model="dialogColorPick">
       <q-card>
         <q-toolbar>
           <q-toolbar-title>{{$t('global.colorPick')}}</q-toolbar-title>
@@ -126,9 +126,9 @@ export default {
   data() {
     return {
       loading: false,
-      loading_add: false,
-      loading_drafts: false,
-      dialog_color_pick: false,
+      loadingAdd: false,
+      loadingDrafts: false,
+      dialogColorPick: false,
       tabs: 'main',
       form: {},
       ticked: ['dashboard'],
@@ -170,25 +170,25 @@ export default {
         if (valid) {
           this.form.routes = this.ticked
           if (this.item) {
-            this.loading_add = true
+            this.loadingAdd = true
             api.update(this.form).then((x) => {
               if (x.ok) {
                 const index = this.items.indexOf(this.item)
                 if (index > -1) this.items.splice(index, 1, this.form)
               }
             }).finally(() => {
-              this.loading_add = false
+              this.loadingAdd = false
             })
           } else {
             this.form.flag = action
-            if (action) this.loading_add = true
-            else this.loading_drafts = true
+            if (action) this.loadingAdd = true
+            else this.loadingDrafts = true
             api.insert(this.form).then((x) => {
               this.items.push(x)
               this.reset()
             }).finally(() => {
-              this.loading_add = false
-              this.loading_drafts = false
+              this.loadingAdd = false
+              this.loadingDrafts = false
             })
           }
         }

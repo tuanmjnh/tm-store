@@ -2,9 +2,9 @@
   <div>
     <q-table :data="items" :columns="columns" row-key="_id" flat :visible-columns="visibleColumns"
       :loading="$store.state.loading.get||$store.state.loading.patch" :selected.sync="selected"
-      :dense="$store.getters.dense.table" selection="multiple" :no-data-label="$t('table.no_data')"
-      :no-results-label="$t('table.no_filter_data')" :rows-per-page-label="$t('table.row_per_page')"
-      :selected-rows-label="()=>`${selected.length} ${$t('table.row_selected')}`"
+      :dense="$store.getters.dense.table" selection="multiple" :no-data-label="$t('table.noData')"
+      :no-results-label="$t('table.noFilterData')" :rows-per-page-label="$t('table.rowPerPage')"
+      :selected-rows-label="()=>`${selected.length} ${$t('table.rowSelected')}`"
       :rows-per-page-options="[10, 20, 50 ,100, 200]" :pagination.sync="pagination"
       @request="onSelect" :filter="pagination.filter" binary-state-sort>
       <template v-slot:top="props">
@@ -45,7 +45,7 @@
                     <select-category :categories="categories" :selected.sync="pagination.categories"
                       data-key="_id" data-all :dense="$store.getters.dense.input"
                       :labelTitle="$t('category.title_product')"
-                      :labelSelect="$t('category.select')" :labelAll="$t('category.select_all')"
+                      :labelSelect="$t('category.select')" :labelAll="$t('category.selectAll')"
                       :labelClose="$t('global.cancel')" @on-selected="onSelectCategory" />
                   </div>
                 </div>
@@ -56,7 +56,7 @@
               <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.recover')}}</q-tooltip>
             </q-btn>
             <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'" icon="menu_open">
-              <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.display_columns')}}</q-tooltip>
+              <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.displayColumns')}}</q-tooltip>
               <q-menu fit>
                 <q-list dense style="min-width:120px">
                   <template v-for="(item,index) in columns">
@@ -73,7 +73,7 @@
               :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               @click="props.toggleFullscreen">
               <q-tooltip v-if="!$q.platform.is.mobile">
-                {{props.inFullscreen?$t('table.normal_screen'):$t('table.full_screen')}}</q-tooltip>
+                {{props.inFullscreen?$t('table.normalScreen'):$t('table.fullScreen')}}</q-tooltip>
             </q-btn>
           </div>
         </div>
@@ -149,9 +149,9 @@ export default {
       unitsPrice: [],
       pins: [],
       isRoutes: {
-        add: this.$router.has('products-add'),
-        edit: this.$router.has('products-edit'),
-        trash: this.$router.has('products-trash')
+        add: this.$router.has('product-list-add'),
+        edit: this.$router.has('product-list-edit'),
+        trash: this.$router.has('product-list-trash')
       },
       pagination: {
         filter: '',
@@ -167,7 +167,7 @@ export default {
       columns: [
         { name: 'title', field: 'title', label: 'product.name', align: 'left', sortable: true, required: true }, // row => this.$t(`roles.${row.name}`)
         { name: 'code', field: 'code', label: 'product.code', align: 'left', sortable: true, required: true },
-        { name: 'quantity', field: 'quantity', label: 'product.quantity_store', align: 'right', sortable: true, required: true },
+        { name: 'quantity', field: 'quantity', label: 'product.quantityStore', align: 'right', sortable: true, required: true },
         { name: 'priceImport', field: 'priceImport', label: 'product.priceImport', align: 'right', sortable: true },
         { name: 'priceExport', field: 'priceExport', label: 'product.priceExport', align: 'right', sortable: true },
         { name: 'price', field: 'price', label: 'product.priceSale', align: 'right', sortable: true },
@@ -238,8 +238,8 @@ export default {
     },
     onTrash(item) {
       this.$q.dialog({
-        title: this.$t('message_box.warning'),
-        message: this.pagination.flag ? this.$t('message_box.lock') : this.$t('message_box.unlock'),
+        title: this.$t('messageBox.warning'),
+        message: this.pagination.flag ? this.$t('messageBox.lock') : this.$t('messageBox.unlock'),
         cancel: true,
         persistent: true
       }).onOk(() => {

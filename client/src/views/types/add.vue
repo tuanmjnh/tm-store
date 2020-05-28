@@ -7,7 +7,7 @@
         <span class="text-weight-bold">{{$t('roles.title')}}</span>
       </q-toolbar-title>
       <q-btn flat round dense icon="close" v-close-popup
-        :disable="loading_add||loading_drafts?true:false">
+        :disable="loading_add||loadingDrafts?true:false">
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
@@ -23,11 +23,11 @@
       <q-card-actions v-else align="right">
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
           icon="check_circle" :label="$t('global.add')" :loading="loading_add"
-          :disable="loading_drafts" @click.prevent="onSubmit(1)">
+          :disable="loadingDrafts" @click.prevent="onSubmit(1)">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="receipt"
-          :label="$t('global.drafts')" :loading="loading_drafts" :disable="loading_add"
+          :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loading_add"
           @click.prevent="onSubmit(0)">
           <!-- <q-tooltip>{{$t('global.drafts')}}</q-tooltip> -->
         </q-btn>
@@ -50,7 +50,7 @@
                 :hint="$t('types.hit_key')" :label="$t('global.types')" /> -->
               <auto-complete v-model.trim="form.key" :data.sync="keys"
                 :placeholder="$t('global.key')" :label="$t('global.types')" is-no-data
-                :no-data="$t('table.no_data')" @input="onFilterKey"
+                :no-data="$t('table.noData')" @input="onFilterKey"
                 :rules="[v=>v&&v.length>0||$t('error.required')]" />
             </div>
             <q-space />
@@ -88,10 +88,10 @@
             :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')"
             :labelInputValue="$t('global.value')" btnIcon="add" btnColor="blue"
             :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
-            :labelConfirmTitle="$t('message_box.confirm')"
-            :labelConfirmContent="$t('message_box.delete')"
-            :labelWarningTitle="$t('message_box.warning')"
-            :labelWarningContent="$t('error.required')" :labelNoData="$t('table.no_data')"
+            :labelConfirmTitle="$t('messageBox.confirm')"
+            :labelConfirmContent="$t('messageBox.delete')"
+            :labelWarningTitle="$t('messageBox.warning')"
+            :labelWarningContent="$t('error.required')" :labelNoData="$t('table.noData')"
             @on-filter-key="onFilterMetaKey" @on-filter-value="onFilterMetaValue">
           </tm-attributes>
         </q-tab-panel>
@@ -116,7 +116,7 @@ export default {
     return {
       loading: false,
       loading_add: false,
-      loading_drafts: false,
+      loadingDrafts: false,
       tabs: 'main',
       form: {},
       keys: [],
@@ -200,13 +200,13 @@ export default {
           } else {
             this.form.flag = action
             if (action) this.loading_add = true
-            else this.loading_drafts = true
+            else this.loadingDrafts = true
             apiTypes.insert(this.form).then((x) => {
               this.items.push(x)
               this.reset()
             }).finally(() => {
               this.loading_add = false
-              this.loading_drafts = false
+              this.loadingDrafts = false
               this.onAddKey(this.form.key)
               this.reset()
             })

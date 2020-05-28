@@ -10,7 +10,8 @@
         </q-btn>
       </div>
       <div class="col-xs-5 col-sm-5 col-md-4">
-        <q-input v-model="filter" :dense="$store.getters.dense.input" debounce="500" :placeholder="$t('global.search')">
+        <q-input v-model="filter" :dense="$store.getters.dense.input" debounce="500"
+          :placeholder="$t('global.search')">
           <template v-slot:append>
             <q-icon v-if="filter===''" name="search" />
             <q-icon v-else name="clear" class="cursor-pointer" @click="filter=''" />
@@ -41,11 +42,13 @@
         </div>
       </template>
     </q-tree> -->
-    <tm-tree :nodes.sync="items" node-key="_id" node-label="label" :no-nodes-label="$t('table.no_data')"
-      :selected.sync="selected" :ticked.sync="ticked" :expanded.sync="expanded" tick-strategy="leaf-filtered"
-      :draggable="true" :filter-method="onFilter" :filter="filter" @on-drag-changed="onTreeDragChanged">
+    <tm-tree :nodes.sync="items" node-key="_id" node-label="label"
+      :no-nodes-label="$t('table.no_data')" :selected.sync="selected" :ticked.sync="ticked"
+      :expanded.sync="expanded" tick-strategy="leaf-filtered" :draggable="true"
+      :filter-method="onFilter" :filter="filter" @on-drag-changed="onTreeDragChanged">
       <template v-slot:content-after="prop">
-        <div class="row items-center" @mouseover="tooltipAction=prop.node._id" @mouseleave="tooltipAction=''">
+        <div class="row items-center" @mouseover="tooltipAction=prop.node._id"
+          @mouseleave="tooltipAction=''">
           <q-icon :name="prop.node.icon" color="blue-grey" size="20px" class="q-mr-sm" />
           <div :class="['node-label q-pr-md',prop.node.flag===1?'':'text-blue-grey-4']"
             :style="{color:prop.node.color?prop.node.color:'#009688'}">
@@ -54,11 +57,11 @@
           <template v-if="prop.node._id===tooltipAction">
             <q-icon v-if="isRoutes.add" name="add" color="blue" size="16px" class="q-pl-xs q-pr-xs"
               @click="onAdd(prop.node)" />
-            <q-icon v-if="isRoutes.edit" name="edit" color="light-green" size="16px" class="q-pl-xs q-pr-xs"
-              @click="onUpdate(prop.node)" />
+            <q-icon v-if="isRoutes.edit" name="edit" color="light-green" size="16px"
+              class="q-pl-xs q-pr-xs" @click="onUpdate(prop.node)" />
             <template v-if="isRoutes.trash">
-              <q-icon v-if="prop.node.flag===1" name="clear" color="negative" size="16px" class="q-pl-xs q-pr-xs"
-                @click="onTrash(prop.node)" />
+              <q-icon v-if="prop.node.flag===1" name="clear" color="negative" size="16px"
+                class="q-pl-xs q-pr-xs" @click="onTrash(prop.node)" />
               <q-icon v-else name="restore" color="amber" size="16px" class="q-pl-xs q-pr-xs"
                 @click="onTrash(prop.node)" />
             </template>
@@ -71,8 +74,8 @@
     <div class="row">expanded: {{expanded}}</div>
     <!-- Add dialog -->
     <q-dialog v-model="dialogAdd" persistent>
-      <template-add :dialog.sync="dialogAdd" :item.sync="item" :items.sync="items" :dependent="dependent"
-        :expanded="expanded" />
+      <template-add :dialog.sync="dialogAdd" :item.sync="item" :items.sync="items"
+        :dependent="dependent" :expanded="expanded" />
     </q-dialog>
   </div>
 </template>
@@ -157,8 +160,8 @@ export default {
     onTrash(item) {
       this.$q.dialog({
         // dark: this.dark,
-        title: this.$t('message_box.warning'),
-        message: item.flag ? this.$t('message_box.trash') : this.$t('message_box.recover'),
+        title: this.$t('messageBox.warning'),
+        message: item.flag ? this.$t('messageBox.trash') : this.$t('messageBox.recover'),
         cancel: true,
         persistent: true
       }).onOk(() => {

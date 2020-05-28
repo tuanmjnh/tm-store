@@ -67,7 +67,7 @@
           <div class="row q-gutter-xs">
             <div class="col-5">
               <q-input v-model.trim="form.price" type="number" :dense="$store.getters.dense.input"
-                :label="$t('product.price_sale')" />
+                :label="$t('product.priceSale')" />
             </div>
             <q-space />
             <div class="col-5">
@@ -89,7 +89,7 @@
           <div class="row q-gutter-xs">
             <div class="col-3">
               <q-input v-model="form.quantity" type="number" :dense="$store.getters.dense.input"
-                :label="$t('product.quantity_store')" />
+                :label="$t('product.quantityStore')" />
             </div>
             <div class="col-2">
               <q-select v-model="unit" use-input hide-selected fill-input input-debounce="200"
@@ -107,7 +107,7 @@
                 </template>
                 <template v-slot:no-option>
                   <q-item>
-                    <q-item-section class="text-grey">{{$t('table.no_data')}}</q-item-section>
+                    <q-item-section class="text-grey">{{$t('table.noData')}}</q-item-section>
                   </q-item>
                 </template>
               </q-select>
@@ -129,7 +129,7 @@
                 </template>
                 <template v-slot:no-option>
                   <q-item>
-                    <q-item-section class="text-grey">{{$t('table.no_data')}}</q-item-section>
+                    <q-item-section class="text-grey">{{$t('table.noData')}}</q-item-section>
                   </q-item>
                 </template>
               </q-select>
@@ -176,11 +176,12 @@
               <tm-upload :data.sync="form.images" :upload-url="uploadUrl" :headers="headers"
                 :max-file-size="1024*1024*2" accept=".jpg,.jpeg,.png,.gif" :multiple="true"
                 :view-type.sync="viewType" :size="121" :labelTitle="$t('files.title')"
-                :labelAccept="$t('global.select')" :labelViewList="$t('files.View_list')"
-                :labelViewBox="$t('files.view_box')" :labelFileName="$t('files.file_name')"
-                :labelFileSize="$t('files.file_size')"
-                :labelConfirmTitle="$t('message_box.confirm')"
-                :labelConfirmContent="$t('message_box.delete')">
+                :labelTitleUpload="$t('files.upload')" :labelTitleFiles="$t('files.title')"
+                :labelOpenFile="$t('files.openFile')" :labelOpenData="$t('files.openData')"
+                :labelViewList="$t('files.ViewList')" :labelViewBox="$t('files.viewBox')"
+                :labelFileName="$t('files.fileName')" :labelFileSize="$t('files.fileSize')"
+                :labelCancel="$t('global.cancel')" :labelConfirmTitle="$t('messageBox.confirm')"
+                :labelConfirmContent="$t('messageBox.delete')">
               </tm-upload>
             </div>
           </div>
@@ -197,9 +198,9 @@
           <tm-tags :data.sync="form.tags" :dense="$store.getters.dense.input"
             :labelTitle="$t('global.keyword')+':'" :labelBtnAdd="$t('global.add')"
             :labelInput="$t('global.tags')" btnIcon="add" btnColor="blue" tagsColor="primary"
-            tagsTextColor="white" :labelConfirmTitle="$t('message_box.confirm')"
-            :labelConfirmContent="$t('message_box.delete')"
-            :labelWarningTitle="$t('message_box.warning')"
+            tagsTextColor="white" :labelConfirmTitle="$t('messageBox.confirm')"
+            :labelConfirmContent="$t('messageBox.delete')"
+            :labelWarningTitle="$t('messageBox.warning')"
             :labelWarningContent="$t('error.required')"></tm-tags>
           <q-separator class="q-mb-md q-mt-md" />
           <tm-attributes :data.sync="form.attr" :keys="attrKeys" :values="attrValues"
@@ -207,10 +208,10 @@
             :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')"
             :labelInputValue="$t('global.value')" btnIcon="add" btnColor="blue"
             :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
-            :labelConfirmTitle="$t('message_box.confirm')"
-            :labelConfirmContent="$t('message_box.delete')"
-            :labelWarningTitle="$t('message_box.warning')"
-            :labelWarningContent="$t('error.required')" :labelNoData="$t('table.no_data')"
+            :labelConfirmTitle="$t('messageBox.confirm')"
+            :labelConfirmContent="$t('messageBox.delete')"
+            :labelWarningTitle="$t('messageBox.warning')"
+            :labelWarningContent="$t('error.required')" :labelNoData="$t('table.noData')"
             @on-filter-key="onFilterAttrKey" @on-filter-value="onFilterAttrValue">
           </tm-attributes>
         </q-tab-panel>

@@ -27,6 +27,7 @@ export default {
     template: 'Template',
     types: 'Kiểu dữ liệu',
     orders: 'Đơn hàng',
+    store: 'Kho hàng',
     warehouse: 'Kho hàng',
     data: 'Dữ liệu',
     import: 'Nhập',
@@ -223,8 +224,8 @@ export default {
     bot: 'Dưới'
   },
   category: {
-    titleProduct: 'Danh mục sản phẩm',
-    titleNews: 'Danh mục tin tức',
+    title_product: 'Danh mục sản phẩm',
+    title_news: 'Danh mục tin tức',
     noithatvanphong: 'Nội thất văn phòng',
     hitCode: 'Mã của danh mục',
     select: 'Chọn danh mục',

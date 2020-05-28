@@ -1,13 +1,13 @@
 <template>
   <q-card flat bordered>
     <q-toolbar>
-      <q-toolbar-title>{{$t('product.warehouse_import')}}</q-toolbar-title>
+      <q-toolbar-title>{{$t('product.warehouseImport')}}</q-toolbar-title>
       <q-btn v-if="!result&&items&&items.length" type="submit" :dense="$store.getters.dense.button"
         color="blue" :label="$t('product.import')" :loading="loading" class="q-btn--square q-mr-sm"
         @click.prevent="onSubmit" />
       <!--icon="offline_pin" -->
       <q-btn v-if="items&&items.length" type="submit" no-caps :dense="$store.getters.dense.button"
-        color="blue-grey-4" :label="$t('product.create_new')" :loading="loading"
+        color="blue-grey-4" :label="$t('product.createNew')" :loading="loading"
         class="q-btn--square" @click.prevent="onCreateNew" />
     </q-toolbar>
     <q-separator />
@@ -18,15 +18,14 @@
       <q-table :data="items" :columns="columns" row-key="code" flat
         :visible-columns="visibleColumns"
         :loading="$store.state.loading.get||$store.state.loading.patch" :selected.sync="selected"
-        selection="multiple" :dense="$store.getters.dense.table"
-        :no-data-label="$t('table.no_data')" :no-results-label="$t('table.no_filter_data')"
-        :rows-per-page-label="$t('table.row_per_page')"
-        :selected-rows-label="()=>`${selected.length} ${$t('table.row_selected')}`"
+        selection="multiple" :dense="$store.getters.dense.table" :no-data-label="$t('table.noData')"
+        :no-results-label="$t('table.noFilterData')" :rows-per-page-label="$t('table.rowPerPage')"
+        :selected-rows-label="()=>`${selected.length} ${$t('table.rowSelected')}`"
         :rows-per-page-options="[10, 20, 50 ,100, 200, 0]" :pagination.sync="pagination">
         <template v-slot:top="props">
           <div class="col-12 row">
             <div v-if="result" class="col-xs-12 col-sm-auto self-center">
-              <span>{{$t('product.import_success')}}</span><b
+              <span>{{$t('product.importSuccess')}}</span><b
                 class="text-positive">{{result.data.code}}</b>
             </div>
             <q-space />
@@ -39,8 +38,8 @@
                 <!-- <q-btn v-if="result" flat round dense color="indigo" icon="print" @click="onPrint">
                   <q-tooltip v-if="!$q.platform.is.mobile">{{$t('product.print')}}</q-tooltip>
                 </q-btn> -->
-                <printer-form v-if="result" :title="$t('product.import_ballot')"
-                  :label="$t('product.print')" :labelDate="$t('product.import_date')" :items="items"
+                <printer-form v-if="result" :title="$t('product.importBallot')"
+                  :label="$t('product.print')" :labelDate="$t('product.importDate')" :items="items"
                   :result="result" />
                 <q-btn v-if="!result" flat round dense color="secondary" icon="find_in_page"
                   @click="onOpenProductList">
@@ -52,11 +51,11 @@
                 </q-btn>
                 <q-btn v-if="!result" flat round dense color="indigo" icon="cloud_upload"
                   @click="onOpenProductLoad">
-                  <q-tooltip v-if="!$q.platform.is.mobile">{{$t('files.open_file')}}</q-tooltip>
+                  <q-tooltip v-if="!$q.platform.is.mobile">{{$t('files.openFile')}}</q-tooltip>
                 </q-btn>
                 <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
                   icon="menu_open">
-                  <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.display_columns')}}
+                  <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.displayColumns')}}
                   </q-tooltip>
                   <q-menu fit>
                     <q-list dense style="min-width:120px">
@@ -74,7 +73,7 @@
                   :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                   @click="props.toggleFullscreen">
                   <q-tooltip v-if="!$q.platform.is.mobile">
-                    {{props.inFullscreen?$t('table.normal_screen'):$t('table.full_screen')}}
+                    {{props.inFullscreen?$t('table.normalScreen'):$t('table.fullScreen')}}
                   </q-tooltip>
                 </q-btn>
               </div>
@@ -150,7 +149,7 @@
                 <q-badge v-html="props.row.unit" color="orange" transparent />
               </div>
               <q-input v-else v-model="props.row.quantity" debounce="300"
-                :label="$t('product.quantity_import')" type="number"
+                :label="$t('product.quantityImport')" type="number"
                 :dense="$store.getters.dense.input" class="no-error-icon no-arrows"
                 :rules="[v=>v!==null&&v!==''||$t('error.required'),v=>parseInt(v)>0||$t('error.minQuanity',{min:1})]">
               </q-input>
@@ -160,8 +159,8 @@
               {{ props.row.amount=parseInt(props.row.price)*parseInt(props.row.quantity)|NumberFormat($store.getters.language) }}
               <q-badge v-html="props.row.priceUnit" color="blue" transparent />
             </q-td>
-            <q-td key="quantity_store" :props="props">
-              {{ (result?parseInt(props.row.quantity)+parseInt(props.row.quantity_store):props.row.quantity)|NumberFormat($store.getters.language) }}
+            <q-td key="quantityStore" :props="props">
+              {{ (result?parseInt(props.row.quantity)+parseInt(props.row.quantityStore):props.row.quantity)|NumberFormat($store.getters.language) }}
               <q-badge v-html="props.row.unit" color="orange" transparent />
             </q-td>
             <q-td key="priceSale" :props="props">
@@ -186,7 +185,7 @@
         <q-item v-for="(e,i) in items" :key="i">
           <q-item-section>{{e.code}} - {{e.title}}</q-item-section>
           <q-item-section>{{e.priceImport}}</q-item-section>
-          <q-item-section>{{e.quantity_import}}</q-item-section>
+          <q-item-section>{{e.quantityImport}}</q-item-section>
         </q-item>
       </q-list> -->
     <!-- Product list dialog -->
@@ -207,12 +206,12 @@
       <q-card style="min-width:800px">
         <q-toolbar>
           <q-avatar :icon="$route.meta.icon" size="50px" />
-          <q-toolbar-title>{{$t('files.data_file')}}</q-toolbar-title>
+          <q-toolbar-title>{{$t('files.dataFile')}}</q-toolbar-title>
           <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
             :icon="maximizedView?'fullscreen_exit':'fullscreen'" :disable="loading"
             @click="maximizedView=!maximized">
             <q-tooltip v-if="!$q.platform.is.mobile">
-              {{maximizedView?$t('table.normal_screen'):$t('table.full_screen')}}</q-tooltip>
+              {{maximizedView?$t('table.normalScreen'):$t('table.fullScreen')}}</q-tooltip>
           </q-btn>
           <q-btn flat round dense icon="close" v-close-popup>
             <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
@@ -220,8 +219,8 @@
         </q-toolbar>
         <q-separator />
         <q-card-section class="text-center">
-          <tm-load-files :button="true" :label="$t('files.open_file')"
-            :placeholder="$t('files.choose_file')" accept=".xls,.xlsx,.csv,.tsv,.txt,.json,.xml"
+          <tm-load-files :button="true" :label="$t('files.openFile')"
+            :placeholder="$t('files.chooseFile')" accept=".xls,.xlsx,.csv,.tsv,.txt,.json,.xml"
             @on-start="loading=true" @on-finish="onLoadedFile" />
         </q-card-section>
       </q-card>
@@ -231,7 +230,7 @@
 
 <script>
 import Cookies from 'js-cookie'
-import * as api from '@/api/warehouse/imports'
+import * as api from '@/api/store/imports'
 import * as apiTypes from '@/api/types'
 import * as apiCategories from '@/api/categories'
 import pList from '@/views/products/components/list'
@@ -255,7 +254,7 @@ export default {
       selected: [],
       items: Cookies.get('import-tmp') ? JSON.parse(Cookies.get('import-tmp')) : [],
       visibleColumns: [],
-      visibleColumnsList: ['quantity_store', 'priceSale', 'priceDiscount', 'priceImport'],
+      visibleColumnsList: ['quantityStore', 'priceSale', 'priceDiscount', 'priceImport'],
       visibleColumnsPrint: [],
       pagination: {
         page: 1,
@@ -264,10 +263,10 @@ export default {
       columns: [
         { name: 'title', field: 'title', label: 'product.name', align: 'left', sortable: true, required: true }, // row => this.$t(`roles.${row.name}`)
         { name: 'code', field: 'code', label: 'product.code', align: 'left', sortable: true, required: true },
-        { name: 'price', field: 'price', label: 'product.unit_price', align: 'right', sortable: true, required: true },
-        { name: 'quantity', field: 'quantity', label: 'product.quantity_import', align: 'right', sortable: true, required: true },
+        { name: 'price', field: 'price', label: 'product.unitPrice', align: 'right', sortable: true, required: true },
+        { name: 'quantity', field: 'quantity', label: 'product.quantityImport', align: 'right', sortable: true, required: true },
         { name: 'amount', field: 'amount', label: 'product.amount', align: 'right', sortable: true, required: true },
-        { name: 'quantity_store', field: 'quantity_store', label: 'product.quantity_store', align: 'right', sortable: true },
+        { name: 'quantityStore', field: 'quantityStore', label: 'product.quantityStore', align: 'right', sortable: true },
         { name: 'priceSale', field: 'priceSale', label: 'product.priceSale', align: 'right', sortable: true },
         { name: 'priceDiscount', field: 'priceDiscount', label: 'product.priceDiscount', align: 'right', sortable: true }
       ]
@@ -329,10 +328,10 @@ export default {
           _id: selected[i]._id,
           code: selected[i].code.toUpperCase(),
           title: selected[i].title,
-          quantity: selected[i].quantity_import || 0,
+          quantity: selected[i].quantityImport || 0,
           price: selected[i].priceImport || 0,
           priceOld: selected[i].priceImport || 0,
-          quantity_store: selected[i].quantity || 0,
+          quantityStore: selected[i].quantity || 0,
           priceSale: selected[i].price || 0,
           priceDiscount: selected[i].priceDiscount || 0,
           priceUnit: selected[i].priceUnit,
@@ -344,7 +343,7 @@ export default {
       //   _id: item._id,
       //   code: item.code.toUpperCase(),
       //   title: item.title,
-      //   quantity_import: item.quantity_import || 0,
+      //   quantityImport: item.quantityImport || 0,
       //   priceImport: item.priceImport || 0,
       //   priceImport_old: item.priceImport || 0,
       //   quantity: item.quantity || 0,
@@ -360,10 +359,10 @@ export default {
         _id: item._id,
         code: item.code.toUpperCase(),
         title: item.title,
-        quantity: item.quantity_import || 0,
+        quantity: item.quantityImport || 0,
         price: item.priceImport || 0,
         priceOld: item.priceImport || 0,
-        quantity_store: item.quantity || 0,
+        quantityStore: item.quantity || 0,
         priceSale: item.price || 0,
         priceDiscount: item.priceDiscount || 0,
         priceUnit: item.priceUnit,
@@ -388,10 +387,10 @@ export default {
                 _id: item._id,
                 code: item.code.toUpperCase(),
                 title: item.title,
-                quantity: e.quantity_import || 0,
+                quantity: e.quantityImport || 0,
                 price: e.priceImport || 0,
                 priceOld: e.priceImport || 0,
-                quantity_store: item.quantity || 0,
+                quantityStore: item.quantity || 0,
                 priceSale: item.price || 0,
                 priceDiscount: item.priceDiscount || 0,
                 priceUnit: item.priceUnit,
@@ -407,10 +406,10 @@ export default {
                 images: e.images,
                 priceSale: parseInt(e.price) || 0,
                 priceDiscount: parseInt(e.priceDiscount) || 0,
-                quantity_store: 0,
+                quantityStore: 0,
                 price: parseInt(e.priceImport) || 0,
                 priceOld: parseInt(e.priceImport) || 0,
-                quantity: parseInt(e.quantity_import) || 0,
+                quantity: parseInt(e.quantityImport) || 0,
                 priceUnit: e.priceUnit,
                 unit: e.unit,
                 origin: e.origin,
@@ -432,8 +431,8 @@ export default {
     onRemove(item) {
       if (item) this.selected = [item]
       this.$q.dialog({
-        title: this.$t('message_box.confirm'),
-        message: this.$t('message_box.delete'),
+        title: this.$t('messageBox.confirm'),
+        message: this.$t('messageBox.delete'),
         cancel: true,
         persistent: true
       }).onOk(() => {
@@ -447,7 +446,7 @@ export default {
     onSubmit() {
       if (this.result) {
         this.$q.notify({
-          message: this.$t('product.import_exist_result'),
+          message: this.$t('product.importExistResult'),
           color: 'red'
         })
         return null
@@ -455,8 +454,8 @@ export default {
       this.$refs.form.validate().then(valid => {
         if (valid) {
           this.$q.dialog({
-            title: this.$t('message_box.confirm'),
-            message: this.$t('product.import_confirm'),
+            title: this.$t('messageBox.confirm'),
+            message: this.$t('product.importConfirm'),
             cancel: true,
             persistent: true
           }).onOk(() => {

@@ -23,7 +23,7 @@
 <script>
 import Chart from 'chart.js'
 import { dynamicColors } from '@/utils/color'
-import * as api from '@/api/warehouse/reports'
+import * as api from '@/api/store/reports'
 import reportListButton from './components/report-list-button'
 export default {
   components: { reportListButton },
@@ -40,7 +40,7 @@ export default {
       exports: null,
       code: null,
       typeTime: 'date',
-      groups: ['total_bill', 'total_product', 'total_price', 'total_quantity'],
+      groups: ['totalBill', 'totalProduct', 'totalPrice', 'totalQuantity'],
       typeGroup: null
     }
   },
@@ -54,7 +54,7 @@ export default {
           this.imports = x.imports
           this.exports = x.exports
           // this.groups = x ? Object.keys(x.imports[0].data) : null
-          this.labels = this.imports.map(x => this.$t(`day_week.${x.labels}`))
+          this.labels = this.imports.map(x => this.$t(`dayWeek.${x.labels}`))
           this.onGetChart(this.groups ? this.groups[0] : null)
         })
       } else if (this.typeTime === 'month') {
@@ -78,7 +78,7 @@ export default {
           this.labels = this.imports.map(x => x.labels)
           this.onGetChart(this.groups ? this.groups[0] : null)
         })
-      } else if (this.typeTime === 'five_year') {
+      } else if (this.typeTime === 'fiveYear') {
         api.fiveYear().then(x => {
           this.imports = x.imports
           this.exports = x.exports
@@ -107,7 +107,7 @@ export default {
           labels: this.labels,
           datasets: [
             {
-              label: '# ' + this.$t(`report.${typeGroup}_import`),
+              label: '# ' + this.$t(`report.${typeGroup}Import`),
               data: this.imports.map(x => x.data[typeGroup]),
               order: 1,
               // fill: false,
@@ -120,7 +120,7 @@ export default {
               // hoverBorderColor: 'orange',
             },
             {
-              label: '# ' + this.$t(`report.${typeGroup}_export`),
+              label: '# ' + this.$t(`report.${typeGroup}Export`),
               data: this.exports.map(x => x.data[typeGroup]),
               order: 2,
               // fill: false,

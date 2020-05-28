@@ -1,5 +1,5 @@
 import * as http from '@/utils/http-client';
-const collection = '/product-exports';
+const collection = '/store-exports';
 
 export async function select(params) {
   return http.axiosApi.get(collection, params);

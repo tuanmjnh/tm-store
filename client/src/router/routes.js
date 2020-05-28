@@ -108,6 +108,248 @@ export const dynamic = [
             component: 'products/index'
           }
         ]
+      },
+      {
+        path: 'category-product',
+        name: 'category-product',
+        meta: { title: 'category', icon: 'category', type: 'product' },
+        component: 'category',
+        children: [
+          {
+            path: 'view',
+            name: 'category-product-view',
+            meta: {
+              title: 'view',
+              icon: 'list',
+              hidden: true,
+              noCache: true,
+              flag: 1
+            },
+            component: 'category/index'
+          },
+          {
+            path: 'add',
+            name: 'category-product-add',
+            meta: { title: 'add', icon: 'add', hidden: true },
+            component: 'category/add'
+          },
+          {
+            path: 'edit/:?id',
+            name: 'category-product-edit',
+            meta: {
+              title: 'edit',
+              icon: 'edit',
+              hidden: true,
+              noCache: true,
+              activeMenu: '/category-product/view'
+            },
+            component: 'category/add'
+          },
+          {
+            path: 'trash',
+            name: 'category-product-trash',
+            meta: {
+              title: 'trash',
+              icon: 'delete',
+              hidden: true,
+              noCache: true,
+              flag: 0
+            },
+            component: 'category/index'
+          }
+        ]
+      },
+      {
+        path: 'product-orders',
+        name: 'product-orders',
+        meta: { title: 'orders', icon: 'class' },
+        component: 'orders',
+        children: [
+          {
+            path: 'view',
+            name: 'product-orders-view',
+            meta: {
+              title: 'view',
+              icon: 'list',
+              hidden: true,
+              noCache: true,
+              flag: 1
+            },
+            component: 'orders/index'
+          },
+          {
+            path: 'add',
+            name: 'product-orders-add',
+            meta: { title: 'add', icon: 'add', hidden: true },
+            component: 'orders/add'
+          },
+          {
+            path: 'edit/:?id',
+            name: 'product-orders-edit',
+            meta: {
+              title: 'edit',
+              icon: 'edit',
+              hidden: true,
+              noCache: true,
+              activeMenu: '/product-orders/view'
+            },
+            component: 'orders/add'
+          },
+          {
+            path: 'trash',
+            name: 'product-orders-trash',
+            meta: {
+              title: 'trash',
+              icon: 'delete',
+              hidden: true,
+              noCache: true,
+              flag: 0
+            },
+            component: 'orders/index'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: '/news',
+    name: 'news',
+    redirect: 'news-list',
+    meta: { title: 'news', icon: 'library_books' },
+    component: 'layout',
+    children: [
+      {
+        path: 'news-list',
+        name: 'news-list',
+        meta: { title: 'list', icon: 'collections_bookmark' },
+        component: 'news/index',
+        children: [
+          {
+            path: 'view',
+            name: 'news-list-view',
+            meta: {
+              title: 'view',
+              icon: 'list',
+              hidden: true,
+              noCache: true,
+              flag: 1
+            },
+            component: 'news/index'
+          },
+          {
+            path: 'add',
+            name: 'news-list-add',
+            meta: { title: 'add', icon: 'add', hidden: true },
+            component: 'news/add'
+          },
+          {
+            path: 'edit/:?id',
+            name: 'news-list-edit',
+            meta: {
+              title: 'edit',
+              icon: 'edit',
+              hidden: true,
+              noCache: true,
+              activeMenu: '/news-list/view'
+            },
+            component: 'news/add'
+          },
+          {
+            path: 'trash',
+            name: 'news-list-trash',
+            meta: {
+              title: 'trash',
+              icon: 'delete',
+              hidden: true,
+              noCache: true,
+              flag: 0
+            },
+            component: 'news/index'
+          }
+        ]
+      },
+      {
+        path: 'category-news',
+        name: 'category-news',
+        meta: { title: 'category', icon: 'category', type: 'news' },
+        component: 'news',
+        children: [
+          {
+            path: 'view',
+            name: 'category-news-view',
+            meta: {
+              title: 'view',
+              icon: 'list',
+              hidden: true,
+              noCache: true,
+              flag: 1
+            },
+            component: 'news/index'
+          },
+          {
+            path: 'add',
+            name: 'category-news-add',
+            meta: { title: 'add', icon: 'add', hidden: true },
+            component: 'news/add'
+          },
+          {
+            path: 'edit/:?id',
+            name: 'category-news-edit',
+            meta: {
+              title: 'edit',
+              icon: 'edit',
+              hidden: true,
+              noCache: true,
+              activeMenu: '/category-news/view'
+            },
+            component: 'news/add'
+          },
+          {
+            path: 'trash',
+            name: 'category-news-trash',
+            meta: {
+              title: 'trash',
+              icon: 'delete',
+              hidden: true,
+              noCache: true,
+              flag: 0
+            },
+            component: 'news/index'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: '/store',
+    name: 'store',
+    redirect: 'store-warehouse',
+    meta: { title: 'store', icon: 'store' },
+    component: 'layout',
+    children: [
+      {
+        path: 'warehouse',
+        name: 'store-warehouse',
+        meta: { title: 'data', icon: 'home_work' },
+        component: 'store/index'
+      },
+      {
+        path: 'report',
+        name: 'store-report',
+        meta: { title: 'report', icon: 'pie_chart' },
+        component: 'store/report'
+      },
+      {
+        path: 'import',
+        name: 'store-import',
+        meta: { title: 'import', icon: 'playlist_add' },
+        component: 'store/import'
+      },
+      {
+        path: 'export',
+        name: 'store-export',
+        meta: { title: 'export', icon: 'double_arrow' },
+        component: 'store/export'
       }
     ]
   },

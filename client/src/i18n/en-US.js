@@ -26,6 +26,7 @@ export default {
     template: 'Template',
     types: 'Type data',
     orders: 'Orders',
+    store: 'Store',
     warehouse: 'Warehouse',
     data: 'Data',
     import: 'Import',
@@ -223,8 +224,8 @@ export default {
     bot: 'Dưới'
   },
   category: {
-    titleProduct: 'Category of product',
-    titleNews: 'Category of news',
+    title_product: 'Category of product',
+    title_news: 'Category of news',
     noithatvanphong: 'Office furniture',
     hitCode: 'Code of category',
     select: 'Select category',

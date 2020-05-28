@@ -45,7 +45,7 @@
       </template>
     </q-tree>
     <q-separator></q-separator> -->
-    <tm-tree :nodes="items" node-key="_id" node-label="label" :no-nodes-label="$t('table.no_data')"
+    <tm-tree :nodes="items" node-key="_id" node-label="label" :no-nodes-label="$t('table.noData')"
       :selected.sync="selected" :ticked.sync="ticked" :expanded.sync="expanded"
       tick-strategy="leaf-child" :draggable="true" :filter-method="onFilter"
       :filter="pagination.filter" @on-drag-changed="onTreeDragChanged">

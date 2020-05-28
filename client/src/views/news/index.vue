@@ -2,34 +2,37 @@
   <div>
     <q-table :data="items" :columns="columns" row-key="_id" flat :visible-columns="visibleColumns"
       :loading="$store.state.loading.get||$store.state.loading.patch" :selected.sync="selected"
-      :dense="$store.getters.dense.table" selection="multiple" :no-data-label="$t('table.no_data')"
-      :no-results-label="$t('table.no_filter_data')" :rows-per-page-label="$t('table.row_per_page')"
-      :selected-rows-label="()=>`${selected.length} ${$t('table.row_selected')}`"
-      :rows-per-page-options="[10, 20, 50 ,100, 200, 0]" :pagination.sync="pagination" @request="onSelect"
-      :filter="pagination.filter" binary-state-sort>
+      :dense="$store.getters.dense.table" selection="multiple" :no-data-label="$t('table.noData')"
+      :no-results-label="$t('table.noFilterData')" :rows-per-page-label="$t('table.rowPerPage')"
+      :selected-rows-label="()=>`${selected.length} ${$t('table.rowSelected')}`"
+      :rows-per-page-options="[10, 20, 50 ,100, 200, 0]" :pagination.sync="pagination"
+      @request="onSelect" :filter="pagination.filter" binary-state-sort>
       <template v-slot:top="props">
         <div class="col-12 row">
           <div class="col-xs-12 col-sm-auto q-table__title text-h6">{{$t('news.title')}}</div>
           <q-space />
           <div class="col-xs-12 col-sm-auto self-center text-right">
             <div class="col-auto self-center">
-              <q-btn v-if="isRoutes.add" flat round dense icon="add" color="blue" @click="dialogAdd=true">
+              <q-btn v-if="isRoutes.add" flat round dense icon="add" color="blue"
+                @click="dialogAdd=true">
                 <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.add')}}</q-tooltip>
               </q-btn>
-              <q-btn v-if="isRoutes.trash&&selected.length>0&&pagination.flag" flat round dense color="negative"
-                icon="delete" @click="onTrash()">
+              <q-btn v-if="isRoutes.trash&&selected.length>0&&pagination.flag" flat round dense
+                color="negative" icon="delete" @click="onTrash()">
                 <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.delete')}}</q-tooltip>
               </q-btn>
-              <q-btn v-if="isRoutes.trash&&selected.length>0&&!pagination.flag" flat round dense color="warning"
-                icon="restore_page" @click="onTrash()">
+              <q-btn v-if="isRoutes.trash&&selected.length>0&&!pagination.flag" flat round dense
+                color="warning" icon="restore_page" @click="onTrash()">
                 <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.recover')}}</q-tooltip>
               </q-btn>
-              <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'" icon="menu_open">
-                <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.display_columns')}}</q-tooltip>
+              <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
+                icon="menu_open">
+                <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.displayColumns')}}</q-tooltip>
                 <q-menu fit>
                   <q-list dense style="min-width:100px">
                     <template v-for="(item,index) in columns">
-                      <q-item clickable :key="index" v-if="!item.required" @click="onColumns(item.name)"
+                      <q-item clickable :key="index" v-if="!item.required"
+                        @click="onColumns(item.name)"
                         :active="visibleColumns.indexOf(item.name)>-1||false">
                         <q-item-section>{{$t(item.label)}}</q-item-section>
                       </q-item>
@@ -38,20 +41,24 @@
                 </q-menu>
               </q-btn>
               <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
-                :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen">
+                :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                @click="props.toggleFullscreen">
                 <q-tooltip v-if="!$q.platform.is.mobile">
-                  {{props.inFullscreen?$t('table.normal_screen'):$t('table.full_screen')}}</q-tooltip>
+                  {{props.inFullscreen?$t('table.normalScreen'):$t('table.fullScreen')}}
+                </q-tooltip>
               </q-btn>
-              <q-btn v-if="isRoutes.trash" flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
-                icon="more_vert">
+              <q-btn v-if="isRoutes.trash" flat round dense
+                :color="$store.state.app.darkMode?'':'grey-7'" icon="more_vert">
                 <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.action')}}</q-tooltip>
                 <q-menu auto-close>
                   <q-list dense bordered>
                     <q-item clickable>
-                      <q-item-section no-wrap @click="onChangeFlag(1)">{{$t('global.working')}}</q-item-section>
+                      <q-item-section no-wrap @click="onChangeFlag(1)">{{$t('global.working')}}
+                      </q-item-section>
                     </q-item>
                     <q-item clickable>
-                      <q-item-section no-wrap @click="onChangeFlag(0)">{{$t('global.locked')}}</q-item-section>
+                      <q-item-section no-wrap @click="onChangeFlag(0)">{{$t('global.locked')}}
+                      </q-item-section>
                     </q-item>
                   </q-list>
                 </q-menu>
@@ -61,10 +68,11 @@
         </div>
         <div class="col-12 row">
           <div class="col-xs-12 col-sm-5 col-md-4">
-            <select-category :categories="categories" :selected.sync="pagination.categories" data-key="_id" data-all
-              :dense="$store.getters.dense.input" :labelTitle="$t('category.title_product')"
-              :labelSelect="$t('category.select')" :labelAll="$t('category.select_all')"
-              :labelClose="$t('global.cancel')" @on-selected="onSelectCategory" />
+            <select-category :categories="categories" :selected.sync="pagination.categories"
+              data-key="_id" data-all :dense="$store.getters.dense.input"
+              :labelTitle="$t('category.title_news')" :labelSelect="$t('category.select')"
+              :labelAll="$t('category.selectAll')" :labelClose="$t('global.cancel')"
+              @on-selected="onSelectCategory" />
           </div>
           <q-space />
           <div class="col-xs-12 col-sm-6">
@@ -81,8 +89,8 @@
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th auto-width>
-            <q-checkbox v-if="props.multipleSelect" v-model="props.selected" indeterminate-value="some"
-              :dense="$store.getters.dense.table" />
+            <q-checkbox v-if="props.multipleSelect" v-model="props.selected"
+              indeterminate-value="some" :dense="$store.getters.dense.table" />
           </q-th>
           <q-th v-for="col in props.cols" :key="col.name" :props="props">
             <span v-if="$store.state.app.darkMode" class="text-bold">{{ $t(col.label) }}</span>
@@ -94,7 +102,8 @@
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td auto-width>
-            <q-checkbox v-model="props.selected" color="primary" :dense="$store.getters.dense.table" />
+            <q-checkbox v-model="props.selected" color="primary"
+              :dense="$store.getters.dense.table" />
           </q-td>
           <q-td key="title" :props="props">
             {{ props.row.title }}
@@ -121,8 +130,8 @@
                 :size="$store.getters.dense.table?'sm':'md'" @click="onTrash(props.row)">
                 <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.lock')}}</q-tooltip>
               </q-btn>
-              <q-btn v-else flat round dense color="amber" icon="restore" :size="$store.getters.dense.table?'sm':'md'"
-                @click="onTrash(props.row)">
+              <q-btn v-else flat round dense color="amber" icon="restore"
+                :size="$store.getters.dense.table?'sm':'md'" @click="onTrash(props.row)">
                 <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.unlock')}}</q-tooltip>
               </q-btn>
             </template>
@@ -132,8 +141,8 @@
     </q-table>
     <!-- Add dialog -->
     <q-dialog v-model="dialogAdd" persistent>
-      <template-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items" :categories="categories"
-        :pins="pins" />
+      <template-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items"
+        :categories="categories" :pins="pins" />
     </q-dialog>
   </div>
 </template>
@@ -159,9 +168,9 @@ export default {
       unitsPrice: [],
       pins: [],
       isRoutes: {
-        add: this.$router.has('news-add'),
-        edit: this.$router.has('news-edit'),
-        trash: this.$router.has('news-trash')
+        add: this.$router.has('news-list-add'),
+        edit: this.$router.has('news-list-edit'),
+        trash: this.$router.has('news-list-trash')
       },
       pagination: {
         filter: '',
@@ -234,8 +243,8 @@ export default {
     },
     onTrash(item) {
       this.$q.dialog({
-        title: this.$t('message_box.warning'),
-        message: this.pagination.flag ? this.$t('message_box.lock') : this.$t('message_box.unlock'),
+        title: this.$t('messageBox.warning'),
+        message: this.pagination.flag ? this.$t('messageBox.lock') : this.$t('messageBox.unlock'),
         cancel: true,
         persistent: true
       }).onOk(() => {

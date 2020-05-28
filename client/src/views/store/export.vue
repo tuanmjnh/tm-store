@@ -1,13 +1,13 @@
 <template>
   <q-card flat bordered>
     <q-toolbar>
-      <q-toolbar-title>{{$t('product.warehouse_export')}}</q-toolbar-title>
+      <q-toolbar-title>{{$t('product.warehouseExport')}}</q-toolbar-title>
       <q-btn v-if="!result&&items&&items.length" type="submit" no-caps
         :dense="$store.getters.dense.button" color="blue" :label="$t('product.export')"
         :loading="loading" class="q-btn--square q-mr-sm" @click.prevent="onSubmit" />
       <!--icon="offline_pin" -->
       <q-btn v-if="items&&items.length" type="submit" no-caps :dense="$store.getters.dense.button"
-        color="blue-grey-4" :label="$t('product.create_new')" :loading="loading"
+        color="blue-grey-4" :label="$t('product.createNew')" :loading="loading"
         class="q-btn--square" @click.prevent="onCreateNew" />
     </q-toolbar>
     <q-separator />
@@ -15,15 +15,14 @@
       <q-table :data="items" :columns="columns" row-key="code" flat
         :visible-columns="visibleColumns"
         :loading="$store.state.loading.get||$store.state.loading.patch" :selected.sync="selected"
-        selection="multiple" :dense="$store.getters.dense.table"
-        :no-data-label="$t('table.no_data')" :no-results-label="$t('table.no_filter_data')"
-        :rows-per-page-label="$t('table.row_per_page')"
-        :selected-rows-label="()=>`${selected.length} ${$t('table.row_selected')}`"
+        selection="multiple" :dense="$store.getters.dense.table" :no-data-label="$t('table.noData')"
+        :no-results-label="$t('table.noFilterData')" :rows-per-page-label="$t('table.rowPerPage')"
+        :selected-rows-label="()=>`${selected.length} ${$t('table.rowSelected')}`"
         :rows-per-page-options="[10, 20, 50 ,100, 200, 0]" :pagination.sync="pagination">
         <template v-slot:top="props">
           <div class="col-12 row">
             <div v-if="result" class="col-xs-12 col-sm-auto self-center">
-              <span>{{$t('product.export_success')}}</span><b
+              <span>{{$t('product.exportSuccess')}}</span><b
                 class="text-positive">{{result.data.code}}</b>
             </div>
             <q-space />
@@ -36,8 +35,8 @@
                 <!-- <q-btn v-if="result" flat round dense color="indigo" icon="print" @click="onPrint">
                   <q-tooltip v-if="!$q.platform.is.mobile">{{$t('product.print')}}</q-tooltip>
                 </q-btn> -->
-                <printer-form v-if="result" :title="$t('product.export_ballot')"
-                  :label="$t('product.print')" :labelDate="$t('product.export_date')" :items="items"
+                <printer-form v-if="result" :title="$t('product.exportBallot')"
+                  :label="$t('product.print')" :labelDate="$t('product.exportDate')" :items="items"
                   :result="result" />
                 <q-btn v-if="!result" flat round dense color="secondary" icon="find_in_page"
                   @click="onOpenProductList">
@@ -45,11 +44,11 @@
                 </q-btn>
                 <q-btn v-if="!result" flat round dense color="indigo" icon="cloud_upload"
                   @click="onOpenProductLoad">
-                  <q-tooltip v-if="!$q.platform.is.mobile">{{$t('files.open_file')}}</q-tooltip>
+                  <q-tooltip v-if="!$q.platform.is.mobile">{{$t('files.openFile')}}</q-tooltip>
                 </q-btn>
                 <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
                   icon="menu_open">
-                  <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.display_columns')}}
+                  <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.displayColumns')}}
                   </q-tooltip>
                   <q-menu fit>
                     <q-list dense style="min-width:120px">
@@ -67,7 +66,7 @@
                   :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                   @click="props.toggleFullscreen">
                   <q-tooltip v-if="!$q.platform.is.mobile">
-                    {{props.inFullscreen?$t('table.normal_screen'):$t('table.full_screen')}}
+                    {{props.inFullscreen?$t('table.normalScreen'):$t('table.fullScreen')}}
                   </q-tooltip>
                 </q-btn>
               </div>
@@ -109,7 +108,7 @@
               <q-input v-else v-model="props.row.price" debounce="300"
                 :label="$t('product.priceExport')" type="number" :dense="$store.getters.dense.input"
                 class="no-error-icon no-arrows"
-                :rules="[v=>v!==null&&v!==''||$t('error.required'),v=>parseInt(v)>0||$t('error.min_quanity',{min:1})]">
+                :rules="[v=>v!==null&&v!==''||$t('error.required'),v=>parseInt(v)>0||$t('error.minQuanity',{min:1})]">
                 <template v-slot:append>
                   <q-icon name="refresh" class="cursor-pointer"
                     @click="props.row.price=props.row.priceOld" />
@@ -125,7 +124,7 @@
               <q-input v-else v-model="props.row.quantity" debounce="300"
                 :label="$t('product.quantityExport')" type="number"
                 :dense="$store.getters.dense.input" class="no-error-icon no-arrows"
-                :rules="[v=>v!==null&&v!==''||$t('error.required'),v=>parseInt(v)>0||$t('error.min_quanity',{min:1})]"
+                :rules="[v=>v!==null&&v!==''||$t('error.required'),v=>parseInt(v)>0||$t('error.minQuanity',{min:1})]"
                 @input="onCheckQuantity(props.row)">
                 <template v-slot:append>
                   <q-icon name="arrow_drop_up" class="cursor-pointer"
@@ -183,7 +182,7 @@
         </q-toolbar>
         <q-separator />
         <q-card-section class="text-center">
-          <tm-load-files :button="true" :label="$t('files.open_file')"
+          <tm-load-files :button="true" :label="$t('files.openFile')"
             :placeholder="$t('files.chooseFile')" accept=".xls,.xlsx,.csv,.tsv,.txt,.json,.xml"
             @on-start="loading=true" @on-finish="onLoadedFile" />
         </q-card-section>
@@ -194,7 +193,7 @@
 
 <script>
 import Cookies from 'js-cookie'
-import * as api from '@/api/warehouse/exports'
+import * as api from '@/api/store/exports'
 import * as apiCategories from '@/api/categories'
 import pList from '@/views/products/components/list'
 import tmLoadFiles from '@/components/tm-load-files'
@@ -309,8 +308,8 @@ export default {
     onRemove(item) {
       if (item) this.selected = [item]
       this.$q.dialog({
-        title: this.$t('message_box.confirm'),
-        message: this.$t('message_box.delete'),
+        title: this.$t('messageBox.confirm'),
+        message: this.$t('messageBox.delete'),
         cancel: true,
         persistent: true
       }).onOk(() => {
@@ -327,7 +326,7 @@ export default {
     onSubmit() {
       if (this.result) {
         this.$q.notify({
-          message: this.$t('product.export_exist_result'),
+          message: this.$t('product.exportExistResult'),
           color: 'red'
         })
         return null
@@ -335,8 +334,8 @@ export default {
       this.$refs.form.validate().then(valid => {
         if (valid) {
           this.$q.dialog({
-            title: this.$t('message_box.confirm'),
-            message: this.$t('product.export_confirm'),
+            title: this.$t('messageBox.confirm'),
+            message: this.$t('product.exportConfirm'),
             cancel: true,
             persistent: true
           }).onOk(() => {

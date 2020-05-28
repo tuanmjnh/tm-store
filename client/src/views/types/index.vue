@@ -2,9 +2,9 @@
   <div>
     <q-table :data="items" :columns="columns" row-key="_id" flat :visible-columns="visibleColumns"
       :loading="$store.state.loading.get||$store.state.loading.patch" :selected.sync="selected"
-      :dense="$store.getters.dense.table" selection="multiple" :no-data-label="$t('table.no_data')"
-      :rows-per-page-label="$t('table.row_per_page')"
-      :selected-rows-label="()=>`${selected.length} ${$t('table.row_selected')}`"
+      :dense="$store.getters.dense.table" selection="multiple" :no-data-label="$t('table.noData')"
+      :rows-per-page-label="$t('table.rowPerPage')"
+      :selected-rows-label="()=>`${selected.length} ${$t('table.rowSelected')}`"
       :rows-per-page-options="[10, 20, 50 ,100, 200, 0]" :pagination.sync="pagination"
       @request="onSelect" :filter="pagination.filter" binary-state-sort>
       <template v-slot:top="props">
@@ -25,7 +25,7 @@
               <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.recover')}}</q-tooltip>
             </q-btn>
             <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'" icon="menu_open">
-              <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.display_columns')}}</q-tooltip>
+              <q-tooltip v-if="!$q.platform.is.mobile">{{$t('table.displayColumns')}}</q-tooltip>
               <q-menu fit>
                 <q-list dense style="min-width:100px">
                   <template v-for="(item,index) in columns">
@@ -42,7 +42,7 @@
               :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               @click="props.toggleFullscreen">
               <q-tooltip v-if="!$q.platform.is.mobile">
-                {{props.inFullscreen?$t('table.normal_screen'):$t('table.full_screen')}}</q-tooltip>
+                {{props.inFullscreen?$t('table.normalScreen'):$t('table.fullScreen')}}</q-tooltip>
             </q-btn>
             <q-btn v-if="isRoutes.trash" flat round dense
               :color="$store.state.app.darkMode?'':'grey-7'" icon="more_vert">
@@ -220,8 +220,8 @@ export default {
     onTrash(item) {
       this.$q.dialog({
         // dark: this.dark,
-        title: this.$t('message_box.warning'),
-        message: this.pagination.flag ? this.$t('message_box.trash') : this.$t('message_box.recover'),
+        title: this.$t('messageBox.warning'),
+        message: this.pagination.flag ? this.$t('messageBox.trash') : this.$t('messageBox.recover'),
         cancel: true,
         persistent: true
       }).onOk(() => {

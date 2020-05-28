@@ -1,7 +1,7 @@
 <template>
   <div>
-    <q-editor :value="value" :dense="$q.screen.lt.md" :toolbar="toolbar" :definitions="definitions" :fonts="fonts"
-      @input="onUpdateValue" />
+    <q-editor :value="value" :dense="$q.screen.lt.md" :toolbar="toolbar" :definitions="definitions"
+      :fonts="fonts" @input="onUpdateValue" />
     <!-- Dialog Files -->
     <q-dialog v-model="dialogFiles">
       <q-card style="width:672px;max-width:80vw;">
@@ -13,8 +13,8 @@
         </q-toolbar>
         <q-separator />
         <q-card-section>
-          <tm-files :selected.sync="files" :accept="accept" :multiple="multiple" :url="uploadUrl" :headers="headers"
-            @on-finish="onFilesFinish">
+          <tm-files :selected.sync="files" :accept="accept" :multiple="multiple" :url="uploadUrl"
+            :headers="headers" @on-finish="onFilesFinish">
           </tm-files>
         </q-card-section>
       </q-card>
@@ -30,8 +30,9 @@
         </q-toolbar>
         <q-separator />
         <q-card-section>
-          <q-uploader ref="upload" square flat :multiple="multiple" :max-file-size="maxFileSize" :accept="accept"
-            style="width:100%" @uploaded="onUploaded" @finish="dialogUpload=false" :url="uploadUrl" :headers="headers">
+          <q-uploader ref="upload" square flat :multiple="multiple" :max-file-size="maxFileSize"
+            :accept="accept" style="width:100%" @uploaded="onUploaded" @finish="dialogUpload=false"
+            :url="uploadUrl" :headers="headers">
           </q-uploader>
         </q-card-section>
       </q-card>
@@ -119,7 +120,7 @@ export default {
       ],
       definitions: {
         loadFile: {
-          tip: this.$t('files.open_file'),
+          tip: this.$t('files.openFile'),
           icon: 'pageview',
           handler: this.onEditorOpenFile
         },

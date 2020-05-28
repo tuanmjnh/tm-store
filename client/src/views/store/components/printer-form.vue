@@ -33,7 +33,7 @@
                     <span class="text-bold text-blue-grey-10">{{$t('product.code')}}</span>
                   </th>
                   <th class="text-right">
-                    <span class="text-bold text-blue-grey-10">{{$t('product.unit_price')}}</span>
+                    <span class="text-bold text-blue-grey-10">{{$t('product.unitPrice')}}</span>
                   </th>
                   <th class="text-right">
                     <span class="text-bold text-blue-grey-10">{{$t('product.quantity')}}</span>
@@ -66,7 +66,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="4" class="text-left text-bold">{{$t('product.total_amount')}}</td>
+                  <td colspan="4" class="text-left text-bold">{{$t('product.totalAmount')}}</td>
                   <td class="text-right text-bold">
                     {{(result.data.price+result.data.vat)|NumberFormat($store.getters.language)}}
                   </td>

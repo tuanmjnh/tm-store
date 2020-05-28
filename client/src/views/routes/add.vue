@@ -13,19 +13,21 @@
     <q-separator />
     <q-form ref="form">
       <q-card-actions v-if="item" align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="offline_pin"
-          :label="$t('global.update')" :loading="loading" @click.prevent="onSubmit">
+        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
+          icon="offline_pin" :label="$t('global.update')" :loading="loading"
+          @click.prevent="onSubmit">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
       </q-card-actions>
       <q-card-actions v-else align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue" icon="check_circle"
-          :label="$t('global.add')" :loading="loading" @click.prevent="onSubmit()">
+        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
+          icon="check_circle" :label="$t('global.add')" :loading="loading"
+          @click.prevent="onSubmit()">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
       </q-card-actions>
-      <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form" class="text-deep-purple"
-        align="justify">
+      <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form"
+        class="text-deep-purple" align="justify">
         <q-tab name="main" :label="$t('tabs.main')" />
         <q-tab name="attributes" :label="$t('global.attributes')" />
       </q-tabs>
@@ -44,19 +46,20 @@
           </div>
           <div class="row q-gutter-xs">
             <div class="col-12 col-md-5">
-              <q-input v-model.trim="form.path" :dense="$store.getters.dense.input" v-lowercase label="Path"
-                :rules="[v=>v&&v.length>0||$t('error.required')]" />
+              <q-input v-model.trim="form.path" :dense="$store.getters.dense.input" v-lowercase
+                label="Path" :rules="[v=>v&&v.length>0||$t('error.required')]" />
             </div>
             <q-space />
             <div class="col-12 col-md-6">
               <q-input v-model.trim="form.name" :dense="$store.getters.dense.input" label="Name"
-                :rules="[v=>v&&v.length>0||$t('error.required')]" :prefix="!item&&dependent?`${dependent.name}-`:''" />
+                :rules="[v=>v&&v.length>0||$t('error.required')]"
+                :prefix="!item&&dependent?`${dependent.name}-`:''" />
             </div>
           </div>
           <div class="row q-gutter-xs">
             <div class="col-12 col-md-5">
-              <q-input v-model.trim="form.component" :dense="$store.getters.dense.input" v-lowercase label="Component"
-                :rules="[v=>v&&v.length>0||$t('error.required')]">
+              <q-input v-model.trim="form.component" :dense="$store.getters.dense.input" v-lowercase
+                label="Component" :rules="[v=>v&&v.length>0||$t('error.required')]">
                 <template v-slot:append>
                   <q-icon name="view_quilt" @click="form.component='layout'" />
                 </template>
@@ -64,17 +67,19 @@
             </div>
             <q-space />
             <div class="col-12 col-md-6">
-              <q-input v-model.trim="form.redirect" :dense="$store.getters.dense.input" label="Redirect" />
+              <q-input v-model.trim="form.redirect" :dense="$store.getters.dense.input"
+                label="Redirect" />
             </div>
           </div>
           <div class="row q-gutter-xs">
             <div v-if="form.meta&&form.meta.title" class="col-12 col-md-5">
-              <q-input v-model.trim="form.meta.title" :dense="$store.getters.dense.input" v-lowercase label="Title"
-                :rules="[v=>v&&v.length>0||$t('error.required')]" />
+              <q-input v-model.trim="form.meta.title" :dense="$store.getters.dense.input"
+                v-lowercase label="Title" :rules="[v=>v&&v.length>0||$t('error.required')]" />
             </div>
             <q-space />
             <div v-if="form.meta&&form.meta.icon" class="col-12 col-md-6">
-              <q-input v-model.trim="form.meta.icon" :dense="$store.getters.dense.input" label="Icon">
+              <q-input v-model.trim="form.meta.icon" :dense="$store.getters.dense.input"
+                label="Icon">
                 <template v-slot:append>
                   <q-icon :name="form.meta.icon" /></template>
               </q-input>
@@ -83,24 +88,29 @@
           <div class="row q-gutter-xs">
             <div class="col-8 col-md-3">
               <q-input v-model="form.orders" type="number" :dense="$store.getters.dense.input"
-                :label="$t('global.order')" :rules="[v=>v!==null&&v!==''||$t('error.required')]" class="col-md-4" />
+                :label="$t('global.order')" :rules="[v=>v!==null&&v!==''||$t('error.required')]"
+                class="col-md-4" />
             </div>
             <q-space />
             <div v-if="form.meta&&form.meta.hidden" class="col-5 col-md-3 self-center">
-              <q-toggle v-model="form.meta.hidden" :dense="$store.getters.dense.input" :true-value="true"
-                label="Hidden" />
+              <q-toggle v-model="form.meta.hidden" :dense="$store.getters.dense.input"
+                :true-value="true" label="Hidden" />
             </div>
             <div class="col-1 col-md-3 self-center">
-              <q-toggle v-model="form.flag" :dense="$store.getters.dense.input" :true-value="1" label="Flag" />
+              <q-toggle v-model="form.flag" :dense="$store.getters.dense.input" :true-value="1"
+                label="Flag" />
             </div>
           </div>
         </q-tab-panel>
         <q-tab-panel name="attributes">
-          <tm-attributes :data.sync="metas" :keys="metaKeys" :values="metaValues" :dense="$store.getters.dense.input"
-            :labelTitle="$t('product.attributes')+':'" :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')"
-            :labelInputValue="$t('global.value')" btnIcon="add" btnColor="blue" :btnEditLabel="$t('global.edit')"
-            :btnDeleteLabel="$t('global.delete')" :labelConfirmTitle="$t('message_box.confirm')"
-            :labelConfirmContent="$t('message_box.delete')" :labelWarningTitle="$t('message_box.warning')"
+          <tm-attributes :data.sync="metas" :keys="metaKeys" :values="metaValues"
+            :dense="$store.getters.dense.input" :labelTitle="$t('product.attributes')+':'"
+            :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')"
+            :labelInputValue="$t('global.value')" btnIcon="add" btnColor="blue"
+            :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
+            :labelConfirmTitle="$t('messageBox.confirm')"
+            :labelConfirmContent="$t('messageBox.delete')"
+            :labelWarningTitle="$t('messageBox.warning')"
             :labelWarningContent="$t('error.required')" :labelNoData="$t('table.no_data')"
             @on-filter-key="onFilterAttrKey" @on-filter-value="onFilterAttrValue">
           </tm-attributes>
