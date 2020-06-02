@@ -1,6 +1,7 @@
 // prototypes
 require('./utils/prototypes');
 // config
+process.env.ROOT_PATH = __dirname;
 require('./config');
 
 const express = require('express'),

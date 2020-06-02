@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header :class="$store.state.app.darkMode?'bg-black':''">
       <q-toolbar>
-        <q-btn flat dense round @click="drawer=!drawer" aria-label="Menu">
+        <q-btn flat dense round @click="onChangeModeMini" aria-label="Menu">
           <q-icon name="menu" />
         </q-btn>
         <q-toolbar-title>
@@ -12,12 +12,7 @@
         <!-- <div>Quasar v{{ $q.version }}</div> -->
       </q-toolbar>
     </q-header>
-    <q-drawer v-model="drawer" bordered>
-      <q-scroll-area style="height:calc(100% - 50px);margin-top:50px;">
-        <drawer :items="$store.getters.routes" :dense="$store.getters.dense.menu" />
-      </q-scroll-area>
-      <drawer-search />
-    </q-drawer>
+    <drawer ref="drawer" :items="$store.getters.routes" :dense="$store.getters.dense.menu" />
     <q-page-container>
       <q-page padding>
         <slot v-if="$store.state.auth.user" />
@@ -29,14 +24,12 @@
 
 <script>
 import drawer from '../components/drawer'
-import drawerSearch from '../components/drawer-search'
 import headerRight from '../components/header-right'
 export default {
-  components: { drawer, drawerSearch, headerRight },
+  components: { drawer, headerRight },
   data() {
     return {
-      title: 'TM-Store', // process.env.APP_NAME,
-      drawer: this.$q.platform.is.desktop
+      title: 'TM-Store' // process.env.APP_NAME,
     }
   },
   created() {
@@ -52,7 +45,11 @@ export default {
     // toggle
     // this.$q.dark.toggle()
   },
-  methods: {}
+  methods: {
+    onChangeModeMini() {
+      this.$refs.drawer.onChangeModeMini()
+    }
+  }
 }
 </script>
 

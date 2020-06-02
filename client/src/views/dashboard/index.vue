@@ -1,7 +1,8 @@
 <template>
   <div>
     Dashboard
-    <router-link to="/roles">roles</router-link>
+    <!-- <router-link to="/roles">roles</router-link> -->
+    <!-- <p>{{$store.state.app.search}}</p> -->
   </div>
 </template>
 

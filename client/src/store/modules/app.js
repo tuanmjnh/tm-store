@@ -3,6 +3,7 @@ import { Get, Set, GetAll } from '@/i18n';
 import { i18n } from '@/boot/i18n';
 
 const state = {
+  search: '',
   sidebar: {
     opened: Cookies.get('sidebarStatus')
       ? !!+Cookies.get('sidebarStatus')
@@ -86,6 +87,9 @@ const mutations = {
   SET_DARK_MODE: (state, value) => {
     state.darkMode = value;
     Cookies.set('darkMode', value);
+  },
+  SET_SEARCH: (state, value) => {
+    state.search = value;
   }
 };
 

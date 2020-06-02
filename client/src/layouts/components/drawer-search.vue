@@ -1,9 +1,11 @@
 <template>
-  <div :class="['absolute-top layout-drawer-toolbar',$store.state.app.darkMode?'bg-black':'bg-primary']">
-    <q-input dark borderless v-model="appSearch" class="q-ml-md" style="height:50px" :placeholder="$t('global.search')">
+  <div
+    :class="['absolute-top layout-drawer-toolbar',$store.state.app.darkMode?'bg-black':'bg-primary',isPlaceholder?'':'fix-icon-search']">
+    <q-input dark borderless v-model="appSearch" class="q-ml-md" style="height:50px"
+      :placeholder="isPlaceholder?$t('global.search'):''">
       <template v-slot:append>
-        <q-icon v-if="appSearch === ''" name="search" />
-        <q-icon v-else name="clear" class="cursor-pointer" @click="appSearch = ''" />
+        <q-icon v-if="appSearch===''" name="search" />
+        <q-icon v-else name="clear" class="cursor-pointer" @click="appSearch=''" />
       </template>
     </q-input>
     <!-- <form autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false"><label
@@ -29,15 +31,29 @@
           </div>
         </div>
       </label></form> -->
-    <div class="layout-drawer-toolbar__shadow absolute-full overflow-hidden no-pointer-events"></div>
+    <div class="layout-drawer-toolbar__shadow absolute-full overflow-hidden no-pointer-events">
+    </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    isPlaceholder: { type: Boolean, default: true }
+  },
   data() {
     return {
-      appSearch: ''
+      // appSearch: ''
+    }
+  },
+  computed: {
+    appSearch: {
+      get() {
+        return this.$store.state.app.search
+      },
+      set(value) {
+        this.$store.commit('app/SET_SEARCH', value)
+      }
     }
   }
 }
@@ -52,5 +68,11 @@ export default {
 }
 .layout-drawer-toolbar {
   right: -1px;
+}
+.fix-icon-search {
+  i.material-icons {
+    position: absolute;
+    left: 0;
+  }
 }
 </style>
