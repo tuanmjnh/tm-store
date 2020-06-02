@@ -1,9 +1,7 @@
 <template>
-  <div class="window-height window-width row justify-center items-center">
-    <div v-if="loading" style="position:absolute;top:38%;left:50%;">
-      <q-spinner color="primary" size="5em" :thickness="2" />
-    </div>
-    <q-form v-else ref="form" class="col-9 col-md-4">
+  <div v-if="!$store.state.auth.verified"
+    class="window-height window-width row justify-center items-center">
+    <q-form ref="form" class="col-9 col-md-4">
       <q-card flat square inline bordered>
         <q-card-section class="bg-teal text-white">
           <div class="text-h6">{{$t('login.title')}}</div>
@@ -15,7 +13,6 @@
               :hint="$t('login.username')" :placeholder="$t('login.username')"
               :rules="[v=>v&&v.length>0||$t('error.required')]" />
           </div>
-
           <div class="q-pl-md q-pr-md q-pt-md">
             <q-input v-model.trim="form.password" :type="passwordType"
               :dense="$store.getters.dense.input" :hint="$t('login.password')"
@@ -95,17 +92,14 @@ export default {
             if (x) {
               this.$store.dispatch('auth/login', x)
                 .then(() => {
-                  this.loading = true
                   routers.router.addRoutes(this.$store.state.auth.routes, { replace: true })
+                  this.$router.push({ path: this.redirect }).catch((e) => { })
                 }).then(() => {
                   // Set user setting
                   apiUserSetting.get().then(x => {
                     this.$store.dispatch('userSetting/set', x)
                     this.$q.dark.set(this.$store.getters.darkMode)
                   })
-                })
-                .then(() => {
-                  this.$router.push({ path: this.redirect }).catch((e) => { })
                 })
             }
           })

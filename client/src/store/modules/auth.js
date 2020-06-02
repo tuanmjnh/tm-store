@@ -3,6 +3,7 @@ import * as routers from '@/router';
 import { constant } from '@/router/routes';
 
 const state = {
+  verified: false,
   token: Cookies.get('token') || undefined,
   user: undefined,
   roles: [],
@@ -10,6 +11,9 @@ const state = {
   routes: []
 };
 const mutations = {
+  SET_VERIFIED(state, value) {
+    state.verified = value;
+  },
   SET_TOKEN(state, value) {
     state.token = value;
     Cookies.set('token', value);
@@ -31,6 +35,7 @@ const mutations = {
 const actions = {
   login({ commit, rootState }, params) {
     return new Promise((resolve, reject) => {
+      commit('SET_VERIFIED', true);
       if (params.token) commit('SET_TOKEN', params.token);
       if (params.user) commit('SET_USER', params.user);
       if (params.routes) {
@@ -40,6 +45,7 @@ const actions = {
     });
   },
   logout({ commit, rootState }) {
+    commit('SET_VERIFIED', false);
     commit('REMOVE_TOKEN');
     commit('SET_USER', null);
     commit('SET_ROUTES', []);

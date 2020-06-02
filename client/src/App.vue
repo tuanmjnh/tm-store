@@ -5,7 +5,7 @@
       <q-spinner-gears size="100px" color="primary" />
     </q-inner-loading> -->
     <!-- <b>{{$q.platform}}</b> -->
-    <component v-if="getDisplay()" :is="layout">
+    <component v-if="$store.state.auth.verified" :is="layout">
       <!-- <transition name="fade" mode="out-in"> -->
       <!-- <transition  enter-active-class="animated fadeIn"> -->
       <!-- <q-transition appear enter="fadeInLeft" leave="fadeOutRight" mode="out-in"> -->
@@ -50,7 +50,7 @@ export default {
       if (this.$store.state.auth.user && this.$store.state.auth.roles) {
         return setTimeout(() => {
           return true
-        }, 3000)
+        }, 30000)
       } else return false
     }
   }
