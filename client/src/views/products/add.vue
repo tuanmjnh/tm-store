@@ -1,6 +1,6 @@
 <template>
   <q-card flat bordered :style="$q.platform.is.mobile?{width:'100%'}:{minWidth:'800px'}">
-    <q-toolbar>
+    <q-toolbar v-if="!$q.platform.is.mobile">
       <q-avatar :icon="$route.meta.icon" size="50px" />
       <q-toolbar-title>
         {{this.item?$t('global.update'):$t('global.add')}}
@@ -8,10 +8,10 @@
       </q-toolbar-title>
       <q-btn flat round dense icon="close" v-close-popup
         :disable="loadingAdd||loadingDrafts?true:false">
-        <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
+        <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
-    <q-separator />
+    <q-separator v-if="!$q.platform.is.mobile" />
     <q-form ref="form">
       <q-card-actions v-if="item" align="right">
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
@@ -287,6 +287,9 @@ export default {
       }
     }
   },
+  // created() {
+  //   console.log(this.$q.platform.is.mobile)
+  // },
   watch: {
     dialog: {
       handler(val) {
@@ -297,6 +300,7 @@ export default {
           this.form.unit = this.units.find(x => x._id === this.form.unit)
           this.form.priceUnit = this.unitsPrice.find(x => x._id === this.form.priceUnit)
         }
+        console.log(this.categories)
       },
       deep: true,
       immediate: true

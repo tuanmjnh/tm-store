@@ -1,6 +1,6 @@
 <template>
   <q-card style="width:700px;max-width:80vw">
-    <q-toolbar>
+    <q-toolbar v-if="!$q.platform.is.mobile">
       <q-avatar :icon="$route.meta.icon" size="50px" />
       <q-toolbar-title>
         {{this.item?$t('global.update'):$t('global.add')}}
@@ -8,7 +8,7 @@
       </q-toolbar-title>
       <q-btn flat round dense icon="close" v-close-popup
         :disable="loadingAdd||loadingDrafts?true:false">
-        <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
+        <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
     <q-separator />
