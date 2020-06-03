@@ -1,5 +1,5 @@
 <template>
-  <q-drawer v-model="drawer" :mini="drawerMini" :mini-to-overlay="overlay" bordered
+  <q-drawer v-model="drawer" bordered :mini="drawerMini" :mini-to-overlay="overlay"
     @mouseover="onMouseOverDrawer" @mouseout="onMouseOutDrawer">
     <q-scroll-area style="height:calc(100% - 50px);margin-top:50px;">
       <q-list class="rounded-borders">
@@ -25,7 +25,7 @@ export default {
       drawer: this.$q.platform.is.desktop,
       modeMini: false,
       drawerMini: false,
-      overlay: false
+      overlay: true
     }
   },
   computed: {
@@ -35,13 +35,19 @@ export default {
     // }
   },
   methods: {
-    onChangeModeMini() {
-      if (this.modeMini) {
-        this.modeMini = false
-        this.drawerMini = false
+    onChangeModeDrawer() {
+      if (this.$q.platform.is.desktop) {
+        if (this.modeMini) {
+          this.modeMini = false
+          this.drawerMini = false
+        } else {
+          this.modeMini = true
+          this.drawerMini = true
+        }
       } else {
-        this.modeMini = true
-        this.drawerMini = true
+        this.modeMini = false
+        this.drawer = !this.drawer
+        console.log(this.drawer)
       }
     },
     onMouseOverDrawer() {

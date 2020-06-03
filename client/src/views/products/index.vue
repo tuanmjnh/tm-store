@@ -13,8 +13,7 @@
           <q-space />
           <div class="col-xs-12 col-sm-auto self-center text-right">
             <div class="col-auto self-center">
-              <q-btn v-if="isRoutes.add" flat round dense icon="add" color="blue"
-                @click="dialogAdd=true">
+              <q-btn v-if="isRoutes.add" flat round dense icon="add" color="blue" @click="onAddNew">
                 <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.add')}}</q-tooltip>
               </q-btn>
               <q-btn v-if="isRoutes.trash&&selected.length>0&&pagination.flag" flat round dense
@@ -75,7 +74,7 @@
               @on-selected="onSelectCategory" />
           </div>
           <q-space />
-          <div class="col-xs-12 col-sm-6">
+          <div class="col-xs-12 col-sm-5 col-md-4">
             <q-input v-model="pagination.filter" :dense="$store.getters.dense.input" debounce="500"
               :placeholder="$t('global.search')">
               <template v-slot:append>
@@ -285,6 +284,13 @@ export default {
       var index = this.visibleColumns.indexOf(value)
       if (index < 0) this.visibleColumns.push(value)
       else this.visibleColumns.splice(index, 1)
+    },
+    onAddNew() {
+      if (this.$q.platform.is.mobile) {
+        this.$router.push('add')
+      } else {
+        this.dialogAdd = true
+      }
     },
     onUpdate(item) {
       this.dialogAdd = true

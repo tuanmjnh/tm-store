@@ -74,14 +74,14 @@
           </div>
         </div>
         <div class="col-12 row">
-          <div class="col-xs-12 col-sm-3">
+          <div class="col-xs-12 col-sm-5 col-md-4">
             <q-select v-model="pagination.group" input-debounce="200"
               :dense="$store.getters.dense.input" :options-dense="$store.getters.dense.input"
               :options="groups" :label="$t('users.group')" option-value="code"
               :option-label="opt=>opt.name" />
           </div>
           <q-space />
-          <div class="col-xs-12 col-sm-3">
+          <div class="col-xs-12 col-sm-5 col-md-4">
             <q-input v-model="pagination.filter" :dense="$store.getters.dense.input" debounce="500"
               :placeholder="$t('global.search')">
               <template v-slot:append>

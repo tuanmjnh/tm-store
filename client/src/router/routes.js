@@ -55,15 +55,16 @@ export const dynamic = [
   {
     path: '/product',
     name: 'product',
-    redirect: 'product-list',
+    redirect: 'product/list/view',
     meta: { title: 'product', icon: 'perm_media' },
     component: 'layout',
     children: [
       {
-        path: 'product-list',
+        path: 'list',
         name: 'product-list',
         meta: { title: 'list', icon: 'collections' },
-        component: 'products/index',
+        component: 'layout',
+        redirect: 'list/view',
         children: [
           {
             path: 'view',
@@ -110,7 +111,7 @@ export const dynamic = [
         ]
       },
       {
-        path: 'category-product',
+        path: 'category',
         name: 'category-product',
         meta: { title: 'category', icon: 'category', type: 'product' },
         component: 'category',
@@ -160,7 +161,7 @@ export const dynamic = [
         ]
       },
       {
-        path: 'product-orders',
+        path: 'orders',
         name: 'product-orders',
         meta: { title: 'orders', icon: 'class' },
         component: 'orders',
@@ -219,7 +220,7 @@ export const dynamic = [
     component: 'layout',
     children: [
       {
-        path: 'news-list',
+        path: 'list',
         name: 'news-list',
         meta: { title: 'list', icon: 'collections_bookmark' },
         component: 'news/index',
@@ -269,10 +270,10 @@ export const dynamic = [
         ]
       },
       {
-        path: 'category-news',
+        path: 'category',
         name: 'category-news',
         meta: { title: 'category', icon: 'category', type: 'news' },
-        component: 'news',
+        component: 'category',
         children: [
           {
             path: 'view',
@@ -284,13 +285,13 @@ export const dynamic = [
               noCache: true,
               flag: 1
             },
-            component: 'news/index'
+            component: 'category/index'
           },
           {
             path: 'add',
             name: 'category-news-add',
             meta: { title: 'add', icon: 'add', hidden: true },
-            component: 'news/add'
+            component: 'category/add'
           },
           {
             path: 'edit/:?id',
@@ -302,7 +303,7 @@ export const dynamic = [
               noCache: true,
               activeMenu: '/category-news/view'
             },
-            component: 'news/add'
+            component: 'category/add'
           },
           {
             path: 'trash',
@@ -314,7 +315,7 @@ export const dynamic = [
               noCache: true,
               flag: 0
             },
-            component: 'news/index'
+            component: 'category/index'
           }
         ]
       }

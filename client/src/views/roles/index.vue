@@ -64,7 +64,7 @@
         </div>
         <div class="col-12 row">
           <q-space />
-          <div class="col-xs-12 col-sm-6">
+          <div class="col-xs-12 col-sm-5 col-md-4">
             <q-input v-model="pagination.filter" :dense="$store.getters.dense.input" debounce="500"
               :placeholder="$t('global.search')">
               <template v-slot:append>

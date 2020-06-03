@@ -141,7 +141,7 @@
             <div class="col-12 q-gutter-sm images">
               <tm-upload :data.sync="form.images" :upload-url="uploadUrl" :headers="headers"
                 :max-file-size="1024*1024*2" accept=".jpg,.jpeg,.png,.gif" :multiple="false"
-                :view-type.sync="viewTypeImage" :size="121" :labelTitle="$t('files.title')"
+                :view-type.sync="viewTypeImage" :size="121" :labelTitle="$t('global.avatar')"
                 :labelTitleUpload="$t('files.upload')" :labelTitleFiles="$t('files.title')"
                 :labelOpenFile="$t('files.openFile')" :labelOpenData="$t('files.openData')"
                 :labelViewList="$t('files.ViewList')" :labelViewBox="$t('files.viewBox')"
@@ -156,7 +156,7 @@
             <div class="col-12 q-gutter-sm images">
               <tm-upload :data.sync="form.attach" :upload-url="uploadUrl" :headers="headers"
                 :max-file-size="1024*1024*5" :multiple="true" :view-type.sync="viewTypeAttach"
-                :size="121" :labelTitle="$t('files.title')" :labelTitleUpload="$t('files.upload')"
+                :size="121" :labelTitle="$t('global.attach')" :labelTitleUpload="$t('files.upload')"
                 :labelTitleFiles="$t('files.title')" :labelOpenFile="$t('files.openFile')"
                 :labelOpenData="$t('files.openData')" :labelViewList="$t('files.ViewList')"
                 :labelViewBox="$t('files.viewBox')" :labelFileName="$t('files.fileName')"

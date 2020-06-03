@@ -5,12 +5,13 @@
         {{$t(`category.title_${$route.meta.type}`)}}</div>
     </div>
     <div class="col-12 row">
-      <div class="col">
+      <div class="col-1">
         <q-btn v-if="isRoutes.add" flat round dense icon="add" color="blue" @click="onAdd()">
           <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.add')}}</q-tooltip>
         </q-btn>
       </div>
-      <div class="col-xs-5 col-sm-5 col-md-4">
+      <q-space />
+      <div class="col-xs-9 col-sm-5 col-md-4">
         <q-input v-model="pagination.filter" :dense="$store.getters.dense.input" debounce="500"
           :placeholder="$t('global.search')">
           <template v-slot:append>
