@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie';
 import * as routers from '@/router';
 import { constant } from '@/router/routes';
+import http from '@/utils/http-client';
+const controller = '/auth';
 
 const state = {
   verified: false,
@@ -33,16 +35,12 @@ const mutations = {
   }
 };
 const actions = {
-  login({ commit, rootState }, params) {
-    return new Promise((resolve, reject) => {
-      commit('SET_VERIFIED', true);
-      if (params.token) commit('SET_TOKEN', params.token);
-      if (params.user) commit('SET_USER', params.user);
-      if (params.routes) {
-        commit('SET_ROUTES', routers.generateRoutes(params.routes));
-      }
-      resolve(true);
-    });
+  async login({ commit, rootState }, params) {
+    const rs = await http.post(controller, params);
+    commit('SET_VERIFIED', true);
+    if (rs.token) commit('SET_TOKEN', rs.token);
+    if (rs.user) commit('SET_USER', rs.user);
+    if (rs.routes) commit('SET_ROUTES', routers.generateRoutes(rs.routes));
   },
   logout({ commit, rootState }) {
     commit('SET_VERIFIED', false);

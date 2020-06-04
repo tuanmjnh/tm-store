@@ -82,7 +82,7 @@
             {{ props.row.code }}
           </q-td>
           <q-td key="quantityImport" :props="props">
-            {{ props.row.quantity_import|NumberFormat($store.getters.language) }}
+            {{ props.row.quantityImport|NumberFormat($store.getters.language) }}
             <!-- <q-badge v-html="props.row.unit" color="orange" transparent /> -->
           </q-td>
           <q-td key="priceImport" :props="props">

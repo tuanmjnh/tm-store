@@ -92,12 +92,12 @@
           </q-td>
           <q-td key="price" :props="props">
             <span class="q-pr-xs">{{ props.row.price|NumberFormat($store.getters.language) }}</span>
-            <q-badge v-html="props.row.price_unit" color="blue" transparent />
+            <q-badge v-html="props.row.priceUnit" color="blue" transparent />
           </q-td>
           <q-td key="priceDiscount" :props="props">
             <span
               class="q-pr-xs">{{ props.row.priceDiscount|NumberFormat($store.getters.language) }}</span>
-            <q-badge v-html="props.row.price_unit" color="red" transparent />
+            <q-badge v-html="props.row.priceUnit" color="red" transparent />
           </q-td>
           <q-td key="priceImport" :props="props">
             <span

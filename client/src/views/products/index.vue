@@ -117,22 +117,22 @@
           </q-td>
           <q-td key="price" :props="props">
             <span class="q-pr-xs">{{ props.row.price|NumberFormat($store.getters.language) }}</span>
-            <q-badge v-html="props.row.price" color="blue" transparent />
+            <q-badge v-html="props.row.priceUnit" color="blue" transparent />
           </q-td>
           <q-td key="priceDiscount" :props="props">
             <span
               class="q-pr-xs">{{ props.row.priceDiscount|NumberFormat($store.getters.language) }}</span>
-            <q-badge v-html="props.row.price_unit" color="red" transparent />
+            <q-badge v-html="props.row.priceUnit" color="red" transparent />
           </q-td>
           <q-td key="priceImport" :props="props">
             <span
               class="q-pr-xs">{{ props.row.priceImport|NumberFormat($store.getters.language) }}</span>
-            <q-badge v-html="props.row.price_unit" color="teal" transparent />
+            <q-badge v-html="props.row.priceUnit" color="teal" transparent />
           </q-td>
           <q-td key="priceExport" :props="props">
             <span
               class="q-pr-xs">{{ props.row.priceExport|NumberFormat($store.getters.language) }}</span>
-            <q-badge v-html="props.row.price_unit" color="teal" transparent />
+            <q-badge v-html="props.row.priceUnit" color="teal" transparent />
           </q-td>
           <q-td key="order" :props="props">
             {{ props.row.order }}

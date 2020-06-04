@@ -162,18 +162,18 @@ axiosApi.interceptors.response.use(
     switch (error.response.status) {
       case 401:
         Notify.create({
-          message: i18n.t('error.token_no_exist'),
+          message: i18n.t('error.tokenNoExist'),
           color: 'negative'
         });
         break;
       case 402:
         Notify.create({
-          message: i18n.t('error.token_invalid'),
+          message: i18n.t('error.tokenInvalid'),
           color: 'negative'
         });
         break;
       case 404:
-        Notify.create({ message: i18n.t('error.no_exist'), color: 'negative' });
+        Notify.create({ message: i18n.t('error.noExist'), color: 'negative' });
         break;
       case 500:
         Notify.create({ message: i18n.t('error.system'), color: 'negative' });
@@ -183,31 +183,31 @@ axiosApi.interceptors.response.use(
         break;
       case 502:
         Notify.create({
-          message: i18n.t('error.account_no_exist'),
+          message: i18n.t('error.accountNoExist'),
           color: 'negative'
         });
         break;
       case 503:
         Notify.create({
-          message: i18n.t('error.account_no_exist'),
+          message: i18n.t('error.accountNoExist'),
           color: 'negative'
         });
         break;
       case 504:
         Notify.create({
-          message: i18n.t('error.account_locked'),
+          message: i18n.t('error.accountLocked'),
           color: 'negative'
         });
         break;
       case 505:
         Notify.create({
-          message: i18n.t('error.wrong_password'),
+          message: i18n.t('error.wrongPassword'),
           color: 'negative'
         });
         break;
       default:
         Notify.create({
-          message: `${i18n.t('error.error_code')}: ${error.response.status}`,
+          message: `${i18n.t('error.errorCode')}: ${error.response.status}`,
           color: 'negative'
         });
         break;

@@ -88,21 +88,21 @@ export default {
     onSubmit() {
       this.$refs.form.validate().then(valid => {
         if (valid) {
-          api.login(this.form).then((x) => {
-            if (x) {
-              this.$store.dispatch('auth/login', x)
-                .then(() => {
-                  routers.router.addRoutes(this.$store.state.auth.routes, { replace: true })
-                  this.$router.push({ path: this.redirect }).catch((e) => { })
-                }).then(() => {
-                  // Set user setting
-                  apiUserSetting.get().then(x => {
-                    this.$store.dispatch('userSetting/set', x)
-                    this.$q.dark.set(this.$store.getters.darkMode)
-                  })
-                })
-            }
-          })
+          // api.login(this.form).then((x) => {
+          //   if (x) {
+          this.$store.dispatch('auth/login', this.form)
+            .then(() => {
+              routers.router.addRoutes(this.$store.state.auth.routes, { replace: true })
+              this.$router.push({ path: this.redirect }).catch((e) => { })
+            }).then(() => {
+              // Set user setting
+              apiUserSetting.get().then(x => {
+                this.$store.dispatch('userSetting/set', x)
+                this.$q.dark.set(this.$store.getters.darkMode)
+              })
+            })
+          // }
+          // })
         }
       })
     },
