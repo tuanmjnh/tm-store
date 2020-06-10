@@ -35,6 +35,7 @@ module.exports = {
     'generator-star-spacing': 'off',
     'template-curly-spacing': 'off',
     // allow paren-less arrow functions
+    'no-unneeded-ternary': 'off',
     'no-useless-escape': 'off',
     'arrow-parens': 'off',
     'one-var': 'off',

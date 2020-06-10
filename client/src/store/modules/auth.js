@@ -9,7 +9,7 @@ const state = {
   token: Cookies.get('token') || undefined,
   user: undefined,
   roles: [],
-  constant_routes: constant,
+  routesConstant: constant,
   routes: []
 };
 const mutations = {
@@ -35,19 +35,31 @@ const mutations = {
   }
 };
 const actions = {
-  async login({ commit, rootState }, params) {
+  async login({ dispatch }, params) {
     const rs = await http.post(controller, params);
-    commit('SET_VERIFIED', true);
-    if (rs.token) commit('SET_TOKEN', rs.token);
-    if (rs.user) commit('SET_USER', rs.user);
-    if (rs.routes) commit('SET_ROUTES', routers.generateRoutes(rs.routes));
+    if (rs) dispatch('setCommit', rs);
   },
-  logout({ commit, rootState }) {
+  async verify({ dispatch }, params) {
+    const rs = await http.get(controller, { params });
+    if (rs) dispatch('setCommit', rs);
+    else dispatch('logout');
+  },
+  logout({ commit }) {
     commit('SET_VERIFIED', false);
     commit('REMOVE_TOKEN');
     commit('SET_USER', null);
     commit('SET_ROUTES', []);
     routers.resetRouter();
+  },
+  async setCommit({ commit }, rs) {
+    commit('SET_VERIFIED', true);
+    if (rs.token) commit('SET_TOKEN', rs.token);
+    if (rs.user) commit('SET_USER', rs.user);
+    if (rs.user && rs.user.routes) {
+      const routes = await routers.generateRoutes(rs.user.routes);
+      routers.router.addRoutes(routes, { replace: true });
+      commit('SET_ROUTES', routes);
+    }
   }
 };
 export default {

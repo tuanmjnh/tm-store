@@ -62,7 +62,8 @@ export function resetRouter() {
   router.matcher = newRouter.matcher; // reset router
 }
 
-export function addRoutes(routers) {
+export function addRoutes(routers, replace = true) {
+  // console.log(router);
   routers = routers.filter(x => {
     if (!router.includes(x.name)) return x;
   });

@@ -70,17 +70,19 @@ module.exports.get = async function (req, res, next) {
   try {
     // constant account
     let rs = constantCommon.users.find((x) => x._id === req.verify._id);
-    let routes = [];
+    // let routes = [];
     // database account
     if (rs) {
-      routes = await getConstantRoutes();
+      // routes = await getConstantRoutes();
+      rs.routes = await getConstantRoutes();
     } else {
       rs = await MUser.findOne({ _id: req.verify._id });
       if (!rs) return res.status(402).json({ msg: 'token_invalid' });
       // Routes
-      routes = await getAuthRoutes(rs.roles);
+      // routes = await getAuthRoutes(rs.roles);
+      rs.routes = await getAuthRoutes(rs.roles);
     }
-    return res.status(200).json({ user: rs, routes });
+    return res.status(200).json({ user: rs });
     // return res.status(200).json({ data: req.verify._id as any });
   } catch (e) {
     console.log(e);
@@ -98,9 +100,10 @@ module.exports.post = async function (req, res, next) {
         x.username === req.body.username &&
         x.password === crypto.SHA256(req.body.password + x.salt),
     );
-    let routes = [];
+    // let routes = [];
     if (rs) {
-      routes = await getConstantRoutes();
+      // routes = await getConstantRoutes();
+      rs.routes = await getConstantRoutes();
     } else {
       // throw new Error('wrong')
       rs = await MUser.findOne({ username: req.body.username });
@@ -113,7 +116,8 @@ module.exports.post = async function (req, res, next) {
       // check lock
       if (!rs.enable) return res.status(504).json({ msg: 'locked' });
       // Routes
-      routes = await getAuthRoutes(rs.roles);
+      // routes = await getAuthRoutes(rs.roles);
+      rs.routes = await getAuthRoutes(rs.roles);
       // Update last login
       await MUser.updateOne(
         { _id: rs._id },
@@ -126,7 +130,7 @@ module.exports.post = async function (req, res, next) {
     }
     // Token
     const token = middleware.sign({ params: { _id: rs._id, code: rs.username } });
-    if (rs) return res.status(200).json({ token, user: rs, routes });
+    if (rs) return res.status(200).json({ token, user: rs });
     else return res.status(401).json({ msg: 'wrong' });
   } catch (e) {
     console.log(e);

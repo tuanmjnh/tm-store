@@ -1,6 +1,6 @@
 import * as routers from '@/router';
 import store from '@/store';
-import * as auth from '@/api/auth';
+// import * as auth from '@/api/auth';
 // import * as userSetting from '@/api/user-setting'
 import NProgress from 'nprogress'; // progress bar
 import '@/css/nprogress.css'; // progress bar style
@@ -33,20 +33,22 @@ routers.router.beforeEach(async (to, from, next) => {
       } else {
         try {
           // get user info
-          const data = await auth.checkToken();
-          if (!data.user) store.dispatch('auth/logout'); // || !data.routes.length
+          await store.dispatch('auth/verify').then(() => {
+            next(to.path);
+          });
+          // if (!data.user) store.dispatch('auth/logout'); // || !data.routes.length
           // if (!store.state.userSetting.data) {
           //   const us = await userSetting.get()
           //   store.dispatch('userSetting/set', us)
           // }
-          store
-            .dispatch('auth/login', { user: data.user, routes: data.routes })
-            .then(
-              routers.router.addRoutes(store.state.auth.routes, {
-                replace: true
-              })
-            )
-            .then(next(to.path)); // next({ ...to, replace: true })
+          // store
+          //   .dispatch('auth/login', { user: data.user, routes: data.routes })
+          //   .then(
+          //     routers.router.addRoutes(store.state.auth.routes, {
+          //       replace: true
+          //     })
+          //   )
+          //   .then(next(to.path)); // next({ ...to, replace: true })
         } catch (err) {
           // console.log(err)
           // remove token and go to login page to re-login

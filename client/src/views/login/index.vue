@@ -52,7 +52,6 @@
 <script>
 import * as api from '@/api/auth'
 import * as apiUserSetting from '@/api/users/setting'
-import * as routers from '@/router'
 export default {
   data() {
     return {
@@ -92,7 +91,7 @@ export default {
           //   if (x) {
           this.$store.dispatch('auth/login', this.form)
             .then(() => {
-              routers.router.addRoutes(this.$store.state.auth.routes, { replace: true })
+              // routers.router.addRoutes(this.$store.state.auth.routes, { replace: true })
               this.$router.push({ path: this.redirect }).catch((e) => { })
             }).then(() => {
               // Set user setting

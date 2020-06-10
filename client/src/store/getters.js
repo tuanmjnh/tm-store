@@ -1,6 +1,6 @@
 export default {
   // sidebar: state => state.app.sidebar,
-  routes: state => state.auth.constant_routes.concat(state.auth.routes),
+  routes: state => state.auth.routesConstant.concat(state.auth.routes),
   languages: state => state.app.languages,
   genders: state => state.app.genders,
   // User setting
