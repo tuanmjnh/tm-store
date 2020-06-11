@@ -35,14 +35,36 @@ const mutations = {
   }
 };
 const actions = {
-  async login({ dispatch }, params) {
+  async login({ commit }, params) {
     const rs = await http.post(controller, params);
-    if (rs) dispatch('setCommit', rs);
+    if (rs) {
+      commit('SET_VERIFIED', true);
+      if (rs.token) commit('SET_TOKEN', rs.token);
+      if (rs.user) commit('SET_USER', rs.user);
+      if (rs.user && rs.user.routes) {
+        const routes = await routers.generateRoutes(rs.user.routes);
+        routers.router.addRoutes(routes, { replace: true });
+        commit('SET_ROUTES', routes);
+      }
+    }
   },
-  async verify({ dispatch }, params) {
-    const rs = await http.get(controller, { params });
-    if (rs) dispatch('setCommit', rs);
-    else dispatch('logout');
+  async verify({ commit, dispatch }, params) {
+    let rs;
+    if (params) {
+      rs = await http.post(controller, params);
+    } else {
+      rs = await http.get(controller, { params });
+    }
+    if (rs) {
+      commit('SET_VERIFIED', true);
+      if (rs.token) commit('SET_TOKEN', rs.token);
+      if (rs.user) commit('SET_USER', rs.user);
+      if (rs.user && rs.user.routes) {
+        const routes = await routers.generateRoutes(rs.user.routes);
+        routers.router.addRoutes(routes, { replace: true });
+        commit('SET_ROUTES', routes);
+      }
+    } else dispatch('logout');
   },
   logout({ commit }) {
     commit('SET_VERIFIED', false);
@@ -50,16 +72,6 @@ const actions = {
     commit('SET_USER', null);
     commit('SET_ROUTES', []);
     routers.resetRouter();
-  },
-  async setCommit({ commit }, rs) {
-    commit('SET_VERIFIED', true);
-    if (rs.token) commit('SET_TOKEN', rs.token);
-    if (rs.user) commit('SET_USER', rs.user);
-    if (rs.user && rs.user.routes) {
-      const routes = await routers.generateRoutes(rs.user.routes);
-      routers.router.addRoutes(routes, { replace: true });
-      commit('SET_ROUTES', routes);
-    }
   }
 };
 export default {

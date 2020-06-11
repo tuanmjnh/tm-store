@@ -14,23 +14,27 @@ const mutations = {
   }
 };
 const actions = {
-  async select({ commit }, params) {
+  async get({ commit }, params) {
     const rs = await http.get(controller, { params });
     if (rs) commit('SET_ITEMS', rs);
   },
-  async insert({ commit }, params) {
+  async find({ commit }, params) {
+    const rs = await http.get(controller, { params });
+    if (rs) commit('SET_ITEMS', rs);
+  },
+  async post({ commit }, params) {
     const rs = await http.post(controller, params);
     if (rs) commit('SET_ITEMS', rs);
   },
-  async update({ commit }, params) {
+  async put({ commit }, params) {
     const rs = await http.put(controller, params);
     if (rs) commit('SET_ITEMS', rs);
   },
-  async trash({ commit }, params) {
+  async patch({ commit }, params) {
     const rs = await http.patch(controller, params);
     if (rs) commit('SET_ITEMS', rs);
   },
-  async remove({ commit }, params) {
+  async delete({ commit }, params) {
     const rs = await http.delete(controller, params);
     if (rs) commit('SET_ITEMS', rs);
   }
