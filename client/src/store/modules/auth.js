@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 import * as routers from '@/router';
 import { constant } from '@/router/routes';
 import http from '@/utils/http-client';
-const controller = '/auth';
+const source = '/auth';
 
 const state = {
   verified: false,
@@ -36,7 +36,7 @@ const mutations = {
 };
 const actions = {
   async login({ commit }, params) {
-    const rs = await http.post(controller, params);
+    const rs = await http.post(source, params);
     if (rs) {
       commit('SET_VERIFIED', true);
       if (rs.token) commit('SET_TOKEN', rs.token);
@@ -51,9 +51,9 @@ const actions = {
   async verify({ commit, dispatch }, params) {
     let rs;
     if (params) {
-      rs = await http.post(controller, params);
+      rs = await http.post(source, params);
     } else {
-      rs = await http.get(controller, { params });
+      rs = await http.get(source, { params });
     }
     if (rs) {
       commit('SET_VERIFIED', true);
