@@ -1,7 +1,7 @@
 <template>
   <div :class="['relative-position',isDisplay?'is-display':'']">
-    <q-input v-if="hint" v-model.trim="item" @focus="onFocus" @input="onInput" :dense="dense" :placeholder="placeholder"
-      :hint="hint" :label="label" :rules="rules">
+    <q-input v-if="hint" v-model.trim="item" @focus="onFocus" @input="onInput" :dense="dense"
+      :placeholder="placeholder" :hint="hint" :label="label" :rules="rules">
       <template v-if="slotPrepend" v-slot:prepend>
         <slot name="prepend"></slot>
       </template>
@@ -9,8 +9,8 @@
         <slot name="append"></slot>
       </template>
     </q-input>
-    <q-input v-else v-model.trim="item" @focus="onFocus" @input="onInput" :dense="dense" :placeholder="placeholder"
-      :label="label" :rules="rules">
+    <q-input v-else v-model.trim="item" @focus="onFocus" @input="onInput" :dense="dense"
+      :placeholder="placeholder" :label="label" :rules="rules">
       <template v-if="slotPrepend" v-slot:prepend>
         <slot name="prepend"></slot>
       </template>
@@ -88,14 +88,14 @@ export default {
     }
   },
   methods: {
-    onFocus: _.debounce(function(x) {
+    onFocus: _.debounce(function (x) {
       if (this.isFirst) {
         // this.isDisplay = true
         this.checkDisplay()
         this.$emit('focus', this.item)
       } else this.isFirst = true
     }, 500),
-    onInput: _.debounce(function() {
+    onInput: _.debounce(function () {
       // this.$nextTick(() => {
       this.$emit('input', this.item)
       // })
@@ -115,12 +115,14 @@ export default {
       this.$emit('input', item)
     },
     checkDisplay() {
-      if (this.isNoData) {
-        if (this.data && this.data.length) this.isDisplay = true
-        else this.isDisplay = false
-      } else {
-        this.isDisplay = true
-      }
+      setTimeout(() => {
+        if (this.isNoData) {
+          if (this.data && this.data.length) this.isDisplay = true
+          else this.isDisplay = false
+        } else {
+          this.isDisplay = true
+        }
+      }, 100);
     }
   }
 }

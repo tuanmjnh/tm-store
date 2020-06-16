@@ -7,6 +7,7 @@ const schema = new mongoose.Schema({
   meta: { type: Array, default: null },
   orders: { type: Number, default: 1 },
   flag: { type: Number, default: 1 },
-  created: { type: Object, default: { at: new Date(), by: '', ip: '' } }
+  created: { type: Object, default: { at: new Date(), by: '', ip: '' } },
 });
 module.exports = mongoose.model('types', schema);
+// chema.index({ key: 'text', title: 'text', origin: 'text' });

@@ -61,12 +61,15 @@ module.exports.find = async function (req, res, next) {
 
 module.exports.getKey = async function (req, res, next) {
   try {
-    MTypes.distinct('key', req.body.conditions, (e, rs) => {
+    MTypes.distinct('key', { key: new RegExp(req.query.key, 'i') }, (e, rs) => {
       if (e) return res.status(500).send(e);
-      if (req.query.filter) rs = rs.filter((x) => new RegExp(req.query.filter, 'i').test(x));
       const rowsNumber = rs.length;
-      if (req.query.page && req.query.rowsPerPage)
+      req.query.page = req.query.page ? req.query.page : 1;
+      req.query.rowsPerPage = req.query.rowsPerPage ? req.query.rowsPerPage : 5;
+      if (req.query.page && req.query.rowsPerPage) {
         rs = pagination.get(rs, req.query.page, req.query.rowsPerPage);
+        return res.status(200).json({ rowsNumber: rs.totalPage, data: rs.data });
+      }
       return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
     });
   } catch (e) {
@@ -74,14 +77,55 @@ module.exports.getKey = async function (req, res, next) {
   }
 };
 
+// module.exports.getKey = async function (req, res, next) {
+//   try {
+//     const conditions = {};
+//     if (req.query.key) conditions.key = `/${req.query.key}/`;
+//     const countDocuments = await MTypes.where(conditions).countDocuments();
+//     const qry = MTypes.aggregate([
+//       { $match: conditions },
+//       {
+//         $sort: {
+//           [req.query.sortBy || 'key']: req.query.descending === 'true' ? -1 : 1,
+//         },
+//       },
+//       {
+//         $project: {
+//           _id: 0,
+//           key: 1,
+//         },
+//       },
+//       // {
+//       //   $replaceRoot: {
+//       //     newRoot: '$key',
+//       //   },
+//       // },
+//     ]);
+//     const page = parseInt(req.query.page);
+//     const rowsPerPage = parseInt(req.query.rowsPerPage);
+//     if (page && rowsPerPage) qry.skip((page - 1) * rowsPerPage).limit(rowsPerPage);
+//     const rs = await qry.exec();
+//     return res.status(200).json({ rowsNumber: countDocuments, data: rs });
+//   } catch (e) {
+//     console.log(e);
+//     return res.status(500).send('invalid');
+//   }
+// };
+
 module.exports.getMeta = async function (req, res, next) {
   try {
-    MTypes.distinct(req.query.key ? 'meta.key' : 'meta.value', null, (e, rs) => {
+    const conditions = req.query.key
+      ? { 'meta.key': new RegExp(req.query.filter, 'i') }
+      : { 'meta.value': new RegExp(req.query.filter, 'i') };
+    MTypes.distinct(req.query.key ? 'meta.key' : 'meta.value', conditions, (e, rs) => {
       if (e) return res.status(500).send(e);
-      if (req.query.filter) rs = rs.filter((x) => new RegExp(req.query.filter, 'i').test(x));
       const rowsNumber = rs.length;
-      if (req.query.page && req.query.rowsPerPage)
+      req.query.page = req.query.page ? req.query.page : 1;
+      req.query.rowsPerPage = req.query.rowsPerPage ? req.query.rowsPerPage : 5;
+      if (req.query.page && req.query.rowsPerPage) {
         rs = pagination.get(rs, req.query.page, req.query.rowsPerPage);
+        return res.status(200).json({ rowsNumber: rs.totalPage, data: rs.data });
+      }
       return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
     });
   } catch (e) {

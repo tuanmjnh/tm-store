@@ -162,7 +162,7 @@ export default {
     },
     onFilterKey() {
       this.keys = []
-      apiTypes.getKey().then((x) => {
+      apiTypes.getKey({ key: this.form.key }).then((x) => {
         if (x) this.keys = x.data
       })
     },
