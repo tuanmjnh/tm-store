@@ -114,7 +114,8 @@ export const dynamic = [
         path: 'category',
         name: 'category-product',
         meta: { title: 'category', icon: 'category', type: 'product' },
-        component: 'category',
+        component: 'layout',
+        redirect: 'category/view',
         children: [
           {
             path: 'view',
@@ -223,7 +224,8 @@ export const dynamic = [
         path: 'list',
         name: 'news-list',
         meta: { title: 'list', icon: 'collections_bookmark' },
-        component: 'news/index',
+        component: 'layout',
+        redirect: 'list/view',
         children: [
           {
             path: 'view',
@@ -273,7 +275,8 @@ export const dynamic = [
         path: 'category',
         name: 'category-news',
         meta: { title: 'category', icon: 'category', type: 'news' },
-        component: 'category',
+        component: 'layout',
+        redirect: 'category/view',
         children: [
           {
             path: 'view',
@@ -365,7 +368,8 @@ export const dynamic = [
         path: 'users',
         name: 'manager-users',
         meta: { title: 'users', icon: 'account_box' },
-        component: 'users/index',
+        component: 'layout',
+        redirect: 'users/view',
         children: [
           {
             path: 'view',
@@ -402,7 +406,8 @@ export const dynamic = [
         path: 'roles',
         name: 'manager-roles',
         meta: { title: 'roles', icon: 'verified_user' },
-        component: 'roles/index',
+        component: 'layout',
+        redirect: 'roles/view',
         children: [
           {
             path: 'view',
@@ -439,7 +444,8 @@ export const dynamic = [
         path: 'types',
         name: 'manager-types',
         meta: { title: 'types', icon: 'scatter_plot' },
-        component: 'types/index',
+        component: 'layout',
+        redirect: 'types/view',
         children: [
           {
             path: 'view',

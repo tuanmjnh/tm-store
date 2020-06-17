@@ -168,20 +168,35 @@
     </q-table>
     <!-- Add dialog -->
     <q-dialog v-model="dialogAdd" persistent>
-      <template-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items"
-        :categories="categories" :units="units" :unitsPrice="unitsPrice" :pins="pins" />
+      <q-card flat :style="{minWidth:'60%'}">
+        <q-toolbar>
+          <q-avatar :icon="$route.meta.icon" size="50px" />
+          <q-toolbar-title>
+            {{selected&&selected.length?$t('global.update'):$t('global.add')}}
+            <span class="text-weight-bold">{{$t('route.product')}}</span>
+          </q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup
+            :disable="$store.state.loading.post?true:false">
+            <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
+          </q-btn>
+        </q-toolbar>
+        <q-separator />
+        <template-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items"
+          :categories="categories" :units="units" :unitsPrice="unitsPrice" :pins="pins" />
+      </q-card>
     </q-dialog>
   </div>
 </template>
 
 <script>
-import templateAdd from './add'
-import selectCategory from '@/views/category/components/select-category'
 import * as api from '@/api/products'
 import * as apiCategories from '@/api/categories'
 import * as apiTypes from '@/api/types'
 export default {
-  components: { templateAdd, selectCategory },
+  components: {
+    templateAdd: () => import('./add'),
+    selectCategory: () => import('@/views/category/components/select-category')
+  },
   data() {
     return {
       dialogAdd: false,

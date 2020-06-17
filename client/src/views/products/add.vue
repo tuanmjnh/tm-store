@@ -1,6 +1,7 @@
 <template>
-  <q-card flat bordered :style="$q.platform.is.mobile?{width:'100%'}:{minWidth:'800px'}">
-    <q-toolbar v-if="!$q.platform.is.mobile">
+  <div>
+    <!-- <q-card flat :style="dialog?{minWidth:'60%'}:{width:'100%'}"> -->
+    <!-- <q-toolbar v-if="dialog">
       <q-avatar :icon="$route.meta.icon" size="50px" />
       <q-toolbar-title>
         {{this.item?$t('global.update'):$t('global.add')}}
@@ -11,22 +12,25 @@
         <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
-    <q-separator v-if="!$q.platform.is.mobile" />
+    <q-separator v-if="dialog" /> -->
     <q-form ref="form">
-      <q-card-actions v-if="item" align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
+      <q-card-actions align="right">
+        <q-toolbar-title v-if="!dialog">
+          {{this.item?$t('global.update'):$t('global.add')}}
+          <span class="text-weight-bold">{{$t('route.product')}}</span>
+        </q-toolbar-title>
+        <q-space />
+        <q-btn v-if="item" flat type="submit" :dense="$store.getters.dense.button" color="amber"
           icon="offline_pin" :label="$t('global.update')" :loading="loadingAdd"
           @click.prevent="onSubmit">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
-      </q-card-actions>
-      <q-card-actions v-else align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
-          icon="check_circle" :label="$t('global.add')" :loading="loadingAdd"
-          :disable="loadingDrafts" @click.prevent="onSubmit(1)">
+        <q-btn v-if="!item" flat type="submit" :dense="$store.getters.dense.button" color="blue"
+          :label="$t('global.add')" :loading="loadingAdd" :disable="loadingDrafts"
+          @click.prevent="onSubmit(1)">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="receipt"
+        <q-btn v-if="!item" flat type="submit" :dense="$store.getters.dense.button" color="amber"
           :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loadingAdd"
           @click.prevent="onSubmit(0)">
           <!-- <q-tooltip>{{$t('global.drafts')}}</q-tooltip> -->
@@ -218,7 +222,8 @@
       </q-tab-panels>
       <!-- </q-card-section> -->
     </q-form>
-  </q-card>
+    <!-- </q-card> -->
+  </div>
 </template>
 
 <script>
@@ -232,7 +237,7 @@ import selectCategory from '@/views/category/components/select-category'
 export default {
   components: { tmEditor, tmUpload, tmTags, tmAttributes, selectCategory },
   props: {
-    dialog: { type: Boolean, default: true },
+    dialog: { type: Boolean, default: false },
     items: { type: Array, default: () => [] },
     item: { type: Object, default: () => { } },
     categories: { type: Array, default: null },
@@ -300,7 +305,6 @@ export default {
           this.form.unit = this.units.find(x => x._id === this.form.unit)
           this.form.priceUnit = this.unitsPrice.find(x => x._id === this.form.priceUnit)
         }
-        console.log(this.categories)
       },
       deep: true,
       immediate: true
