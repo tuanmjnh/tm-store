@@ -374,13 +374,19 @@ export const dynamic = [
           {
             path: 'view',
             name: 'manager-users-view',
-            meta: { title: 'view', hidden: true, noCache: true, flag: 1 },
+            meta: {
+              title: 'view',
+              icon: 'list',
+              hidden: true,
+              noCache: true,
+              flag: 1
+            },
             component: 'users/index'
           },
           {
             path: 'add',
             name: 'manager-users-add',
-            meta: { title: 'add', hidden: true },
+            meta: { title: 'add', icon: 'add', hidden: true },
             component: 'users/add'
           },
           {
@@ -388,6 +394,7 @@ export const dynamic = [
             name: 'manager-users-edit',
             meta: {
               title: 'edit',
+              icon: 'edit',
               hidden: true,
               noCache: true,
               activeMenu: '/users/view'
@@ -397,7 +404,13 @@ export const dynamic = [
           {
             path: 'trash',
             name: 'manager-users-trash',
-            meta: { title: 'trash', hidden: true, noCache: true, flag: 0 },
+            meta: {
+              title: 'trash',
+              icon: 'delete',
+              hidden: true,
+              noCache: true,
+              flag: 0
+            },
             component: 'users/index'
           }
         ]
@@ -411,12 +424,14 @@ export const dynamic = [
         children: [
           {
             path: 'view',
+            icon: 'list',
             name: 'manager-roles-view',
             meta: { title: 'view', hidden: true, noCache: true, flag: 1 },
             component: 'roles/index'
           },
           {
             path: 'add',
+            icon: 'add',
             name: 'manager-roles-add',
             meta: { title: 'add', hidden: true },
             component: 'roles/add'
@@ -426,6 +441,7 @@ export const dynamic = [
             name: 'manager-roles-edit',
             meta: {
               title: 'edit',
+              icon: 'edit',
               hidden: true,
               noCache: true,
               activeMenu: '/roles/view'
@@ -435,7 +451,13 @@ export const dynamic = [
           {
             path: 'trash',
             name: 'manager-roles-trash',
-            meta: { title: 'trash', hidden: true, noCache: true, flag: 0 },
+            meta: {
+              title: 'trash',
+              icon: 'delete',
+              hidden: true,
+              noCache: true,
+              flag: 0
+            },
             component: 'roles/index'
           }
         ]
@@ -449,12 +471,14 @@ export const dynamic = [
         children: [
           {
             path: 'view',
+            icon: 'list',
             name: 'manager-types-view',
             meta: { title: 'view', hidden: true, noCache: true, flag: 1 },
             component: 'types/index'
           },
           {
             path: 'add',
+            icon: 'add',
             name: 'manager-types-add',
             meta: { title: 'add', hidden: true },
             component: 'types/add'
@@ -464,6 +488,7 @@ export const dynamic = [
             name: 'manager-types-edit',
             meta: {
               title: 'edit',
+              icon: 'edit',
               hidden: true,
               noCache: true,
               activeMenu: '/types/view'
@@ -473,7 +498,13 @@ export const dynamic = [
           {
             path: 'trash',
             name: 'manager-types-trash',
-            meta: { title: 'trash', hidden: true, noCache: true, flag: 0 },
+            meta: {
+              title: 'trash',
+              icon: 'delete',
+              hidden: true,
+              noCache: true,
+              flag: 0
+            },
             component: 'types/index'
           }
         ]

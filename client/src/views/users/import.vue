@@ -1,5 +1,6 @@
 <template>
-  <q-card :style="$q.platform.is.mobile ? { width: '100%' } : { minWidth: '800px' }">
+  <div>
+    <!-- <q-card :style="$q.platform.is.mobile ? { width: '100%' } : { minWidth: '800px' }">
     <q-toolbar>
       <q-toolbar-title>
         <span class="text-bold">{{$t('files.uploadData')}}</span>
@@ -18,7 +19,7 @@
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
-    <q-separator />
+    <q-separator /> -->
     <q-card-section>
       <!-- <div class="row q-gutter-xs">
         <div class="col-12">
@@ -30,7 +31,6 @@
       <!-- https://docs.google.com/spreadsheets/d/15F3mYued4CDTzHrcpCvrWQrr_ULGxqhLTu5-CYRjOBk/edit?usp=sharing -->
       <div class="row q-gutter-xs">
         <div class="col-5">
-
         </div>
       </div>
       <div class="row q-gutter-xs">
@@ -42,7 +42,7 @@
           <!-- $t('files.open_file') -->
           <tm-load-files ref="tmLoadFiles" :button="true" label="" attachLabel="template"
             attach="https://docs.google.com/spreadsheets/d/15F3mYued4CDTzHrcpCvrWQrr_ULGxqhLTu5-CYRjOBk"
-            :placeholder="$t('files.choose_file')" accept=".xls,.xlsx,.csv,.tsv,.txt,.json,.xml"
+            :placeholder="$t('files.chooseFile')" accept=".xls,.xlsx,.csv,.tsv,.txt,.json,.xml"
             @on-start="loading=true" @on-finish="onLoadedFile" :options="{header:'A',raw:true}" />
         </div>
       </div>
@@ -54,8 +54,8 @@
       <div class="col-12">
         <q-table :data="loadedData" :columns="columns" row-key="_id" flat
           :visible-columns="visibleColumns" :loading="loading" :dense="$store.getters.dense.table"
-          :no-data-label="$t('table.no_data')" :rows-per-page-label="$t('table.row_per_page')"
-          :selected-rows-label="()=>`${selected.length} ${$t('table.row_selected')}`"
+          :no-data-label="$t('table.noData')" :rows-per-page-label="$t('table.rowPerPage')"
+          :selected-rows-label="()=>`${selected.length} ${$t('table.rowSelected')}`"
           :rows-per-page-options="[10, 20, 50, 100, 200, 0]" :pagination.sync="pagination"
           :filter="pagination.filter" binary-state-sort>
           <template v-slot:top="props">
@@ -68,7 +68,7 @@
                 <div class="col-auto self-center">
                   <q-btn flat round dense :color="$store.getters.darkMode ? '' : 'grey-7'"
                     icon="menu_open">
-                    <q-tooltip v-if="!$q.platform.is.mobile">{{ $t("table.display_columns")}}
+                    <q-tooltip v-if="!$q.platform.is.mobile">{{ $t("table.displayColumns")}}
                     </q-tooltip>
                     <q-menu fit>
                       <q-list dense style="min-width:100px">
@@ -85,7 +85,7 @@
                     :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                     @click="props.toggleFullscreen">
                     <q-tooltip v-if="!$q.platform.is.mobile">
-                      {{props.inFullscreen? $t("table.normal_screen"): $t("table.full_screen")}}
+                      {{props.inFullscreen? $t("table.normalScreen"): $t("table.fullScreen")}}
                     </q-tooltip>
                   </q-btn>
                 </div>
@@ -138,7 +138,8 @@
         </q-table>
       </div>
     </q-card-section>
-  </q-card>
+    <!-- </q-card> -->
+  </div>
 </template>
 
 <script>
@@ -148,6 +149,7 @@ import regionData from '@/i18n/region'
 export default {
   components: { tmLoadFiles },
   props: {
+    dialog: { type: Boolean, default: false },
     groups: { type: Array, default: () => [] },
     roles: { type: Array, default: () => [] },
     maximized: { type: Boolean, default: false }

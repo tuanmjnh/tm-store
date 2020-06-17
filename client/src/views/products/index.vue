@@ -181,7 +181,7 @@
           </q-btn>
         </q-toolbar>
         <q-separator />
-        <template-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items"
+        <tpl-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items"
           :categories="categories" :units="units" :unitsPrice="unitsPrice" :pins="pins" />
       </q-card>
     </q-dialog>
@@ -194,7 +194,7 @@ import * as apiCategories from '@/api/categories'
 import * as apiTypes from '@/api/types'
 export default {
   components: {
-    templateAdd: () => import('./add'),
+    tplAdd: () => import('./add'),
     selectCategory: () => import('@/views/category/components/select-category')
   },
   data() {

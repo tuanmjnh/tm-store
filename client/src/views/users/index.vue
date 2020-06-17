@@ -10,7 +10,7 @@
       <template v-slot:top="props">
         <div class="col-12 row">
           <div class="col-xs-12 col-sm-auto q-table__title text-h6">
-            {{ $t("users.title") }}
+            {{ $t("users.titleList") }}
           </div>
           <q-space />
           <div class="col-xs-12 col-sm-auto self-center text-right">
@@ -176,13 +176,48 @@
     </q-table>
     <!-- Add dialog -->
     <q-dialog v-model="dialogAdd" persistent>
-      <tpl-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items" :roles="roles"
-        :groups="groups" />
+      <q-card flat :style="{minWidth:'60%'}">
+        <q-toolbar>
+          <q-avatar :icon="$route.meta.icon" size="50px" />
+          <q-toolbar-title>
+            {{selected&&selected.length?$t('global.update'):$t('global.add')}}
+            <span class="text-weight-bold">{{$t('users.title')}}</span>
+          </q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup
+            :disable="$store.state.loading.post?true:false">
+            <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
+          </q-btn>
+        </q-toolbar>
+        <q-separator />
+        <tpl-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items"
+          :roles="roles" :groups="groups" />
+      </q-card>
     </q-dialog>
     <!-- Import dialog -->
     <q-dialog v-model="dialogImport" :maximized="maximizedView" persistent>
-      <tpl-import :dialog.sync="dialogImport" :maximized.sync="maximizedView" :groups="groups"
-        :roles="roles" />
+      <q-card flat :style="{minWidth:'60%'}">
+        <q-toolbar>
+          <q-toolbar-title>
+            <span class="text-bold">{{$t('files.uploadData')}}</span>
+          </q-toolbar-title>
+          <q-btn flat round dense icon="cloud_upload" color="indigo">
+            <q-tooltip v-if="!$q.platform.is.mobile">{{$t("files.uploadData")}}</q-tooltip>
+          </q-btn>
+          <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
+            :icon="maximizedView?'fullscreen_exit':'fullscreen'"
+            :disable="$store.state.loading.post" @click="maximizedView=!maximizedView">
+            <q-tooltip v-if="!$q.platform.is.mobile">
+              {{maximizedView?$t('table.normalScreen'):$t('table.fullScreen')}}
+            </q-tooltip>
+          </q-btn>
+          <q-btn flat round dense icon="close" :disable="$store.state.loading.post" v-close-popup>
+            <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
+          </q-btn>
+        </q-toolbar>
+        <q-separator />
+        <tpl-import :dialog.sync="dialogImport" :maximized.sync="maximizedView" :groups="groups"
+          :roles="roles" />
+      </q-card>
     </q-dialog>
   </div>
 </template>
@@ -191,10 +226,11 @@
 import * as apiUsers from '@/api/users'
 import * as apiTypes from '@/api/types'
 import * as apiRoles from '@/api/roles'
-import tplAdd from './add'
-import tplImport from './import'
 export default {
-  components: { tplAdd, tplImport },
+  components: {
+    tplAdd: () => import('./add'),
+    tplImport: () => import('./import')
+  },
   data() {
     return {
       dialogFilter: false,

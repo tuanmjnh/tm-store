@@ -16,7 +16,7 @@
     <q-form ref="form">
       <q-card-actions align="right">
         <q-toolbar-title v-if="!dialog">
-          {{this.item?$t('global.update'):$t('global.add')}}
+          {{item?$t('global.update'):$t('global.add')}}
           <span class="text-weight-bold">{{$t('route.product')}}</span>
         </q-toolbar-title>
         <q-space />

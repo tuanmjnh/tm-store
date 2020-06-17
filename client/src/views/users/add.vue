@@ -1,5 +1,6 @@
 <template>
-  <q-card :style="$q.platform.is.mobile ? { width: '100%' } : { minWidth: '800px' }">
+  <div>
+    <!-- <q-card :style="$q.platform.is.mobile ? { width: '100%' } : { minWidth: '800px' }">
     <q-toolbar>
       <q-avatar :icon="$route.meta.icon" size="50px" />
       <q-toolbar-title>
@@ -13,23 +14,26 @@
         }}</q-tooltip>
       </q-btn>
     </q-toolbar>
-    <q-separator />
+    <q-separator /> -->
     <q-form ref="form">
-      <q-card-actions v-if="item" align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
+      <q-card-actions>
+        <q-toolbar-title v-if="!dialog">
+          {{item?$t('global.update'):$t('global.add')}}
+          <span class="text-weight-bold">{{$t('users.title')}}</span>
+        </q-toolbar-title>
+        <q-space />
+        <q-btn v-if="item" flat type="submit" :dense="$store.getters.dense.button" color="amber"
           icon="offline_pin" :label="$t('global.update')" :loading="loadingAdd"
           @click.prevent="onSubmit">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
-      </q-card-actions>
-      <q-card-actions v-else align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
+        <q-btn v-if="!item" flat type="submit" :dense="$store.getters.dense.button" color="blue"
           icon="check_circle" :label="$t('global.add')" :loading="loadingAdd"
           :disable="loadingDrafts" @click.prevent="onSubmit(true)">
           <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
         </q-btn>
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="receipt"
-          :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loadingAdd"
+        <q-btn v-if="!item" flat type="submit" :dense="$store.getters.dense.button" color="amber"
+          icon="receipt" :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loadingAdd"
           @click.prevent="onSubmit(false)">
           <!-- <q-tooltip>{{$t('global.drafts')}}</q-tooltip> -->
         </q-btn>
@@ -216,7 +220,8 @@
       </q-tab-panels>
       <!-- </q-card-section> -->
     </q-form>
-  </q-card>
+    <!-- </q-card> -->
+  </div>
 </template>
 
 <script>
@@ -226,7 +231,7 @@ import tmUpload from '@/components/tm-upload'
 export default {
   components: { tmUpload },
   props: {
-    dialog: { type: Boolean, default: true },
+    dialog: { type: Boolean, default: false },
     item: { type: Object, default: () => { } },
     items: { type: Array, default: () => [] },
     roles: { type: Array, default: () => [] },

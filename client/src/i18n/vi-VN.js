@@ -176,13 +176,14 @@ export default {
     loginWith: 'Đăng nhập bằng'
   },
   users: {
-    title: 'Danh sách tài khoản',
+    title: 'Người dùng',
+    titleList: 'Danh sách người dùng',
     username: 'Tài khoản',
     password: 'Mật khẩu',
     oldPassword: 'Mật khẩu cũ',
     newPassword: 'Mật khẩu mới',
     rePassword: 'Xác nhận mật khẩu',
-    group: 'Nhóm tài khoản',
+    group: 'Nhóm người dùng',
     email: 'Email',
     firstName: 'Tên',
     lastName: 'Họ',
@@ -303,8 +304,9 @@ export default {
     actions: '#'
   },
   files: {
-    title: 'Danh sách tệp',
-    upload: 'Tải tệp',
+    title: 'Dữ liệu',
+    upload: 'Tải dữ liệu',
+    uploadData: 'Thực hiện đẩy dữ liệu',
     openFile: 'Duyệt tệp',
     openData: 'Duyệt dữ liệu',
     dataFile: 'Dữ liệu tệp',

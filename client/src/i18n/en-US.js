@@ -176,7 +176,8 @@ export default {
     loginWith: 'Login with'
   },
   users: {
-    title: 'Account list',
+    title: 'User',
+    titleList: 'User list',
     username: 'Username',
     password: 'Password',
     oldPassword: 'Old password',
@@ -305,6 +306,7 @@ export default {
   files: {
     title: 'List file',
     upload: 'Upload',
+    uploadData: 'Upload Data',
     openFile: 'Browse file',
     openData: 'Browse data',
     dataFile: 'Data of file',
