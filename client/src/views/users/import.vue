@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <q-card :style="$q.platform.is.mobile ? { width: '100%' } : { minWidth: '800px' }">
+    <!-- <q-card :style="$q.platform.is.mobile ? { width: '100%' } : { minWidth: '800px' }">-->
     <q-toolbar>
       <q-toolbar-title>
         <span class="text-bold">{{$t('files.uploadData')}}</span>
@@ -19,98 +19,99 @@
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
-    <q-separator /> -->
-    <q-card-section>
-      <!-- <div class="row q-gutter-xs">
+    <q-separator />
+    <q-form ref="form">
+      <q-card-section>
+        <!-- <div class="row q-gutter-xs">
         <div class="col-12">
           <q-select v-model="group" input-debounce="200" :dense="$store.getters.dense.input"
             :options="groups" :label="$t('users.group')" option-value="code"
             :option-label="opt=>opt.name" :rules="[v=>!!v||$t('error.required')]" />
         </div>
       </div> -->
-      <!-- https://docs.google.com/spreadsheets/d/15F3mYued4CDTzHrcpCvrWQrr_ULGxqhLTu5-CYRjOBk/edit?usp=sharing -->
-      <div class="row q-gutter-xs">
-        <div class="col-5">
+        <!-- https://docs.google.com/spreadsheets/d/15F3mYued4CDTzHrcpCvrWQrr_ULGxqhLTu5-CYRjOBk/edit?usp=sharing -->
+        <div class="row q-gutter-xs">
+          <div class="col-5">
+          </div>
         </div>
-      </div>
-      <div class="row q-gutter-xs">
-        <div class="col-3">
-          <q-checkbox v-model="append" :label="$t('global.append')" />
+        <div class="row q-gutter-xs">
+          <div class="col-3">
+            <q-checkbox v-model="append" :label="$t('global.append')" />
+          </div>
+          <q-space />
+          <div class="col-8">
+            <!-- $t('files.open_file') -->
+            <tm-load-files ref="tmLoadFiles" :button="true" label="" attachLabel="template"
+              attach="https://docs.google.com/spreadsheets/d/15F3mYued4CDTzHrcpCvrWQrr_ULGxqhLTu5-CYRjOBk"
+              :placeholder="$t('files.chooseFile')" accept=".xls,.xlsx,.csv,.tsv,.txt,.json,.xml"
+              @on-start="loading=true" @on-finish="onLoadedFile" :options="{header:'A',raw:true}" />
+          </div>
         </div>
-        <q-space />
-        <div class="col-8">
-          <!-- $t('files.open_file') -->
-          <tm-load-files ref="tmLoadFiles" :button="true" label="" attachLabel="template"
-            attach="https://docs.google.com/spreadsheets/d/15F3mYued4CDTzHrcpCvrWQrr_ULGxqhLTu5-CYRjOBk"
-            :placeholder="$t('files.chooseFile')" accept=".xls,.xlsx,.csv,.tsv,.txt,.json,.xml"
-            @on-start="loading=true" @on-finish="onLoadedFile" :options="{header:'A',raw:true}" />
+      </q-card-section>
+      <q-card-section>
+        <div v-if="loadedReport.wrong.length" class="col-12"
+          v-html="$t('question.msgPushWrong',{total:loadedReport.wrong.length})+'<br/>'+$t('question.msgPushWrongDetails')+loadedReport.wrong.join(', ')">
         </div>
-      </div>
-    </q-card-section>
-    <q-card-section>
-      <div v-if="loadedReport.wrong.length" class="col-12"
-        v-html="$t('question.msgPushWrong',{total:loadedReport.wrong.length})+'<br/>'+$t('question.msgPushWrongDetails')+loadedReport.wrong.join(', ')">
-      </div>
-      <div class="col-12">
-        <q-table :data="loadedData" :columns="columns" row-key="_id" flat
-          :visible-columns="visibleColumns" :loading="loading" :dense="$store.getters.dense.table"
-          :no-data-label="$t('table.noData')" :rows-per-page-label="$t('table.rowPerPage')"
-          :selected-rows-label="()=>`${selected.length} ${$t('table.rowSelected')}`"
-          :rows-per-page-options="[10, 20, 50, 100, 200, 0]" :pagination.sync="pagination"
-          :filter="pagination.filter" binary-state-sort>
-          <template v-slot:top="props">
-            <div class="col-12 row">
-              <div class="col-xs-12 col-sm-auto q-table__title text-h6">
-                {{ $t("files.dataList") }}
-              </div>
-              <q-space />
-              <div class="col-xs-12 col-sm-auto self-center text-right">
-                <div class="col-auto self-center">
-                  <q-btn flat round dense :color="$store.getters.darkMode ? '' : 'grey-7'"
-                    icon="menu_open">
-                    <q-tooltip v-if="!$q.platform.is.mobile">{{ $t("table.displayColumns")}}
-                    </q-tooltip>
-                    <q-menu fit>
-                      <q-list dense style="min-width:100px">
-                        <template v-for="(e,i) in columns">
-                          <q-item clickable :key="i" v-if="!e.required" @click="onColumns(e.name)"
-                            :active="visibleColumns.indexOf(e.name) > -1 || false">
-                            <q-item-section>{{ e.label }}</q-item-section>
-                          </q-item>
-                        </template>
-                      </q-list>
-                    </q-menu>
-                  </q-btn>
-                  <q-btn flat round dense :color="$store.getters.darkMode ? '' : 'grey-7'"
-                    :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                    @click="props.toggleFullscreen">
-                    <q-tooltip v-if="!$q.platform.is.mobile">
-                      {{props.inFullscreen? $t("table.normalScreen"): $t("table.fullScreen")}}
-                    </q-tooltip>
-                  </q-btn>
+        <div class="col-12">
+          <q-table :data="loadedData" :columns="columns" row-key="_id" flat
+            :visible-columns="visibleColumns" :loading="loading" :dense="$store.getters.dense.table"
+            :no-data-label="$t('table.noData')" :rows-per-page-label="$t('table.rowPerPage')"
+            :selected-rows-label="()=>`${selected.length} ${$t('table.rowSelected')}`"
+            :rows-per-page-options="[10, 20, 50, 100, 200, 0]" :pagination.sync="pagination"
+            :filter="pagination.filter" binary-state-sort>
+            <template v-slot:top="props">
+              <div class="col-12 row">
+                <div class="col-xs-12 col-sm-auto q-table__title text-h6">
+                  {{ $t("files.dataList") }}
+                </div>
+                <q-space />
+                <div class="col-xs-12 col-sm-auto self-center text-right">
+                  <div class="col-auto self-center">
+                    <q-btn flat round dense :color="$store.getters.darkMode ? '' : 'grey-7'"
+                      icon="menu_open">
+                      <q-tooltip v-if="!$q.platform.is.mobile">{{ $t("table.displayColumns")}}
+                      </q-tooltip>
+                      <q-menu fit>
+                        <q-list dense style="min-width:100px">
+                          <template v-for="(e,i) in columns">
+                            <q-item clickable :key="i" v-if="!e.required" @click="onColumns(e.name)"
+                              :active="visibleColumns.indexOf(e.name) > -1 || false">
+                              <q-item-section>{{ e.label }}</q-item-section>
+                            </q-item>
+                          </template>
+                        </q-list>
+                      </q-menu>
+                    </q-btn>
+                    <q-btn flat round dense :color="$store.getters.darkMode ? '' : 'grey-7'"
+                      :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                      @click="props.toggleFullscreen">
+                      <q-tooltip v-if="!$q.platform.is.mobile">
+                        {{props.inFullscreen? $t("table.normalScreen"): $t("table.fullScreen")}}
+                      </q-tooltip>
+                    </q-btn>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-12 row">
-              <div class="col-xs-12 col-sm-5">
-                <q-select v-model="pagination.group" input-debounce="200"
-                  :dense="$store.getters.dense.input" :options="groups" :label="$t('users.group')"
-                  option-value="code" :option-label="opt=>opt.name" />
+              <div class="col-12 row">
+                <div class="col-xs-12 col-sm-5">
+                  <q-select v-model="pagination.group" input-debounce="200"
+                    :dense="$store.getters.dense.input" :options="groups" :label="$t('users.group')"
+                    option-value="code" :option-label="opt=>opt.name" />
+                </div>
+                <q-space />
+                <div class="col-xs-12 col-sm-5">
+                  <q-input v-model="pagination.filter" :dense="$store.getters.dense.input"
+                    debounce="500" :placeholder="$t('global.search')">
+                    <template v-slot:append>
+                      <q-icon v-if="pagination.filter === ''" name="search" />
+                      <q-icon v-else name="clear" class="cursor-pointer"
+                        @click="pagination.filter = ''" />
+                    </template>
+                  </q-input>
+                </div>
               </div>
-              <q-space />
-              <div class="col-xs-12 col-sm-5">
-                <q-input v-model="pagination.filter" :dense="$store.getters.dense.input"
-                  debounce="500" :placeholder="$t('global.search')">
-                  <template v-slot:append>
-                    <q-icon v-if="pagination.filter === ''" name="search" />
-                    <q-icon v-else name="clear" class="cursor-pointer"
-                      @click="pagination.filter = ''" />
-                  </template>
-                </q-input>
-              </div>
-            </div>
-          </template>
-          <!-- <template v-slot:header="props">
+            </template>
+            <!-- <template v-slot:header="props">
             <q-tr :props="props">
               <q-th v-for="col in props.cols" :key="col.name" :props="props">
                 <span :class="['text-bold',$store.getters.darkMode ? '' : 'text-blue-grey-10']">
@@ -119,7 +120,7 @@
               </q-th>
             </q-tr>
           </template> -->
-          <!-- <template v-slot:body="props">
+            <!-- <template v-slot:body="props">
             <q-tr :props="props">
               <q-td key="username" :props="props">
                 {{ props.row.username }}
@@ -135,9 +136,10 @@
               </q-td>
             </q-tr>
           </template> -->
-        </q-table>
-      </div>
-    </q-card-section>
+          </q-table>
+        </div>
+      </q-card-section>
+    </q-form>
     <!-- </q-card> -->
   </div>
 </template>

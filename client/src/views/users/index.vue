@@ -196,7 +196,7 @@
     <!-- Import dialog -->
     <q-dialog v-model="dialogImport" :maximized="maximizedView" persistent>
       <q-card flat :style="{minWidth:'60%'}">
-        <q-toolbar>
+        <!-- <q-toolbar>
           <q-toolbar-title>
             <span class="text-bold">{{$t('files.uploadData')}}</span>
           </q-toolbar-title>
@@ -213,8 +213,8 @@
           <q-btn flat round dense icon="close" :disable="$store.state.loading.post" v-close-popup>
             <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
           </q-btn>
-        </q-toolbar>
-        <q-separator />
+        </q-toolbar> -->
+        <!-- <q-separator /> -->
         <tpl-import :dialog.sync="dialogImport" :maximized.sync="maximizedView" :groups="groups"
           :roles="roles" />
       </q-card>
