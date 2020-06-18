@@ -360,7 +360,7 @@ export const dynamic = [
   {
     path: '/manager',
     name: 'manager',
-    redirect: 'manager-users',
+    redirect: 'manager/users/view',
     meta: { title: 'manager', icon: 'security' },
     component: 'layout',
     children: [
@@ -412,6 +412,18 @@ export const dynamic = [
               flag: 0
             },
             component: 'users/index'
+          },
+          {
+            path: 'import',
+            name: 'manager-users-import',
+            meta: {
+              title: 'import',
+              icon: 'cloud_upload',
+              hidden: true,
+              noCache: true,
+              flag: 0
+            },
+            component: 'users/import'
           }
         ]
       },
@@ -424,16 +436,20 @@ export const dynamic = [
         children: [
           {
             path: 'view',
-            icon: 'list',
             name: 'manager-roles-view',
-            meta: { title: 'view', hidden: true, noCache: true, flag: 1 },
+            meta: {
+              title: 'view',
+              icon: 'list',
+              hidden: true,
+              noCache: true,
+              flag: 1
+            },
             component: 'roles/index'
           },
           {
             path: 'add',
-            icon: 'add',
             name: 'manager-roles-add',
-            meta: { title: 'add', hidden: true },
+            meta: { title: 'add', icon: 'add', hidden: true },
             component: 'roles/add'
           },
           {
@@ -471,16 +487,20 @@ export const dynamic = [
         children: [
           {
             path: 'view',
-            icon: 'list',
             name: 'manager-types-view',
-            meta: { title: 'view', hidden: true, noCache: true, flag: 1 },
+            meta: {
+              title: 'view',
+              icon: 'list',
+              hidden: true,
+              noCache: true,
+              flag: 1
+            },
             component: 'types/index'
           },
           {
             path: 'add',
-            icon: 'add',
             name: 'manager-types-add',
-            meta: { title: 'add', hidden: true },
+            meta: { title: 'add', icon: 'add', hidden: true },
             component: 'types/add'
           },
           {

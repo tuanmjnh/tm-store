@@ -91,6 +91,7 @@ export function generateRoutesRoles(nodes) {
       const e = { ..._e };
       if (!e.constant) {
         e.label = i18n.t(`route.${e.meta.title}`);
+        e.icon = e.meta.icon;
         if (e.children) {
           const child = generateRoutesRoles(e.children);
           if (child.length > 0) e.children = child;
