@@ -9,7 +9,7 @@
       @request="onSelect" :filter="pagination.filter" binary-state-sort>
       <template v-slot:top="props">
         <div class="col-12 row">
-          <div class="col-xs-12 col-sm-auto q-table__title text-h6">{{$t('types.title')}}</div>
+          <div class="col-xs-12 col-sm-auto q-table__title text-h6">{{$t('types.titleList')}}</div>
           <q-space />
           <div class="col-xs-12 col-sm-auto self-center text-right">
             <q-btn v-if="isRoutes.add" flat round dense icon="add" color="blue"
@@ -131,21 +131,24 @@
       </template>
     </q-table>
     <!-- Add dialog -->
-    <q-dialog v-model="dialogAdd" persistent>
-      <template-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items" />
+    <q-dialog v-model="dialogAdd" :maximized="maximizedView" persistent>
+      <q-card flat :style="{minWidth:'60%'}">
+        <tpl-add :dialog.sync="dialogAdd" :maximized.sync="maximizedView" :item.sync="selected[0]"
+          :items.sync="items" />
+      </q-card>
     </q-dialog>
   </div>
 </template>
 
 <script>
 import * as apiTypes from '@/api/types'
-import templateAdd from './add'
 export default {
-  components: { templateAdd },
+  components: { tplAdd: () => import('./add') },
   data() {
     return {
       dialogFilter: false,
       dialogAdd: false,
+      maximizedView: false,
       items: [],
       selected: [],
       keys: [],

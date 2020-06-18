@@ -1,37 +1,58 @@
 <template>
-  <q-card style="width:700px;max-width:80vw">
+  <div>
     <q-toolbar>
-      <q-avatar :icon="$route.meta.icon" size="50px" />
+      <q-avatar v-if="dialog" :icon="$route.meta.icon" size="50px" />
       <q-toolbar-title>
-        {{this.item?$t('global.update'):$t('global.add')}}
-        <span class="text-weight-bold">{{$t('roles.title')}}</span>
+        {{ this.item ? $t("global.update") : $t("global.add") }}
+        <span class="text-weight-bold">{{ $t("types.title") }}</span>
       </q-toolbar-title>
-      <q-btn flat round dense icon="close" v-close-popup
-        :disable="loading_add||loadingDrafts?true:false">
+      <q-btn v-if="item" flat type="submit" :dense="$store.getters.dense.button" color="amber"
+        icon="offline_pin" :label="dialog?'':$t('global.update')" :loading="loadingAdd"
+        @click.prevent="onSubmit">
+        <q-tooltip v-if="dialog">{{$t('global.update')}}</q-tooltip>
+      </q-btn>
+      <q-btn v-if="!item" flat type="submit" :dense="$store.getters.dense.button" color="blue"
+        icon="check_circle" :label="dialog?'':$t('global.add')" :loading="loadingAdd"
+        :disable="loadingDrafts" @click.prevent="onSubmit(1)">
+        <q-tooltip v-if="dialog">{{$t('global.add')}}</q-tooltip>
+      </q-btn>
+      <q-btn v-if="!item" flat type="submit" :dense="$store.getters.dense.button" color="amber"
+        icon="receipt" :label="dialog?'':$t('global.drafts')" :loading="loadingDrafts"
+        :disable="loadingAdd" @click.prevent="onSubmit(0)">
+        <q-tooltip v-if="dialog">{{$t('global.drafts')}}</q-tooltip>
+      </q-btn>
+      <q-btn v-if="dialog" flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
+        :icon="maximized?'fullscreen_exit':'fullscreen'" :disable="loading"
+        @click="$emit('update:maximized',!maximized)">
+        <q-tooltip v-if="!$q.platform.is.mobile">
+          {{maximized?$t('table.normalScreen'):$t('table.fullScreen')}}
+        </q-tooltip>
+      </q-btn>
+      <q-btn v-if="dialog" flat round dense icon="close" :disable="loading" v-close-popup>
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
     <q-separator />
     <q-form ref="form">
-      <q-card-actions v-if="item" align="right">
+      <!-- <q-card-actions v-if="item" align="right">
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
           icon="offline_pin" :label="$t('global.update')" :loading="loading_add"
           @click.prevent="onSubmit">
-          <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
+          <q-tooltip>{{$t('global.add')}}</q-tooltip>
         </q-btn>
       </q-card-actions>
       <q-card-actions v-else align="right">
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
           icon="check_circle" :label="$t('global.add')" :loading="loading_add"
           :disable="loadingDrafts" @click.prevent="onSubmit(1)">
-          <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
+          <q-tooltip>{{$t('global.add')}}</q-tooltip>
         </q-btn>
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="receipt"
           :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loading_add"
           @click.prevent="onSubmit(0)">
-          <!-- <q-tooltip>{{$t('global.drafts')}}</q-tooltip> -->
+          <q-tooltip>{{$t('global.drafts')}}</q-tooltip>
         </q-btn>
-      </q-card-actions>
+      </q-card-actions> -->
       <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form"
         class="text-deep-purple" align="justify">
         <q-tab name="main" :label="$t('tabs.main')" />
@@ -98,7 +119,7 @@
       </q-tab-panels>
       <!-- </q-card-section> -->
     </q-form>
-  </q-card>
+  </div>
 </template>
 
 <script>

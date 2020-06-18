@@ -38,6 +38,7 @@ export default {
     list: 'Danh sách dữ liệu',
     add: 'Thêm mới',
     details: 'Chi tiết',
+    process: 'Thực hiện',
     publish: 'Công bố',
     use: 'Sử dụng',
     using: 'Đang dùng',
@@ -101,7 +102,15 @@ export default {
     year: 'Năm',
     month: 'Tháng',
     day: 'Ngày',
-    getData: 'Lấy dữ liệu'
+    getData: 'Lấy dữ liệu',
+    replay: 'Làm lại',
+    success: 'Thàng công',
+    error: 'Lỗi',
+    question: 'Câu hỏi',
+    hour: 'Giờ',
+    minute: 'Phút',
+    result: 'Kết quả',
+    append: 'Nhập thêm'
   },
   success: {
     insert: 'Thêm mới thành công',
@@ -216,7 +225,8 @@ export default {
     menus: 'Danh sách Menus'
   },
   types: {
-    title: 'Danh sách kiểu dữ liệu'
+    title: 'Kiểu dữ liệu',
+    titleList: 'Danh sách kiểu dữ liệu'
   },
   position: {
     top: 'Trên',
@@ -304,17 +314,20 @@ export default {
     actions: '#'
   },
   files: {
-    title: 'Dữ liệu',
-    upload: 'Tải dữ liệu',
-    uploadData: 'Thực hiện đẩy dữ liệu',
+    title: 'Danh sách tệp',
+    upload: 'Tải tệp',
+    uploadData: 'Tải dữ liệu lên',
     openFile: 'Duyệt tệp',
     openData: 'Duyệt dữ liệu',
-    dataFile: 'Dữ liệu tệp',
+    dataDile: 'Dữ liệu tệp',
     chooseFile: 'Chọn tệp...',
     ViewList: 'Xem kiểu danh sách',
     viewBox: 'Xem kiểu hộp',
     fileName: 'Tên tệp',
-    fileSize: 'Kích cỡ'
+    fileSize: 'Kích cỡ',
+    dataList: 'Danh sách dữ liệu',
+    import: 'Nhập dữ liệu',
+    export: 'Xuất dữ liệu'
   },
   gender: {
     male: 'Nam',

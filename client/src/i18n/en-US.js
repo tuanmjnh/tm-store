@@ -37,6 +37,7 @@ export default {
     list: 'List data',
     add: 'Add new',
     details: 'Details',
+    process: 'Process',
     publish: 'Publish',
     use: 'Use',
     using: 'Using',
@@ -101,7 +102,15 @@ export default {
     year: 'Year',
     month: 'Month',
     day: 'Day',
-    getData: 'Get data'
+    getData: 'Get data',
+    replay: 'Replay',
+    success: 'Success',
+    error: 'Error',
+    question: 'Question',
+    hour: 'Hour',
+    minute: 'Minutes',
+    result: 'Result',
+    append: 'Append'
   },
   success: {
     insert: 'Insert success',
@@ -216,7 +225,8 @@ export default {
     menus: 'Menu list'
   },
   types: {
-    title: 'Types of data'
+    title: 'Types',
+    titleList: 'Types list'
   },
   position: {
     top: 'Trên',
@@ -306,7 +316,7 @@ export default {
   files: {
     title: 'List file',
     upload: 'Upload',
-    uploadData: 'Upload Data',
+    uploadData: 'Upload data',
     openFile: 'Browse file',
     openData: 'Browse data',
     dataFile: 'Data of file',
@@ -314,7 +324,10 @@ export default {
     ViewList: 'List view',
     viewBox: 'Box view',
     fileName: 'File name',
-    fileSize: 'File size'
+    fileSize: 'File size',
+    dataList: 'Data list',
+    import: 'Import data',
+    export: 'Export data'
   },
   gender: {
     male: 'Male',

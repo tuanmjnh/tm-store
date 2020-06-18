@@ -175,46 +175,15 @@
       </template>
     </q-table>
     <!-- Add dialog -->
-    <q-dialog v-model="dialogAdd" persistent>
+    <q-dialog v-model="dialogAdd" :maximized="maximizedView" persistent>
       <q-card flat :style="{minWidth:'60%'}">
-        <q-toolbar>
-          <q-avatar :icon="$route.meta.icon" size="50px" />
-          <q-toolbar-title>
-            {{selected&&selected.length?$t('global.update'):$t('global.add')}}
-            <span class="text-weight-bold">{{$t('users.title')}}</span>
-          </q-toolbar-title>
-          <q-btn flat round dense icon="close" v-close-popup
-            :disable="$store.state.loading.post?true:false">
-            <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
-          </q-btn>
-        </q-toolbar>
-        <q-separator />
-        <tpl-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items"
-          :roles="roles" :groups="groups" />
+        <tpl-add :dialog.sync="dialogAdd" :maximized.sync="maximizedView" :item.sync="selected[0]"
+          :items.sync="items" :roles="roles" :groups="groups" />
       </q-card>
     </q-dialog>
     <!-- Import dialog -->
     <q-dialog v-model="dialogImport" :maximized="maximizedView" persistent>
       <q-card flat :style="{minWidth:'60%'}">
-        <!-- <q-toolbar>
-          <q-toolbar-title>
-            <span class="text-bold">{{$t('files.uploadData')}}</span>
-          </q-toolbar-title>
-          <q-btn flat round dense icon="cloud_upload" color="indigo">
-            <q-tooltip v-if="!$q.platform.is.mobile">{{$t("files.uploadData")}}</q-tooltip>
-          </q-btn>
-          <q-btn flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
-            :icon="maximizedView?'fullscreen_exit':'fullscreen'"
-            :disable="$store.state.loading.post" @click="maximizedView=!maximizedView">
-            <q-tooltip v-if="!$q.platform.is.mobile">
-              {{maximizedView?$t('table.normalScreen'):$t('table.fullScreen')}}
-            </q-tooltip>
-          </q-btn>
-          <q-btn flat round dense icon="close" :disable="$store.state.loading.post" v-close-popup>
-            <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
-          </q-btn>
-        </q-toolbar> -->
-        <!-- <q-separator /> -->
         <tpl-import :dialog.sync="dialogImport" :maximized.sync="maximizedView" :groups="groups"
           :roles="roles" />
       </q-card>
