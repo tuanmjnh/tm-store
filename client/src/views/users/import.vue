@@ -21,8 +21,8 @@
       </q-btn>
     </q-toolbar>
     <q-separator />
-    <q-scroll-area :style="dialog?{height:'calc(100vh - 100px)'}:{height:'calc(100vh - 130px)'}">
-      <q-form ref="form">
+    <q-form ref="form">
+      <q-scroll-area style="height:calc(100vh - 180px)">
         <q-card-section>
           <!-- <div class="row q-gutter-xs">
         <div class="col-12">
@@ -145,18 +145,17 @@
             </q-table>
           </div>
         </q-card-section>
-      </q-form>
-    </q-scroll-area>
+      </q-scroll-area>
+    </q-form>
     <!-- </q-card> -->
   </div>
 </template>
 
 <script>
 import * as apiUsers from '@/api/users'
-import tmLoadFiles from '@/components/tm-load-files'
 import regionData from '@/i18n/region'
 export default {
-  components: { tmLoadFiles },
+  components: { tmLoadFiles: () => import('@/components/tm-load-files') },
   props: {
     dialog: { type: Boolean, default: false },
     groups: { type: Array, default: () => [] },

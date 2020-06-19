@@ -24,9 +24,8 @@
 import Chart from 'chart.js'
 import { dynamicColors } from '@/utils/color'
 import * as api from '@/api/store/reports'
-import reportListButton from './components/report-list-button'
 export default {
-  components: { reportListButton },
+  components: { reportListButton: () => import('./components/report-list-button') },
   data() {
     return {
       loading: false,

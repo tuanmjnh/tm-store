@@ -123,10 +123,11 @@
 
 <script>
 import * as api from '@/api/products'
-import tmLoadFiles from '@/components/tm-load-files'
-import selectCategory from '@/views/category/components/select-category'
 export default {
-  components: { tmLoadFiles, selectCategory },
+  components: {
+    tmLoadFiles: () => import('@/components/tm-load-files'),
+    selectCategory: () => import('@/views/category/components/select-category')
+  },
   props: {
     dialog: { type: Boolean, default: false },
     maximized: { type: Boolean, default: false },

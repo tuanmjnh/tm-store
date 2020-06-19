@@ -1,8 +1,8 @@
 <template>
-  <q-card style="min-width:800px">
+  <q-card flat :style="{minWidth:'60%'}">
     <q-toolbar>
       <q-avatar :icon="$route.meta.icon" size="50px" />
-      <q-toolbar-title>{{$t('product.title')}}</q-toolbar-title>
+      <q-toolbar-title>{{$t('product.titleList')}}</q-toolbar-title>
       <q-btn v-if="selected&&selected.length" flat round dense color="primary" icon="done"
         :disable="$store.state.loading.get" @click="onSubmit">
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.accept')}}</q-tooltip>
@@ -136,9 +136,8 @@
 <script>
 import * as api from '@/api/products'
 import * as apiTypes from '@/api/types'
-import selectCategory from '@/views/category/components/select-category'
 export default {
-  components: { selectCategory },
+  components: { selectCategory: () => import('@/views/category/components/select-category') },
   props: {
     maximized: { type: Boolean, default: false },
     categories: { type: Array, default: null },
@@ -172,6 +171,15 @@ export default {
   },
   created() {
     this.onSelect({ pagination: this.pagination })
+  },
+  watch: {
+    dialog: {
+      handler(val) {
+        this.$emit('update:maximized', false)
+      },
+      deep: true,
+      immediate: true
+    }
   },
   methods: {
     onSelectCategory(value) {

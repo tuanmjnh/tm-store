@@ -67,11 +67,12 @@
 </template>
 
 <script>
-import tplInformation from './information'
-import tplSecurity from './security'
-import tplSetting from './setting'
 export default {
-  components: { tplInformation, tplSecurity, tplSetting },
+  components: {
+    tplInformation: () => import('./information'),
+    tplSecurity: () => import('./security'),
+    tplSetting: () => import('./setting')
+  },
   data() {
     return {
       linkProfileActive: 'information',

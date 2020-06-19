@@ -65,3 +65,13 @@
 .q-tab-panels .q-panel {
   min-height: 250px;
 }
+
+.card-title {
+  line-height: 3rem;
+  .card-title-text {
+    line-height: 3rem !important;
+  }
+  .text-right {
+    padding-right: 6px;
+  }
+}

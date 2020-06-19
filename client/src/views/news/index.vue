@@ -140,25 +140,29 @@
       </template>
     </q-table>
     <!-- Add dialog -->
-    <q-dialog v-model="dialogAdd" persistent>
-      <template-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items"
-        :categories="categories" :pins="pins" />
+    <q-dialog v-model="dialogAdd" :maximized="maximizedView" persistent>
+      <q-card flat :style="{minWidth:'60%'}">
+        <tpl-add :dialog.sync="dialogAdd" :maximized.sync="maximizedView" :item.sync="selected[0]"
+          :items.sync="items" :categories="categories" :pins="pins" />
+      </q-card>
     </q-dialog>
   </div>
 </template>
 
 <script>
-import templateAdd from './add'
-import selectCategory from '@/views/category/components/select-category'
 import * as api from '@/api/news'
 import * as apiCategories from '@/api/categories'
 import * as apiTypes from '@/api/types'
 export default {
-  components: { templateAdd, selectCategory },
+  components: {
+    tplAdd: () => import('./add'),
+    selectCategory: () => import('@/views/category/components/select-category')
+  },
   data() {
     return {
       dialogCategories: false,
       dialogAdd: false,
+      maximizedView: false,
       items: [],
       selected: [],
       categories: [],

@@ -244,7 +244,8 @@ export default {
     attributes: 'Thuộc tính danh mục'
   },
   product: {
-    title: 'Danh sách sản phẩm',
+    title: 'Sản phẩm',
+    titleList: 'Danh sách sản phẩm',
     warehouse: 'Kho hàng',
     warehouseImport: 'Nhập kho',
     warehouseExport: 'Xuất kho',
@@ -319,7 +320,7 @@ export default {
     uploadData: 'Tải dữ liệu lên',
     openFile: 'Duyệt tệp',
     openData: 'Duyệt dữ liệu',
-    dataDile: 'Dữ liệu tệp',
+    dataFile: 'Dữ liệu tệp',
     chooseFile: 'Chọn tệp...',
     ViewList: 'Xem kiểu danh sách',
     viewBox: 'Xem kiểu hộp',

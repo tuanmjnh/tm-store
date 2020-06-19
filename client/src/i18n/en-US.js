@@ -244,7 +244,8 @@ export default {
     attributes: 'Category attributes'
   },
   product: {
-    title: 'Product list',
+    title: 'Product',
+    titleList: 'Product list',
     warehouse: 'Warehouse',
     warehouseImport: 'Product import',
     warehouseExport: 'Product export',

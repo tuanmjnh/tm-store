@@ -195,11 +195,12 @@
 import Cookies from 'js-cookie'
 import * as api from '@/api/store/exports'
 import * as apiCategories from '@/api/categories'
-import pList from '@/views/products/components/list'
-import tmLoadFiles from '@/components/tm-load-files'
-import printerForm from './components/printer-form'
 export default {
-  components: { pList, tmLoadFiles, printerForm },
+  components: {
+    pList: () => import('@/views/products/components/list'),
+    tmLoadFiles: () => import('@/components/tm-load-files'),
+    printerForm: () => import('./components/printer-form')
+  },
   data() {
     return {
       loading: false,

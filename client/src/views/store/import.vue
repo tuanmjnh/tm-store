@@ -203,7 +203,7 @@
     <q-dialog v-model="dialogProductLoad" :maximized="maximizedView" persistent>
       <!-- <p-load-files :categories="categories" :maximized.sync="maximizedView" :dialog.sync="dialogProductLoad" :loading.sync="loading"
         @on-finish="onLoadedFile" /> -->
-      <q-card style="min-width:800px">
+      <q-card flat :style="{minWidth:'60%'}">
         <q-toolbar>
           <q-avatar :icon="$route.meta.icon" size="50px" />
           <q-toolbar-title>{{$t('files.dataFile')}}</q-toolbar-title>
@@ -233,12 +233,13 @@ import Cookies from 'js-cookie'
 import * as api from '@/api/store/imports'
 import * as apiTypes from '@/api/types'
 import * as apiCategories from '@/api/categories'
-import pList from '@/views/products/components/list'
-import pAdd from '@/views/products/components/add'
-import tmLoadFiles from '@/components/tm-load-files'
-import printerForm from './components/printer-form'
 export default {
-  components: { pList, pAdd, tmLoadFiles, printerForm },
+  components: {
+    pList: () => import('@/views/products/components/list'),
+    pAdd: () => import('@/views/products/components/add'),
+    tmLoadFiles: () => import('@/components/tm-load-files'),
+    printerForm: () => import('./components/printer-form')
+  },
   data() {
     return {
       loading: false,

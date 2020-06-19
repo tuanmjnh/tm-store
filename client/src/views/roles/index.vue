@@ -126,25 +126,27 @@
       </template>
     </q-table>
     <!-- Add dialog -->
-    <q-dialog v-model="dialogAdd" persistent>
-      <template-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items"
-        :routes="routes" :rootRoutes="rootRoutes" />
+    <q-dialog v-model="dialogAdd" :maximized="maximizedView" persistent>
+      <q-card flat :style="{minWidth:'60%'}">
+        <tpl-add :dialog.sync="dialogAdd" :maximized.sync="maximizedView" :item.sync="selected[0]"
+          :items.sync="items" :routes="routes" :rootRoutes="rootRoutes" />
+      </q-card>
     </q-dialog>
   </div>
 </template>
 
 <script>
-import templateAdd from './add'
 import * as apiRoles from '@/api/roles'
 // import * as apiRoutes from '@/api/routes'
 import * as treeRouters from '@/utils/tree'
 import { dynamic } from '@/router/routes'
 export default {
-  components: { templateAdd },
+  components: { tplAdd: () => import('./add') },
   data() {
     return {
       dialogFilter: false,
       dialogAdd: false,
+      maximizedView: false,
       items: [],
       selected: [],
       routes: [],

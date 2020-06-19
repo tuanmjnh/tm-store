@@ -123,9 +123,8 @@
 
 <script>
 import * as api from '@/api/routes'
-import tmAttributes from '@/components/tm-attributes'
 export default {
-  components: { tmAttributes },
+  components: { tmAttributes: () => import('@/components/tm-attributes') },
   props: {
     dialog: { type: Boolean, default: false },
     item: { type: Object, default: null },

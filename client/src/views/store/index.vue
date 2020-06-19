@@ -20,7 +20,7 @@
               text-color="white" @click="$router.push('export')">
               {{$t('product.export')}}</q-chip>
             <q-btn v-if="isRoutes.add" flat dense no-caps color="blue" class="q-ml-sm"
-              :label="$t('global.add')" @click="$router.push('/products/collection/add')">
+              :label="$t('global.add')" @click="$router.push('/product/list/add')">
             </q-btn>
           </div>
           <div class="col-12 text-right">
@@ -133,12 +133,11 @@
 </template>
 
 <script>
-import selectCategory from '@/views/category/components/select-category'
 import * as api from '@/api/products'
 import * as apiCategories from '@/api/categories'
 import * as apiTypes from '@/api/types'
 export default {
-  components: { selectCategory },
+  components: { selectCategory: () => import('@/views/category/components/select-category') },
   data() {
     return {
       dialogAdd: false,

@@ -37,11 +37,10 @@
 </template>
 
 <script>
-import tmTree from '@/components/tm-tree'
 import * as treeRouters from '@/utils/tree'
 // import * as api from '@/api/categories'
 export default {
-  components: { tmTree },
+  components: { tmTree: () => import('@/components/tm-tree') },
   props: {
     categories: { type: Array, default: null },
     selected: { default: undefined },

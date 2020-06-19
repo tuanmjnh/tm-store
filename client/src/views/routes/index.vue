@@ -74,20 +74,21 @@
     <div class="row">expanded: {{expanded}}</div>
     <!-- Add dialog -->
     <q-dialog v-model="dialogAdd" persistent>
-      <template-add :dialog.sync="dialogAdd" :item.sync="item" :items.sync="items"
-        :dependent="dependent" :expanded="expanded" />
+      <tpl-add :dialog.sync="dialogAdd" :item.sync="item" :items.sync="items" :dependent="dependent"
+        :expanded="expanded" />
     </q-dialog>
   </div>
 </template>
 
 <script>
-import templateAdd from './add'
 import * as api from '@/api/routes'
 import * as treeRouters from '@/utils/tree'
 import normalize from '@/utils/search'
-import tmTree from '@/components/tm-tree'
 export default {
-  components: { templateAdd, tmTree },
+  components: {
+    tplAdd: () => import('./add'),
+    tmTree: () => import('@/components/tm-tree')
+  },
   data() {
     return {
       dialogAdd: false,

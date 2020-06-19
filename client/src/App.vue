@@ -21,13 +21,14 @@
 </template>
 
 <script>
-import spa from './layouts/spa/index'
-import mobile from './layouts/mobile'
-import electron from './layouts/electron'
-import loading from './layouts/loading'
 export default {
   name: 'App',
-  components: { spa, mobile, electron, loading },
+  components: {
+    spa: () => import('./layouts/spa/index'),
+    mobile: () => import('./layouts/mobile'),
+    electron: () => import('./layouts/electron'),
+    loading: () => import('./layouts/loading')
+  },
   data() {
     return {
       platform: 'tuanmjnh'

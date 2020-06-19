@@ -1,37 +1,39 @@
 <template>
-  <q-card style="width:700px;max-width:80vw">
+  <div>
     <q-toolbar>
-      <q-avatar :icon="$route.meta.icon" size="50px" />
+      <q-avatar v-if="dialog" :icon="$route.meta.icon" size="50px" />
       <q-toolbar-title>
-        {{this.item?$t('global.update'):$t('global.add')}}
-        <span class="text-weight-bold">{{$t('roles.title')}}</span>
+        {{ this.item ? $t('global.update') : $t('global.add') }}
+        <span class="text-weight-bold">{{ $t("roles.title") }}</span>
       </q-toolbar-title>
-      <q-btn flat round dense icon="close" v-close-popup
-        :disable="loadingAdd||loadingDrafts?true:false">
+      <q-btn v-if="item" flat type="submit" :dense="$store.getters.dense.button" color="amber"
+        icon="offline_pin" :label="dialog?'':$t('global.update')" :loading="loadingAdd"
+        @click.prevent="onSubmit">
+        <q-tooltip v-if="dialog">{{$t('global.update')}}</q-tooltip>
+      </q-btn>
+      <q-btn v-if="!item" flat type="submit" :dense="$store.getters.dense.button" color="blue"
+        icon="check_circle" :label="dialog?'':$t('global.add')" :loading="loadingAdd"
+        :disable="loadingDrafts" @click.prevent="onSubmit(1)">
+        <q-tooltip v-if="dialog">{{$t('global.add')}}</q-tooltip>
+      </q-btn>
+      <q-btn v-if="!item" flat type="submit" :dense="$store.getters.dense.button" color="amber"
+        icon="receipt" :label="dialog?'':$t('global.drafts')" :loading="loadingDrafts"
+        :disable="loadingAdd" @click.prevent="onSubmit(0)">
+        <q-tooltip v-if="dialog">{{$t('global.drafts')}}</q-tooltip>
+      </q-btn>
+      <q-btn v-if="dialog" flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
+        :icon="maximized?'fullscreen_exit':'fullscreen'" :disable="loading"
+        @click="$emit('update:maximized',!maximized)">
+        <q-tooltip v-if="!$q.platform.is.mobile">
+          {{maximized?$t('table.normalScreen'):$t('table.fullScreen')}}
+        </q-tooltip>
+      </q-btn>
+      <q-btn v-if="dialog" flat round dense icon="close" :disable="loading" v-close-popup>
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
     </q-toolbar>
     <q-separator />
     <q-form ref="form">
-      <q-card-actions v-if="item" align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
-          icon="offline_pin" :label="$t('global.update')" :loading="loadingAdd"
-          @click.prevent="onSubmit">
-          <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
-        </q-btn>
-      </q-card-actions>
-      <q-card-actions v-else align="right">
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
-          icon="check_circle" :label="$t('global.add')" :loading="loadingAdd"
-          :disable="loadingDrafts" @click.prevent="onSubmit(1)">
-          <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
-        </q-btn>
-        <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="receipt"
-          :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loadingAdd"
-          @click.prevent="onSubmit(0)">
-          <!-- <q-tooltip>{{$t('global.drafts')}}</q-tooltip> -->
-        </q-btn>
-      </q-card-actions>
       <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form"
         class="text-deep-purple" align="justify">
         <q-tab name="main" :label="$t('tabs.main')" />
@@ -39,59 +41,61 @@
       </q-tabs>
       <q-separator />
       <!-- <q-card-section> -->
-      <q-tab-panels v-model="tabs" animated>
-        <q-tab-panel name="main">
-          <div class="row q-gutter-xs">
-            <div class="col-12 col-md-5">
-              <q-input v-model.trim="form.key" :dense="$store.getters.dense.input" v-lowercase
-                :label="$t('roles.key')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
-            </div>
-            <q-space />
-            <div class="col-12 col-md-6">
-              <q-input v-model.trim="form.name" :dense="$store.getters.dense.input"
-                :label="$t('roles.name')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
-            </div>
-          </div>
-          <div class="row q-gutter-xs">
-            <div class="col">
-              <q-input v-model="form.level" type="number" :dense="$store.getters.dense.input"
-                :label="$t('global.level')" :rules="[v=>v!==null&&v!==''||$t('error.required')]"
-                class="col-md-4" />
-            </div>
-            <q-space v-if="item" />
-            <div class="col-5 self-center" v-if="item">
-              <q-toggle v-model="form.flag" :true-value="1" :dense="$store.getters.dense.input"
-                :label="form.flag?$t('global.publish'):$t('global.drafts')" />
-            </div>
-            <q-space />
-            <div class="col self-center">
-              {{$t('global.colorPick')}}:
-              <q-badge :style="{backgroundColor:form.color}" @click="dialogColorPick=true">
-                {{form.color}}</q-badge>
-            </div>
-          </div>
-          <q-input v-model.trim="form.desc" autogrow :dense="$store.getters.dense.input"
-            :label="$t('global.desc')" />
-        </q-tab-panel>
-        <q-tab-panel name="routes">
-          <q-tree ref="routes" class="col-12 col-sm-6" :nodes="routes"
-            :dense="$store.getters.dense.input" node-key="name" node-label="label"
-            :ticked.sync="ticked" tick-strategy="strict" :no-nodes-label="$t('table.noData')"
-            default-expand-all @update:ticked="onTickedUpdate">
-            <template v-slot:default-header="prop">
-              <div class="row items-center">
-                <q-icon :name="prop.node.icon" color="blue-grey" size="20px" class="q-mr-sm" />
-                <div class="q-pr-md">{{ prop.node.label }}</div>
+      <q-scroll-area style="height:calc(100vh - 180px)">
+        <q-tab-panels v-model="tabs">
+          <q-tab-panel name="main">
+            <div class="row q-gutter-xs">
+              <div class="col-12 col-md-5">
+                <q-input v-model.trim="form.key" :dense="$store.getters.dense.input" v-lowercase
+                  :label="$t('roles.key')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
               </div>
-            </template>
-          </q-tree>
-          <div class="row">
-            {{ticked}}
-          </div>
-          <!-- <q-btn flat color="positive" icon="check_circle" :label="$t('global.add')" @click="onTicked">
+              <q-space />
+              <div class="col-12 col-md-6">
+                <q-input v-model.trim="form.name" :dense="$store.getters.dense.input"
+                  :label="$t('roles.name')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
+              </div>
+            </div>
+            <div class="row q-gutter-xs">
+              <div class="col">
+                <q-input v-model="form.level" type="number" :dense="$store.getters.dense.input"
+                  :label="$t('global.level')" :rules="[v=>v!==null&&v!==''||$t('error.required')]"
+                  class="col-md-4" />
+              </div>
+              <q-space v-if="item" />
+              <div class="col-5 self-center" v-if="item">
+                <q-toggle v-model="form.flag" :true-value="1" :dense="$store.getters.dense.input"
+                  :label="form.flag?$t('global.publish'):$t('global.drafts')" />
+              </div>
+              <q-space />
+              <div class="col self-center">
+                {{$t('global.colorPick')}}:
+                <q-badge :style="{backgroundColor:form.color}" @click="dialogColorPick=true">
+                  {{form.color}}</q-badge>
+              </div>
+            </div>
+            <q-input v-model.trim="form.desc" autogrow :dense="$store.getters.dense.input"
+              :label="$t('global.desc')" />
+          </q-tab-panel>
+          <q-tab-panel name="routes">
+            <q-tree ref="routes" class="col-12 col-sm-6" :nodes="routes"
+              :dense="$store.getters.dense.input" node-key="name" node-label="label"
+              :ticked.sync="ticked" tick-strategy="strict" :no-nodes-label="$t('table.noData')"
+              default-expand-all @update:ticked="onTickedUpdate">
+              <template v-slot:default-header="prop">
+                <div class="row items-center">
+                  <q-icon :name="prop.node.icon" color="blue-grey" size="20px" class="q-mr-sm" />
+                  <div class="q-pr-md">{{ prop.node.label }}</div>
+                </div>
+              </template>
+            </q-tree>
+            <div class="row">
+              {{ticked}}
+            </div>
+            <!-- <q-btn flat color="positive" icon="check_circle" :label="$t('global.add')" @click="onTicked">
           </q-btn> -->
-        </q-tab-panel>
-      </q-tab-panels>
+          </q-tab-panel>
+        </q-tab-panels>
+      </q-scroll-area>
       <!-- </q-card-section> -->
     </q-form>
     <!-- Dialog color pick -->
@@ -108,7 +112,7 @@
         </q-card-section>
       </q-card>
     </q-dialog>
-  </q-card>
+  </div>
 </template>
 
 <script>
@@ -117,11 +121,12 @@ import * as ultis from '@/utils'
 import { findNodesIfExist } from '@/utils/tree'
 export default {
   props: {
-    dialog: { type: Boolean, default: true },
+    dialog: { type: Boolean, default: false },
     item: { type: Object, default: () => { } },
     items: { type: Array, default: () => [] },
     routes: { type: Array, default: () => [] },
-    rootRoutes: { type: Array, default: () => [] }
+    rootRoutes: { type: Array, default: () => [] },
+    maximized: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -216,6 +221,7 @@ export default {
     },
     reset() {
       new Promise((resolve, reject) => {
+        this.$emit('update:maximized', false)
         this.form = { ...this.default }
         // this.form.routes = treeRouters.ticked
         resolve()

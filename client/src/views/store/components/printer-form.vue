@@ -93,9 +93,8 @@
 </template>
 
 <script>
-import tmPrinter from '@/components/tm-printer'
 export default {
-  components: { tmPrinter },
+  components: { tmPrinter: () => import('@/components/tm-printer') },
   props: {
     items: { type: Array, required: true },
     result: { type: Object, required: true },

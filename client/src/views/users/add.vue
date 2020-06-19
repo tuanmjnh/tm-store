@@ -33,17 +33,17 @@
       </q-btn>
     </q-toolbar>
     <q-separator />
-    <q-scroll-area :style="dialog?{height:'calc(100vh - 100px)'}:{height:'calc(100vh - 130px)'}">
-      <q-form ref="form">
-        <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form"
-          class="text-deep-purple" align="justify">
-          <q-tab name="main" :label="$t('tabs.main')" />
-          <q-tab name="roles" :label="$t('roles.title')" />
-          <q-tab name="avatar" :label="$t('users.avatar')" />
-        </q-tabs>
-        <q-separator />
-        <!-- <q-card-section> -->
-        <q-tab-panels v-model="tabs" animated>
+    <q-form ref="form">
+      <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form"
+        class="text-deep-purple" align="justify">
+        <q-tab name="main" :label="$t('tabs.main')" />
+        <q-tab name="roles" :label="$t('roles.title')" />
+        <q-tab name="avatar" :label="$t('users.avatar')" />
+      </q-tabs>
+      <q-separator />
+      <!-- <q-card-section> -->
+      <q-scroll-area style="height:calc(100vh - 180px)">
+        <q-tab-panels v-model="tabs">
           <q-tab-panel name="main">
             <div class="row q-gutter-xs">
               <div class="col-12">
@@ -204,7 +204,7 @@
             <div class="row">
               <div class="col-12 q-gutter-sm images">
                 <tm-upload :data.sync="form.avatar" :upload-url="uploadUrl" :headers="headers"
-                  :max-file-size="1024 * 1024 * 2" accept=".jpg,.jpeg,.png,.gif" :multiple="false"
+                  :max-file-size="1024*1024*2" accept=".jpg,.jpeg,.png,.gif" :multiple="false"
                   :view-type.sync="viewType" :size="121" :labelTitle="$t('files.title')"
                   :labelTitleUpload="$t('files.upload')" :labelTitleFiles="$t('files.title')"
                   :labelOpenFile="$t('files.openFile')" :labelOpenData="$t('files.openData')"
@@ -217,9 +217,9 @@
             </div>
           </q-tab-panel>
         </q-tab-panels>
-        <!-- </q-card-section> -->
-      </q-form>
-    </q-scroll-area>
+      </q-scroll-area>
+      <!-- </q-card-section> -->
+    </q-form>
     <!-- </q-card> -->
   </div>
 </template>
@@ -227,9 +227,8 @@
 <script>
 import * as apiUsers from '@/api/users'
 import regionData from '@/i18n/region'
-import tmUpload from '@/components/tm-upload'
 export default {
-  components: { tmUpload },
+  components: { tmUpload: () => import('@/components/tm-upload') },
   props: {
     dialog: { type: Boolean, default: false },
     item: { type: Object, default: () => { } },

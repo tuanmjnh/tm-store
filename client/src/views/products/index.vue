@@ -9,11 +9,13 @@
       @request="onSelect" :filter="pagination.filter" binary-state-sort>
       <template v-slot:top="props">
         <div class="col-12 row">
-          <div class="col-xs-12 col-sm-auto q-table__title text-h6">{{$t('product.title')}}</div>
+          <div class="col-xs-12 col-sm-auto text-h5">{{$t('product.titleList')}}
+          </div>
           <q-space />
           <div class="col-xs-12 col-sm-auto self-center text-right">
             <div class="col-auto self-center">
-              <q-btn v-if="isRoutes.add" flat round dense icon="add" color="blue" @click="onAddNew">
+              <q-btn v-if="isRoutes.add" flat round dense icon="add" color="blue"
+                @click="$q.platform.is.mobile?$router.push('add'):dialogAdd=true">
                 <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.add')}}</q-tooltip>
               </q-btn>
               <q-btn v-if="isRoutes.trash&&selected.length>0&&pagination.flag" flat round dense
@@ -167,22 +169,11 @@
       </template>
     </q-table>
     <!-- Add dialog -->
-    <q-dialog v-model="dialogAdd" persistent>
+    <q-dialog v-model="dialogAdd" :maximized="maximizedView" persistent>
       <q-card flat :style="{minWidth:'60%'}">
-        <q-toolbar>
-          <q-avatar :icon="$route.meta.icon" size="50px" />
-          <q-toolbar-title>
-            {{selected&&selected.length?$t('global.update'):$t('global.add')}}
-            <span class="text-weight-bold">{{$t('route.product')}}</span>
-          </q-toolbar-title>
-          <q-btn flat round dense icon="close" v-close-popup
-            :disable="$store.state.loading.post?true:false">
-            <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
-          </q-btn>
-        </q-toolbar>
-        <q-separator />
-        <tpl-add :dialog.sync="dialogAdd" :item.sync="selected[0]" :items.sync="items"
-          :categories="categories" :units="units" :unitsPrice="unitsPrice" :pins="pins" />
+        <tpl-add :dialog.sync="dialogAdd" :maximized.sync="maximizedView" :item.sync="selected[0]"
+          :items.sync="items" :categories="categories" :units="units" :unitsPrice="unitsPrice"
+          :pins="pins" />
       </q-card>
     </q-dialog>
   </div>
@@ -200,6 +191,7 @@ export default {
   data() {
     return {
       dialogAdd: false,
+      maximizedView: false,
       items: [],
       selected: [],
       categories: [],

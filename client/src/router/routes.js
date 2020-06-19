@@ -85,7 +85,7 @@ export const dynamic = [
             component: 'products/add'
           },
           {
-            path: 'edit/:?id',
+            path: 'edit/:id',
             name: 'product-list-edit',
             meta: {
               title: 'edit',
@@ -123,6 +123,7 @@ export const dynamic = [
             meta: {
               title: 'view',
               icon: 'list',
+              type: 'product',
               hidden: true,
               noCache: true,
               flag: 1
@@ -132,15 +133,16 @@ export const dynamic = [
           {
             path: 'add',
             name: 'category-product-add',
-            meta: { title: 'add', icon: 'add', hidden: true },
+            meta: { title: 'add', icon: 'add', type: 'product', hidden: true },
             component: 'category/add'
           },
           {
-            path: 'edit/:?id',
+            path: 'edit/:id',
             name: 'category-product-edit',
             meta: {
               title: 'edit',
               icon: 'edit',
+              type: 'product',
               hidden: true,
               noCache: true,
               activeMenu: '/category-product/view'
@@ -153,6 +155,7 @@ export const dynamic = [
             meta: {
               title: 'trash',
               icon: 'delete',
+              type: 'product',
               hidden: true,
               noCache: true,
               flag: 0
@@ -186,7 +189,7 @@ export const dynamic = [
             component: 'orders/add'
           },
           {
-            path: 'edit/:?id',
+            path: 'edit/:id',
             name: 'product-orders-edit',
             meta: {
               title: 'edit',
@@ -246,7 +249,7 @@ export const dynamic = [
             component: 'news/add'
           },
           {
-            path: 'edit/:?id',
+            path: 'edit/:id',
             name: 'news-list-edit',
             meta: {
               title: 'edit',
@@ -284,6 +287,7 @@ export const dynamic = [
             meta: {
               title: 'view',
               icon: 'list',
+              type: 'news',
               hidden: true,
               noCache: true,
               flag: 1
@@ -293,15 +297,16 @@ export const dynamic = [
           {
             path: 'add',
             name: 'category-news-add',
-            meta: { title: 'add', icon: 'add', hidden: true },
+            meta: { title: 'add', icon: 'add', type: 'news', hidden: true },
             component: 'category/add'
           },
           {
-            path: 'edit/:?id',
+            path: 'edit/:id',
             name: 'category-news-edit',
             meta: {
               title: 'edit',
               icon: 'edit',
+              type: 'news',
               hidden: true,
               noCache: true,
               activeMenu: '/category-news/view'
@@ -314,6 +319,7 @@ export const dynamic = [
             meta: {
               title: 'trash',
               icon: 'delete',
+              type: 'news',
               hidden: true,
               noCache: true,
               flag: 0
@@ -390,7 +396,7 @@ export const dynamic = [
             component: 'users/add'
           },
           {
-            path: 'edit/:?id',
+            path: 'edit/:id',
             name: 'manager-users-edit',
             meta: {
               title: 'edit',
@@ -453,7 +459,7 @@ export const dynamic = [
             component: 'roles/add'
           },
           {
-            path: 'edit/:?id',
+            path: 'edit/:id',
             name: 'manager-roles-edit',
             meta: {
               title: 'edit',
@@ -504,7 +510,7 @@ export const dynamic = [
             component: 'types/add'
           },
           {
-            path: 'edit/:?id',
+            path: 'edit/:id',
             name: 'manager-types-edit',
             meta: {
               title: 'edit',

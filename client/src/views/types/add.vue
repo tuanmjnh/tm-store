@@ -36,19 +36,19 @@
     <q-form ref="form">
       <!-- <q-card-actions v-if="item" align="right">
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber"
-          icon="offline_pin" :label="$t('global.update')" :loading="loading_add"
+          icon="offline_pin" :label="$t('global.update')" :loading="loadingAdd"
           @click.prevent="onSubmit">
           <q-tooltip>{{$t('global.add')}}</q-tooltip>
         </q-btn>
       </q-card-actions>
       <q-card-actions v-else align="right">
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="blue"
-          icon="check_circle" :label="$t('global.add')" :loading="loading_add"
+          icon="check_circle" :label="$t('global.add')" :loading="loadingAdd"
           :disable="loadingDrafts" @click.prevent="onSubmit(1)">
           <q-tooltip>{{$t('global.add')}}</q-tooltip>
         </q-btn>
         <q-btn flat type="submit" :dense="$store.getters.dense.button" color="amber" icon="receipt"
-          :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loading_add"
+          :label="$t('global.drafts')" :loading="loadingDrafts" :disable="loadingAdd"
           @click.prevent="onSubmit(0)">
           <q-tooltip>{{$t('global.drafts')}}</q-tooltip>
         </q-btn>
@@ -60,63 +60,66 @@
       </q-tabs>
       <q-separator />
       <!-- <q-card-section> -->
-      <q-tab-panels v-model="tabs" animated>
-        <q-tab-panel name="main">
-          <div class="row q-gutter-xs">
-            <div class="col-12 col-md-5">
-              <!-- <q-input v-model.trim="form.key" :dense="$store.getters.dense.input" v-lowercase :label="$t('global.types')"
+      <q-scroll-area style="height:calc(100vh - 180px)">
+        <q-tab-panels v-model="tabs">
+          <q-tab-panel name="main">
+            <div class="row q-gutter-xs">
+              <div class="col-12 col-md-5">
+                <!-- <q-input v-model.trim="form.key" :dense="$store.getters.dense.input" v-lowercase :label="$t('global.types')"
                 :rules="[v=>v&&v.length>0||$t('error.required')]" /> -->
-              <!-- <q-select v-model="form.key" hide-selected fill-input use-input input-debounce="0" :dense="$store.getters.dense.input"
+                <!-- <q-select v-model="form.key" hide-selected fill-input use-input input-debounce="0" :dense="$store.getters.dense.input"
                 :options-dense="$store.getters.dense.input" @new-value="onAddKey" :options="keys" @filter="onFilterKey"
                 :hint="$t('types.hit_key')" :label="$t('global.types')" /> -->
-              <auto-complete v-model.trim="form.key" :data.sync="keys"
-                :placeholder="$t('global.key')" :label="$t('global.types')" is-no-data
-                :no-data="$t('table.noData')" @input="onFilterKey"
-                :rules="[v=>v&&v.length>0||$t('error.required')]" />
+                <auto-complete v-model.trim="form.key" :data.sync="keys"
+                  :placeholder="$t('global.key')" :label="$t('global.types')" is-no-data
+                  :no-data="$t('table.noData')" @input="onFilterKey"
+                  :rules="[v=>v&&v.length>0||$t('error.required')]" />
+              </div>
+              <q-space />
+              <div class="col-12 col-md-6">
+                <q-input v-model.trim="form.code" v-lowercase :dense="$store.getters.dense.input"
+                  :label="$t('global.code')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
+              </div>
             </div>
-            <q-space />
-            <div class="col-12 col-md-6">
-              <q-input v-model.trim="form.code" v-lowercase :dense="$store.getters.dense.input"
-                :label="$t('global.code')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
+            <div class="row q-gutter-xs">
+              <div class="col-12 col-md-5">
+                <q-input v-model.trim="form.name" :dense="$store.getters.dense.input"
+                  :label="$t('global.name')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
+              </div>
+              <q-space />
+              <div class="col-12 col-md-6">
+                <q-input v-model.trim="form.desc" autogrow :dense="$store.getters.dense.input"
+                  :label="$t('global.desc')" />
+              </div>
             </div>
-          </div>
-          <div class="row q-gutter-xs">
-            <div class="col-12 col-md-5">
-              <q-input v-model.trim="form.name" :dense="$store.getters.dense.input"
-                :label="$t('global.name')" :rules="[v=>v&&v.length>0||$t('error.required')]" />
+            <div class="row q-gutter-xs">
+              <div class="col-3">
+                <q-input v-model="form.orders" type="number" :dense="$store.getters.dense.input"
+                  :label="$t('global.order')"
+                  :rules="[v=>v!==null&&v!==''||$t('error.required')]" />
+              </div>
+              <q-space v-if="item" />
+              <div class="col-5 self-center" v-if="item">
+                <q-toggle v-model="form.flag" :true-value="1" :dense="$store.getters.dense.input"
+                  :label="form.flag?$t('global.publish'):$t('global.drafts')" />
+              </div>
             </div>
-            <q-space />
-            <div class="col-12 col-md-6">
-              <q-input v-model.trim="form.desc" autogrow :dense="$store.getters.dense.input"
-                :label="$t('global.desc')" />
-            </div>
-          </div>
-          <div class="row q-gutter-xs">
-            <div class="col-3">
-              <q-input v-model="form.orders" type="number" :dense="$store.getters.dense.input"
-                :label="$t('global.order')" :rules="[v=>v!==null&&v!==''||$t('error.required')]" />
-            </div>
-            <q-space v-if="item" />
-            <div class="col-5 self-center" v-if="item">
-              <q-toggle v-model="form.flag" :true-value="1" :dense="$store.getters.dense.input"
-                :label="form.flag?$t('global.publish'):$t('global.drafts')" />
-            </div>
-          </div>
-        </q-tab-panel>
-        <q-tab-panel name="attributes">
-          <tm-attributes :data.sync="form.meta" :keys="metaKeys" :values="metaValues"
-            :dense="$store.getters.dense.input" :labelTitle="$t('global.attributes')+':'"
-            :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')"
-            :labelInputValue="$t('global.value')" btnIcon="add" btnColor="blue"
-            :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
-            :labelConfirmTitle="$t('messageBox.confirm')"
-            :labelConfirmContent="$t('messageBox.delete')"
-            :labelWarningTitle="$t('messageBox.warning')"
-            :labelWarningContent="$t('error.required')" :labelNoData="$t('table.noData')"
-            @on-filter-key="onFilterMetaKey" @on-filter-value="onFilterMetaValue">
-          </tm-attributes>
-        </q-tab-panel>
-      </q-tab-panels>
+          </q-tab-panel>
+          <q-tab-panel name="attributes">
+            <tm-attributes :data.sync="form.meta" :keys="metaKeys" :values="metaValues"
+              :dense="$store.getters.dense.input" :labelTitle="$t('global.attributes')+':'"
+              :labelBtnAdd="$t('global.add')" :labelInputKey="$t('global.key')"
+              :labelInputValue="$t('global.value')" btnIcon="add" btnColor="blue"
+              :btnEditLabel="$t('global.edit')" :btnDeleteLabel="$t('global.delete')"
+              :labelConfirmTitle="$t('messageBox.confirm')"
+              :labelConfirmContent="$t('messageBox.delete')"
+              :labelWarningTitle="$t('messageBox.warning')"
+              :labelWarningContent="$t('error.required')" :labelNoData="$t('table.noData')"
+              @on-filter-key="onFilterMetaKey" @on-filter-value="onFilterMetaValue">
+            </tm-attributes>
+          </q-tab-panel>
+        </q-tab-panels>
+      </q-scroll-area>
       <!-- </q-card-section> -->
     </q-form>
   </div>
@@ -124,19 +127,21 @@
 
 <script>
 import * as apiTypes from '@/api/types'
-import autoComplete from '@/components/auto-complete'
-import tmAttributes from '@/components/tm-attributes'
 export default {
-  components: { autoComplete, tmAttributes },
+  components: {
+    autoComplete: () => import('@/components/auto-complete'),
+    tmAttributes: () => import('@/components/tm-attributes')
+  },
   props: {
-    dialog: { type: Boolean, default: true },
+    dialog: { type: Boolean, default: false },
     item: { type: Object, default: () => { } },
-    items: { type: Array, default: () => [] }
+    items: { type: Array, default: () => [] },
+    maximized: { type: Boolean, default: false }
   },
   data() {
     return {
       loading: false,
-      loading_add: false,
+      loadingAdd: false,
       loadingDrafts: false,
       tabs: 'main',
       form: {},
@@ -208,25 +213,25 @@ export default {
       this.$refs.form.validate().then(valid => {
         if (valid) {
           if (this.item) {
-            this.loading_add = true
+            this.loadingAdd = true
             apiTypes.update(this.form).then((x) => {
               if (x.ok) {
                 const index = this.items.indexOf(this.item)
                 if (index > -1) this.items.splice(index, 1, this.form)
               }
             }).finally(() => {
-              this.loading_add = false
+              this.loadingAdd = false
               this.onAddKey(this.form.key)
             })
           } else {
             this.form.flag = action
-            if (action) this.loading_add = true
+            if (action) this.loadingAdd = true
             else this.loadingDrafts = true
             apiTypes.insert(this.form).then((x) => {
               this.items.push(x)
               this.reset()
             }).finally(() => {
-              this.loading_add = false
+              this.loadingAdd = false
               this.loadingDrafts = false
               this.onAddKey(this.form.key)
               this.reset()
@@ -237,6 +242,7 @@ export default {
     },
     reset() {
       new Promise((resolve, reject) => {
+        this.$emit('update:maximized', false)
         this.form = { ...this.default }
         resolve()
       }).then(() => {

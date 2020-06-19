@@ -80,25 +80,29 @@
     <div class="row">ticked: {{ticked}}</div>
     <div class="row">expanded: {{expanded}}</div> -->
     <!-- Add dialog -->
-    <q-dialog v-model="dialogAdd" persistent>
-      <template-add :dialog.sync="dialogAdd" :item.sync="item" :items.sync="items"
-        :dependent="dependent" :positions="positions" :expanded="expanded" />
+    <q-dialog v-model="dialogAdd" :maximized="maximizedView" persistent>
+      <q-card flat :style="{minWidth:'60%'}">
+        <tpl-add :dialog.sync="dialogAdd" :maximized.sync="maximizedView" :item.sync="item"
+          :items.sync="items" :dependent="dependent" :positions="positions" :expanded="expanded" />
+      </q-card>
     </q-dialog>
   </div>
 </template>
 
 <script>
-import templateAdd from './add'
 import * as api from '@/api/categories'
 import * as apiTypes from '@/api/types'
 import * as treeRouters from '@/utils/tree'
 import normalize from '@/utils/search'
-import tmTree from '@/components/tm-tree'
 export default {
-  components: { templateAdd, tmTree },
+  components: {
+    tplAdd: () => import('./add'),
+    tmTree: () => import('@/components/tm-tree')
+  },
   data() {
     return {
       dialogAdd: false,
+      maximizedView: false,
       items: [],
       rootItems: [],
       item: null,
@@ -174,8 +178,12 @@ export default {
       this.onSelect({ pagination: this.pagination })
     },
     onAdd(item) {
-      this.dialogAdd = true
-      if (item) this.dependent = item
+      if (this.$q.platform.is.mobile) {
+        this.$router.push('add')
+      } else {
+        this.dialogAdd = true
+        if (item) this.dependent = item
+      }
     },
     onUpdate(item) {
       this.dialogAdd = true
