@@ -228,24 +228,23 @@ export default {
       }
     },
     onFilterKey() {
+      if (!this.form.key) return
       this.keys = []
-      apiTypes.getKey({ key: this.form.key }).then((x) => {
+      apiTypes.getKey({ key: this.form.key, page: 1, rowsPerPage: 5 }).then((x) => {
         if (x) this.keys = x.data
       })
     },
     onFilterMetaKey(val) {
-      let data = { key: true }
-      if (val) data.filter = val
+      if (!val) return
       this.metaKeys = []
-      apiTypes.getMeta(data).then((x) => {
+      apiTypes.getMeta({ key: true, filter: val, page: 1, rowsPerPage: 5 }).then((x) => {
         if (x) this.metaKeys = x.data
       })
     },
     onFilterMetaValue(val) {
-      let data = {}
-      if (val) data.filter = val
+      if (!val) return
       this.metaValues = []
-      apiTypes.getMeta(data).then((x) => {
+      apiTypes.getMeta({ filter: val, page: 1, rowsPerPage: 5 }).then((x) => {
         if (x) this.metaValues = x.data
       })
     },

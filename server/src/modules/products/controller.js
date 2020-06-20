@@ -75,14 +75,22 @@ module.exports.exist = async function (req, res, next) {
 
 module.exports.getAttr = async function (req, res, next) {
   try {
-    MProducts.distinct(req.query.key ? 'attr.key' : 'attr.value', null, (e, rs) => {
-      if (e) return res.status(500).send(e);
-      if (req.query.filter) rs = rs.filter((x) => new RegExp(req.query.filter, 'i').test(x));
-      const rowsNumber = rs.length;
-      if (req.query.page && req.query.rowsPerPage)
-        rs = pagination.get(rs, req.query.page, req.query.rowsPerPage);
-      return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
-    });
+    const conditions = req.query.key
+      ? { 'attr.key': new RegExp(req.query.filter, 'i') }
+      : { 'attr.value': new RegExp(req.query.filter, 'i') };
+    const qry = MProducts.distinct(
+      req.query.key ? 'attr.key' : 'attr.value',
+      conditions,
+      (e, rs) => {
+        if (e) return res.status(500).send(e);
+        const rowsNumber = rs.length;
+        if (req.query.page && req.query.rowsPerPage) {
+          return res.status(200).json(pagination.get(rs, req.query.page, req.query.rowsPerPage));
+        } else {
+          return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
+        }
+      },
+    );
   } catch (e) {
     return res.status(500).send('invalid');
   }

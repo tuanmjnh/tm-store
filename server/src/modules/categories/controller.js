@@ -60,14 +60,22 @@ module.exports.find = async function (req, res, next) {
 
 module.exports.getAttr = async function (req, res, next) {
   try {
-    MCategories.distinct(req.query.key ? 'attr.key' : 'attr.value', null, (e, rs) => {
-      if (e) return res.status(500).send(e);
-      if (req.query.filter) rs = rs.filter((x) => new RegExp(req.query.filter, 'i').test(x));
-      const rowsNumber = rs.length;
-      if (req.query.page && req.query.rowsPerPage)
-        rs = pagination.get(rs, req.query.page, req.query.rowsPerPage);
-      return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
-    });
+    const conditions = req.query.key
+      ? { 'meta.key': new RegExp(req.query.filter, 'i') }
+      : { 'meta.value': new RegExp(req.query.filter, 'i') };
+    const qry = MCategories.distinct(
+      req.query.key ? 'meta.key' : 'meta.value',
+      conditions,
+      (e, rs) => {
+        if (e) return res.status(500).send(e);
+        const rowsNumber = rs.length;
+        if (req.query.page && req.query.rowsPerPage) {
+          return res.status(200).json(pagination.get(rs, req.query.page, req.query.rowsPerPage));
+        } else {
+          return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
+        }
+      },
+    );
   } catch (e) {
     return res.status(500).send('invalid');
   }
@@ -75,13 +83,7 @@ module.exports.getAttr = async function (req, res, next) {
 
 module.exports.post = async function (req, res, next) {
   try {
-    if (
-      !req.body ||
-      Object.keys(req.body).length < 1 ||
-      !req.body.type ||
-      !req.body.title ||
-      !req.body.code
-    ) {
+    if (!req.body || Object.keys(req.body).length < 1) {
       return res.status(500).send('invalid');
     }
     const x = await MCategories.findOne({ code: req.body.code });

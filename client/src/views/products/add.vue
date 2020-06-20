@@ -236,7 +236,7 @@
 </template>
 
 <script>
-import * as api from '@/api/products'
+import * as apiProducts from '@/api/products'
 import normalize from '@/utils/search'
 export default {
   components: {
@@ -322,7 +322,7 @@ export default {
     },
     'form.code'(val) {
       if (val) {
-        api.exist({ code: val.toUpperCase() }).then((x) => {
+        apiProducts.exist({ code: val.toUpperCase() }).then((x) => {
           if (x) this.existCode = true
         })
       }
@@ -330,18 +330,16 @@ export default {
   },
   methods: {
     onFilterAttrKey(val) {
-      let data = { key: true }
-      if (val) data.filter = val
+      if (!val) return
       this.attrKeys = []
-      api.getAttr(data).then((x) => {
+      apiProducts.getAttr({ key: true, filter: val, page: 1, rowsPerPage: 5 }).then((x) => {
         if (x) this.attrKeys = x.data
       })
     },
     onFilterAttrValue(val) {
-      let data = {}
-      if (val) data.filter = val
+      if (!val) return
       this.attrValues = []
-      api.getAttr(data).then((x) => {
+      apiProducts.getAttr({ filter: val, page: 1, rowsPerPage: 5 }).then((x) => {
         if (x) this.attrValues = x.data
       })
     },
@@ -380,7 +378,7 @@ export default {
         if (valid) {
           if (this.item) {
             this.loadingAdd = true
-            api.update(this.form).then((x) => {
+            apiProducts.update(this.form).then((x) => {
               if (x.ok) {
                 const index = this.items.indexOf(this.item)
                 if (index > -1) this.items.splice(index, 1, this.form)
@@ -392,7 +390,7 @@ export default {
             this.form.flag = action
             if (action) this.loadingAdd = true
             else this.loadingDrafts = true
-            api.insert(this.form).then((x) => {
+            apiProducts.insert(this.form).then((x) => {
               this.items.push(x)
             }).finally(() => {
               this.loadingAdd = false

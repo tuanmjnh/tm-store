@@ -76,13 +76,17 @@ module.exports.find = async function (req, res, next) {
 
 module.exports.getMeta = async function (req, res, next) {
   try {
-    MRoutes.distinct(req.query.key ? 'meta.key' : 'meta.value', null, (e, rs) => {
+    const conditions = req.query.key
+      ? { 'meta.key': new RegExp(req.query.filter, 'i') }
+      : { 'meta.value': new RegExp(req.query.filter, 'i') };
+    const qry = MRoutes.distinct(req.query.key ? 'meta.key' : 'meta.value', conditions, (e, rs) => {
       if (e) return res.status(500).send(e);
-      if (req.query.filter) rs = rs.filter((x) => new RegExp(req.query.filter, 'i').test(x));
       const rowsNumber = rs.length;
-      if (req.query.page && req.query.rowsPerPage)
-        rs = pagination.get(rs, req.query.page, req.query.rowsPerPage);
-      return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
+      if (req.query.page && req.query.rowsPerPage) {
+        return res.status(200).json(pagination.get(rs, req.query.page, req.query.rowsPerPage));
+      } else {
+        return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
+      }
     });
   } catch (e) {
     return res.status(500).send('invalid');

@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import * as api from '@/api/routes'
+import * as apiRoutes from '@/api/routes'
 export default {
   components: { tmAttributes: () => import('@/components/tm-attributes') },
   props: {
@@ -168,18 +168,16 @@ export default {
   },
   methods: {
     onFilterAttrKey(val) {
-      let data = { key: true }
-      if (val) data.filter = val
+      if (!val) return
       this.metaKeys = []
-      api.getMeta(data).then((x) => {
+      apiRoutes.getMeta({ key: true, filter: val, page: 1, rowsPerPage: 5 }).then((x) => {
         if (x) this.metaKeys = x.data
       })
     },
     onFilterAttrValue(val) {
-      let data = {}
-      if (val) data.filter = val
+      if (!val) return
       this.metaValues = []
-      api.getMeta(data).then((x) => {
+      apiRoutes.getMeta({ filter: val, page: 1, rowsPerPage: 5 }).then((x) => {
         if (x) this.metaValues = x.data
       })
     },
@@ -191,7 +189,7 @@ export default {
           this.form.meta = this.metas
           if (this.item) {
             this.loading = true
-            api.update(this.form).then((x) => {
+            apiRoutes.update(this.form).then((x) => {
               if (x.ok) {
                 if (!this.dependent) {
                   const index = this.items.indexOf(this.item)
@@ -207,7 +205,7 @@ export default {
           } else {
             this.loading = true
             if (this.dependent) this.form.name = `${this.dependent.name}-${this.form.name}`
-            api.insert(this.form).then((x) => {
+            apiRoutes.insert(this.form).then((x) => {
               if (this.dependent) {
                 this.expanded.push(x._id)
                 if (!this.dependent.children) this.dependent.children = []

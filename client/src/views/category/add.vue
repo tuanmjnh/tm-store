@@ -214,7 +214,7 @@
 </template>
 
 <script>
-import * as api from '@/api/categories'
+import * as apiCategories from '@/api/categories'
 export default {
   components: {
     tmUpload: () => import('@/components/tm-upload'),
@@ -283,18 +283,16 @@ export default {
   },
   methods: {
     onFilterAttrKey(val) {
-      let data = { key: true }
-      if (val) data.filter = val
+      if (!val) return
       this.attrKeys = []
-      api.getAttr(data).then((x) => {
+      apiCategories.getAttr({ key: true, filter: val, page: 1, rowsPerPage: 5 }).then((x) => {
         if (x) this.attrKeys = x.data
       })
     },
     onFilterAttrValue(val) {
-      let data = {}
-      if (val) data.filter = val
+      if (!val) return
       this.attrValues = []
-      api.getAttr(data).then((x) => {
+      apiCategories.getAttr({ filter: val, page: 1, rowsPerPage: 5 }).then((x) => {
         if (x) this.attrValues = x.data
       })
     },
@@ -308,7 +306,7 @@ export default {
         if (valid) {
           if (this.item) {
             this.loadingAdd = true
-            api.update(this.form).then((x) => {
+            apiCategories.update(this.form).then((x) => {
               if (x.ok) {
                 if (!this.dependent) {
                   const index = this.items.indexOf(this.item)
@@ -325,7 +323,7 @@ export default {
             this.form.flag = action
             if (action) this.loadingAdd = true
             else this.loadingDrafts = true
-            api.insert(this.form).then((x) => {
+            apiCategories.insert(this.form).then((x) => {
               if (this.dependent) {
                 this.expanded.push(x._id)
                 if (!this.dependent.children) this.dependent.children = []

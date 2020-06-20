@@ -64,13 +64,13 @@ module.exports.getKey = async function (req, res, next) {
     MTypes.distinct('key', { key: new RegExp(req.query.key, 'i') }, (e, rs) => {
       if (e) return res.status(500).send(e);
       const rowsNumber = rs.length;
-      req.query.page = req.query.page ? req.query.page : 1;
-      req.query.rowsPerPage = req.query.rowsPerPage ? req.query.rowsPerPage : 5;
+      // req.query.page = req.query.page ? req.query.page : 1;
+      // req.query.rowsPerPage = req.query.rowsPerPage ? req.query.rowsPerPage : 5;
       if (req.query.page && req.query.rowsPerPage) {
-        rs = pagination.get(rs, req.query.page, req.query.rowsPerPage);
-        return res.status(200).json({ rowsNumber: rs.totalPage, data: rs.data });
+        return res.status(200).json(pagination.get(rs, req.query.page, req.query.rowsPerPage));
+      } else {
+        return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
       }
-      return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
     });
   } catch (e) {
     return res.status(500).send('invalid');
@@ -117,18 +117,31 @@ module.exports.getMeta = async function (req, res, next) {
     const conditions = req.query.key
       ? { 'meta.key': new RegExp(req.query.filter, 'i') }
       : { 'meta.value': new RegExp(req.query.filter, 'i') };
-    MTypes.distinct(req.query.key ? 'meta.key' : 'meta.value', conditions, (e, rs) => {
+    const qry = MTypes.distinct(req.query.key ? 'meta.key' : 'meta.value', conditions, (e, rs) => {
       if (e) return res.status(500).send(e);
       const rowsNumber = rs.length;
-      req.query.page = req.query.page ? req.query.page : 1;
-      req.query.rowsPerPage = req.query.rowsPerPage ? req.query.rowsPerPage : 5;
+      // req.query.page = req.query.page ? req.query.page : 1;
+      // req.query.rowsPerPage = req.query.rowsPerPage ? req.query.rowsPerPage : 5;
       if (req.query.page && req.query.rowsPerPage) {
-        rs = pagination.get(rs, req.query.page, req.query.rowsPerPage);
-        return res.status(200).json({ rowsNumber: rs.totalPage, data: rs.data });
+        return res.status(200).json(pagination.get(rs, req.query.page, req.query.rowsPerPage));
+      } else {
+        return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
       }
-      return res.status(200).json({ rowsNumber: rowsNumber, data: rs });
     });
+
+    // req.query.page = req.query.page ? req.query.page : 1;
+    // req.query.rowsPerPage = req.query.rowsPerPage ? req.query.rowsPerPage : 5;
+    // qry.skip((req.query.page - 1) * req.query.rowsPerPage).limit(req.query.rowsPerPage);
+    // console.log(await qry.exec());
+
+    // const rs = await MTypes.aggregate([
+    //   { $group: { _id: '$meta.key' } },
+    //   { $skip: 3 },
+    //   { $limit: 5 },
+    // ]);
+    // return res.status(200).json({ data: rs });
   } catch (e) {
+    console.log(e);
     return res.status(500).send('invalid');
   }
 };
