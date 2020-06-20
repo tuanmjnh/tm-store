@@ -1,25 +1,32 @@
 <template>
   <div>
-    <!-- <q-card :style="$q.platform.is.mobile ? { width: '100%' } : { minWidth: '800px' }">-->
-    <q-toolbar>
-      <q-toolbar-title>
-        <span class="text-bold">{{$t('files.import')}} {{$t('users.title')}}</span>
-      </q-toolbar-title>
-      <q-btn flat icon="publish" :label="dialog?'':$t('global.process')" color="indigo"
-        @click="onSubmit">
-        <q-tooltip v-if="dialog">{{$t('global.process')}}</q-tooltip>
-      </q-btn>
-      <q-btn v-if="dialog" flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
-        :icon="maximized?'fullscreen_exit':'fullscreen'" :disable="loading"
-        @click="$emit('update:maximized',!maximized)">
-        <q-tooltip v-if="!$q.platform.is.mobile">
-          {{maximized?$t('table.normalScreen'):$t('table.fullScreen')}}
-        </q-tooltip>
-      </q-btn>
-      <q-btn v-if="dialog" flat round dense icon="close" :disable="loading" v-close-popup>
-        <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
-      </q-btn>
-    </q-toolbar>
+    <div class="row card-title">
+      <div class="col-sm-auto col-xs-12 text-h6 card-title-text">
+        <q-avatar v-if="dialog" :icon="$route.meta.icon" size="50px" />
+        {{ $t('files.import')}} {{$t('users.title') }}
+      </div>
+      <q-space />
+      <div class="col-sm-auto col-xs-12 text-right">
+        <q-btn flat icon="publish" :label="dialog?'':$t('global.process')" color="indigo"
+          @click="onSubmit">
+          <q-tooltip v-if="dialog">{{$t('global.process')}}</q-tooltip>
+        </q-btn>
+        <q-btn v-if="dialog" flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
+          :icon="maximized?'fullscreen_exit':'fullscreen'" :disable="loading"
+          @click="$emit('update:maximized',!maximized)">
+          <q-tooltip>
+            {{maximized?$t('table.normalScreen'):$t('table.fullScreen')}}
+          </q-tooltip>
+        </q-btn>
+        <q-btn v-if="dialog" flat round dense icon="close" :disable="loading" v-close-popup>
+          <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
+        </q-btn>
+        <q-btn v-else flat round dense icon="reply" :disable="loading"
+          @click="$router.push('view')">
+          <q-tooltip>{{$t('global.back')}}</q-tooltip>
+        </q-btn>
+      </div>
+    </div>
     <q-separator />
     <q-form ref="form">
       <q-scroll-area style="height:calc(100vh - 180px)">

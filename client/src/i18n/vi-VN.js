@@ -291,7 +291,8 @@ export default {
     exportConfirm: 'Bạn có chắc chắn muốn thực hiện xuất kho?'
   },
   news: {
-    title: 'Danh sách tin tức',
+    title: 'Tin tức',
+    titleList: 'Danh sách tin tức',
     name: 'Tiêu đề tin',
     code: 'Mã tin',
     author: 'Tác giả',

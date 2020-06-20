@@ -291,7 +291,8 @@ export default {
     exportConfirm: 'Are you sure you want to export warehousing?'
   },
   news: {
-    title: 'News list',
+    title: 'News',
+    titleList: 'News list',
     name: 'News title',
     code: 'News code',
     author: 'Author',

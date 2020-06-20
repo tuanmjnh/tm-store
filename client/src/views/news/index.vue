@@ -9,7 +9,7 @@
       @request="onSelect" :filter="pagination.filter" binary-state-sort>
       <template v-slot:top="props">
         <div class="col-12 row">
-          <div class="col-xs-12 col-sm-auto q-table__title text-h6">{{$t('news.title')}}</div>
+          <div class="col-xs-12 col-sm-auto q-table__title text-h6">{{$t('news.titleList')}}</div>
           <q-space />
           <div class="col-xs-12 col-sm-auto self-center text-right">
             <div class="col-auto self-center">

@@ -1,6 +1,47 @@
 <template>
   <div>
-    <q-toolbar>
+    <div class="row card-title">
+      <div class="col-sm-auto col-xs-12 text-h6 card-title-text">
+        <q-avatar v-if="dialog" :icon="$route.meta.icon" size="50px" />
+        {{ this.item ? $t('global.update') : $t('global.add') }}
+        <span class="text-weight-bold">{{ $t("types.title") }}</span>
+      </div>
+      <q-space />
+      <div class="col-sm-auto col-xs-12 text-right">
+        <q-btn v-if="item" flat type="submit" :dense="$store.getters.dense.button" color="amber"
+          icon="offline_pin" :loading="loadingAdd" @click.prevent="onSubmit">
+          <!-- :label="dialog?'':$t('global.update')" -->
+          <q-tooltip>{{$t('global.update')}}</q-tooltip>
+        </q-btn>
+        <q-btn v-if="!item" flat type="submit" :dense="$store.getters.dense.button" color="blue"
+          icon="check_circle" :loading="loadingAdd" :disable="loadingDrafts"
+          @click.prevent="onSubmit(1)">
+          <!-- :label="dialog?'':$t('global.add')" -->
+          <q-tooltip>{{$t('global.add')}}</q-tooltip>
+        </q-btn>
+        <q-btn v-if="!item" flat type="submit" :dense="$store.getters.dense.button" color="amber"
+          icon="receipt" :loading="loadingDrafts" :disable="loadingAdd"
+          @click.prevent="onSubmit(0)">
+          <!-- :label="dialog?'':$t('global.drafts')" -->
+          <q-tooltip>{{$t('global.drafts')}}</q-tooltip>
+        </q-btn>
+        <q-btn v-if="dialog" flat round dense :color="$store.state.app.darkMode?'':'grey-7'"
+          :icon="maximized?'fullscreen_exit':'fullscreen'" :disable="loading"
+          @click="$emit('update:maximized',!maximized)">
+          <q-tooltip>
+            {{maximized?$t('table.normalScreen'):$t('table.fullScreen')}}
+          </q-tooltip>
+        </q-btn>
+        <q-btn v-if="dialog" flat round dense icon="close" :disable="loading" v-close-popup>
+          <q-tooltip>{{$t('global.cancel')}}</q-tooltip>
+        </q-btn>
+        <q-btn v-else flat round dense icon="reply" :disable="loading"
+          @click="$router.push('view')">
+          <q-tooltip>{{$t('global.back')}}</q-tooltip>
+        </q-btn>
+      </div>
+    </div>
+    <!-- <q-toolbar>
       <q-avatar v-if="dialog" :icon="$route.meta.icon" size="50px" />
       <q-toolbar-title>
         {{ this.item ? $t("global.update") : $t("global.add") }}
@@ -31,7 +72,7 @@
       <q-btn v-if="dialog" flat round dense icon="close" :disable="loading" v-close-popup>
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>
       </q-btn>
-    </q-toolbar>
+    </q-toolbar> -->
     <q-separator />
     <q-form ref="form">
       <!-- <q-card-actions v-if="item" align="right">
