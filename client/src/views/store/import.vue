@@ -73,7 +73,7 @@
                   :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                   @click="props.toggleFullscreen">
                   <q-tooltip v-if="!$q.platform.is.mobile">
-                    {{props.inFullscreen?$t('table.normalScreen'):$t('table.fullScreen')}}
+                    {{props.inFullscreen?$t('global.normalScreen'):$t('global.fullScreen')}}
                   </q-tooltip>
                 </q-btn>
               </div>
@@ -211,7 +211,7 @@
             :icon="maximizedView?'fullscreen_exit':'fullscreen'" :disable="loading"
             @click="maximizedView=!maximized">
             <q-tooltip v-if="!$q.platform.is.mobile">
-              {{maximizedView?$t('table.normalScreen'):$t('table.fullScreen')}}</q-tooltip>
+              {{maximizedView?$t('global.normalScreen'):$t('global.fullScreen')}}</q-tooltip>
           </q-btn>
           <q-btn flat round dense icon="close" v-close-popup>
             <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>

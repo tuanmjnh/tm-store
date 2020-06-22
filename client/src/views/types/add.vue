@@ -29,7 +29,7 @@
           :icon="maximized?'fullscreen_exit':'fullscreen'" :disable="loading"
           @click="$emit('update:maximized',!maximized)">
           <q-tooltip>
-            {{maximized?$t('table.normalScreen'):$t('table.fullScreen')}}
+            {{maximized?$t('global.normalScreen'):$t('global.fullScreen')}}
           </q-tooltip>
         </q-btn>
         <q-btn v-if="dialog" flat round dense icon="close" :disable="loading" v-close-popup>
@@ -66,7 +66,7 @@
         :icon="maximized?'fullscreen_exit':'fullscreen'" :disable="loading"
         @click="$emit('update:maximized',!maximized)">
         <q-tooltip v-if="!$q.platform.is.mobile">
-          {{maximized?$t('table.normalScreen'):$t('table.fullScreen')}}
+          {{maximized?$t('global.normalScreen'):$t('global.fullScreen')}}
         </q-tooltip>
       </q-btn>
       <q-btn v-if="dialog" flat round dense icon="close" :disable="loading" v-close-popup>

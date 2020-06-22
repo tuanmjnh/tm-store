@@ -25,7 +25,7 @@
         :icon="maximized?'fullscreen_exit':'fullscreen'" :disable="$store.state.loading.get"
         @click="$emit('update:maximized',!maximized)">
         <q-tooltip v-if="!$q.platform.is.mobile">
-          {{maximized?$t('table.normalScreen'):$t('table.fullScreen')}}</q-tooltip>
+          {{maximized?$t('global.normalScreen'):$t('global.fullScreen')}}</q-tooltip>
       </q-btn>
       <q-btn flat round dense icon="close" v-close-popup>
         <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.cancel')}}</q-tooltip>

@@ -15,7 +15,7 @@
           <div class="col-xs-12 col-sm-auto self-center text-right">
             <div class="col-auto self-center">
               <q-btn v-if="isRoutes.add" flat round dense icon="add" color="blue"
-                @click="$q.platform.is.mobile?$router.push('add'):dialogAdd=true">
+                @click="dialogAdd=true">
                 <q-tooltip v-if="!$q.platform.is.mobile">{{$t('global.add')}}</q-tooltip>
               </q-btn>
               <q-btn v-if="isRoutes.trash&&selected.length>0&&pagination.flag" flat round dense
@@ -45,7 +45,7 @@
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 @click="props.toggleFullscreen">
                 <q-tooltip v-if="!$q.platform.is.mobile">
-                  {{props.inFullscreen?$t('table.normalScreen'):$t('table.fullScreen')}}
+                  {{props.inFullscreen?$t('global.normalScreen'):$t('global.fullScreen')}}
                 </q-tooltip>
               </q-btn>
               <q-btn v-if="isRoutes.trash" flat round dense

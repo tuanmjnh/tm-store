@@ -16,21 +16,24 @@
             <q-tooltip>{{labelClose}}</q-tooltip>
           </q-btn>
         </q-toolbar>
-        <q-card-section>
-          <tm-tree :nodes="categoriesLocal" node-key="_id" node-label="label"
-            :no-nodes-label="$t('table.noData')" :expanded-all="true" :selected.sync="selectedLocal"
-            @on-selected="onSelected">
-            <template v-slot:content-after="prop">
-              <div class="row items-center">
-                <q-icon :name="prop.node.icon" color="blue-grey" size="20px" class="q-mr-sm" />
-                <div :class="['node-label q-pr-md',prop.node.flag===1?'':'text-blue-grey-4']"
-                  :style="{color:prop.node.color?prop.node.color:'#009688'}">
-                  {{ prop.node.label }}
+        <q-separator />
+        <q-scroll-area style="height:calc(100vh - 180px)">
+          <q-card-section>
+            <tm-tree :nodes="categoriesLocal" node-key="_id" node-label="label"
+              :no-nodes-label="$t('table.noData')" :expanded-all="true"
+              :selected.sync="selectedLocal" @on-selected="onSelected">
+              <template v-slot:content-after="prop">
+                <div class="row items-center">
+                  <q-icon :name="prop.node.icon" color="blue-grey" size="20px" class="q-mr-sm" />
+                  <div :class="['node-label q-pr-md',prop.node.flag===1?'':'text-blue-grey-4']"
+                    :style="{color:prop.node.color?prop.node.color:'#009688'}">
+                    {{ prop.node.label }}
+                  </div>
                 </div>
-              </div>
-            </template>
-          </tm-tree>
-        </q-card-section>
+              </template>
+            </tm-tree>
+          </q-card-section>
+        </q-scroll-area>
       </q-card>
     </q-dialog>
   </div>

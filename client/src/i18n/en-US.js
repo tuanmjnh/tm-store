@@ -110,7 +110,9 @@ export default {
     hour: 'Hour',
     minute: 'Minutes',
     result: 'Result',
-    append: 'Append'
+    append: 'Append',
+    fullScreen: 'Full screen',
+    normalScreen: 'Normal screen'
   },
   success: {
     insert: 'Insert success',
@@ -157,8 +159,6 @@ export default {
     logOut: 'Logout',
     profile: 'Profile',
     theme: 'Theme',
-    fullScreen: 'Full screen',
-    normalScreen: 'Normal screen',
     size: 'Global Size',
     switchLanguage: 'Switch language'
   },
@@ -300,6 +300,7 @@ export default {
     attributes: 'News attributes'
   },
   tabs: {
+    inf: 'Information',
     main: 'Main information',
     about: 'About',
     updated: 'Updated information'
@@ -311,8 +312,6 @@ export default {
     noFilterData: 'No matched records',
     rowSelected: 'rows are selected',
     rowPerPage: 'Records per page',
-    fullScreen: 'Table full screen',
-    normalScreen: 'Table normal screen',
     actions: '#'
   },
   files: {

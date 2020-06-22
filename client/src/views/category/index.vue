@@ -178,12 +178,12 @@ export default {
       this.onSelect({ pagination: this.pagination })
     },
     onAdd(item) {
-      if (this.$q.platform.is.mobile) {
-        this.$router.push('add')
-      } else {
-        this.dialogAdd = true
-        if (item) this.dependent = item
-      }
+      // if (this.$q.platform.is.mobile) {
+      //   this.$router.push('add')
+      // } else {
+      this.dialogAdd = true
+      if (item) this.dependent = item
+      // }
     },
     onUpdate(item) {
       this.dialogAdd = true

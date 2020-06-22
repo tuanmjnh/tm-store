@@ -73,7 +73,7 @@
               :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               @click="props.toggleFullscreen">
               <q-tooltip v-if="!$q.platform.is.mobile">
-                {{props.inFullscreen?$t('table.normalScreen'):$t('table.fullScreen')}}</q-tooltip>
+                {{props.inFullscreen?$t('global.normalScreen'):$t('global.fullScreen')}}</q-tooltip>
             </q-btn>
           </div>
         </div>

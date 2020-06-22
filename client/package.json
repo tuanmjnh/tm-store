@@ -33,6 +33,7 @@
     "moment": "^2.24.0",
     "multer": "^1.4.2",
     "nprogress": "^0.2.0",
+    "qrcode": "^1.4.4",
     "quasar": "^1.11.3",
     "vue-i18n": "^8.17.6",
     "vuedraggable": "^2.23.2",

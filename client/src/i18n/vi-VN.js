@@ -110,7 +110,9 @@ export default {
     hour: 'Giờ',
     minute: 'Phút',
     result: 'Kết quả',
-    append: 'Nhập thêm'
+    append: 'Nhập thêm',
+    fullScreen: 'Toàn màn hình',
+    normalScreen: 'Màn hình thường'
   },
   success: {
     insert: 'Thêm mới thành công',
@@ -157,8 +159,6 @@ export default {
     logOut: 'Đăng xuất',
     profile: 'Hồ sơ',
     theme: 'Chủ đề',
-    fullScreen: 'Full screen',
-    normalScreen: 'Normal screen',
     size: 'Kích thước chữ',
     switchLanguage: 'Thay đổi ngôn ngữ'
   },
@@ -300,6 +300,7 @@ export default {
     attributes: 'Thuộc tính tin tức'
   },
   tabs: {
+    inf: 'Thông tin',
     main: 'Thông tin chính',
     about: 'Giới thiệu',
     updated: 'Thông tin cập nhật'
@@ -311,8 +312,6 @@ export default {
     noFilterData: 'không tìm thấy dữ liệu phù hợp',
     rowSelected: 'bản ghi đã được chọn',
     rowPerPage: 'Số bản ghi trên trang',
-    fullScreen: 'Bảng toàn màn hình',
-    normalScreen: 'Bảng màn hình bình thường',
     actions: '#'
   },
   files: {

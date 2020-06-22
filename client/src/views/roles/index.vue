@@ -42,7 +42,7 @@
               :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               @click="props.toggleFullscreen">
               <q-tooltip v-if="!$q.platform.is.mobile">
-                {{props.inFullscreen?$t('table.normalScreen'):$t('table.fullScreen')}}</q-tooltip>
+                {{props.inFullscreen?$t('global.normalScreen'):$t('global.fullScreen')}}</q-tooltip>
             </q-btn>
             <q-btn v-if="isRoutes.trash" flat round dense
               :color="$store.state.app.darkMode?'':'grey-7'" icon="more_vert">

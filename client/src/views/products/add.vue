@@ -29,7 +29,7 @@
           :icon="maximized?'fullscreen_exit':'fullscreen'" :disable="loading"
           @click="$emit('update:maximized',!maximized)">
           <q-tooltip>
-            {{maximized?$t('table.normalScreen'):$t('table.fullScreen')}}
+            {{maximized?$t('global.normalScreen'):$t('global.fullScreen')}}
           </q-tooltip>
         </q-btn>
         <q-btn v-if="dialog" flat round dense icon="close" :disable="loading" v-close-popup>
@@ -45,8 +45,8 @@
     <q-form ref="form">
       <q-tabs v-model="tabs" narrow-indicator :dense="$store.getters.dense.form"
         class="text-deep-purple" align="justify">
-        <q-tab name="main" :label="$t('tabs.main')" />
-        <q-tab name="about" :label="$t('tabs.about')" />
+        <q-tab name="inf" :label="$t('tabs.inf')" />
+        <!-- <q-tab name="about" :label="$t('tabs.about')" /> -->
         <q-tab name="images" :label="$t('global.images')" />
         <q-tab name="attributes" :label="$t('global.attributes')" />
       </q-tabs>
@@ -54,7 +54,7 @@
       <!-- <q-card-section> -->
       <q-scroll-area style="height:calc(100vh - 180px)">
         <q-tab-panels v-model="tabs">
-          <q-tab-panel name="main">
+          <q-tab-panel name="inf">
             <div class="row q-gutter-xs">
               <div class="col-12">
                 <select-category :categories="categories" :selected.sync="form.categories"
@@ -154,8 +154,6 @@
                   class="col-md-4" />
               </div>
             </div>
-          </q-tab-panel>
-          <q-tab-panel name="about">
             <div class="row q-gutter-xs">
               <div class="col-12 col-md-5">
                 <q-input v-model.trim="form.origin" :dense="$store.getters.dense.input"
@@ -182,6 +180,33 @@
               </div>
             </div>
           </q-tab-panel>
+          <!-- <q-tab-panel name="about">
+            <div class="row q-gutter-xs">
+              <div class="col-12 col-md-5">
+                <q-input v-model.trim="form.origin" :dense="$store.getters.dense.input"
+                  :label="$t('product.origin')" />
+              </div>
+              <q-space />
+              <div class="col-12 col-md-6">
+                <q-input v-model.trim="form.date" :dense="$store.getters.dense.input"
+                  :label="$t('product.date')" />
+              </div>
+            </div>
+            <div class="row q-gutter-sm q-mb-lg">
+              <div class="col-12">
+                <q-input v-model.trim="form.desc" autogrow :dense="$store.getters.dense.input"
+                  :label="$t('global.desc')" />
+              </div>
+            </div>
+            <div class="row q-gutter-sm">
+              <div class="col-12">{{$t('global.content')}}</div>
+              <div class="col-12">
+                <tm-editor :value.sync="form.content" :upload-url="uploadUrl" :headers="headers"
+                  multiple :max-file-size="1024*1024*2" accept=".jpg,.jpeg,.png,.gif"></tm-editor>
+                <-- <q-editor v-model="form.content" min-height="5rem" />
+              </div>
+            </div>
+          </q-tab-panel> -->
           <q-tab-panel name="images">
             <div class="row">
               <div class="col-12 q-gutter-sm images">
@@ -263,7 +288,7 @@ export default {
       loadingDrafts: false,
       dialogFiles: false,
       dialogUpload: false,
-      tabs: 'main',
+      tabs: 'inf',
       form: {},
       attrKeys: [],
       attrValues: [],
