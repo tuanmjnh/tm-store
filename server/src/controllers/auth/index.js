@@ -4,7 +4,6 @@ const MUser = require('../../models/users'),
   middleware = require('../../services/middleware'),
   crypto = require('../../utils/crypto'),
   constantCommon = require('../../config/common');
-
 const name = 'auth';
 module.exports.name = name;
 const generateRoutes_children = (routes, rolesRoutes) => {
@@ -68,10 +67,10 @@ const getConstantRoutes = async () => {
 
 module.exports.get = async function (req, res, next) {
   try {
-    // constant account
+    // get constant account
     let rs = constantCommon.users.find((x) => x._id === req.verify._id);
     let routes = [];
-    // database account
+    // get database account
     if (rs) {
       routes = await getConstantRoutes();
     } else {

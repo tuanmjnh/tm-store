@@ -35,8 +35,8 @@ export default {
     }
   },
   created() {
-    // this.$store.commit('userSetting/SET', this.$store.state.userSetting.data)
-    this.$store.dispatch('userSetting/set', this.$store.state.userSetting.data)
+    this.$store.commit('userSetting/INIT', this.$store.state.userSetting)
+    // this.$store.dispatch('userSetting/set', this.$store.state.userSetting)
     this.$q.dark.set(this.$store.getters.darkMode)
   },
   computed: {

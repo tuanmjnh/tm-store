@@ -2,7 +2,7 @@
   <!-- <q-btn-dropdown class="self-stretch row no-wrap"> -->
   <!-- <q-btn v-if="!$q.platform.is.mobile" flat size="md"
       :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" @click="$q.fullscreen.toggle()" color="grey-1">
-      <q-tooltip>{{$q.fullscreen.isActive ? $t('navbar.normal_screen') : $t('navbar.full_screen')}}</q-tooltip>
+      <q-tooltip>{{$q.fullscreen.isActive ? $t('global.normal_screen') : $t('global.full_screen')}}</q-tooltip>
     </q-btn> -->
   <!-- <q-btn flat size="md" color="grey-1" icon="format_size">
       <template v-slot:label>
@@ -100,11 +100,11 @@
           </q-item>
           <q-item v-if="!$q.platform.is.mobile">
             <q-btn flat no-caps size="md" class="btn-setting"
-              :label="$q.fullscreen.isActive ? $t('navbar.normal_screen') : $t('navbar.full_screen')"
+              :label="$q.fullscreen.isActive ? $t('global.normal_screen') : $t('global.full_screen')"
               :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" @click="$q.fullscreen.toggle()"
               :color="$store.state.app.darkMode?'':'blue-grey'" v-close-popup>
               <!-- <q-tooltip>
-                  {{$q.fullscreen.isActive ? $t('navbar.normal_screen') : $t('navbar.full_screen')}}
+                  {{$q.fullscreen.isActive ? $t('global.normal_screen') : $t('global.full_screen')}}
                 </q-tooltip> -->
             </q-btn>
           </q-item>

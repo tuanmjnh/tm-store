@@ -13,11 +13,11 @@
       </q-toolbar>
     </q-header>
     <q-drawer v-model="drawer" bordered :mini="drawerMini" :mini-to-overlay="overlay"
-      @mouseover="onMouseOverDrawer" @mouseout="onMouseOutDrawer">
+              @mouseover="onMouseOverDrawer" @mouseout="onMouseOutDrawer">
       <q-scroll-area style="height:calc(100% - 50px);margin-top:50px;">
         <q-list class="rounded-borders">
           <drawer-item v-for="(e,i) in $store.getters.routes" :key="i" :active="onActive(e.name)"
-            :dense="$store.getters.dense.menu" :item="e" is-icon>
+                       :dense="$store.state.userSetting.menu" :item="e" is-icon>
           </drawer-item>
         </q-list>
       </q-scroll-area>

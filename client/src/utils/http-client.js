@@ -10,7 +10,7 @@ export const CANCEL_TOKEN = axios.CancelToken;
 // create an axios instance
 export const axiosApi = axios.create({
   // uploadURL: 'http://localhost:8001/api/upload',
-  baseURL: process.env.API + '/', // 'http://localhost:8001/api',
+  baseURL: `${process.env.API}/`, // 'http://localhost:8001/api',
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 10000 // request timeout
   // headers: {

@@ -369,7 +369,7 @@ export default {
     language: 'Language',
     fontSize: 'Font size',
     fontFamily: 'Font family',
-    fontColor: 'Color',
+    fontColor: 'Font color',
     fontLineHeight: 'Line height',
     formatDate: 'Format date',
     formatTime: 'Format time',
@@ -381,7 +381,8 @@ export default {
     darkMode: 'Dark mode',
     msgChangeTheme: 'Change the theme color success',
     msgChangeLanguage: 'Change language success',
-    msgChangeSize: 'Change font size success'
+    msgChangeSize: 'Change font size success',
+    shadowTable: 'Box shadow table'
   },
   size: {
     md: 'Default',

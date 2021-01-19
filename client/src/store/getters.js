@@ -5,11 +5,13 @@ export default {
   genders: state => state.app.genders,
   // User setting
   // userSetting: state => state.userSetting.data,
-  language: state => state.userSetting.data.language,
-  font: state => state.userSetting.data.font,
-  dense: state => state.userSetting.data.dense,
-  darkMode: state => state.userSetting.data.darkMode,
-  format: state => state.userSetting.data.format
+  language: state => state.userSetting.language,
+  font: state => state.userSetting.font,
+  dense: state => state.userSetting.dense,
+  darkMode: state => state.userSetting.darkMode,
+  format: state => state.userSetting.format,
+  shadow: state => state.userSetting.shadow
+
   // device: state => state.app.device,
   // useLogs: state => state.app.useLogs,
   // visitedViews: state => state.tagsView.visitedViews,

@@ -111,26 +111,22 @@ module.exports = function(ctx) {
           // 'vue$': 'vue/dist/vue.esm.js',
           '@': path.resolve('src')
         }
-        cfg.plugins.push(
-          new CopyPlugin([
-            { from: './statics/', to: '../' }
-          ])
-        )
+        cfg.plugins.push( new CopyPlugin({patterns: [{ from: './statics/', to: '../' } ]}))
       },
       env: ctx.dev
         ? { // so on dev we'll have
-          APP_TITLE: JSON.stringify('TM-Store'),
-          API: JSON.stringify('http://localhost:8001/api'),
-          API_UPLOAD: JSON.stringify('http://localhost:8001/uploads'),
-          API_PUBLIC: JSON.stringify('http://localhost:8001/public'),
-          API_FILE_UPLOAD: JSON.stringify('http://localhost:8001/api/file-manager')
+          APP_TITLE: 'TM-Store', // JSON.stringify('TM-Store'),
+          API: 'http://localhost:8001/api', // JSON.stringify('http://localhost:8001/api'),
+          API_UPLOAD: 'http://localhost:8001/uploads', // JSON.stringify('http://localhost:8001/uploads'),
+          API_PUBLIC: 'http://localhost:8001/public', // JSON.stringify('http://localhost:8001/public'),
+          API_FILE_UPLOAD: 'http://localhost:8001/api/file-manager', // JSON.stringify('http://localhost:8001/api/file-manager')
         }
         : { // and on build (production):
-          APP_TITLE: JSON.stringify('TM-Store'),
-          API: JSON.stringify('https://tm-store-express.herokuapp.com/api'),
-          API_UPLOAD: JSON.stringify('https://tm-store-express.herokuapp.com/uploads'),
-          API_PUBLIC: JSON.stringify('https://tm-store-express.herokuapp.com/public'),
-          API_FILE_UPLOAD: JSON.stringify('https://tm-store-express.herokuapp.com/api/file-manager')
+          APP_TITLE: 'TM-Store', // JSON.stringify('TM-Store'),
+          API: 'https://tm-store-express.herokuapp.com/api', // JSON.stringify('https://tm-store-express.herokuapp.com/api'),
+          API_UPLOAD: 'https://tm-store-express.herokuapp.com/uploads', // JSON.stringify('https://tm-store-express.herokuapp.com/uploads'),
+          API_PUBLIC: 'https://tm-store-express.herokuapp.com/public', // JSON.stringify('https://tm-store-express.herokuapp.com/public'),
+          API_FILE_UPLOAD: 'https://tm-store-express.herokuapp.com/api/file-manager', // JSON.stringify('https://tm-store-express.herokuapp.com/api/file-manager')
         }
     },
 

@@ -388,7 +388,8 @@ export default {
     denseMenu: 'Độ dầy Menu',
     msgChangeTheme: 'Thay đổi mầu chủ đề thành công',
     msgChangeLanguage: 'Thay đổi ngôn ngữ thành công',
-    msgChangeSize: 'Thay đổi kích thước chữ thành công'
+    msgChangeSize: 'Thay đổi kích thước chữ thành công',
+    shadowTable: 'Đổ bóng bảng'
   },
   size: {
     md: 'Mặc định',
