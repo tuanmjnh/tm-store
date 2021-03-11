@@ -1,5 +1,6 @@
 <template>
   <div id="q-app">
+
     <!-- <q-spinner-pie color="primary" size="2em" /> -->
     <!-- <q-inner-loading :showing="$store.state.loading.get">
       <q-spinner-gears size="100px" color="primary" />
@@ -35,7 +36,7 @@ export default {
     }
   },
   created() {
-    this.$store.commit('userSetting/INIT', this.$store.state.userSetting)
+    this.$store.commit('userSetting/INIT')
     // this.$store.dispatch('userSetting/set', this.$store.state.userSetting)
     this.$q.dark.set(this.$store.getters.darkMode)
   },

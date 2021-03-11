@@ -3,7 +3,7 @@
 let path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 
-module.exports = function(ctx) {
+module.exports = function (ctx) {
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
@@ -111,7 +111,8 @@ module.exports = function(ctx) {
           // 'vue$': 'vue/dist/vue.esm.js',
           '@': path.resolve('src')
         }
-        cfg.plugins.push( new CopyPlugin({patterns: [{ from: './statics/', to: '../' } ]}))
+        // cfg.plugins.push(new CopyPlugin([{ from: './statics/', to: '../' }]))
+        cfg.plugins.push(new CopyPlugin({ patterns: [{ from: './statics/', to: '../' }] }))
       },
       env: ctx.dev
         ? { // so on dev we'll have
@@ -134,7 +135,15 @@ module.exports = function(ctx) {
     devServer: {
       // https: true,
       port: 8000,
-      open: false // opens browser window automatically
+      open: false, // opens browser window automatically
+      // // proxy all requests starting with /api to jsonplaceholder
+      // '/api': {
+      //   target: 'http://localhost:8001',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '^/api': ''
+      //   }
+      // }
     },
 
     // animations: 'all', // --- includes all animations

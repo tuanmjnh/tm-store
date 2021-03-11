@@ -83,3 +83,17 @@ export function isBoolean(arg) {
   }
   return false
 }
+
+export function isObject(arg) {
+  if (typeof arg === 'object' || arg instanceof Object) {
+    return true
+  }
+  return false
+}
+
+export function isObjectExist(arg) {
+  if (isObject(arg) && Object.keys(arg).length > 0) {
+    return true
+  }
+  return false
+}

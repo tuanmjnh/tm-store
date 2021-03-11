@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie'
-import { Get, Set, GetAll } from '@/i18n'
+// import { Get, Set, GetAll } from '@/i18n'
 import { i18n } from '@/boot/i18n'
+import http from '@/utils/http-client';
+const source = '/user-setting';
 const COOKIE_NAME = 'user-setting'
 const COOKIE_DATA = Cookies.get(COOKIE_NAME) ? JSON.parse(Cookies.get(COOKIE_NAME)) : {}
 // console.log(COOKIE_DATA)
@@ -29,21 +31,21 @@ const state = {
 }
 
 const mutations = {
-  INIT: (state) => {
-    i18n.locale = state.language
-    document.body.style.fontSize = `${state.font.size}px`
-    document.body.style.fontFamily = state.font.family
-    document.body.style.color = state.font.color
-  },
-  SET: (state, data) => {
-    // state.data = data
-    //
+  INIT: (state, data) => {
+    if (data) state = state = { ...state, ...data }
     i18n.locale = state.language
     document.body.style.fontSize = `${state.font.size}px`
     document.body.style.fontFamily = state.font.family
     document.body.style.color = state.font.color
     Cookies.set(COOKIE_NAME, JSON.stringify(state))
   },
+  // SET: (state, data) => {
+  //   i18n.locale = state.language
+  //   document.body.style.fontSize = `${state.font.size}px`
+  //   document.body.style.fontFamily = state.font.family
+  //   document.body.style.color = state.font.color
+  //   Cookies.set(COOKIE_NAME, JSON.stringify(state))
+  // },
   SET_LANGUAGE: (state, value) => {
     state.language = value
     i18n.locale = state.language
@@ -84,8 +86,20 @@ const mutations = {
 }
 
 const actions = {
-  set({ commit }, data) {
-    if (data) commit('SET', data)
+  async get({ commit }, params) {
+    const rs = await http.get(source, { params });
+    if ((typeof rs === 'object' || rs instanceof Object) && Object.keys(rs).length) {
+      commit('INIT', rs);
+    }
+    // http.get(source, { params }).then(rs => {
+    //   if ((typeof rs === 'object' || rs instanceof Object) && Object.keys(rs).length) {
+    //     commit('INIT', rs);
+    //   }
+    // });
+  },
+  async reload({ commit, state }) {
+    const data = JSON.parse(Cookies.get(COOKIE_NAME))
+    commit('INIT', data);
   }
 }
 

@@ -1,5 +1,6 @@
 <template>
   <div class="row">
+    {{darkMode}}
     <div v-if="$q.platform.is.desktop" class="col-12 col-md-3">
       <q-card flat bordered class="q-mb-md">
         <q-card-section class="text-center">
@@ -7,13 +8,13 @@
             <img size="150px" :src="$store.state.auth.user.avatar">
           </q-avatar> -->
           <q-img transition="fade" :src="avatarUrl" style="width:80%;border-radius:50%;" ratio="1"
-            spinner-color="blue-grey" class="rounded-borders">
+                 spinner-color="blue-grey" class="rounded-borders">
           </q-img>
         </q-card-section>
         <q-separator inset />
         <q-card-section>
           <div v-if="$store.state.auth.user&&$store.state.auth.user.note"
-            v-html="$store.state.auth.user.note"></div>
+               v-html="$store.state.auth.user.note"></div>
         </q-card-section>
       </q-card>
       <q-card flat bordered>
@@ -46,7 +47,7 @@
           <q-space />
           <div class="col-5 text-center">
             <q-img transition="fade" :src="avatarUrl" style="width:80%;border-radius:50%;" ratio="1"
-              spinner-color="blue-grey" class="rounded-borders">
+                   spinner-color="blue-grey" class="rounded-borders">
             </q-img>
           </div>
         </q-card-section>
@@ -89,6 +90,9 @@ export default {
       if (this.$store.state.auth.user && this.$store.state.auth.user.avatar) {
         return this.$store.state.auth.user.avatar
       } else return this.$store.state.avatar
+    },
+    darkMode() {
+      return this.$store.state.userSetting.darkMode;
     }
   },
   methods: {

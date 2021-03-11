@@ -1,6 +1,6 @@
 <template>
   <div v-if="!$store.state.auth.verified"
-    class="window-height window-width row justify-center items-center">
+       class="window-height window-width row justify-center items-center">
     <q-form ref="form" class="col-9 col-md-4">
       <q-card flat square inline bordered>
         <q-card-section class="bg-teal text-white">
@@ -10,22 +10,22 @@
         <q-card-section>
           <div class="q-pl-md q-pr-md q-pt-md">
             <q-input v-model.trim="form.username" :dense="$store.getters.dense.input" v-lowercase
-              :hint="$t('login.username')" :placeholder="$t('login.username')"
-              :rules="[v=>v&&v.length>0||$t('error.required')]" />
+                     :hint="$t('login.username')" :placeholder="$t('login.username')"
+                     :rules="[v=>v&&v.length>0||$t('error.required')]" />
           </div>
           <div class="q-pl-md q-pr-md q-pt-md">
             <q-input v-model.trim="form.password" :type="passwordType"
-              :dense="$store.getters.dense.input" :hint="$t('login.password')"
-              :placeholder="$t('login.password')" @keyup.native="checkCapslock"
-              @blur="capsTooltip=false" :rules="[v=>v&&v.length>0||$t('error.required')]"
-              class="capsTooltip">
+                     :dense="$store.getters.dense.input" :hint="$t('login.password')"
+                     :placeholder="$t('login.password')" @keyup.native="checkCapslock"
+                     @blur="capsTooltip=false" :rules="[v=>v&&v.length>0||$t('error.required')]"
+                     class="capsTooltip">
               <template v-slot:append>
                 <q-icon v-if="passwordType==='password'" name="visibility_off"
-                  @click="passwordType='text'" class="cursor-pointer" />
+                        @click="passwordType='text'" class="cursor-pointer" />
                 <q-icon v-else name="visibility" @click="passwordType='password'"
-                  class="cursor-pointer" />
+                        class="cursor-pointer" />
                 <q-tooltip v-model="capsTooltip" :no-parent-event="true" :offset="[10, 10]"
-                  content-class="bg-indigo">
+                           content-class="bg-indigo">
                   Caps lock
                 </q-tooltip>
               </template>
@@ -38,8 +38,8 @@
         <!-- <q-separator dark inset /> -->
         <q-card-actions align="right">
           <q-btn type="submit" flat :dense="$store.getters.dense.button" color="blue"
-            :label="$t('login.login')" :loading="$store.state.loading.post"
-            @click.prevent="onSubmit">
+                 :label="$t('login.login')" :loading="$store.state.loading.post"
+                 @click.prevent="onSubmit">
             <!-- <q-tooltip>{{$t('global.add')}}</q-tooltip> -->
           </q-btn>
           <!-- <q-btn flat>Action 2</q-btn> -->
@@ -50,7 +50,6 @@
 </template>
 
 <script>
-import * as api from '@/api/auth'
 import * as apiUserSetting from '@/api/users/setting'
 export default {
   data() {
@@ -87,21 +86,27 @@ export default {
     onSubmit() {
       this.$refs.form.validate().then(valid => {
         if (valid) {
-          // api.login(this.form).then((x) => {
-          //   if (x) {
           this.$store.dispatch('auth/verify', this.form)
             .then(() => {
-              // routers.router.addRoutes(this.$store.state.auth.routes, { replace: true })
               this.$router.push({ path: this.redirect }).catch((e) => { })
-            }).then(() => {
+              // }).then(() => {
               // Set user setting
-              apiUserSetting.get().then(x => {
-                this.$store.dispatch('userSetting/set', x)
-                this.$q.dark.set(this.$store.getters.darkMode)
-              })
+              if (this.$store.state.auth.verified) {
+                apiUserSetting.get().then(x => {
+                  this.$store.commit('userSetting/INIT', x)
+                  this.$q.dark.set(this.$store.getters.darkMode)
+                })
+                // this.$store.dispatch('userSetting/get').then(() => {
+                //   // this.$store.dispatch('userSetting/reload').then(() => {
+                //   //   console.log(this.$store.state.userSetting.darkMode)
+                //   //   this.$q.dark.set(this.$store.getters.darkMode)
+                //   // })
+                //   // console.log(this.darkMode)
+                //   // this.$store.dispatch('userSetting/getDarkMode')
+                // })
+                // // console.log(this.$store.state.userSetting.language)
+              }
             })
-          // }
-          // })
         }
       })
     },
