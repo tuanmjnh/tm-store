@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "tm-store-api"
+		},
+		{
+			"path": "tm-store-mobile"
+		}
+	],
+  "settings": {}
+}

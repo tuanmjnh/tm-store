@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="128x128" href="icons/favicon-128x128.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+    <link rel="icon" type="image/ico" href="favicon.ico">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <meta name="msapplication-TileImage" content="icons/favicon-128x128.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" size="128x128" href="icons/favicon-128x128.png">
+    <link rel="apple-touch-icon" type="image/png" href="icons/favicon-128x128.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>%VITE_APP_NAME%</title>
+  </head>
+  <body>
+    <div id="app">
+      <style>
+        html,
+        body,
+        #app {
+          height: 100%;
+          margin: 0px;
+          padding: 0px;
+          width: 100%;
+        }
+        .__spinner-container {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        .__spinner {
+          position: relative;
+          width: 68px;
+          height: 68px;
+          background-color: #41b883;
+          animation: cube-shadow-spinner 1.8s cubic-bezier(0.75, 0, 0.5, 1)
+            infinite;
+        }
+        @keyframes cube-shadow-spinner {
+          50% {
+            border-radius: 50%;
+            transform: scale(0.5) rotate(360deg);
+          }
+          100% {
+            transform: scale(1) rotate(720deg);
+          }
+        }
+      </style>
+      <div class="__spinner-container">
+        <div class="__spinner"></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "web": {
+    "client_id": "235324461758-n9qs0f3kec5e8q8t2almq6edn0cjh704.apps.googleusercontent.com",
+    "project_id": "tm-store-384513",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "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",
+    "redirect_uris": [
+      "http://localhost:8000/google/redirect",
+      "http://localhost:3000/auth"
+    ],
+    "javascript_origins": [
+      "http://localhost",
+      "http://localhost:8000",
+      "http://localhost:5173",
+      "http://localhost:3000"
+    ]
+  }
+}
