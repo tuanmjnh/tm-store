@@ -1,5 +1,6 @@
-import { createMenus, createRoutes, generateCacheRoutes } from './helper'
-import { $t, local } from '@/utils'
+import { createMenus, createRoutes, generateCacheRoutes } from '@/utils/router'
+import { $t } from '@/i18n'
+import { local } from '@/utils/storage'
 import { router } from '@/router'
 import { staticRoutes } from '@/router/routes.static'
 import { useAuthStore } from '@/store/auth'
@@ -46,10 +47,10 @@ export const useRouteStore = defineStore('route-store', {
         }
 
         // Get user's route
-        const { data } = await fetchUserRoutes({
-          id: userInfo.id,
-        })
-
+        // const { data } = await fetchUserRoutes({
+        //   id: userInfo.id,
+        // })
+        const data = []
         if (!data)
           return
 
@@ -66,14 +67,15 @@ export const useRouteStore = defineStore('route-store', {
       // Initialize route information
       const rowRoutes = await this.initRouteInfo()
       if (!rowRoutes) {
-        window.$message.error($t(`app.getRouteError`))
+        // window.$message.error($t(`app.getRouteError`))
+        console.log($t(`app.getRouteError`))
         return
       }
       this.rowRoutes = rowRoutes
 
       // Generate actual route and insert
       const routes = createRoutes(rowRoutes)
-      router.addRoute(routes)
+      router.addRoute(routes as any)
 
       // Generate side menu
       this.menus = createMenus(rowRoutes)

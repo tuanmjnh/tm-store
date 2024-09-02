@@ -3,7 +3,7 @@
     "title": "日本語",
     "order": 4
   },
-  "common": {
+  "global": {
     "cancel": "こんにちは",
     "confirm": "確認する",
     "close": "ドン",
@@ -12,6 +12,9 @@
     "navigate": "ドゥーフン",
     "inputPlaceholder": "長い話",
     "selectPlaceholder": "ヴイロンチョン"
+  },
+  "language": {
+    "switchTitle": "Thay đổi ngôn ngữ"
   },
   "app": {
     "loginOut": "ログアウト",
@@ -96,13 +99,13 @@
   },
   "login": {
     "signInTitle": "ログイン",
-    "accountPlaceholder": "アカウント番号を入力してください",
-    "passwordPlaceholder": "パスワードを入力してください",
+    "username": "ユーザー名",
+    "password": "パスワード",
     "accountRuleTip": "アカウント番号を入力してください",
     "passwordRuleTip": "パスワードを入力してください",
     "or": "その他",
     "signIn": "サインイン",
-    "rememberMe": "ログイン情報を記憶する",
+    "remember": "ログイン情報を記憶する",
     "forgotPassword": "パスワードを忘れましたか?",
     "signUp": "登録",
     "noAccountText": "アカウントをお持ちではありませんか?",
@@ -118,6 +121,7 @@
     "resetPassword": "パスワードをリセット"
   },
   "route": {
+    "login": "ログイン",
     "appRoot": "ホーム",
     "dashboard": "ダッシュボード",
     "workbench": "ワークベンチ",

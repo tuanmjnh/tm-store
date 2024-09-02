@@ -1,13 +1,12 @@
 import type { Router } from 'vue-router'
 import { useAppStore, useAuthStore } from '@/store'
-import NProgress from "@/utils/progress";
 import { local } from '@/utils/storage';
 import { $t } from '@/i18n';
+import NProgress from "@/utils/progress";
 
-export function setupRouterGuard(router: Router) {
+export function initMiddleware(router: Router) {
   const appStore = useAppStore()
   const authStore = useAuthStore()
-
   router.beforeEach(async (to, from, next) => {
     // Determine whether it is an external link. If it is, open the web page directly and intercept the jump
     if (to.meta.href) {
@@ -19,6 +18,7 @@ export function setupRouterGuard(router: Router) {
 
     // Determine whether there is a TOKEN and log in for authentication
     const isLogin = Boolean(local.get('accessToken'))
+    console.log(isLogin)
     if (!isLogin) {
       if (to.name === 'login')
         next()

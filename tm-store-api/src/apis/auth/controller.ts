@@ -10,6 +10,10 @@ import { SHA256 } from '@/utils/tm-crypto';
 import { sign } from 'jsonwebtoken'
 import { SECRET_KEY } from '@config'
 
+// export interface IUserAuth extends IUser {
+//   routes: Array<string>
+// }
+
 export class AuthController {
   public auth = Container.get(AuthService)
 
@@ -51,6 +55,7 @@ export class AuthController {
       if (!req.body.username || !req.body.password) { return res.status(404).json({ msg: 'no_exist' }) }
       // constant account
       let rs = constantUsers.find((x) => x.username === req.body.username && x.password === SHA256(req.body.password + x.salt))
+      let routes = []
       // let routes = []
       if (rs) {
         rs.routes = constantRoutes
@@ -64,22 +69,17 @@ export class AuthController {
         // check lock
         if (!rs.enable) return res.status(504).json({ msg: 'locked' })
         // Routes
-        rs.routes = await this.getAuthRoutes(rs.roles)
+        // rs.routes = await this.getAuthRoutes(rs.roles)
+        routes = await this.getAuthRoutes(rs.roles)
+        // rs = { ...rs, ...{ routes: routes } }
         // fix date
-        rs.dateBirth = moment(rs.dateBirth).format('YYYY-MM-DD')
+        // rs.dateBirth = moment(rs.dateBirth).format('YYYY-MM-DD')
         // Update last login
-        await MUser.updateOne(
-          { _id: rs._id },
-          {
-            $set: {
-              lastLogin: new Date()
-            }
-          }
-        )
+        await MUser.updateOne({ _id: rs._id }, { $set: { lastLogin: new Date() } })
       }
       // Token
       const token = sign({ _id: rs._id, code: rs.username }, SECRET_KEY, { expiresIn: '24h' })
-      if (rs) return res.status(200).json({ token, data: rs, message: 'login' })
+      if (rs) return res.status(200).json({ token, data: rs, routes: routes, message: 'login' })
       else return next(new HttpException(401, 'wrongToken'))
     } catch (error) {
       next(error)

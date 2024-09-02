@@ -3,7 +3,7 @@
     "title": "Tiếng việt",
     "order": 2
   },
-  "common": {
+  "global": {
     "confirm": "xác nhận",
     "cancel": "Hủy",
     "reload": "Làm mới",
@@ -12,6 +12,9 @@
     "navigate": "Chuyển đổi",
     "inputPlaceholder": "Vui lòng nhập",
     "selectPlaceholder": "Hãy chọn"
+  },
+  "language": {
+    "switchTitle": "Thay đổi ngôn ngữ"
   },
   "app": {
     "loginOut": "Đăng xuất",
@@ -96,13 +99,13 @@
   },
   "login": {
     "signInTitle": "Đăng nhập",
-    "accountPlaceholder": "Nhập số tài khoản",
-    "passwordPlaceholder": "Nhập mật khẩu",
+    "username": "Tài khoản",
+    "password": "Mật khẩu",
     "accountRuleTip": "Vui lòng nhập tài khoản",
     "passwordRuleTip": "Vui lòng nhập mật khẩu của bạn",
     "or": "Khác",
     "signIn": "Đăng nhập",
-    "rememberMe": "Ghi nhớ",
+    "remember": "Ghi nhớ",
     "forgotPassword": "Quên mật khẩu của bạn?",
     "signUp": "Đăng ký",
     "noAccountText": "Bạn chưa có tài khoản?",
@@ -118,6 +121,7 @@
     "resetPassword": "Đặt lại mật khẩu"
   },
   "route": {
+    "login": "Đăng nhập",
     "appRoot": "Trang chủ",
     "dashboard": "Bảng điều khiển",
     "workbench": "Bàn làm việc",

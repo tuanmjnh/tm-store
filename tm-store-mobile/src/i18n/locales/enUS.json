@@ -3,7 +3,7 @@
     "title": "English",
     "order": 1
   },
-  "common": {
+  "global": {
     "confirm": "Confirm",
     "cancel": "Cancel",
     "reload": "Refresh",
@@ -12,6 +12,9 @@
     "navigate": "Switch",
     "inputPlaceholder": "Please enter",
     "selectPlaceholder": "Please select"
+  },
+  "language": {
+    "switchTitle": "Change language"
   },
   "app": {
     "loginOut": "Logout",
@@ -96,13 +99,13 @@
   },
   "login": {
     "signInTitle": "Login",
-    "accountPlaceholder": "Enter your account number",
-    "passwordPlaceholder": "Enter your password",
+    "username": "Username",
+    "password": "Password",
     "accountRuleTip": "Please enter your account number",
     "passwordRuleTip": "Please enter your password",
     "or": "Other",
     "signIn": "Signin",
-    "rememberMe": "Remember me",
+    "remember": "Remember me",
     "forgotPassword": "Forgot your password?",
     "signUp": "Register",
     "noAccountText": "You don't have an account? ",
@@ -118,6 +121,7 @@
     "resetPassword": "Reset Password"
   },
   "route": {
+    "login": "Log in",
     "appRoot": "Home",
     "dashboard": "Dashboard",
     "workbench": "Workbench",

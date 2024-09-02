@@ -1,8 +1,8 @@
+import type { App } from "vue";
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 // import routes from "./routes";
 import { routes } from './routes.inner'
-import { setupRouterGuard } from "./guard";
-import type { App } from "vue";
+import { initMiddleware } from "./middleware";
 // import { useCachedViewStoreHook } from "@/store/modules/cachedView";
 // import NProgress from "@/utils/progress";
 // import setPageTitle from "@/utils/set-page-title";
@@ -13,7 +13,7 @@ const router = createRouter({
   history: createHistory(VITE_APP_MODE === 'ssr' ? void 0 : VITE_APP_ROUTER_BASE),
   routes
 });
-// setupRouterGuard(router);
+// initMiddleware(router);
 // export interface toRouteType extends RouteLocationNormalized {
 //   meta: {
 //     title?: string;
@@ -35,7 +35,7 @@ const router = createRouter({
 // Install Vue Router
 export async function installRouter(app: App) {
   // Adding a route guard
-  setupRouterGuard(router)
+  initMiddleware(router)
   app.use(router)
   await router.isReady() // https://router.vuejs.org/zh/api/index.html#isready
 }

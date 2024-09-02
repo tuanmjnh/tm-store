@@ -20,6 +20,16 @@ export const staticRoutes: AppRoute.RowRoute[] = [
     parent: null
   },
   {
+    name: 'test1',
+    path: '/test/test1',
+    title: 'Multi-level menu subpages',
+    requiresAuth: true,
+    icon: 'icon-park-outline:list',
+    menuType: 'page',
+    componentPath: '/test/test1/index.vue',
+    parent: 'test'
+  },
+  {
     name: 'test2',
     path: '/test/test2',
     title: 'Multi-level menu subpages',
@@ -48,16 +58,7 @@ export const staticRoutes: AppRoute.RowRoute[] = [
     requiresAuth: true,
     icon: 'icon-park-outline:list',
     menuType: 'dir',
-    componentPath: null,
-    parent: 'test'
-  },
-  {
-    name: 'test4',
-    path: '/test/test3/test4',
-    title: 'Multi-level menu 3-1',
-    requiresAuth: true,
-    icon: 'icon-park-outline:list',
-    componentPath: '/test/test3/test4/index.vue',
+    componentPath: '/test/test3/index.vue',
     parent: 'test'
   }
 ]

@@ -24,7 +24,7 @@ export const useAppStore = defineStore('app-store', {
       showBreadcrumb: true,
       showBreadcrumbIcon: true,
       showSetting: false,
-      fullScreen: false,
+      contentFullScreen: false,
       languages: [],
       language: VITE_APP_DEFAULT_LANG as string,
       transitionAnimation: 'fade-slide' as TransitionAnimation,
@@ -34,7 +34,9 @@ export const useAppStore = defineStore('app-store', {
         put: false,
         patch: false,
         delete: false
-      }
+      },
+      routes: [],
+      cacheRoutes: []
     }
   },
   getters: {
@@ -72,7 +74,7 @@ export const useAppStore = defineStore('app-store', {
     setLanguage(lang) {//App.lang
       setLocale(lang)
       local.set('lang', lang)
-      this.lang = lang
+      this.language = lang
     },
     setDarkMode() {
       this.darkMode = !this.darkMode

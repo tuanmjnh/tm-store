@@ -6,6 +6,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'root',
     // redirect: '/appRoot',
+    // redirect: import.meta.env.VITE_HOME_PATH,
     component: Layout,
     children: [],
   },

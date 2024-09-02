@@ -1,16 +1,19 @@
-// import { useRouteStore } from './index.ts.bak'
+import { http } from '@/utils/http-axios'
 import { router } from '@/router'
 import { local } from '@/utils/storage'
 import { IUser } from './interfaces/user'
 
 interface AuthStatus {
   user: IUser | null
+  routes: Array<string>
   token: string
 }
+const API_PATH = 'auth'
 export const useAuthStore = defineStore('auth-store', {
   state: (): AuthStatus => {
     return {
       user: local.get('user'),
+      routes: [],
       token: local.get('accessToken') || '',
     }
   },
@@ -21,6 +24,39 @@ export const useAuthStore = defineStore('auth-store', {
     },
   },
   actions: {
+    async verify(arg) {
+      let rs = null
+      try {
+        // api.post(`/${NAMESPACED}`, arg).then(x => {
+        //   console.log(x)
+        // })
+        if (arg) rs = await http.axiosInstance.post(`/${API_PATH}`, arg)
+        else rs = await http.axiosInstance.get(`/${API_PATH}`, { arg } as any)
+        console.log(rs)
+        // if (rs) {
+        //   if (rs.token) this.token = rs.token
+        //   if (rs.user) {
+        //     this.user = rs.user
+        //     if (rs.user.routes) {
+        //       const routes = await generateRoutes(rs.user.routes)
+        //       for await (const r of routes) {
+        //         Router.addRoute(r)
+        //       }
+        //       this.routes = routes
+        //     }
+        //   }
+        // } else {
+        //   this.token = null
+        //   this.user = null
+        //   this.routes = []
+        //   resetRouter()
+        // }
+        return rs
+      } catch (e) {
+        console.log(e)
+        return rs
+      }
+    },
     /* Log in and out, reset user information, etc. */
     async logout() {
       const route = unref(router.currentRoute)

@@ -29,7 +29,7 @@ const configDefault = {
     "Content-Type": ContentTypeEnum.JSON
   },
   timeout: 0,
-  baseURL: import.meta.env.VITE_APP_API,
+  baseURL: import.meta.env.VITE_BASE_API,
   data: {}
 };
 
@@ -124,10 +124,10 @@ class Http {
       }
     );
   }
-  public axiosInstance
+
   constructor(config: AxiosRequestConfig) {
     Http.axiosConfigDefault = config;
-    this.axiosInstance = Http.axiosInstance = Axios.create(config);
+    Http.axiosInstance = Axios.create(config);
     this.httpInterceptorsRequest();
     this.httpInterceptorsResponse();
   }

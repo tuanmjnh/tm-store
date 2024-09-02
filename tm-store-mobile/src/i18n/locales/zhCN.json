@@ -3,7 +3,7 @@
     "title": "中国人",
     "order": 3
   },
-  "common": {
+  "global": {
     "confirm": "确认",
     "cancel": "取消",
     "reload": "刷新",
@@ -12,6 +12,9 @@
     "navigate": "切换",
     "inputPlaceholder": "请输入",
     "selectPlaceholder": "请选择"
+  },
+  "language": {
+    "switchTitle": "更改语言"
   },
   "app": {
     "loginOut": "退出登录",
@@ -96,13 +99,13 @@
   },
   "login": {
     "signInTitle": "登录",
-    "accountPlaceholder": "输入账号",
-    "passwordPlaceholder": "输入密码",
+    "username": "用户名",
+    "password": "密码",
     "accountRuleTip": "请输入账户",
     "passwordRuleTip": "请输入密码",
     "or": "其他",
     "signIn": "登录",
-    "rememberMe": "记住我",
+    "remember": "记住我",
     "forgotPassword": "忘记密码？",
     "signUp": "注册",
     "noAccountText": "你没有账户？",
@@ -118,6 +121,7 @@
     "resetPassword": "重置密码"
   },
   "route": {
+    "login": "登录",
     "appRoot": "首页",
     "dashboard": "仪表盘",
     "workbench": "工作台",
