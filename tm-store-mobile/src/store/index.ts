@@ -7,9 +7,9 @@ export * from './auth'
 // export * from './router'
 // export * from './tab'
 
-const store = createPinia();
-store.use(piniaPluginPersistedstate)
-export { store };
+// const store = createPinia();
+// store.use(piniaPluginPersistedstate)
+// export { store };
 
 // Install the pinia global state library
 export function installPinia(app: App) {

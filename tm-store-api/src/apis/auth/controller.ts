@@ -40,7 +40,7 @@ export class AuthController {
         else {
           rs.routes = await this.getAuthRoutes(rs.roles)
           // fix date
-          rs.dateBirth = moment(rs.dateBirth).format('YYYY-MM-DD')
+          // rs.dateBirth = moment(rs.dateBirth).format('YYYY-MM-DD')
           return res.status(200).json({ data: rs, message: 'verify' })
         }
       }
@@ -65,7 +65,7 @@ export class AuthController {
         // not exist username
         if (!rs) return res.status(502).json({ msg: 'no_exist' })
         // check password
-        if (rs.password !== SHA256(req.body.password + rs.salt)) { return res.status(503).json({ msg: 'no_exist' }) }
+        if (rs.password !== SHA256(req.body.password + rs.salt)) return res.status(503).json({ msg: 'no_exist' })
         // check lock
         if (!rs.enable) return res.status(504).json({ msg: 'locked' })
         // Routes
@@ -79,7 +79,7 @@ export class AuthController {
       }
       // Token
       const token = sign({ _id: rs._id, code: rs.username }, SECRET_KEY, { expiresIn: '24h' })
-      if (rs) return res.status(200).json({ token, data: rs, routes: routes, message: 'login' })
+      if (rs) return res.status(200).json({ accessToken: token, data: rs, routes: routes, message: 'login' })
       else return next(new HttpException(401, 'wrongToken'))
     } catch (error) {
       next(error)

@@ -1,4 +1,4 @@
-const STORAGE_PREFIX = import.meta.env.RENDERER_VITE_STORAGE_PREFIX
+const STORAGE_PREFIX = import.meta.env.RENDERER_VITE_STORAGE_PREFIX || ''
 
 interface StorageData {
   value: any

@@ -14,6 +14,7 @@
     "selectPlaceholder": "Please select"
   },
   "language": {
+    "title": "Language",
     "switchTitle": "Change language"
   },
   "app": {
@@ -21,6 +22,7 @@
     "loginOutTitle": "Logout",
     "loginOutContent": "Confirm to log out of the current account?",
     "userCenter": "Personal Center",
+    "darkMode": "Dark Mode",
     "lignt": "Light",
     "dark": "Dark",
     "system": "Follow the system",
@@ -32,6 +34,7 @@
     "notifications": "Notification",
     "messages": "Message",
     "todos": "To do",
+    "search": "Search",
     "searchPlaceholder": "Search page/path",
     "resetSettingTitle": "Reset settings",
     "resetSettingContent": "Are you sure to reset all settings?",
@@ -120,8 +123,19 @@
     "resetPasswordRuleTip": "Please enter your account/mobile number",
     "resetPassword": "Reset Password"
   },
+  "user": {
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "email": "Email",
+    "dateBirth": "Date of Birth",
+    "personNumber": "Identification Number",
+    "gender": "Gender",
+    "address": "Address",
+    "verify": "Verify"
+  },
   "route": {
     "login": "Log in",
+    "root": "Home",
     "appRoot": "Home",
     "dashboard": "Dashboard",
     "workbench": "Workbench",
@@ -161,8 +175,39 @@
     "dictionarySetting": "Dictionary Settings",
     "menuSetting": "Menu Settings",
     "userCenter": "Personal Center",
+    "profile": "Profile",
+    "search": "Search",
     "about": "About",
     "cascader": "Provincial, Municipal and District Linkage",
     "dict": "Dictionary Example"
+  },
+  "dayWeek": {
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday",
+    "7": "Sunday"
+  },
+  "quarter": {
+    "1": "Quarter 1",
+    "2": "Quarter 2",
+    "3": "Quarter 3",
+    "4": "Quarter 4"
+  },
+  "month": {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
   }
 }

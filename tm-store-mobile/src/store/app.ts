@@ -1,4 +1,4 @@
-import { local } from '@/utils/storage'
+// import { local } from '@/utils/storage'
 import { setLocale } from '@/i18n'
 export type TransitionAnimation = '' | 'fade-slide' | 'fade-bottom' | 'fade-scale' | 'zoom-fade' | 'zoom-out'
 export type LayoutMode = 'leftMenu' | 'topMenu' | 'mixMenu'
@@ -12,33 +12,80 @@ const { isFullscreen, toggle } = useFullscreen(docEle)
 const { system, store } = useColorMode({
   emitAuto: true,
 })
+// these APIs are auto-imported from @vueuse/core
+// export const isDark = useDark()
+// export const toggleDark = useToggle(isDark)
+// export const preferredDark = usePreferredDark()
 
-export const useAppStore = defineStore('app-store', {
-  persist: true,
-  state: () => {
-    return {
-      darkMode: false,
-      colorWeak: false,
-      showLogo: true,
-      showProgress: true,
-      showBreadcrumb: true,
-      showBreadcrumbIcon: true,
-      showSetting: false,
-      contentFullScreen: false,
-      languages: [],
-      language: VITE_APP_DEFAULT_LANG as string,
-      transitionAnimation: 'fade-slide' as TransitionAnimation,
-      loading: {
-        get: false,
-        post: false,
-        put: false,
-        patch: false,
-        delete: false
-      },
-      routes: [],
-      cacheRoutes: []
+const settings = {
+  darkMode: false,
+  language: 'vi-VN',
+  unitPrice: 'vnd',
+  font: {
+    size: 14,
+    family: '"Roboto", "-apple-system", "Helvetica Neue", Helvetica, Arial, sans-serif',
+    color: '#6b6b6b',
+    lineHeight: 1.5
+  },
+  format: {
+    date: 'DD/MM/YYYY',
+    time: 'hh:mm:ss a',
+    dateTime: {
+      date: 'DD/MM/YYYY',
+      time: 'hh:mm:ss a'
     }
   },
+  dialog: {
+    add: true,
+    edit: true,
+    import: true
+  },
+  dense: {
+    form: true,
+    button: true,
+    input: true,
+    table: true,
+    menu: false
+  },
+  shadow: {
+    table: false
+  }
+}
+export const useAppStore = defineStore('appStore', {
+  persist: true, //{
+  // storage: localStorage,
+  // key: 'app-store',
+  //},//{ storage: localStorage }
+  state: () => ({// useLocalStorage('app-store', {
+    darkMode: isDark,
+    colorWeak: false,
+    showLogo: true,
+    showProgress: true,
+    showBreadcrumb: true,
+    showBreadcrumbIcon: true,
+    showSetting: false,
+    contentFullScreen: false,
+    filter: '',
+    isLeftMenu: false,
+    rowsPerPageOptions: [10, 20, 50, 100, 200, 0],
+    languages: [],
+    language: VITE_APP_DEFAULT_LANG as string,
+    transitionAnimation: 'fade-slide' as TransitionAnimation,
+    loading: {
+      get: false,
+      post: false,
+      put: false,
+      patch: false,
+      delete: false
+    },
+    routes: [],
+    cacheRoutes: [],
+    format: {
+      date: settings.format.date,
+      time: settings.format.time,
+      dateTime: settings.format.dateTime,
+    }
+  }),
   getters: {
     storeColorMode() {
       return store.value
@@ -73,11 +120,14 @@ export const useAppStore = defineStore('app-store', {
     },
     setLanguage(lang) {//App.lang
       setLocale(lang)
-      local.set('lang', lang)
+      // local.set('lang', lang)
       this.language = lang
     },
     setDarkMode() {
-      this.darkMode = !this.darkMode
+      // const toggleDark = useToggle(this.darkMode)
+      // toggleDark()
+      // useToggle(this.darkMode)
+      // this.darkMode = !this.darkMode
     },
     setColorMode(mode: 'light' | 'dark' | 'auto') {
       store.value = mode
@@ -117,5 +167,9 @@ export const useAppStore = defineStore('app-store', {
       docEle.value.classList.toggle('gray-mode')
       this.grayMode = docEle.value.classList.contains('gray-mode')
     },
+    // easily reset state using `$reset`
+    clear() {
+      this.$reset()
+    }
   }
 })

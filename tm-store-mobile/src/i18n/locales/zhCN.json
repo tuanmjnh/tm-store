@@ -14,6 +14,7 @@
     "selectPlaceholder": "请选择"
   },
   "language": {
+    "title": "语言",
     "switchTitle": "更改语言"
   },
   "app": {
@@ -21,6 +22,7 @@
     "loginOutTitle": "退出登录",
     "loginOutContent": "确认退出当前账号？",
     "userCenter": "个人中心",
+    "darkMode": "暗黑模式",
     "lignt": "浅色",
     "dark": "深色",
     "system": "跟随系统",
@@ -32,6 +34,7 @@
     "notifications": "通知",
     "messages": "消息",
     "todos": "待办",
+    "search": "搜索",
     "searchPlaceholder": "搜索页面/路径",
     "resetSettingTitle": "重置设置",
     "resetSettingContent": "确认重置所有设置？",
@@ -64,7 +67,7 @@
     "closeRight": "关闭右侧",
     "closeAll": "全部关闭",
     "backHome": "回到首页",
-    "getRouteError": "获取路由失败，请稍后再试",
+    "getRouteError": "获取路由失败,请稍后再试",
     "layoutSetting": "布局设置",
     "leftMenu": "左侧菜单",
     "topMenu": "顶部菜单",
@@ -120,8 +123,19 @@
     "resetPasswordRuleTip": "请输入账号/手机号码",
     "resetPassword": "重置密码"
   },
+  "user": {
+    "fullName": "全名",
+    "phone": "电话号码",
+    "email": "电子邮件",
+    "dateBirth": "出生日期",
+    "personNumber": "身份证号码",
+    "gender": "性别",
+    "address": "地址",
+    "verify": "验证"
+  },
   "route": {
     "login": "登录",
+    "root": "首页",
     "appRoot": "首页",
     "dashboard": "仪表盘",
     "workbench": "工作台",
@@ -161,8 +175,39 @@
     "dictionarySetting": "字典设置",
     "menuSetting": "菜单设置",
     "userCenter": "个人中心",
+    "profile": "轮廓",
+    "search": "搜索",
     "about": "关于",
     "cascader": "省市区联动",
     "dict": "字典示例"
+  },
+  "dayWeek": {
+    "1": "星期一",
+    "2": "星期二",
+    "3": "星期三",
+    "4": "星期四",
+    "5": "星期五",
+    "6": "星期六",
+    "7": "星期日"
+  },
+  "quarter": {
+    "1": "第 1 季度",
+    "2": "第 2 季度",
+    "3": "第 3 季度",
+    "4": "第 4 季度"
+  },
+  "month": {
+    "1": "一月",
+    "2": "二月",
+    "3": "三月",
+    "4": "四月",
+    "5": "五月",
+    "6": "六月",
+    "7": "七月",
+    "8": "八月",
+    "9": "九月",
+    "10": "十月",
+    "11": "十一月",
+    "12": "十二月"
   }
 }

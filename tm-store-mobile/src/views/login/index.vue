@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppStore, useAuthStore } from '@/store'
-import switchLanguage from "@/components/common/switchLanguage.vue";
-import switchDarkMode from "@/components/common/switchDarkMode.vue";
+import switchLanguage from "@/components/switchLanguage.vue";
+import switchDarkMode from "@/components/switchDarkMode.vue";
 // library core
 const $route = useRoute()
 const $router = useRouter()
@@ -16,20 +16,20 @@ const data = ref({
   password: 'Bk123456@',
   remember: true
 })
-const passwordType = ref('password')
+const isPassword = ref(true)
 const isCapsTooltip = ref(false)
 
 // Return data for html
 const onSetGlobalData = () => {
   return new Promise(async (resolve, reject) => {
-    if (storeAuth.user) {
-      if (!$store.state.types.items) await $store.dispatch('types/getAll')// .then(() => { console.log(store.state.types.items) })
+    if (storeAuth.userInfo) {
+      // if (!$store.state.types.items) await $store.dispatch('types/getAll')// .then(() => { console.log(store.state.types.items) })
       // if (!$store.state.roles.items) await $store.dispatch('roles/getAll')// .then(() => { console.log(store.state.roles.items) })
     }
     return resolve(true)
   })
 }
-const onCheckCapslock = ({ shiftKey, key } = {}) => {
+const onCheckCapslock = ({ shiftKey, key } = {} as any) => {
   if (key && key.length === 1) {
     if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) isCapsTooltip.value = true
     else isCapsTooltip.value = false
@@ -40,7 +40,7 @@ const onSubmit = async () => {
   storeAuth.verify(data.value).then(async rs => {
     if (rs) {
       const redirect = $route.query && $route.query.redirect ? $route.query.redirect : '/'
-      $router.push(redirect).catch((e) => { })
+      $router.push(redirect.toString()).catch((e) => { })
       await onSetGlobalData()
     }
   })
@@ -62,11 +62,12 @@ const onSubmit = async () => {
         <!-- <van-field :label="AppName"></van-field> -->
         <van-field v-model="data.username" name="Username" :label="$t('login.username')"
           :placeholder="$t('login.username')" :rules="[{ required: true, message: 'Username is required' }]" />
-        <van-field v-model="data.password" :type="passwordType" name="Password" :label="$t('login.password')"
-          :placeholder="$t('login.password')" :rules="[{ required: true, message: 'Password is required' }]">
+        <van-field v-model="data.password" :type="isPassword ? 'password' : 'text'" name="Password"
+          :label="$t('login.password')" :placeholder="$t('login.password')"
+          :rules="[{ required: true, message: 'Password is required' }]">
           <template #right-icon>
-            <van-icon v-if="passwordType === 'password'" name="closed-eye" @click="passwordType = 'text'" />
-            <van-icon v-else name="eye-o" @click="passwordType = 'password'" />
+            <van-icon v-if="isPassword" name="closed-eye" @click="isPassword = false" />
+            <van-icon v-else name="eye-o" @click="isPassword = true" />
           </template>
         </van-field>
         <van-field name="checkbox" :label="$t('login.remember')">

@@ -14,6 +14,7 @@
     "selectPlaceholder": "Hãy chọn"
   },
   "language": {
+    "title": "Ngôn ngữ",
     "switchTitle": "Thay đổi ngôn ngữ"
   },
   "app": {
@@ -21,6 +22,7 @@
     "loginOutTitle": "Đăng xuất",
     "loginOutContent": "Xác nhận đăng xuất khỏi tài khoản hiện tại?",
     "userCenter": "Trung tâm cá nhân",
+    "darkMode": "Chế độ tối",
     "lignt": "Màu sáng",
     "dark": "Tối",
     "system": "Tuân theo hệ thống",
@@ -32,6 +34,7 @@
     "notifications": "Thông báo",
     "messages": "Tin nhắn",
     "todos": "Việc cần làm",
+    "search":"Tìm kiếm",
     "searchPlaceholder": "Trang/đường dẫn tìm kiếm",
     "resetSettingTitle": "Đặt lại cài đặt",
     "resetSettingContent": "Bạn có chắc chắn muốn đặt lại tất cả cài đặt không?",
@@ -120,8 +123,19 @@
     "resetPasswordRuleTip": "Vui lòng nhập tài khoản/số điện thoại di động của bạn",
     "resetPassword": "Đặt lại mật khẩu"
   },
+  "user": {
+    "fullName": "Tên đầy đủ",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "dateBirth": "Ngày sinh",
+    "personNumber": "Số định danh",
+    "gender": "Giới tính",
+    "address": "Địa chỉ",
+    "verify": "Xác thực"
+  },
   "route": {
     "login": "Đăng nhập",
+    "root": "Trang chủ",
     "appRoot": "Trang chủ",
     "dashboard": "Bảng điều khiển",
     "workbench": "Bàn làm việc",
@@ -161,8 +175,39 @@
     "dictionarySetting": "Cài đặt từ điển",
     "menuSetting": "Cài đặt menu",
     "userCenter": "Trung tâm cá nhân",
+    "profile": "Hồ sơ",
+    "search": "Tìm kiếm",
     "about": "Về",
     "cascader": "Mối liên kết giữa tỉnh và thành phố",
     "dict": "Ví dụ về từ điển"
+  },
+  "dayWeek": {
+    "1": "Thứ 2",
+    "2": "Thứ 3",
+    "3": "Thứ 4",
+    "4": "Thứ 5",
+    "5": "Thứ 6",
+    "6": "Thứ 7",
+    "7": "Chủ nhật"
+  },
+  "quarter": {
+    "1": "Quý 1",
+    "2": "Quý 2",
+    "3": "Quý 3",
+    "4": "Quý 4"
+  },
+  "month": {
+    "1": "Tháng 1",
+    "2": "Tháng 2",
+    "3": "Tháng 3",
+    "4": "Tháng 4",
+    "5": "Tháng 5",
+    "6": "Tháng 6",
+    "7": "Tháng 7",
+    "8": "Tháng 8",
+    "9": "Tháng 9",
+    "10": "Tháng 10",
+    "11": "Tháng 11",
+    "12": "Tháng 12"
   }
 }

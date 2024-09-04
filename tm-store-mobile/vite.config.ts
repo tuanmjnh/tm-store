@@ -39,7 +39,8 @@ export default defineConfig(({ mode }) => {
           'vue-i18n'
         ],
         include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],
-        dts: 'src/typings/auto-imports.d.ts'
+        dts: 'src/typings/auto-imports.d.ts',
+        dirs: ['src/composables']
       }),
       // vant 组件自动按需引入
       Components({

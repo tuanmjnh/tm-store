@@ -1,13 +1,12 @@
-'use strict';
-var property = require('nested-property');
-var keyBy = require('lodash.keyby');
+import property from 'nested-property';
+import keyBy from 'lodash.keyby';
 
 function createTree(array, rootNodes, customID, childrenProperty) {
-  var tree = [];
+  const tree = [];
 
-  for (var rootNode in rootNodes) {
-    var node = rootNodes[rootNode];
-    var childNode = array[node[customID]];
+  for (const rootNode in rootNodes) {
+    const node = rootNodes[rootNode];
+    const childNode = array[node[customID]];
 
     if (!node && !rootNodes.hasOwnProperty(rootNode)) {
       continue;
@@ -29,10 +28,10 @@ function createTree(array, rootNodes, customID, childrenProperty) {
 }
 
 function groupByParents(array, options) {
-  var arrayByID = keyBy(array, options.customID);
+  const arrayByID = keyBy(array, options.customID);
 
   return array.reduce(function (prev, item) {
-    var parentID = property.get(item, options.parentProperty);
+    let parentID = property.get(item, options.parentProperty);
     if (!parentID || !arrayByID.hasOwnProperty(parentID)) {
       parentID = options.rootID;
     }
@@ -99,7 +98,7 @@ export const arrayToTree = (data, options) => {
     throw new TypeError('Expected an array but got an invalid argument');
   }
 
-  var grouped = groupByParents(deepClone(data), options);
+  const grouped = groupByParents(deepClone(data), options);
   return createTree(
     grouped,
     grouped[options.rootID],

@@ -4,6 +4,7 @@ import { local } from '@/utils/storage'
 import { router } from '@/router'
 import { staticRoutes } from '@/router/routes.static'
 import { useAuthStore } from '@/store/auth'
+import { arrayToTree } from '@/utils/tree'
 
 interface RoutesStatus {
   isInitAuthRoute: boolean
@@ -28,8 +29,8 @@ export const useRouteStore = defineStore('route-store', {
       this.$reset()
     },
     resetRoutes() {
-      if (router.hasRoute('appRoot'))
-        router.removeRoute('appRoot')
+      if (router.hasRoute('root'))
+        router.removeRoute('root')
     },
     // set the currently highlighted menu key
     setActiveMenu(key: string) {

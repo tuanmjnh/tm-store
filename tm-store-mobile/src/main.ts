@@ -2,8 +2,9 @@ import { createApp } from "vue";
 import { i18n } from './i18n'
 import { installRouter } from '@/router'
 import { installPinia } from '@/store'
+// import { store } from '@/store'
 import AppVue from './App.vue'
-import AppLoading from './components/common/AppLoading.vue'
+import AppLoading from './components/AppLoading.vue'
 // normalize.css
 import "normalize.css/normalize.css";
 // 全局样式
@@ -23,6 +24,7 @@ async function setupApp() {
 
   // Registration module Pinia
   await installPinia(app)
+  // app.use(store)
 
   // Register Module Vue-router
   await installRouter(app)

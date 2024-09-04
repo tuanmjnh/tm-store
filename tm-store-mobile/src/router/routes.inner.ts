@@ -1,12 +1,25 @@
 import type { RouteRecordRaw } from 'vue-router'
 import Layout from "@/layouts/index.vue";
+const { VITE_APP_HOME_PATH } = import.meta.env
 /* Some fixed routes in the page, error pages, etc. */
+export const rootRoute: RouteRecordRaw = {
+  path: '/appRoot',
+  name: 'appRoot',
+  redirect: VITE_APP_HOME_PATH,
+  component: Layout,
+  meta: {
+    title: '',
+    icon: 'icon-park-outline:home',
+  },
+  children: [],
+}
+
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'root',
     // redirect: '/appRoot',
-    // redirect: import.meta.env.VITE_HOME_PATH,
+    redirect: VITE_APP_HOME_PATH,
     component: Layout,
     children: [],
   },
@@ -49,13 +62,14 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/:pathMatch(.*)*',
+    path: '/:catchAll(.*)*',
+    //path: '/:pathMatch(.*)*',
     component: () => import('@/views/error/404/index.vue'),
     name: '404',
     meta: {
       title: 'Page Not Found',
       icon: 'icon-park-outline:ghost',
       withoutTab: true,
-    },
+    }
   }
 ]

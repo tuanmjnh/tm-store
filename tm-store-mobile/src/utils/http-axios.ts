@@ -2,6 +2,7 @@ import Axios, { type AxiosInstance, type AxiosError, type AxiosResponse, type Ax
 import NProgress from "./progress";
 import { showFailToast } from "vant";
 import "vant/es/toast/style";
+import { local } from '@/utils/storage'
 
 /**
  * @description: ContentType
@@ -60,20 +61,13 @@ class Http {
   // Response Interception
   private httpInterceptorsResponse(): void {
     Http.axiosInstance.interceptors.response.use(
-      (response: AxiosResponse) => {
+      (res: AxiosResponse) => {
         NProgress.done();
+        // Add access-token to headers
+        const accessToken = local.get('access-token')
+        if (accessToken) res.headers['x-access-token'] = `Bearer ${accessToken}`;
         // The return fields of the contract with the backend
-        const { code, result } = response.data;
-        // const { message } = response.data;
-        // Determine whether the request is successful
-        const isSuccess = result && Reflect.has(response.data, "code")
-        if (isSuccess) {
-          return result;
-        } else {
-          // Handling request errors
-          // showFailToast(message);
-          return Promise.reject(response.data);
-        }
+        return res.data
       },
       (error: AxiosError) => {
         NProgress.done();

@@ -4,23 +4,24 @@ import { local } from '@/utils/storage'
 import { IUser } from './interfaces/user'
 
 interface AuthStatus {
-  user: IUser | null
+  userInfo: IUser | null
+  accessToken: string,
   routes: Array<string>
-  token: string
 }
 const API_PATH = 'auth'
-export const useAuthStore = defineStore('auth-store', {
+export const useAuthStore = defineStore('authStore', {
+  // persist: true,
   state: (): AuthStatus => {
     return {
-      user: local.get('user'),
-      routes: [],
-      token: local.get('accessToken') || '',
+      userInfo: local.get('user-info'),
+      accessToken: local.get('access-token') || '',
+      routes: []
     }
   },
   getters: {
     /** Are you logged in? */
     isLogin(state) {
-      return Boolean(state.token)
+      return Boolean(state.accessToken)
     },
   },
   actions: {
@@ -32,25 +33,12 @@ export const useAuthStore = defineStore('auth-store', {
         // })
         if (arg) rs = await http.axiosInstance.post(`/${API_PATH}`, arg)
         else rs = await http.axiosInstance.get(`/${API_PATH}`, { arg } as any)
-        console.log(rs)
-        // if (rs) {
-        //   if (rs.token) this.token = rs.token
-        //   if (rs.user) {
-        //     this.user = rs.user
-        //     if (rs.user.routes) {
-        //       const routes = await generateRoutes(rs.user.routes)
-        //       for await (const r of routes) {
-        //         Router.addRoute(r)
-        //       }
-        //       this.routes = routes
-        //     }
-        //   }
-        // } else {
-        //   this.token = null
-        //   this.user = null
-        //   this.routes = []
-        //   resetRouter()
-        // }
+        if (rs) {
+          this.handleLoginInfo(rs)
+        } else {
+          this.clearAuthStorage()
+          this.resetRouter()
+        }
         return rs
       } catch (e) {
         console.log(e)
@@ -77,36 +65,24 @@ export const useAuthStore = defineStore('auth-store', {
         })
       }
     },
-    clearAuthStorage() {
-      local.remove('accessToken')
-      local.remove('refreshToken')
-      local.remove('userInfo')
-    },
-
-    /* User login */
-    async login(userName: string, password: string) {
-      try {
-        // const { isSuccess, data } = await fetchLogin({ userName, password })
-        // if (!isSuccess)
-        //   return
-
-        // Handling Login Information
-        // await this.handleLoginInfo(data)
-      }
-      catch (e) {
-        console.warn('[Login Error]:', e)
-      }
-    },
-
     /* Processing the data returned by login */
-    async handleLoginInfo(data) {
+    async handleLoginInfo(val) {
       // Save token and userInfo
-      local.set('userInfo', data)
-      local.set('accessToken', data.accessToken)
-      local.set('refreshToken', data.refreshToken)
-      this.token = data.accessToken
-      this.userInfo = data
-
+      if (val.data) {
+        this.userInfo = val.data
+        local.set('user-info', val.data)
+      }
+      if (val.accessToken) {
+        this.accessToken = val.accessToken
+        local.set('access-token', val.accessToken)
+      }
+      if (val.routes) {
+        this.routes = val.routes
+        local.set('routes', val.routes)
+      }
+      if (val.refreshToken) {
+        local.set('refresh-token', val.refreshToken)
+      }
       // Adding Routes and Menus
       // const routeStore = useRouteStore()
       // await routeStore.initAuthRoute()
@@ -118,5 +94,19 @@ export const useAuthStore = defineStore('auth-store', {
         path: query.redirect || '/',
       })
     },
-  },
+    clearAuthStorage() {
+      local.remove('access-token')
+      local.remove('refresh-token')
+      local.remove('user-info')
+      local.remove('routes')
+      this.accessToken = null
+      this.userInfo = null
+      this.routes = []
+
+    },
+    resetRoutes() {
+      if (router.hasRoute('root'))
+        router.removeRoute('root')
+    },
+  }
 })

@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import tabbar from "@/components/Tabbar/index.vue";
-import NavBar from "@/components/NavBar/index.vue";
+// import { computed } from "vue";
+import tabbar from "@/components/tabBar.vue";
+import NavBar from "@/components/navBar.vue";
+import leftMenu from "@/components/leftMenu.vue";
+
 // import { useCachedViewStoreHook } from "@/store/modules/cachedView";
 // import { useDarkMode } from "@/hooks/useToggleDarkMode";
-import { computed } from "vue";
 
 // const cachedViews = computed(() => {
 //   return useCachedViewStoreHook().cachedViewList;
@@ -11,12 +13,20 @@ import { computed } from "vue";
 </script>
 
 <template>
+  <leftMenu />
   <nav-bar />
-  <router-view v-slot="{ Component }">
-    <!-- <keep-alive :include="cachedViews"> -->
-      <component :is="Component" />
+  <router-view v-slot="{ Component, route }">
+    <!-- <transition :name="routeTransitionName"> -->
+    <!-- <keep-alive :include="keepAliveRouteNames"> -->
+    <component :is="Component" :key="route.name" />
     <!-- </keep-alive> -->
+    <!-- </transition> -->
   </router-view>
+  <!-- <router-view v-slot="{ Component }"> -->
+  <!-- <keep-alive :include="cachedViews"> -->
+  <!-- <component :is="Component" /> -->
+  <!-- </keep-alive> -->
+  <!-- </router-view> -->
   <tabbar />
 </template>
 

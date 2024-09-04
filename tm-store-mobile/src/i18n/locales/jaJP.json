@@ -14,13 +14,15 @@
     "selectPlaceholder": "ヴイロンチョン"
   },
   "language": {
-    "switchTitle": "Thay đổi ngôn ngữ"
+    "title": "言語",
+    "switchTitle": "言語を変更する"
   },
   "app": {
     "loginOut": "ログアウト",
     "loginOutTitle": "ログアウト",
     "loginOutContent": "現在のアカウントからログアウトすることを確認しますか？",
     "userCenter": "パーソナル センター",
+    "darkMode": "ダークモード",
     "lignt": "ライト",
     "dark": "ダーク",
     "system": "システムに従う",
@@ -32,6 +34,7 @@
     "notifications": "通知",
     "messages": "メッセージ",
     "todos": "やること",
+    "search": "検索",
     "searchPlaceholder": "ページ/パスを検索",
     "resetSettingTitle": "設定をリセット",
     "resetSettingContent": "すべての設定をリセットしてもよろしいですか？",
@@ -120,8 +123,19 @@
     "resetPasswordRuleTip": "アカウント/携帯電話番号を入力してください",
     "resetPassword": "パスワードをリセット"
   },
+  "user": {
+    "fullName": "氏名",
+    "phone": "電話番号",
+    "email": "メールアドレス",
+    "dateBirth": "生年月日",
+    "personNumber": "識別番号",
+    "gender": "性別",
+    "address": "住所",
+    "verify": "確認"
+  },
   "route": {
     "login": "ログイン",
+    "root": "ホーム",
     "appRoot": "ホーム",
     "dashboard": "ダッシュボード",
     "workbench": "ワークベンチ",
@@ -161,8 +175,39 @@
     "dictionarySetting": "辞書設定",
     "menuSetting": "メニュー設定",
     "userCenter": "パーソナル センター",
+    "profile": "プロフィール",
+    "search": "検索",
     "about": "概要",
     "cascader": "州、市、地区のリンク",
     "dict": "辞書の例"
+  },
+  "dayWeek": {
+    "1": "月曜日",
+    "2": "火曜日",
+    "3": "水曜日",
+    "4": "木曜日",
+    "5": "金曜日",
+    "6": "土曜日",
+    "7": "日曜日"
+  },
+  "quarter": {
+    "1": "四半期 1",
+    "2": "四半期 2",
+    "3": "四半期 3",
+    "4": "四半期 4"
+  },
+  "month": {
+    "1": "1月",
+    "2": "2月",
+    "3": "3月",
+    "4": "4月",
+    "5": "5月",
+    "6": "6月",
+    "7": "7月",
+    "8": "8月",
+    "9": "9月",
+    "10": "10月",
+    "11": "11月",
+    "12": "12月"
   }
 }

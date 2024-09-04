@@ -1,18 +1,11 @@
-@import "./variables.scss";
+@import './variables.scss';
 
 body {
   height: 100%;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family:
-    Helvetica Neue,
-    Helvetica,
-    PingFang SC,
-    Hiragino Sans GB,
-    Microsoft YaHei,
-    Arial,
-    sans-serif;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
   color: var(--van-text-color);
   background-color: var(--color-background-2);
 }
@@ -93,16 +86,14 @@ a:hover {
   text-decoration: none;
 }
 
-[data-theme="dark"] {
-
+[data-theme='dark'] {
   &,
   * {
     color-scheme: dark !important;
   }
 }
 
-[data-theme="light"] {
-
+[data-theme='light'] {
   &,
   * {
     color-scheme: light !important;
@@ -175,4 +166,12 @@ a:hover {
 
 .van-action-sheet__cancel {
   font-size: var(--van-font-size-md) !important;
+}
+
+.van-cell-group {
+  &.cell-left {
+    .van-cell__title {
+      text-align: left;
+    }
+  }
 }
