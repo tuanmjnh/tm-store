@@ -1,8 +1,9 @@
 <script setup lang="ts">
 // import { computed } from "vue";
-import tabbar from "@/components/tabBar.vue";
-import NavBar from "@/components/navBar.vue";
-import leftMenu from "@/components/leftMenu.vue";
+import tabbar from "@/layouts/components/tabBar.vue";
+import NavBar from "@/layouts/components/navBar.vue";
+import leftMenu from "@/layouts/components/leftMenu.vue";
+// import leftMenuTW from "@/components/leftMenuTW.vue";
 
 // import { useCachedViewStoreHook } from "@/store/modules/cachedView";
 // import { useDarkMode } from "@/hooks/useToggleDarkMode";
@@ -22,6 +23,8 @@ import leftMenu from "@/components/leftMenu.vue";
     <!-- </keep-alive> -->
     <!-- </transition> -->
   </router-view>
+  <!-- <left-menuTW /> -->
+
   <!-- <router-view v-slot="{ Component }"> -->
   <!-- <keep-alive :include="cachedViews"> -->
   <!-- <component :is="Component" /> -->

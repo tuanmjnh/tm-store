@@ -179,7 +179,8 @@ export const staticRoutes: RouteRecordRaw[] = [
       icon: 'icon-park-outline:list',
       menuType: 'page',
       parent: 'news-list',
-       level: 2,
+      level: 2,
+      hide: true
     }
   },
   {
@@ -193,6 +194,7 @@ export const staticRoutes: RouteRecordRaw[] = [
       menuType: 'page',
       parent: 'news-list',
       level: 2,
+      hide: true
     }
   }
 ]

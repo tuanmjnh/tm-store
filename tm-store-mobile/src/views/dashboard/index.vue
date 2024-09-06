@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import leftMenu from "@/components/leftMenu.vue";
+import leftMenu from "@/layouts/components/leftMenu.vue";
 import Chart from '@/components/charts/index.vue'
 import { $t } from '@/i18n'
 

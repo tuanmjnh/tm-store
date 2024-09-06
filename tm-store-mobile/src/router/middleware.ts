@@ -6,14 +6,14 @@ import NProgress from "@/utils/progress";
 import { initAuthRoutes } from '@/router'
 
 export function initMiddleware(router: Router) {
-  const appStore = useAppStore()
-  const authStore = useAuthStore()
+  // const appStore = useAppStore()
+  // const authStore = useAuthStore()
   router.beforeEach(async (to, from, next) => {
     // Determine whether it is an external link. If it is, open the web page directly and intercept the jump
-    if (to.meta.href) {
-      window.open(to.meta.href)
-      return false
-    }
+    // if (to.meta.href) {
+    //   window.open(to.meta.href)
+    //   return false
+    // }
     // start loadingBar
     NProgress.start();
 
@@ -53,10 +53,11 @@ export function initMiddleware(router: Router) {
 
     next()
   })
-  router.beforeResolve((to) => {
+  
+  // router.beforeResolve((to) => {
     // Set menu highlight
     // routeStore.setActiveMenu(to.meta.activeMenu ?? to.fullPath)
-  })
+  // })
 
   router.afterEach((to) => {
     // Modify the webpage title

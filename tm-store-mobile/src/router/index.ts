@@ -72,7 +72,7 @@ export const initAuthRoutes = async (authRoutes: Array<string>) => {
       if (x.meta.requiresAuth) return authRoutes.indexOf(x.name.toString()) > -1
       else return true
     })
-    rootRoute.children = rs
+    rootRoute.children = arrayToTree(rs, { parentProperty: 'meta.parent', customID: 'name' })
     router.addRoute(rootRoute)
     // return rootRoute
   }

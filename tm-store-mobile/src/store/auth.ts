@@ -41,7 +41,7 @@ export const useAuthStore = defineStore('authStore', {
         }
         return rs
       } catch (e) {
-        console.log(e)
+        // console.log(e)
         return rs
       }
     },

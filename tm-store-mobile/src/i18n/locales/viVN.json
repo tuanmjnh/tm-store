@@ -34,7 +34,7 @@
     "notifications": "Thông báo",
     "messages": "Tin nhắn",
     "todos": "Việc cần làm",
-    "search":"Tìm kiếm",
+    "search": "Tìm kiếm",
     "searchPlaceholder": "Trang/đường dẫn tìm kiếm",
     "resetSettingTitle": "Đặt lại cài đặt",
     "resetSettingContent": "Bạn có chắc chắn muốn đặt lại tất cả cài đặt không?",
@@ -145,7 +145,6 @@
     "test2Detail": "Trang chi tiết của menu đa cấp",
     "test3": "Menu đa cấp",
     "test4": "Menu đa cấp 3-1",
-    "list": "Trang danh sách",
     "commonList": "Danh sách chung",
     "cardList": "Danh sách thẻ",
     "demo": "Ví dụ về hàm",
@@ -179,7 +178,9 @@
     "search": "Tìm kiếm",
     "about": "Về",
     "cascader": "Mối liên kết giữa tỉnh và thành phố",
-    "dict": "Ví dụ về từ điển"
+    "dict": "Ví dụ về từ điển",
+    "list": "Danh sách",
+    "add": "Thêm mới"
   },
   "dayWeek": {
     "1": "Thứ 2",
