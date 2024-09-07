@@ -1,4 +1,4 @@
-import iconify from '@iconify/vue'
+import * as iconify from '@iconify/vue'
 import { Icon } from 'vant'
 
 export function renderIcon(icon?: string, props?: import('vant').IconProps) {

@@ -2,7 +2,8 @@
 // import { computed } from "vue";
 import tabbar from "@/layouts/components/tabBar.vue";
 import NavBar from "@/layouts/components/navBar.vue";
-import leftMenu from "@/layouts/components/leftMenu.vue";
+import cellMenu from "@/layouts/components/cellMenu.vue";
+// import leftMenu from "@/layouts/components/leftMenu.vue";
 // import leftMenuTW from "@/components/leftMenuTW.vue";
 
 // import { useCachedViewStoreHook } from "@/store/modules/cachedView";
@@ -14,7 +15,8 @@ import leftMenu from "@/layouts/components/leftMenu.vue";
 </script>
 
 <template>
-  <leftMenu />
+  <!-- <leftMenu /> -->
+  <cell-menu />
   <nav-bar />
   <router-view v-slot="{ Component, route }">
     <!-- <transition :name="routeTransitionName"> -->
