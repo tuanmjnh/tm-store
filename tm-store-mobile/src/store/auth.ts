@@ -11,13 +11,11 @@ interface AuthStatus {
 const API_PATH = 'auth'
 export const useAuthStore = defineStore('authStore', {
   // persist: true,
-  state: (): AuthStatus => {
-    return {
-      userInfo: local.get('user-info'),
-      accessToken: local.get('access-token') || '',
-      routes: []
-    }
-  },
+  state: (): AuthStatus => ({
+    userInfo: local.get('user-info'),
+    accessToken: local.get('access-token') || '',
+    routes: []
+  }),
   getters: {
     /** Are you logged in? */
     isLogin(state) {
@@ -25,14 +23,14 @@ export const useAuthStore = defineStore('authStore', {
     },
   },
   actions: {
-    async verify(arg) {
-      let rs = null
+    async verify(arg: any) {
+      let rs
       try {
         // api.post(`/${NAMESPACED}`, arg).then(x => {
         //   console.log(x)
         // })
         if (arg) rs = await http.axiosInstance.post(`/${API_PATH}`, arg)
-        else rs = await http.axiosInstance.get(`/${API_PATH}`, { arg } as any)
+        else rs = await http.axiosInstance.get(`/${API_PATH}`, { params: arg })
         if (rs) {
           this.handleLoginInfo(rs)
         } else {
@@ -108,5 +106,9 @@ export const useAuthStore = defineStore('authStore', {
       if (router.hasRoute('root'))
         router.removeRoute('root')
     },
+    // easily reset state using `$reset`
+    clear() {
+      this.$reset()
+    }
   }
 })

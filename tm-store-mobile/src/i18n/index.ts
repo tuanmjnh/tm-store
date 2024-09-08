@@ -38,3 +38,11 @@ export const $t = i18n.global.t
 // export function install(app: App) {
 //   app.use(i18n)
 // }
+
+//vant Locale
+import { Locale } from 'vant';
+import enUS from 'vant/es/locale/lang/en-US';
+Locale.use('en-US', enUS);
+// const currentLang = useCurrentLang();
+// console.log(currentLang.value); // --> 'en-US'
+

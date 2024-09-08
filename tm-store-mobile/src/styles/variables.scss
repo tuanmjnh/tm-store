@@ -1,7 +1,9 @@
 :root {
+  --van-light-blue: #1bb5fe;
   --color-text: var(--van-text-color, #323233);
   --color-background-2: var(--van-background-2, #fff);
   --color-block-background: var(--van-border-color, #ebedf0);
+  --van-primary-color: var(--van-light-blue);
 }
 
 html.dark {

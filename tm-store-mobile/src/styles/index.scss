@@ -175,3 +175,35 @@ a:hover {
     }
   }
 }
+
+// Text
+.van-text--primary {
+  color: var(--van-primary-color);
+}
+.van-text--success {
+  color: var(--van-success-color);
+}
+.van-text--default {
+  color: var(--van-text-color);
+}
+.van-text--danger {
+  color: var(--van-danger-color);
+}
+.van-text--warning {
+  color: var(--van-warning-color);
+}
+
+//van-nav-bar
+.van-nav-bar__left,
+.van-nav-bar__right {
+  font-size: var(--van-font-size-lg);
+}
+.van-cell__title,
+.van-cell__value {
+  align-content: center;
+}
+
+.van-cell .van-dropdown-menu__bar {
+  height: initial !important;
+  box-shadow: initial !important;
+}

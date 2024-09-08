@@ -1,5 +1,5 @@
 import { model, Schema, Document, Types } from 'mongoose'
-import { ICreated } from '@interfaces/common'
+import { ICreated, IMeta } from '@interfaces/common'
 
 export interface IType {
   _id?: Types.ObjectId
@@ -7,7 +7,7 @@ export interface IType {
   code: string
   name: string
   desc: string
-  meta: Array<string>
+  meta: Array<IMeta>
   order: number
   flag: number
   created: ICreated

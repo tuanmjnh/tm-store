@@ -4,6 +4,7 @@ import { showFailToast } from "vant";
 import "vant/es/toast/style";
 import { local } from '@/utils/storage'
 
+export const CANCEL_TOKEN = Axios.CancelToken
 /**
  * @description: ContentType
  */
@@ -33,6 +34,9 @@ const configDefault = {
   baseURL: import.meta.env.VITE_APP_API,
   data: {}
 };
+
+// Create API debonce
+let call
 
 class Http {
   // Current instance
@@ -118,12 +122,26 @@ class Http {
       }
     );
   }
-  public axiosInstance
+  public axiosInstance: AxiosInstance
   constructor(config: AxiosRequestConfig) {
     Http.axiosConfigDefault = config;
     this.axiosInstance = Http.axiosInstance = Axios.create(config);
     this.httpInterceptorsRequest();
     this.httpInterceptorsResponse();
+  }
+
+
+  // const apiDebonce = (config = {}) => {
+  //   if (call) call.cancel('canceled')
+  //   call = axios.CancelToken.source()
+  //   config.cancelToken = call.token
+  //   return api(config)
+  // }
+  public debonce = (config = {} as any) => {
+    if (call) call.cancel('canceled')
+    call = Axios.CancelToken.source()
+    config.cancelToken = call.token
+    return this.axiosInstance(config)
   }
 
   // Common request functions

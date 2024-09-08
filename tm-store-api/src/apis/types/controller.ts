@@ -103,6 +103,20 @@ export class TypeController {
     }
   };
 
+  public getKey = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const queries = req.query as any
+      const rs = { rowsNumber: 0, data: [] }
+      rs.data = await MType.distinct('key', { key: new RegExp(queries.filter, 'i') })
+      rs.rowsNumber = rs.data.length
+
+      if (queries.page && queries.rowsPerPage) res.status(200).json(getPagination(rs, parseInt(queries.page), parseInt(queries.rowsPerPage)));
+      else res.status(200).json(rs);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getMeta = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any

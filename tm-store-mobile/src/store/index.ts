@@ -4,6 +4,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 export * from './app'
 export * from './auth'
+export * from './types'
 // export * from './router'
 // export * from './tab'
 

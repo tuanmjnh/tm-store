@@ -137,7 +137,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'list',
       requiresAuth: true,
-     icon: 'icon-park-outline:list',
+      icon: 'icon-park-outline:list',
       menuType: 'page',
       parent: 'types',
       level: 2,
@@ -204,7 +204,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'list',
       requiresAuth: true,
-     icon: 'icon-park-outline:list',
+      icon: 'icon-park-outline:list',
       menuType: 'page',
       parent: 'roles',
       level: 2,
@@ -271,7 +271,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'list',
       requiresAuth: true,
-     icon: 'icon-park-outline:list',
+      icon: 'icon-park-outline:list',
       menuType: 'page',
       parent: 'users',
       level: 2,
@@ -338,7 +338,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'list',
       requiresAuth: true,
-     icon: 'icon-park-outline:list',
+      icon: 'icon-park-outline:list',
       menuType: 'page',
       parent: 'links',
       level: 2,
@@ -405,7 +405,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'list',
       requiresAuth: true,
-     icon: 'icon-park-outline:list',
+      icon: 'icon-park-outline:list',
       menuType: 'page',
       parent: 'group-news',
       level: 2,
@@ -472,7 +472,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'list',
       requiresAuth: true,
-     icon: 'icon-park-outline:list',
+      icon: 'icon-park-outline:list',
       menuType: 'page',
       parent: 'news',
       level: 2,
@@ -539,7 +539,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'list',
       requiresAuth: true,
-     icon: 'icon-park-outline:list',
+      icon: 'icon-park-outline:list',
       menuType: 'page',
       parent: 'group-product',
       level: 2,
@@ -606,7 +606,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'list',
       requiresAuth: true,
-     icon: 'icon-park-outline:list',
+      icon: 'icon-park-outline:list',
       menuType: 'page',
       parent: 'product',
       level: 2,
