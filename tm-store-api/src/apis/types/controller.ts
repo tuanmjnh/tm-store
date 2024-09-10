@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { MType, IType } from './model';
 import { TypeService } from './service';
-import { HttpException } from '@/exceptions/httpException';
+import { HttpException } from '@/exceptions/http.exception';
 import { RequestMiddlewares } from '@/interfaces/auth.interface';
 import mongoose from 'mongoose';
 import { getIp } from '@/utils/tm-request';
@@ -18,8 +18,9 @@ export class TypeController {
       queries.rowsPerPage = queries.rowsPerPage ? parseInt(queries.rowsPerPage) : 10
       const rs = { data: [] as IType[], rowsNumber: 0, message: 'find' }
       const conditions = { $and: [{ flag: queries.flag ? parseInt(queries.flag) : 1 }] } as any
+      if (queries.key) conditions.$and.push({ key: queries.key })
       if (queries.filter) {
-        conditions.$and = []
+        // conditions.$and = []
         conditions.$and.push({
           $or: [
             { key: new RegExp(queries.filter, 'i') },
@@ -34,6 +35,7 @@ export class TypeController {
         .limit(parseInt(queries.rowsPerPage))
         .sort({ [queries.sortBy]: queries.descending === 'true' ? -1 : 1 }) // 1 ASC, -1 DESC
         .exec()
+      // rs.data = rs.data.sort(function (a, b) { return a.order - b.order })
       // return res.status(200).json(rs)
       res.status(200).json(rs);
     } catch (error) {
@@ -106,12 +108,9 @@ export class TypeController {
   public getKey = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any
-      const rs = { rowsNumber: 0, data: [] }
-      rs.data = await MType.distinct('key', { key: new RegExp(queries.filter, 'i') })
-      rs.rowsNumber = rs.data.length
-
+      const rs = await MType.distinct('key', { key: new RegExp(queries.filter, 'i') })
       if (queries.page && queries.rowsPerPage) res.status(200).json(getPagination(rs, parseInt(queries.page), parseInt(queries.rowsPerPage)));
-      else res.status(200).json(rs);
+      else res.status(200).json({ data: rs, message: 'getKey' });
     } catch (error) {
       next(error);
     }

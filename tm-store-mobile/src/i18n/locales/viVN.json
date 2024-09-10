@@ -33,10 +33,11 @@
     "activite": "Hoạt động",
     "inactivite": "Không hoạt động",
     "bin": "Thùng rác",
+    "key": "Khóa",
     "textPulling": "Kéo để làm mới...",
     "textLoosing": "Thả để làm mới...",
     "textLoading": "Đang tải...",
-    "textFinished": "Hoàn thành"
+    "textFinished": "Đã tải hết dữ liệu"
   },
   "http": {
     "400": "Đã xảy ra lỗi cú pháp trong yêu cầu",
@@ -51,7 +52,7 @@
     "503": "Dịch vụ không khả dụng",
     "504": "Hết thời gian chờ cổng",
     "505": "Phiên bản http không hỗ trợ yêu cầu này",
-    "defaultTip": "Lỗi yêu cầu"
+    "default": "Lỗi kết nối, vui lòng thử lại"
   },
   "components": {
     "iconSelector": {
@@ -123,6 +124,20 @@
     "product": "Sản phẩm",
     "list": "Danh sách",
     "add": "Thêm mới"
+  },
+  "types": {
+    "title": "Kiểu dữ liệu",
+    "titleList": "Danh sách kiểu dữ liệu",
+    "group": "Nhóm",
+    "gender": "Giới tính",
+    "pinNews": "Ghim tin tức",
+    "pinProduct": "Ghim sản phẩm",
+    "position": "Vị trí",
+    "unit": "Đơn vị",
+    "unitPrice": "Đơn vị tiền",
+    "userGroup": "Nhóm người dùng",
+    "settings": "Cài đặt",
+    "reasonCancel": "Lý do hủy đơn"
   },
   "dayWeek": {
     "1": "Thứ 2",

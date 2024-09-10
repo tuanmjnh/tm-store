@@ -1,9 +1,9 @@
 import { NextFunction, Response } from 'express'
 import { verify, sign } from 'jsonwebtoken'
 import { SECRET_KEY } from '@config'
-import { HttpException } from '@exceptions/httpException'
+import { HttpException } from '@exceptions/http.exception'
 import { DataStoredInToken, RequestMiddlewares } from '@interfaces/auth.interface'
-import { UserModel } from '@modules/users/model'
+// import { UserModel } from '@modules/users/model'
 
 export const APISign = ({ params, secret, expires }) => {
   // expires in 24 hours
@@ -24,17 +24,20 @@ export const APIMiddleware = async (req: RequestMiddlewares, res: Response, next
         // Remove Bearer from string
         if (token.startsWith('Bearer ')) token = token.slice(7, token.length)
         req.verify = { ...(await verify(token, SECRET_KEY)) as DataStoredInToken, ...{ token: token, secret: SECRET_KEY } }
-        const findUser = await UserModel.findById(req.verify._id)
-        if (findUser) {
-          req.user = findUser
-          next()
-        } else {
-          next(new HttpException(404, 'wrongToken'))
-        }
+        // console.log(req.verify)
+        next()
+        // const findUser = await UserModel.findById(req.verify._id)
+        // if (findUser) {
+        //   req.user = findUser
+
+        //   next()
+        // } else {
+        //   next(new HttpException(404, 'wrongToken'))
+        // }
       }
     }
   } catch (e) {
-    console.log(e)
+    // console.log(e)
     next(new HttpException(401, 'wrongToken'))
   }
 }

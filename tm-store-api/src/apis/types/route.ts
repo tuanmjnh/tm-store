@@ -13,12 +13,12 @@ export class TypeRoute implements Routes {
   }
   private initializeRoutes() {
     this.router.get(`${this.path}`, APIMiddleware, this.controller.get);
-    this.router.get(`${this.path}/:id`, APIMiddleware, this.controller.findById);
-    this.router.get(`${this.path}/get-all`, APIMiddleware, this.controller.getAll);
+    this.router.get(`${this.path}/all`, APIMiddleware, this.controller.getAll);
     this.router.get(`${this.path}/find`, APIMiddleware, this.controller.find);
     this.router.get(`${this.path}/exist`, APIMiddleware, this.controller.findExist);
     this.router.get(`${this.path}/key`, APIMiddleware, this.controller.getKey);
     this.router.get(`${this.path}/meta`, APIMiddleware, this.controller.getMeta);
+    this.router.get(`${this.path}/:id`, APIMiddleware, this.controller.findById);
     this.router.post(`${this.path}`, APIMiddleware, this.controller.create);
     this.router.put(`${this.path}`, APIMiddleware, this.controller.update);
     this.router.patch(`${this.path}`, APIMiddleware, this.controller.updateFlag);

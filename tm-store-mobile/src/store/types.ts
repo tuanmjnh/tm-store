@@ -1,7 +1,5 @@
 import { http } from '@/utils/http-axios'
-import { router } from '@/router'
-import { local } from '@/utils/storage'
-import { ICreated, IMeta } from './interfaces/common'
+import { ICreated, IMeta, IResponseList } from './interfaces/common'
 
 interface IType {
   _id?: string
@@ -52,21 +50,31 @@ export const useTypeStore = defineStore('typeStore', {
     // },
   },
   actions: {
-    async getAll(arg?: any) {
+    async getAll(arg?: any): Promise<IResponseList> {
       try {
-        const rs = await http.axiosInstance.get(`/${API_PATH}`, { params: arg })
-        if (rs) return rs.data.sort(function (a, b) { return a.order - b.order })
-        return []
+        const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/all`, { params: arg })
+        this.all = rs.data as IType[]
+        return rs
       } catch (e) {
         // console.log(e)
-        return []
+        return { data: [], rowsNumber: 0 } as IResponseList
+      }
+    },
+    async getItems(arg?: any): Promise<IResponseList> {
+      try {
+        const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}`, { params: arg })
+        return rs
+      } catch (e) {
+        // console.log(e)
+        return { data: [], rowsNumber: 0 } as IResponseList
       }
     },
     async getKey(arg?: any) {
       try {
         const rs = await http.axiosInstance.get(`/${API_PATH}/key`, { params: arg })
-        if (rs) return rs.data
-        return []
+        if (!rs) return []
+        this.keys = rs.data
+        return rs.data
       } catch (e) {
         // console.log(e)
         return []

@@ -2,7 +2,7 @@ import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { Service } from 'typedi';
 import { SECRET_KEY } from '@config';
-import { HttpException } from '@exceptions/httpException';
+import { HttpException } from '@exceptions/http.exception';
 import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
 import { MUser, IUser } from '@apis/users/model';
 

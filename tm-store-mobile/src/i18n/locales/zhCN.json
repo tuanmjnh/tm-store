@@ -27,6 +27,7 @@
     "search": "搜索",
     "reset": "重置",
     "setting": "设置",
+    "back": "后退",
     "add": "添加新内容",
     "status": "状态",
     "activite": "活动",
@@ -35,7 +36,7 @@
     "textPulling": "拉动刷新...",
     "textLoosing": "松开刷新...",
     "textLoading": "正在加载...",
-    "textFinished": "已完成"
+    "textFinished": "所有数据已下载"
   },
   "http": {
     "400": "请求出现语法错误",
@@ -50,7 +51,7 @@
     "503": "服务不可用",
     "504": "网关超时",
     "505": "http版本不支持该请求",
-    "defaultTip": "请求错误"
+    "default": "连接错误,请重试"
   },
   "components": {
     "iconSelector": {
@@ -122,6 +123,20 @@
     "product": "产品",
     "list": "列表",
     "add": "添加"
+  },
+  "types": {
+    "title": "数据类型",
+    "titleList": "数据类型列表",
+    "group": "组",
+    "gender": "性别",
+    "pinNews": "新闻 Pin 图",
+    "pinProduct": "产品引脚",
+    "position": "位置",
+    "unit": "单位",
+    "unitPrice": "货币单位",
+    "userGroup": "用户组",
+    "settings": "设置",
+    "reasonCancel": "取消原因"
   },
   "dayWeek": {
     "1": "星期一",

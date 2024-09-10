@@ -3,7 +3,7 @@ import { Container } from 'typedi';
 import { MUser, IUser } from './model';
 import { UserService } from './service';
 import mongoose from 'mongoose';
-import { HttpException } from '@/exceptions/httpException';
+import { HttpException } from '@exceptions/http.exception';
 import { RequestMiddlewares } from '@/interfaces/auth.interface';
 import { getIp } from '@/utils/tm-request';
 

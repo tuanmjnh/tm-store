@@ -7,8 +7,8 @@ import express from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
-import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
+// import swaggerJSDoc from 'swagger-jsdoc';
+// import swaggerUi from 'swagger-ui-express';
 import { PACKAGE, NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS, BASE_URL, UPLOAD_MAX_SIZE } from '@config';
 import { dbConnection } from '@/services/mongoose';
 import { Routes } from '@interfaces/routes.interface';
@@ -102,8 +102,8 @@ export class App {
       apis: ['swagger.yaml'],
     };
 
-    const specs = swaggerJSDoc(options);
-    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+    // const specs = swaggerJSDoc(options);
+    // this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
   }
 
   private initializeErrorHandling() {

@@ -27,6 +27,7 @@
     "search": "Search",
     "reset": "Reset",
     "setting": "Settings",
+    "back": "Back",
     "add": "Add New",
     "status": "Status",
     "activite": "Activity",
@@ -35,7 +36,7 @@
     "textPulling": "Pull to refresh...",
     "textLoosing": "Loose to refresh...",
     "textLoading": "Loading...",
-    "textFinished": "Finished"
+    "textFinished": "All data loaded"
   },
   "http": {
     "400": "Syntax error in request",
@@ -50,7 +51,7 @@
     "503": "Service unavailable",
     "504": "Gateway timeout",
     "505": "http version does not support the request",
-    "defaultTip": "Request error"
+    "default": "Connection error, please try again"
   },
   "components": {
     "iconSelector": {
@@ -122,6 +123,20 @@
     "product": "Product",
     "list": "List",
     "add": "Add"
+  },
+  "types": {
+    "title": "Data type",
+    "titleList": "Data type list",
+    "group": "Group",
+    "gender": "Gender",
+    "pinNews": "Pin news",
+    "pinProduct": "Pin product",
+    "position": "Position",
+    "unit": "Unit",
+    "unitPrice": "Currency",
+    "userGroup": "User group",
+    "settings": "Settings",
+    "reasonCancel": "Reason for cancellation"
   },
   "dayWeek": {
     "1": "Monday",

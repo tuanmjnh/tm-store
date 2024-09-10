@@ -3,16 +3,18 @@ import router from '@/router'
 import { $t } from '@/i18n'
 import { useTypeStore } from '@/store'
 import delay from 'delay'
+import { Pagination } from '@/utils/pagination'
 const typeStore = useTypeStore()
 
 onMounted(() => {
   typeStore.getKey()
+  typeStore.getAll(filter.value)
 })
 
-const keys = computed(() => typeStore.keys.map((x: string) => { return { text: $t(`types.${x}`), value: x } }))
+const keys = computed(() => typeStore.keys)
+const all = computed(() => typeStore.all)
 const filter = ref({
   text: '',
-  key: 'group',
   flag: 1,
   page: 1,
   rowsPerPage: 15
@@ -26,35 +28,35 @@ const isLoading = ref(false)
 const isFinished = ref(false)
 const isRefresh = ref(false)
 const isShowFilter = ref(false)
+
+
 const onLoadData = async () => {
   //Check pull refresh
-  await delay(600)
+  await delay(1000)
   if (isRefresh.value) {
     filter.value.page = 1
     items.value = []
     isRefresh.value = false
   }
   //Get and push row to data
-  const { data, rowsNumber } = await typeStore.getItems(filter.value)
-  items.value = items.value.concat(data)
+  const page = Pagination({ items: all.value, offset: filter.value.page, limit: filter.value.rowsPerPage })
+  items.value = items.value.concat(page.data)//all.value, filter.value.page, filter.value.rowsPerPage))
   filter.value.page++
   isLoading.value = false
 
   //Load all row Finished
-  if (items.value.length >= rowsNumber) isFinished.value = true
-  console.log(keys.value)
-
+  if (items.value.length >= page.rowsNumber) isFinished.value = true//all.value.length
 }
 
-const onRefresh = async () => {
+const onRefresh = () => {
   isFinished.value = false
   isLoading.value = true
-  await onLoadData()
+  onLoadData()
 }
-const onChangeFlag = async () => {
-  isRefresh.value = true
-  isShowFilter.value = false
-  await onLoadData()
+const onChangeFlag = () => {
+  console.log(filter.value.flag)
+  
+  // filter.value.flag = filter.value.flag == 0 ? 1 : 0
 }
 const onBackPage = () => {
   if (window.history.state.back) history.back()
@@ -80,9 +82,7 @@ const onBackPage = () => {
     </van-list>
   </van-pull-refresh>
   <van-tabbar placeholder fixed>
-    <van-tabbar-item icon="arrow-left" class="van-text--default" @click="onBackPage()">
-      {{ $t('app.back') }}
-    </van-tabbar-item>
+    <van-tabbar-item icon="arrow-left" @click="onBackPage()">{{ $t('app.back') }}</van-tabbar-item>
     <van-tabbar-item icon="add-o" @click="router.push('add').catch(e => { })">{{ $t('app.add') }}</van-tabbar-item>
     <van-tabbar-item icon="filter-o" @click="isShowFilter = !isShowFilter">{{ $t('app.filter') }}</van-tabbar-item>
     <!-- <van-tabbar-item v-if="filter.flag == 0" icon="completed-o" @click="onChangeFlag">
@@ -94,16 +94,6 @@ const onBackPage = () => {
   </van-tabbar>
   <van-popup v-model:show="isShowFilter" position="bottom" :style="{ height: '30%' }">
     <van-search v-model="filter.text" :placeholder="$t('app.search')" />
-    <van-cell-group>
-      <van-cell :title="$t('app.key')">
-        <template #value>
-          <van-dropdown-menu>
-            <van-dropdown-item v-model="filter.key" :options="keys" @change="onChangeFlag">
-            </van-dropdown-item>
-          </van-dropdown-menu>
-        </template>
-      </van-cell>
-    </van-cell-group>
     <van-cell-group>
       <van-cell :title="$t('app.status')">
         <template #value>

@@ -4,7 +4,7 @@ import { rootRoute } from '@/router/routes.inner'
 import cellMenuItem from "./cellMenuItem.vue";
 
 const { isLeftMenu } = toRefs(useAppStore())
-console.log(rootRoute.children)
+// console.log(rootRoute.children)
 </script>
 
 <template>

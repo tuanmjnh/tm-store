@@ -1,25 +1,25 @@
 import { Router } from 'express';
-import { ConfigController } from './controller';
+import { FileManagerController } from './controller';
 import { Routes } from '@interfaces/routes.interface';
 import { APIMiddleware } from '@middlewares/api.middleware';
 
-export class ConfigRoute implements Routes {
+export class FileManagerRoute implements Routes {
   public path = '/api/configs';
   public router = Router();
-  public controller = new ConfigController();
+  public controller = new FileManagerController();
 
   constructor() {
     this.initializeRoutes();
   }
   private initializeRoutes() {
     this.router.get(`${this.path}`, APIMiddleware, this.controller.get);
-    this.router.get(`${this.path}/:id`, APIMiddleware, this.controller.findById);
-    this.router.get(`${this.path}/get-all`, APIMiddleware, this.controller.getAll);
-    this.router.get(`${this.path}/find`, APIMiddleware, this.controller.find);
-    this.router.get(`${this.path}/exist`, APIMiddleware, this.controller.findExist);
-    this.router.post(`${this.path}`, APIMiddleware, this.controller.create);
-    this.router.put(`${this.path}`, APIMiddleware, this.controller.update);
-    this.router.patch(`${this.path}`, APIMiddleware, this.controller.updateFlag);
-    // this.router.delete(`${this.path}/:id`, APIMiddleware, this.user.delete);
+    this.router.get(`${this.path}/folders`, APIMiddleware, this.controller.getFolders);
+    this.router.get(`${this.path}/files`, APIMiddleware, this.controller.getFiles);
+    this.router.get(`${this.path}/thumbnail`, APIMiddleware, this.controller.getThumbnail);
+    this.router.post(`${this.path}`, APIMiddleware, this.controller.upload);
+    this.router.put(`${this.path}`, APIMiddleware, this.controller.put);
+    this.router.patch(`${this.path}`, APIMiddleware, this.controller.trash);
+    this.router.patch(`${this.path}/empty`, APIMiddleware, this.controller.emptyTrash);
+    this.router.delete(`${this.path}`, APIMiddleware, this.controller.delete);
   }
 }

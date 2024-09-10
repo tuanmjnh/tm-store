@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { MConfig, IConfig } from './model';
 import { ConfigService } from './service';
-import { HttpException } from '@/exceptions/httpException';
+import { HttpException } from '@/exceptions/http.exception';
 import { RequestMiddlewares } from '@/interfaces/auth.interface';
 import mongoose from 'mongoose';
 

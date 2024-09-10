@@ -16,7 +16,7 @@ export function initMiddleware(router: Router) {
     // }
     // start loadingBar
     NProgress.start();
-
+    // local.set('access-token','abc')
     // Determine whether there is a TOKEN and log in for authentication
     const isLogin = Boolean(local.get('access-token'))
     if (!isLogin) {

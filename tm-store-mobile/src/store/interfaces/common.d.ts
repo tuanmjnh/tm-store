@@ -24,3 +24,9 @@ export enum EConfigType {
   BOOLEAN = 'boolean',
   DATE = 'date'
 }
+
+export interface IResponseList {
+  data: Array<T>
+  rowsNumber: number
+  message: string
+}

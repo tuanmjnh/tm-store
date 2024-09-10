@@ -1,5 +1,5 @@
 import { Service } from 'typedi'
-import { HttpException } from '@exceptions/httpException'
+import { HttpException } from '@exceptions/http.exception'
 import { MUser, IUser } from './model'
 import { Aggregate, ClientSession, Types } from 'mongoose'
 import { NewGuid, SHA256 } from '@utils/tm-crypto'

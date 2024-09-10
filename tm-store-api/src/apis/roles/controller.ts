@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { MRole, IRole } from './model';
 import { RoleService } from './service';
-import { HttpException } from '@/exceptions/httpException';
+import { HttpException } from '@/exceptions/http.exception';
 import { RequestMiddlewares } from '@/interfaces/auth.interface';
 import mongoose from 'mongoose';
 import { getIp } from '@/utils/tm-request';

@@ -5,7 +5,7 @@ import { MUser } from '@apis/users/model';
 import { MRole, IRole } from '@apis/roles/model';
 import { constantUsers, constantRoutes } from './constant';
 import { AuthService } from './service';
-import { HttpException } from '@/exceptions/httpException';
+import { HttpException } from '@/exceptions/http.exception';
 import { SHA256 } from '@/utils/tm-crypto';
 import { sign } from 'jsonwebtoken'
 import { SECRET_KEY } from '@config'

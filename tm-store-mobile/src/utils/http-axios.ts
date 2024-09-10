@@ -1,8 +1,9 @@
-import Axios, { type AxiosInstance, type AxiosError, type AxiosResponse, type AxiosRequestConfig } from "axios";
-import NProgress from "./progress";
-import { showFailToast } from "vant";
-import "vant/es/toast/style";
+import Axios, { type AxiosInstance, type AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios';
+import NProgress from './progress';
+import { showFailToast } from 'vant';
 import { local } from '@/utils/storage'
+import { $t } from '@/i18n'
+import 'vant/es/toast/style';
 
 export const CANCEL_TOKEN = Axios.CancelToken
 /**
@@ -10,11 +11,11 @@ export const CANCEL_TOKEN = Axios.CancelToken
  */
 export enum ContentTypeEnum {
   // form-data qs
-  FORM_URLENCODED = "application/x-www-form-urlencoded;charset=UTF-8",
+  FORM_URLENCODED = 'application/x-www-form-urlencoded;charset=UTF-8',
   // form-data upload
-  FORM_DATA = "multipart/form-data;charset=UTF-8",
+  FORM_DATA = 'multipart/form-data;charset=UTF-8',
   // json
-  JSON = "application/json;charset=UTF-8"
+  JSON = 'application/json;charset=UTF-8'
 }
 
 /**
@@ -28,7 +29,7 @@ export enum ResultEnum {
 // Default axios instance request configuration
 const configDefault = {
   headers: {
-    "Content-Type": ContentTypeEnum.JSON
+    'Content-Type': ContentTypeEnum.JSON
   },
   timeout: 0,
   baseURL: import.meta.env.VITE_APP_API,
@@ -50,9 +51,9 @@ class Http {
       config => {
         NProgress.start();
         // Before sending a request, you can carry a token here
-        // if (token) {
-        //   config.headers['token'] = token
-        // }
+        // Add access-token to headers
+        const accessToken = local.get('access-token')
+        if (accessToken) config.headers['x-access-token'] = `Bearer ${accessToken}`;
         return config;
       },
       (error: AxiosError) => {
@@ -67,54 +68,58 @@ class Http {
     Http.axiosInstance.interceptors.response.use(
       (res: AxiosResponse) => {
         NProgress.done();
-        // Add access-token to headers
-        const accessToken = local.get('access-token')
-        if (accessToken) res.headers['x-access-token'] = `Bearer ${accessToken}`;
+        // // Add access-token to headers
+        // const accessToken = local.get('access-token')
+        // console.log(accessToken)
+        // if (accessToken) res.headers['x-access-token'] = `Bearer ${accessToken}`;
         // The return fields of the contract with the backend
         return res.data
       },
       (error: AxiosError) => {
         NProgress.done();
         // Handle HTTP network errors
-        let message = "";
+        let message = '';
         // HTTP Status Code
         const status = error.response?.status;
         switch (status) {
           case 400:
-            message = "Request error";
+            message = $t('http.400', 'Request error');
             break;
           case 401:
-            message = "Unauthorized, please log in";
+            message = $t('http.401', 'Unauthorized, please log in');
+            // remove storage access-token and refresh page if 401
+            local.remove('access-token')
+            location.reload();
             break;
           case 403:
-            message = "Access denied";
+            message = $t('http.403', 'Access denied');
             break;
           case 404:
-            message = `Request address error: ${error.response?.config?.url}`;
+            message = $t('http.404', `Request address error: ${error.response?.config?.url}`);
             break;
           case 408:
-            message = "Request timeout";
+            message = $t('http.408', 'Request timeout');
             break;
           case 500:
-            message = "Server internal error";
+            message = $t('http.500', 'Server internal error');
             break;
           case 501:
-            message = "Service not implemented";
+            message = $t('http.501', 'Service not implemented');
             break;
           case 502:
-            message = "Gateway error";
+            message = $t('http.502', 'Gateway error');
             break;
           case 503:
-            message = "Service unavailable";
+            message = $t('http.503', 'Service unavailable');
             break;
           case 504:
-            message = "Gateway timeout";
+            message = $t('http.504', 'Gateway timeout');
             break;
           case 505:
-            message = "HTTP version not supported";
+            message = $t('http.505', 'HTTP version not supported');
             break;
           default:
-            message = "Network connection failure";
+            message = $t('http.default', 'Network connection failure');
         }
 
         showFailToast(message);

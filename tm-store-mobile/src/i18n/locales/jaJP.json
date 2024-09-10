@@ -27,6 +27,7 @@
     "search": "検索",
     "reset": "リセット",
     "setting": "設定",
+    "back": "戻る",
     "add": "新規追加",
     "status": "ステータス",
     "activite": "アクティビティ",
@@ -35,7 +36,7 @@
     "textPulling": "更新するには引っ張ってください...",
     "textLoosing": "更新するには緩めてください...",
     "textLoading": "読み込み中...",
-    "textFinished": "完了しました"
+    "textFinished": "すべてのデータがダウンロードされました"
   },
   "http": {
     "400": "リクエストの構文エラー",
@@ -50,7 +51,7 @@
     "503": "サービスが利用できません",
     "504": "ゲートウェイがタイムアウトしました",
     "505": "http バージョンがリクエストをサポートしていません",
-    "defaultTip": "リクエスト エラー"
+    "default": "接続エラー。もう一度お試しください。"
   },
   "components": {
     "iconSelector": {
@@ -122,6 +123,20 @@
     "product": "製品",
     "list": "リスト",
     "add": "追加"
+  },
+  "types": {
+    "title": "データ型",
+    "titleList": "データ型のリスト",
+    "group": "グループ",
+    "gender": "性別",
+    "pinNews": "ニュースピン",
+    "pinProduct": "製品ピン",
+    "position": "位置",
+    "unit": "単位",
+    "unitPrice": "金額単位",
+    "userGroup": "ユーザーグループ",
+    "settings": "設定",
+    "reasonCancel": "キャンセルの理由"
   },
   "dayWeek": {
     "1": "月曜日",
