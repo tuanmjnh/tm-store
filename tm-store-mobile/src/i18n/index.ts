@@ -1,7 +1,7 @@
 import { createI18n } from 'vue-i18n'
 // import { local } from '@/utils/storage'
 import localStorage from '@/utils/localStorage'
-var appStore = localStorage.get('appStore')
+const appStoreLanguage = localStorage.get('appStore.language')
 const modulesFiles = import.meta.glob('./locales/*.json', { eager: true })
 export const locales = Object.keys(modulesFiles).reduce((locales, currentValue) => {
   const moduleName = currentValue.replace('./locales/', '').replace(/\.\w+$/, '')
@@ -19,7 +19,7 @@ export const languages = Object.keys(locales).map(x => {
 
 export const i18n = createI18n({
   legacy: false,
-  locale: appStore.language || import.meta.env.VITE_APP_DEFAULT_LANG, // Default display language
+  locale: appStoreLanguage || import.meta.env.VITE_APP_DEFAULT_LANG, // Default display language
   fallbackLocale: import.meta.env.VITE_APP_DEFAULT_LANG,
   messages: locales,
   // Missing internationalization key warning

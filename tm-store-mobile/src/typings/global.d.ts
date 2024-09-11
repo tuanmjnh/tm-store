@@ -8,6 +8,13 @@ declare namespace Api {
 
 }
 
+declare global {
+  interface Window {
+    history: any
+  }
+}
+
+declare const history : any
 // interface Window {
 //   $loadingBar: import('naive-ui').LoadingBarApi
 //   $dialog: import('naive-ui').DialogApi

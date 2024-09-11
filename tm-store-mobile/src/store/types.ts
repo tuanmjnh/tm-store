@@ -15,7 +15,7 @@ interface IType {
 
 interface IState {
   all: IType[],
-  items: IType[],
+  // items: IType[],
   keys: [],
   // metaKeys: [],
   // metaValues: [],
@@ -39,9 +39,9 @@ export const useTypeStore = defineStore('typeStore', {
   persist: true,
   state: (): IState => ({
     all: [],
-    items: [],
+    // items: [],
     keys: [],
-    item: { ...constant },
+    item: JSON.parse(JSON.stringify(constant)),
   }),
   getters: {
     // /** Are you logged in? */
@@ -92,7 +92,7 @@ export const useTypeStore = defineStore('typeStore', {
     },
     async create(arg?: any) {
       try {
-        const rs = await http.axiosInstance.post(`/${API_PATH}/meta`, arg)
+        const rs = await http.axiosInstance.post(`/${API_PATH}`, arg)
         if (rs) return rs.data
         return null
       } catch (e) {
@@ -102,7 +102,7 @@ export const useTypeStore = defineStore('typeStore', {
     },
     async update(arg?: any) {
       try {
-        const rs = await http.axiosInstance.get(`/${API_PATH}/meta`, arg)
+        const rs = await http.axiosInstance.put(`/${API_PATH}`, arg)
         if (rs) return rs.data
         return null
       } catch (e) {
@@ -112,12 +112,41 @@ export const useTypeStore = defineStore('typeStore', {
     },
     async updateFlag(arg?: any) {
       try {
-        const rs = await http.axiosInstance.get(`/${API_PATH}/meta`, arg)
+        const rs = await http.axiosInstance.patch(`/${API_PATH}`, arg)
         if (rs) return rs.data
         return []
       } catch (e) {
         // console.log(e)
         return []
+      }
+    },
+    async setItem(arg?: any) {
+      this.item = arg ? { ...arg } : JSON.parse(JSON.stringify(constant))
+    },
+    async addItems(arg: any) {
+      if (Array.isArray(arg)) this.items.concat(arg)
+      else this.items.push(arg)
+    },
+    async updateItems(arg: any) {
+      if (Array.isArray(arg)) {
+        arg.forEach(e => {
+          const i = this.items.findIndex(x => x._id === e._id)
+          if (i > -1) this.items.splice(i, 1, e)
+        })
+      } else {
+        const i = this.items.findIndex(x => x._id === arg._id)
+        if (i > -1) this.items.splice(i, 1, arg)
+      }
+    },
+    async removeItems(arg: any) {
+      if (Array.isArray(arg)) {
+        arg.forEach(e => {
+          const i = this.items.findIndex(x => x._id === e)
+          if (i > -1) this.items.splice(i, 1)
+        })
+      } else {
+        const i = this.items.findIndex(x => x._id === arg)
+        if (i > -1) this.items.splice(i, 1)
       }
     },
     // easily reset state using `$reset`

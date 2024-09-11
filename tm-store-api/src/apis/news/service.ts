@@ -71,8 +71,8 @@ export class NewsService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<INews> {
     const rs: INews = session ?
-      await MNews.findByIdAndUpdate(_id, { $set: { enable: flag } }, { session: session }) :
-      await MNews.findByIdAndUpdate(_id, { $set: { enable: flag } })
+      await MNews.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
+      await MNews.findByIdAndUpdate(_id, { $set: { flag: flag } })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

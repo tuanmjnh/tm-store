@@ -164,13 +164,13 @@ export class GroupController {
   public updateFlag = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body;
-      if (body.data && Array.isArray(body.data)) {
+      if (body && Array.isArray(body)) {
         const rs = { status: false, success: [], error: [] }
         const session = await mongoose.startSession();
         try {
           session.startTransaction();
           for await (let obj of req.body.data) {
-            const item = await this.group.UpdateFlag(obj._id, obj.flag, session)
+            const item = await this.group.UpdateFlag(new mongoose.Types.ObjectId(obj._id), obj.flag, session)
             if (!item) {
               rs.error.push(obj._id)
               next(new HttpException(401, 'update'))
@@ -186,7 +186,7 @@ export class GroupController {
           session.endSession();
         }
       } else {
-        const rs: IGroup = await this.group.UpdateFlag(body._id, body.flag);
+        const rs: IGroup = await this.group.UpdateFlag(new mongoose.Types.ObjectId(body._id), body.flag);
         res.status(200).json({ data: rs, message: 'updated' });
       }
     } catch (error) {

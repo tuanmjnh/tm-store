@@ -86,8 +86,8 @@ export class GroupService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IGroup> {
     const rs: IGroup = session ?
-      await MGroup.findByIdAndUpdate(_id, { $set: { enable: flag } }, { session: session }) :
-      await MGroup.findByIdAndUpdate(_id, { $set: { enable: flag } })
+      await MGroup.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
+      await MGroup.findByIdAndUpdate(_id, { $set: { flag: flag } })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

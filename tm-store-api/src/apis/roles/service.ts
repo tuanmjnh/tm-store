@@ -58,8 +58,8 @@ export class RoleService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IRole> {
     const rs: IRole = session ?
-      await MRole.findByIdAndUpdate(_id, { $set: { enable: flag } }, { session: session }) :
-      await MRole.findByIdAndUpdate(_id, { $set: { enable: flag } })
+      await MRole.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
+      await MRole.findByIdAndUpdate(_id, { $set: { flag: flag } })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

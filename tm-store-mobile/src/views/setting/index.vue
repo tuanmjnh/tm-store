@@ -29,11 +29,11 @@ const languge = computed(() => {
         <VanSwitch v-model="checked" size="20px" aria-label="on/off Dark Mode" @click="onToggleDark()" />
       </template>
     </van-cell>
-    <van-cell :title="$t('language.title')" :value="languge.label" is-link
+    <van-cell :title="$t('setting.title')" :value="languge.label" is-link
       @click="isDialogLanguage = !isDialogLanguage" />
   </van-cell-group>
   <van-action-sheet v-model:show="isDialogLanguage" :cancel-text="$t('global.cancel')"
-    :description="$t('language.switchTitle')" close-on-click-action>
+    :description="$t('setting.switchTitle')" close-on-click-action>
     <van-cell-group inset>
       <van-cell v-for="(e, i) in languages" :key="i" @click="onSetLanguage(e)">
         <template #title>

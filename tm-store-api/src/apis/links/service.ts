@@ -60,8 +60,8 @@ export class LinkService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<ILink> {
     const rs: ILink = session ?
-      await MLink.findByIdAndUpdate(_id, { $set: { enable: flag } }, { session: session }) :
-      await MLink.findByIdAndUpdate(_id, { $set: { enable: flag } })
+      await MLink.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
+      await MLink.findByIdAndUpdate(_id, { $set: { flag: flag } })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

@@ -11,7 +11,7 @@ const onSetLanguage = (language) => {
 <template>
   <!-- <span :class="`fi fi-${storeApp.language}`" @click="isDialog = !isDialog" /> -->
   <icon-park-outline-translate @click="isDialog = !isDialog" />
-  <van-action-sheet v-model:show="isDialog" :cancel-text="$t('global.cancel')" :description="$t('language.switchTitle')" 
+  <van-action-sheet v-model:show="isDialog" :cancel-text="$t('global.cancel')" :description="$t('setting.switchTitle')" 
     close-on-click-action>
     <van-cell-group inset>
       <van-cell v-for="(e, i) in languages" :key="i" @click="onSetLanguage(e)">

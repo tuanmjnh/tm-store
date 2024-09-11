@@ -193,6 +193,16 @@ a:hover {
   color: var(--van-warning-color);
 }
 
+//van-tabbar
+.margin-bottom-initial {
+  .van-tabbar-item__icon {
+    margin-bottom: initial !important;
+  }
+  // .van-tabbar-item__text {
+  //   margin-top: var(--van-padding-base);
+  // }
+}
+
 //van-nav-bar
 .van-nav-bar__left,
 .van-nav-bar__right {

@@ -132,8 +132,8 @@ export class ProductService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IProduct> {
     const rs: IProduct = session ?
-      await MProduct.findByIdAndUpdate(_id, { $set: { enable: flag } }, { session: session }) :
-      await MProduct.findByIdAndUpdate(_id, { $set: { enable: flag } })
+      await MProduct.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
+      await MProduct.findByIdAndUpdate(_id, { $set: { flag: flag } })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

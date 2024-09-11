@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import tabBarView from "@/components/tabBarView.vue";
 import router from '@/router'
 import { $t } from '@/i18n'
 import { useTypeStore } from '@/store'
@@ -81,17 +82,14 @@ const onBackPage = () => {
       </van-swipe-cell>
     </van-list>
   </van-pull-refresh>
-  <van-tabbar placeholder fixed>
-    <van-tabbar-item icon="arrow-left" @click="onBackPage()">{{ $t('app.back') }}</van-tabbar-item>
-    <van-tabbar-item icon="add-o" @click="router.push('add').catch(e => { })">{{ $t('app.add') }}</van-tabbar-item>
-    <van-tabbar-item icon="filter-o" @click="isShowFilter = !isShowFilter">{{ $t('app.filter') }}</van-tabbar-item>
-    <!-- <van-tabbar-item v-if="filter.flag == 0" icon="completed-o" @click="onChangeFlag">
-      {{ $t('app.activite') }}
-    </van-tabbar-item>
-    <van-tabbar-item v-else icon="delete-o" @click="onChangeFlag">
-      {{ $t('app.bin') }}
-    </van-tabbar-item> -->
-  </van-tabbar>
+
+  <tab-bar-view>
+    <template #item>
+      <van-tabbar-item icon="add-o" @click="router.push('add')">{{ $t('app.add') }}</van-tabbar-item>
+      <van-tabbar-item icon="filter-o" @click="isShowFilter = !isShowFilter">{{ $t('app.filter') }}</van-tabbar-item>
+    </template>
+  </tab-bar-view>
+
   <van-popup v-model:show="isShowFilter" position="bottom" :style="{ height: '30%' }">
     <van-search v-model="filter.text" :placeholder="$t('app.search')" />
     <van-cell-group>

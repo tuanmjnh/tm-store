@@ -165,13 +165,13 @@ export class UserController {
   public updateFlag = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body;
-      if (body.data && Array.isArray(body.data)) {
+      if (body && Array.isArray(body)) {
         const rs = { status: false, success: [], error: [] }
         const session = await mongoose.startSession()
         session.startTransaction();
         try {
-          for await (let obj of req.body.data) {
-            const item = await this.user.UpdateFlag(obj._id, obj.flag, session)
+          for await (let obj of req.body) {
+            const item = await this.user.UpdateFlag(new mongoose.Types.ObjectId(obj._id), obj.flag, session)
             if (!item) {
               rs.error.push(obj._id)
               next(new HttpException(401, 'update'))
@@ -210,7 +210,7 @@ export class UserController {
         // if (transaction && transaction.ok) return res.status(203).json(rs)
         // else return res.status(200).json(rs)
       } else {
-        const rs: IUser = await this.user.UpdateFlag(body._id, body.flag);
+        const rs: IUser = await this.user.UpdateFlag(new mongoose.Types.ObjectId(body._id), body.flag);
         res.status(200).json({ data: rs, message: 'updated' });
       }
     } catch (error) {

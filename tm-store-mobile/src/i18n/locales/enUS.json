@@ -38,33 +38,6 @@
     "textLoading": "Loading...",
     "textFinished": "All data loaded"
   },
-  "http": {
-    "400": "Syntax error in request",
-    "401": "User not authorized",
-    "403": "Server denies access",
-    "404": "The requested resource does not exist",
-    "405": "The request method is not allowed",
-    "408": "Network request timed out",
-    "500": "Server internal error",
-    "501": "The server does not implement the request function",
-    "502": "Wrong gateway",
-    "503": "Service unavailable",
-    "504": "Gateway timeout",
-    "505": "http version does not support the request",
-    "default": "Connection error, please try again"
-  },
-  "components": {
-    "iconSelector": {
-      "selectorTitle": "Icon selection",
-      "inputPlaceholder": "Select target icon",
-      "searchPlaceholder": "Search icon",
-      "clearIcon": "Clear icon"
-    },
-    "copyText": {
-      "tooltip": "Copy",
-      "message": "Copy successfully"
-    }
-  },
   "login": {
     "signInTitle": "Login",
     "username": "Username",
@@ -137,6 +110,43 @@
     "userGroup": "User group",
     "settings": "Settings",
     "reasonCancel": "Reason for cancellation"
+  },
+  "error": {
+    "system": "System error. Please try again!",
+    "invalid": "invalid",
+    "exist": "Data already exists. Please try again!",
+    "noExist": "Data does not exist. Please try again!",
+    "required": "Information cannot be empty",
+    "minLength": "Minimum information must be {min} characters long",
+    "minQuanity": "Minimum quantity must be {min}",
+    "email": "Please enter correct Email format",
+    "number": "Data must be a number",
+    "errorCode": "Error code",
+    "tokenNoExist": "Token does not exist, please log in again",
+    "tokenInvalid": "Session expired, please log in again",
+    "accountNoExist": "Account does not exist",
+    "accountLocked": "Account locked, please contact Admin",
+    "wrongPassword": "Incorrect password, please try again",
+    "changePassword": "Password change failed, please try again",
+    "timeout": "Connection error, please try again!",
+    "qrNotLoad": "Unable to decode this QR, please try again!",
+    "qrError": "System error scanning code, please try again!",
+    "qrNotExist": "This code does not exist in the system"
+  },
+  "http": {
+    "400": "Syntax error in request",
+    "401": "User not authorized",
+    "403": "Server denies access",
+    "404": "The requested resource does not exist",
+    "405": "The request method is not allowed",
+    "408": "Network request timed out",
+    "500": "Server internal error",
+    "501": "The server does not implement the request function",
+    "502": "Wrong gateway",
+    "503": "Service unavailable",
+    "504": "Gateway timeout",
+    "505": "http version does not support the request",
+    "default": "Connection error, please try again"
   },
   "dayWeek": {
     "1": "Monday",

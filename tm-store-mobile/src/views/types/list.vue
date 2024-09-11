@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import tabBarView from "@/components/tabBarView.vue";
 import router from '@/router'
 import { $t } from '@/i18n'
 import { useTypeStore } from '@/store'
@@ -18,14 +19,16 @@ const filter = ref({
   rowsPerPage: 15
 })
 const optionFlag = [
-  { text: $t(`app.activite`), value: 1 },
-  { text: $t(`app.inactivite`), value: 0 },
+  { text: $t(`global.activite`), value: 1 },
+  { text: $t(`global.inactivite`), value: 0 },
 ]
 const items = ref([])
+const selected = ref([])
 const isLoading = ref(false)
 const isFinished = ref(false)
 const isRefresh = ref(false)
 const isShowFilter = ref(false)
+const isShowDelete = ref(false)
 const onLoadData = async () => {
   //Check pull refresh
   await delay(600)
@@ -42,10 +45,7 @@ const onLoadData = async () => {
 
   //Load all row Finished
   if (items.value.length >= rowsNumber) isFinished.value = true
-  console.log(keys.value)
-
 }
-
 const onRefresh = async () => {
   isFinished.value = false
   isLoading.value = true
@@ -56,46 +56,54 @@ const onChangeFlag = async () => {
   isShowFilter.value = false
   await onLoadData()
 }
-const onBackPage = () => {
-  if (window.history.state.back) history.back()
-  else router.replace('/')
+const onAdd = async () => {
+  await typeStore.setItem()
+  router.push('add')
 }
+const onEdit = async (item) => {
+  await typeStore.setItem(item)
+  router.push(`edit/${item._id}`)
+}
+const onToggleFlag = async (item) => {
+  selected.value = [toRaw(item)]
+  isShowDelete.value = true
+}
+const onConfirmFlag = async () => {
+  await typeStore.updateFlag(selected.value.map(x => { return { _id: x._id, flag: filter.value.flag == 1 ? 0 : 1 } }))
+}
+
 </script>
 
 <template>
-  <van-pull-refresh v-model="isRefresh" :pulling-text="$t('app.textPulling')" :loosing-text="$t('app.textLoosing')"
-    :loading-text="$t('app.textLoading')" @refresh="onRefresh">
-    <van-list v-model:loading="isLoading" :finished="isFinished" :finished-text="$t('app.textFinished')"
-      :loading-text="$t('app.textLoading')" :offset="50" @load="onLoadData">
+  <van-pull-refresh v-model="isRefresh" :pulling-text="$t('global.textPulling')"
+    :loosing-text="$t('global.textLoosing')" :loading-text="$t('global.textLoading')" @refresh="onRefresh">
+    <van-list v-model:loading="isLoading" :finished="isFinished" :finished-text="$t('global.textFinished')"
+      :loading-text="$t('global.textLoading')" :offset="50" @load="onLoadData">
       <van-swipe-cell v-for="item in items" :key="item">
         <template #left>
           <van-button square icon="passed" type="primary" />
         </template>
         <van-cell :title="item.code" :value="item.name" :label="item.desc" />
         <template #right>
-          <van-button square icon="edit" type="warning" />
-          <van-button square icon="close" type="danger" />
+          <van-button square icon="edit" type="success" @click="onEdit(item)" />
+          <van-button v-if="filter.flag" square icon="close" type="danger" @click="onToggleFlag(item)" />
+          <van-button v-else square icon="replay" type="warning" @click="onToggleFlag(item)" />
         </template>
       </van-swipe-cell>
     </van-list>
   </van-pull-refresh>
-  <van-tabbar placeholder fixed>
-    <van-tabbar-item icon="arrow-left" class="van-text--default" @click="onBackPage()">
-      {{ $t('app.back') }}
-    </van-tabbar-item>
-    <van-tabbar-item icon="add-o" @click="router.push('add').catch(e => { })">{{ $t('app.add') }}</van-tabbar-item>
-    <van-tabbar-item icon="filter-o" @click="isShowFilter = !isShowFilter">{{ $t('app.filter') }}</van-tabbar-item>
-    <!-- <van-tabbar-item v-if="filter.flag == 0" icon="completed-o" @click="onChangeFlag">
-      {{ $t('app.activite') }}
-    </van-tabbar-item>
-    <van-tabbar-item v-else icon="delete-o" @click="onChangeFlag">
-      {{ $t('app.bin') }}
-    </van-tabbar-item> -->
-  </van-tabbar>
+
+  <tab-bar-view>
+    <template #item>
+      <van-tabbar-item icon="add-o" @click="onAdd" />
+      <van-tabbar-item icon="filter-o" @click="isShowFilter = !isShowFilter" />
+    </template>
+  </tab-bar-view>
+
   <van-popup v-model:show="isShowFilter" position="bottom" :style="{ height: '30%' }">
-    <van-search v-model="filter.text" :placeholder="$t('app.search')" />
+    <van-search v-model="filter.text" :placeholder="$t('global.search')" />
     <van-cell-group>
-      <van-cell :title="$t('app.key')">
+      <van-cell :title="$t('global.key')">
         <template #value>
           <van-dropdown-menu>
             <van-dropdown-item v-model="filter.key" :options="keys" @change="onChangeFlag">
@@ -105,7 +113,7 @@ const onBackPage = () => {
       </van-cell>
     </van-cell-group>
     <van-cell-group>
-      <van-cell :title="$t('app.status')">
+      <van-cell :title="$t('global.status')">
         <template #value>
           <van-dropdown-menu>
             <van-dropdown-item v-model="filter.flag" :options="optionFlag" @change="onChangeFlag">
@@ -115,4 +123,9 @@ const onBackPage = () => {
       </van-cell>
     </van-cell-group>
   </van-popup>
+  <van-action-sheet v-model:show="isShowDelete" :cancel-text="$t('global.cancel')" close-on-click-action
+    :actions="[{ name: filter.flag ? $t('global.delete') : $t('global.recover'), color: filter.flag ? '#f56c6c' : '#e6a23c' }]"
+    @select="onConfirmFlag">
+    <!-- <van-cell :title="$t('global.accept')" /> -->
+  </van-action-sheet>
 </template>

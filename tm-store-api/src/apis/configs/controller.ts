@@ -126,13 +126,13 @@ export class ConfigController {
   public updateFlag = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body;
-      if (body.data && Array.isArray(body.data)) {
+      if (body && Array.isArray(body)) {
         const rs = { status: false, success: [], error: [] }
         const session = await mongoose.startSession();
         try {
           session.startTransaction();
-          for await (let obj of req.body.data) {
-            const item = await this.config.UpdateFlag(obj._id, obj.flag, session)
+          for await (let obj of req.body) {
+            const item = await this.config.UpdateFlag(new mongoose.Types.ObjectId(obj._id), obj.flag, session)
             if (!item) {
               rs.error.push(obj._id)
               next(new HttpException(401, 'update'))
@@ -148,7 +148,7 @@ export class ConfigController {
           session.endSession();
         }
       } else {
-        const rs: IConfig = await this.config.UpdateFlag(body._id, body.flag);
+        const rs: IConfig = await this.config.UpdateFlag(new mongoose.Types.ObjectId(body._id), body.flag);
         res.status(200).json({ data: rs, message: 'updated' });
       }
     } catch (error) {

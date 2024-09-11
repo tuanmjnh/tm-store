@@ -1,5 +1,5 @@
 import type { Router } from 'vue-router'
-import { useAppStore, useAuthStore } from '@/store'
+// import { useAppStore, useAuthStore } from '@/store'
 import { local } from '@/utils/storage';
 import { $t } from '@/i18n';
 import NProgress from "@/utils/progress";

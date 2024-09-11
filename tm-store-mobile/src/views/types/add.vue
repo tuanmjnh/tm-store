@@ -1,15 +1,42 @@
 <script setup lang="ts">
-import router from '@/router'
+import { useTypeStore } from '@/store'
+const typeStore = useTypeStore()
+import router from '@/router';
+
+const form = computed(() => typeStore.item)
+
+const onSubmit = (values) => {
+  console.log('submit', values);
+};
 const onBackPage = () => {
   if (window.history.state.back) history.back()
   else router.replace('/')
 }
 </script>
 <template>
-  <van-tabbar placeholder fixed>
-    <van-tabbar-item icon="arrow-left" class="van-text--default" @click="onBackPage()">
-      {{ $t('app.back') }}
-    </van-tabbar-item>
-    <van-tabbar-item icon="add-o" @click="router.push('add').catch(e => { })">{{ $t('app.add') }}</van-tabbar-item>
-  </van-tabbar>
+  <van-form required="auto" @submit="onSubmit">
+    <van-cell-group inset>
+      <van-field v-model="form.key" name="key" :label="$t('global.key')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.code" name="code" :label="$t('global.code')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.name" name="name" :label="$t('global.name')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.order" name="name" :label="$t('global.order')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.desc" type="textarea" rows="1" autosize name="desc" :label="$t('global.desc')"
+        :placeholder="$t('global.inputPlaceholder')" />
+    </van-cell-group>
+    <!-- <div style="margin: 16px;">
+      <van-button round block type="primary" native-type="submit">
+        Submit
+      </van-button>
+    </div> -->
+    <van-action-bar>
+      <van-action-bar-icon icon="arrow-left" @click="onBackPage()" />
+      <van-action-bar-icon />
+      <!-- <van-action-bar-button type="success" text="Copy" /> -->
+      <van-action-bar-button type="primary" native-type="submit" :text="$t('global.add')" />
+    </van-action-bar>
+  </van-form>
 </template>

@@ -158,7 +158,7 @@ export const staticRoutes: RouteRecordRaw[] = [
   },
   {
     name: 'types-edit',
-    path: '/types/edit/:id?',
+    path: '/types/edit/:id',
     component: () => import('@/views/types/add.vue'),
     meta: {
       title: 'edit',

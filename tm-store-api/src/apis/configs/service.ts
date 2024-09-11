@@ -90,8 +90,8 @@ export class ConfigService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IConfig> {
     const rs: IConfig = session ?
-      await MConfig.findByIdAndUpdate(_id, { $set: { enable: flag } }, { session: session }) :
-      await MConfig.findByIdAndUpdate(_id, { $set: { enable: flag } })
+      await MConfig.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
+      await MConfig.findByIdAndUpdate(_id, { $set: { flag: flag } })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

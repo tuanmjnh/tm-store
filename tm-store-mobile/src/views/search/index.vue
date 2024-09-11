@@ -6,7 +6,7 @@ const filterSearch = ref(storeApp.filter)
 watch(filterSearch, val => { storeApp.filter = val }, { immediate: true })
 </script>
 <template>
-  <van-search v-model="filterSearch" :placeholder="$t('app.searchPlaceholder')" />
+  <van-search v-model="filterSearch" :placeholder="$t('global.inputPlaceholder')" />
   <!-- <van-form>
     <van-cell-group inset>
       <van-field v-model="filterSearch" name="search" :placeholder="$t('app.searchPlaceholder')" />
