@@ -27,6 +27,20 @@ export enum EConfigType {
 
 export interface IResponseList {
   data: Array<T>
+  status: boolean
   rowsNumber: number
+  message: string
+}
+
+export interface IResponseItem {
+  data: T
+  status: boolean
+  message: string
+}
+
+export interface IResponseFlag {
+  success: Array<T>
+  error: Array<T>
+  status: boolean
   message: string
 }

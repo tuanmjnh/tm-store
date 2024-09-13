@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useAppStore } from '@/store'
 const storeApp = useAppStore()
-// const filterStore = computed(() => storeApp.filter)
 const filterSearch = ref(storeApp.filter)
 watch(filterSearch, val => { storeApp.filter = val }, { immediate: true })
 </script>

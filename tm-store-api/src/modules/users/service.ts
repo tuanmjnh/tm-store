@@ -1,8 +1,9 @@
 import { hash } from 'bcrypt';
 import { Service } from 'typedi';
-import { HttpException } from '@exceptions/httpException';
+import { HttpException } from '@exceptions/http.exception';
 import { User } from '@interfaces/users.interface';
 import { UserModel } from './model';
+import { Types } from 'mongoose';
 
 @Service()
 export class UserService {
@@ -28,7 +29,7 @@ export class UserService {
     return createUserData;
   }
 
-  public async updateUser(userId: string, userData: User): Promise<User> {
+  public async updateUser(userId: Types.ObjectId, userData: User): Promise<User> {
     if (userData.email) {
       const findUser: User = await UserModel.findOne({ email: userData.email });
       if (findUser && findUser._id != userId) throw new HttpException(409, `This email ${userData.email} already exists`);

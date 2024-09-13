@@ -5,7 +5,6 @@
   },
   "global": {
     "list": "Danh sách dữ liệu",
-    "add": "Thêm mới",
     "details": "Chi tiết",
     "publish": "Công bố",
     "public": "Công khai",
@@ -24,6 +23,7 @@
     "cancelled": "Đã hủy",
     "recover": "Khôi phục",
     "insert": "Tạo mới",
+    "add": "Thêm mới",
     "edit": "Sửa",
     "update": "Cập nhật",
     "delete": "Xóa",
@@ -139,7 +139,7 @@
     "textFinished": "Đã tải hết dữ liệu"
   },
   "success": {
-    "insert": "Thêm mới thành công",
+    "create": "Thêm mới thành công",
     "update": "Cập nhật thành công",
     "trash": "Chuyển đến thùng rác thành công",
     "disable": "Vô hiệu hóa thành công",
@@ -576,7 +576,8 @@
     "groupProduct": "Nhóm sản phẩm",
     "product": "Sản phẩm",
     "list": "Danh sách",
-    "add": "Thêm mới"
+    "add": "Thêm mới",
+    "edit": "Cập nhật"
   },
   "error": {
     "system": "Lỗi hệ thống. Vui lòng thử lại!",
@@ -607,6 +608,7 @@
     "404": "Tài nguyên được yêu cầu không tồn tại",
     "405": "Phương thức yêu cầu không được phép",
     "408": "Yêu cầu mạng đã hết thời gian chờ",
+    "409": "Lỗi dữ liệu, vui lòng thử lại",
     "500": "Lỗi nội bộ của máy chủ",
     "501": "Máy chủ không thực hiện chức năng được yêu cầu",
     "502": "Sai cổng",

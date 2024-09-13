@@ -34,6 +34,7 @@ export class ProductService {
     const exist = await this.FindOne({ code: data.code })
     if (exist) throw new HttpException(409, `exist`)
     const rs = new MProduct(data)
+    rs._id = new Types.ObjectId()
     rs.validateSync()
     if (session) return await rs.save({ session: session })
     else return await rs.save()

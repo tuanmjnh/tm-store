@@ -52,8 +52,8 @@ export class UserService {
     const password = data.password || NewGuid().split('-')[0]
     data.salt = NewGuid({ format: 'n' })
     data.password = SHA256(password + data.salt)
-
     const rs = new MUser(data)
+    rs._id = new Types.ObjectId()
     rs.validateSync()
     if (session) return await rs.save({ session: session })
     else return await rs.save()

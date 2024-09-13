@@ -66,6 +66,7 @@ export class ConfigService {
     const exist = await this.FindOne({ key: data.key })
     if (exist) throw new HttpException(409, `exist`)
     const rs = new MConfig(data)
+    rs._id = new Types.ObjectId()
     rs.validateSync()
     if (session) return await rs.save({ session: session })
     else return await rs.save()

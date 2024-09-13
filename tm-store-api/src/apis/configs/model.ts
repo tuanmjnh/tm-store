@@ -1,4 +1,5 @@
 import { model, Schema, Document, Types } from 'mongoose'
+import { ICreated } from '@interfaces/common'
 
 export interface IConfig {
   _id?: Types.ObjectId
@@ -8,6 +9,7 @@ export interface IConfig {
   level: number
   flag: number
   desc: string
+  created: ICreated
 }
 
 const schema: Schema = new Schema({

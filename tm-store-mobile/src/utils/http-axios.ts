@@ -121,9 +121,9 @@ class Http {
           default:
             message = $t('http.default', 'Network connection failure');
         }
-
-        showFailToast(message);
-        return Promise.reject(error);
+        if (status == 409) { }
+        else showFailToast(message);
+        return Promise.reject(error.response);
       }
     );
   }

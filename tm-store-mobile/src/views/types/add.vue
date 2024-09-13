@@ -1,13 +1,30 @@
 <script setup lang="ts">
+import { showNotify } from 'vant'
 import { useTypeStore } from '@/store'
 const typeStore = useTypeStore()
-import router from '@/router';
+import router from '@/router'
+import { $t } from '@/i18n'
 
 const form = computed(() => typeStore.item)
 
-const onSubmit = (values) => {
-  console.log('submit', values);
-};
+const onSubmit = async () => {
+  try {
+    if (form.value._id) {
+      const rs = await typeStore.update(form.value)
+      if (rs)  showNotify({ type: 'success', message: $t('success.update') })
+    } else {
+      const rs = await typeStore.create(form.value)
+      if (rs) {
+        showNotify({ type: 'primary', message: $t('success.create') })
+        typeStore.setItem()
+      }
+    }
+  } catch (error) {
+    if (error.data && error.data.message) showNotify({ type: 'danger', message: $t(`error.${error.data.message}`) })
+    else showNotify({ type: 'danger', message: $t(`http.${error.status}`) })
+  }
+
+}
 const onBackPage = () => {
   if (window.history.state.back) history.back()
   else router.replace('/')
@@ -22,21 +39,73 @@ const onBackPage = () => {
         :rules="[{ required: true, message: $t('error.required') }]" />
       <van-field v-model="form.name" name="name" :label="$t('global.name')" :placeholder="$t('global.inputPlaceholder')"
         :rules="[{ required: true, message: $t('error.required') }]" />
-      <van-field v-model="form.order" name="name" :label="$t('global.order')" :placeholder="$t('global.inputPlaceholder')"
-        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.order" name="name" :label="$t('global.order')"
+        :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
       <van-field v-model="form.desc" type="textarea" rows="1" autosize name="desc" :label="$t('global.desc')"
         :placeholder="$t('global.inputPlaceholder')" />
+
+      <!-- <van-field v-model="form.key" name="key" :label="$t('global.key')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.code" name="code" :label="$t('global.code')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.name" name="name" :label="$t('global.name')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.order" name="name" :label="$t('global.order')"
+        :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.desc" type="textarea" rows="1" autosize name="desc" :label="$t('global.desc')"
+        :placeholder="$t('global.inputPlaceholder')" />
+      <van-field v-model="form.key" name="key" :label="$t('global.key')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.code" name="code" :label="$t('global.code')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.name" name="name" :label="$t('global.name')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.order" name="name" :label="$t('global.order')"
+        :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.desc" type="textarea" rows="1" autosize name="desc" :label="$t('global.desc')"
+        :placeholder="$t('global.inputPlaceholder')" />
+      <van-field v-model="form.key" name="key" :label="$t('global.key')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.code" name="code" :label="$t('global.code')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.name" name="name" :label="$t('global.name')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.order" name="name" :label="$t('global.order')"
+        :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.desc" type="textarea" rows="1" autosize name="desc" :label="$t('global.desc')"
+        :placeholder="$t('global.inputPlaceholder')" />
+      <van-field v-model="form.key" name="key" :label="$t('global.key')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.code" name="code" :label="$t('global.code')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.name" name="name" :label="$t('global.name')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.order" name="name" :label="$t('global.order')"
+        :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.desc" type="textarea" rows="1" autosize name="desc" :label="$t('global.desc')"
+        :placeholder="$t('global.inputPlaceholder')" />
+      <van-field v-model="form.key" name="key" :label="$t('global.key')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.code" name="code" :label="$t('global.code')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.name" name="name" :label="$t('global.name')" :placeholder="$t('global.inputPlaceholder')"
+        :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.order" name="name" :label="$t('global.order')"
+        :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.desc" type="textarea" rows="1" autosize name="desc" :label="$t('global.desc')"
+        :placeholder="$t('global.inputPlaceholder')" /> -->
     </van-cell-group>
-    <!-- <div style="margin: 16px;">
+    <!-- <div style="margin: 16px">
       <van-button round block type="primary" native-type="submit">
         Submit
       </van-button>
     </div> -->
-    <van-action-bar>
+    <van-action-bar placeholder>
       <van-action-bar-icon icon="arrow-left" @click="onBackPage()" />
       <van-action-bar-icon />
       <!-- <van-action-bar-button type="success" text="Copy" /> -->
-      <van-action-bar-button type="primary" native-type="submit" :text="$t('global.add')" />
+      <van-action-bar-button v-if="form._id" type="success" native-type="submit" :text="$t('global.update')" />
+      <van-action-bar-button v-else type="primary" native-type="submit" :text="$t('global.add')" />
     </van-action-bar>
   </van-form>
 </template>

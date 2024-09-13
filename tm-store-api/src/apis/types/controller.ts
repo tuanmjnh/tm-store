@@ -7,6 +7,7 @@ import { RequestMiddlewares } from '@/interfaces/auth.interface'
 import mongoose from 'mongoose'
 import { getIp } from '@/utils/tm-request'
 import { getPagination } from '@/utils/tm-pagination'
+import { NewGuid } from '@/utils/tm-crypto'
 
 export class TypeController {
   public type = Container.get(TypeService)
@@ -16,7 +17,7 @@ export class TypeController {
       const queries = req.query as any
       queries.page = queries.page ? parseInt(queries.page) : 1
       queries.rowsPerPage = queries.rowsPerPage ? parseInt(queries.rowsPerPage) : 10
-      const rs = { data: [] as IType[], rowsNumber: 0, message: 'find' }
+      const rs = { data: [] as IType[], rowsNumber: 0, status: false, message: 'find' }
       const conditions = { $and: [{ flag: queries.flag ? parseInt(queries.flag) : 1 }] } as any
       if (queries.key) conditions.$and.push({ key: queries.key })
       if (queries.filter) {
@@ -36,7 +37,7 @@ export class TypeController {
         .sort({ [queries.sortBy]: queries.descending === 'true' ? -1 : 1 }) // 1 ASC, -1 DESC
         .exec()
       // rs.data = rs.data.sort(function (a, b) { return a.order - b.order })
-      // return res.status(200).json(rs)
+      if (rs.data) rs.status = true
       res.status(200).json(rs)
     } catch (error) {
       next(error)
@@ -46,8 +47,9 @@ export class TypeController {
   public getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any
-      const rs = { data: [] }
+      const rs = { data: [] as IType[], status: false, message: 'getAll' }
       rs.data = await this.type.FindAll({ flag: queries.flag ? parseInt(queries.flag) : 1 })
+      if (rs.data) rs.status = true
       res.status(200).json(rs)
     } catch (error) {
       next(error)
@@ -85,10 +87,11 @@ export class TypeController {
 
   public findById = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const rs = { data: null as IType, status: false, message: 'findOne' }
       const _id: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.id)
-      const rs: IType = await this.type.FindById(_id)
-
-      res.status(200).json({ data: rs, message: 'findOne' })
+      rs.data = await this.type.FindById(_id)
+      if (rs.data) rs.status = true
+      res.status(200).json(rs)
     } catch (error) {
       next(error)
     }
@@ -97,9 +100,10 @@ export class TypeController {
   public findExist = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any
-      const rs = await MType.exists({ key: queries.key })
-      if (rs) res.status(200).json(true)
-      else res.status(200).json(false)
+      const rs = { data: null, status: false, message: 'findExist' }
+      rs.data = await MType.exists({ key: queries.key })
+      if (rs.data) rs.status = true
+      res.status(200).json(rs)
     } catch (error) {
       next(error)
     }
@@ -108,9 +112,11 @@ export class TypeController {
   public getKey = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any
-      const rs = await MType.distinct('key', { key: new RegExp(queries.filter, 'i') })
+      const rs = { data: [] as Array<string>, status: false, message: 'getKey' }
+      rs.data = await MType.distinct('key', { key: new RegExp(queries.filter, 'i') })
+      if (rs.data) rs.status = true
       if (queries.page && queries.rowsPerPage) res.status(200).json(getPagination(rs, parseInt(queries.page), parseInt(queries.rowsPerPage)))
-      else res.status(200).json({ data: rs, message: 'getKey' })
+      else res.status(200).json(rs)
     } catch (error) {
       next(error)
     }
@@ -119,11 +125,11 @@ export class TypeController {
   public getMeta = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any
+      const rs = { data: [], rowsNumber: 0, status: false, message: 'getMeta' }
       const conditions = queries.key ? { 'meta.key': new RegExp(queries.filter, 'i') } : { 'meta.value': new RegExp(queries.filter, 'i') }
-      const rs = { rowsNumber: 0, data: [] }
       rs.data = await MType.distinct(queries.key ? 'meta.key' : 'meta.value', conditions)
       rs.rowsNumber = rs.data.length
-
+      if (rs.data) rs.status = true
       if (queries.page && queries.rowsPerPage) res.status(200).json(getPagination(rs, parseInt(queries.page), parseInt(queries.rowsPerPage)))
       else res.status(200).json(rs)
     } catch (error) {
@@ -134,9 +140,28 @@ export class TypeController {
   public create = async (req: RequestMiddlewares, res: Response, next: NextFunction) => {
     try {
       const body: IType = req.body
+      const rs = { data: null as IType, status: false, message: 'created' }
       body.created = { at: new Date(), by: req.verify._id.toString() || null, ip: getIp(req) }
-      const rs: IType = await this.type.Create(body)
-      res.status(201).json({ data: rs, message: 'created' })
+      rs.data = await this.type.Create(body)
+      if (rs.data) rs.status = true
+      res.status(201).json(rs)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  public copy = async (req: RequestMiddlewares, res: Response, next: NextFunction) => {
+    try {
+      const body: IType = req.body
+      const rs = { data: null as IType, status: false, message: 'copy' }
+      body.code = NewGuid().split('-')[0]
+      body.flag = 0
+      body.name = `${req.body.data.name} - duplicate`
+      if (req.body.data._id) delete body._id
+      body.created = { at: new Date(), by: req.verify._id.toString() || null, ip: getIp(req) }
+      rs.data = await this.type.Create(body)
+      if (rs.data) rs.status = true
+      res.status(201).json(rs)
     } catch (error) {
       next(error)
     }
@@ -145,9 +170,10 @@ export class TypeController {
   public update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body: IType = req.body
-      const rs: IType = await this.type.Update(body)
-
-      res.status(200).json({ data: rs, message: 'updated' })
+      const rs = { data: null as IType, status: false, message: 'updated' }
+      rs.data = await this.type.Update(body)
+      if (rs.data) rs.status = true
+      res.status(201).json(rs)
     } catch (error) {
       next(error)
     }
@@ -157,7 +183,7 @@ export class TypeController {
     try {
       const body = req.body
       if (body && Array.isArray(body)) {
-        const rs = { status: false, success: [], error: [], message: 'updated' }
+        const rs = { success: [], error: [], status: false, message: 'updated' }
         const session = await mongoose.startSession()
         try {
           session.startTransaction()
@@ -190,10 +216,11 @@ export class TypeController {
 
   public delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const rs = { data: null as IType, status: false, message: 'deleted' }
       const _id: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.id)
-      const rs: IType = await this.type.Delete(_id)
-
-      res.status(200).json({ data: rs, message: 'deleted' })
+      rs.data = await this.type.Delete(_id)
+      if (rs.data) rs.status = true
+      res.status(201).json(rs)
     } catch (error) {
       next(error)
     }

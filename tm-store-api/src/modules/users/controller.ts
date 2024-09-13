@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { User } from '@interfaces/users.interface';
 import { UserService } from './service';
+import { Types } from 'mongoose';
 
 export class UserController {
   public user = Container.get(UserService);
@@ -40,7 +41,7 @@ export class UserController {
 
   public updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId: string = req.params.id;
+      const userId: Types.ObjectId = new Types.ObjectId(req.params.id);
       const userData: User = req.body;
       const updateUserData: User = await this.user.updateUser(userId, userData);
 

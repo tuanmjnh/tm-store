@@ -1,5 +1,5 @@
 import { http } from '@/utils/http-axios'
-import { ICreated, IMeta, IResponseList } from './interfaces/common'
+import { ICreated, IMeta, IResponseList, IResponseItem, IResponseFlag } from './interfaces/common'
 
 interface IType {
   _id?: string
@@ -14,12 +14,13 @@ interface IType {
 }
 
 interface IState {
-  all: IType[],
-  // items: IType[],
-  keys: [],
-  // metaKeys: [],
-  // metaValues: [],
-  item: IType,
+  keys: Array<string>
+  all: IType[]
+  items: IType[]
+  rowsNumber: number
+  // metaKeys: []
+  // metaValues: []
+  item: IType
 }
 
 const constant = {
@@ -38,9 +39,10 @@ const API_PATH = 'types'
 export const useTypeStore = defineStore('typeStore', {
   persist: true,
   state: (): IState => ({
-    all: [],
-    // items: [],
     keys: [],
+    all: [],
+    items: [],
+    rowsNumber: 0,
     item: JSON.parse(JSON.stringify(constant)),
   }),
   getters: {
@@ -55,19 +57,15 @@ export const useTypeStore = defineStore('typeStore', {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/all`, { params: arg })
         this.all = rs.data as IType[]
         return rs
-      } catch (e) {
-        // console.log(e)
-        return { data: [], rowsNumber: 0 } as IResponseList
-      }
+      } catch (e) { throw e }
     },
     async getItems(arg?: any): Promise<IResponseList> {
       try {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}`, { params: arg })
+        this.items = rs.data
+        this.rowsNumber = rs.rowsNumber
         return rs
-      } catch (e) {
-        // console.log(e)
-        return { data: [], rowsNumber: 0 } as IResponseList
-      }
+      } catch (e) { throw e }
     },
     async getKey(arg?: any) {
       try {
@@ -75,79 +73,90 @@ export const useTypeStore = defineStore('typeStore', {
         if (!rs) return []
         this.keys = rs.data
         return rs.data
-      } catch (e) {
-        // console.log(e)
-        return []
-      }
+      } catch (e) { throw e }
     },
     async getMeta(arg?: any) {
       try {
         const rs = await http.axiosInstance.get(`/${API_PATH}/meta`, { params: arg })
         if (rs) return rs.data
         return []
-      } catch (e) {
-        // console.log(e)
-        return []
-      }
+      } catch (e) { throw e }
     },
     async create(arg?: any) {
       try {
-        const rs = await http.axiosInstance.post(`/${API_PATH}`, arg)
-        if (rs) return rs.data
-        return null
-      } catch (e) {
-        // console.log(e)
-        return []
-      }
+        const rs: IResponseItem = await http.axiosInstance.post(`/${API_PATH}`, arg)
+        if (rs.status) this.addItems(rs.data)
+        return rs.data
+      } catch (e) { throw e }
     },
     async update(arg?: any) {
       try {
-        const rs = await http.axiosInstance.put(`/${API_PATH}`, arg)
-        if (rs) return rs.data
-        return null
-      } catch (e) {
-        // console.log(e)
-        return []
-      }
+        const rs: IResponseItem = await http.axiosInstance.put(`/${API_PATH}`, arg)
+        if (rs.status) this.updateItems(rs.data)
+        return rs.data
+      } catch (e) { throw e }
     },
     async updateFlag(arg?: any) {
       try {
-        const rs = await http.axiosInstance.patch(`/${API_PATH}`, arg)
-        if (rs) return rs.data
-        return []
-      } catch (e) {
-        // console.log(e)
-        return []
-      }
+        const rs: IResponseFlag = await http.axiosInstance.patch(`/${API_PATH}`, arg)
+        // if (rs.status) this.removeItems(rs.success)
+        return rs
+      } catch (e) { throw e }
     },
     async setItem(arg?: any) {
       this.item = arg ? { ...arg } : JSON.parse(JSON.stringify(constant))
     },
-    async addItems(arg: any) {
-      if (Array.isArray(arg)) this.items.concat(arg)
-      else this.items.push(arg)
+    async addItems(arg: any, items?: IType[]) {
+      try {
+        if (items) {
+          if (Array.isArray(arg)) this.items.concat(arg)
+          else this.items.push(arg)
+        } else {
+          if (Array.isArray(arg)) this.items.concat(arg)
+          else this.items.push(arg)
+        }
+      } catch (e) { throw e }
     },
-    async updateItems(arg: any) {
-      if (Array.isArray(arg)) {
-        arg.forEach(e => {
-          const i = this.items.findIndex(x => x._id === e._id)
-          if (i > -1) this.items.splice(i, 1, e)
-        })
-      } else {
-        const i = this.items.findIndex(x => x._id === arg._id)
-        if (i > -1) this.items.splice(i, 1, arg)
-      }
+    async updateItems(arg: any, items?: IType[]) {
+      try {
+        if (Array.isArray(arg)) {
+          arg.forEach(e => {
+            if (items) {
+              const i = items.findIndex(x => x._id === e._id)
+              if (i > -1) items.splice(i, 1, e)
+            } else {
+              const i = this.items.findIndex(x => x._id === e._id)
+              if (i > -1) this.items.splice(i, 1, e)
+            }
+          })
+        } else {
+          const i = this.items.findIndex(x => x._id === arg._id)
+          if (i > -1) this.items.splice(i, 1, arg)
+        }
+      } catch (e) { throw e }
     },
-    async removeItems(arg: any) {
-      if (Array.isArray(arg)) {
-        arg.forEach(e => {
-          const i = this.items.findIndex(x => x._id === e)
-          if (i > -1) this.items.splice(i, 1)
-        })
-      } else {
-        const i = this.items.findIndex(x => x._id === arg)
-        if (i > -1) this.items.splice(i, 1)
-      }
+    async removeItems(arg: any, items?: IType[]) {
+      try {
+        if (Array.isArray(arg)) {
+          arg.forEach(e => {
+            if (items) {
+              const i = items.findIndex(x => x._id === e)
+              if (i > -1) items.splice(i, 1)
+            } else {
+              const i = this.items.findIndex(x => x._id === e)
+              if (i > -1) this.items.splice(i, 1)
+            }
+          })
+        } else {
+          if (items) {
+            const i = items.findIndex(x => x._id === arg)
+            if (i > -1) items.splice(i, 1)
+          } else {
+            const i = this.items.findIndex(x => x._id === arg)
+            if (i > -1) this.items.splice(i, 1)
+          }
+        }
+      } catch (e) { throw e }
     },
     // easily reset state using `$reset`
     clear() {

@@ -34,9 +34,12 @@ export class TypeService {
     const exist = await this.FindOne({ key: data.key })
     if (exist) throw new HttpException(409, `exist`)
     const rs = new MType(data)
+    rs._id = new Types.ObjectId()
     rs.validateSync()
     if (session) return await rs.save({ session: session })
     else return await rs.save()
+    // if (session) return (await MType.create([data], { session: session }))[0]
+    // else return await MType.create(data)
   }
 
   public async Update(data: IType, session?: ClientSession): Promise<IType> {
@@ -50,8 +53,8 @@ export class TypeService {
     } as IType
 
     const rs = session ?
-      await MType.findByIdAndUpdate(data._id, { $set: set }, { session: session }) :
-      await MType.findByIdAndUpdate(data._id, { $set: set })
+      await MType.findByIdAndUpdate(data._id, { $set: set }, { session: session, new: true }) :
+      await MType.findByIdAndUpdate(data._id, { $set: set }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -59,8 +62,8 @@ export class TypeService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IType> {
     const rs: IType = session ?
-      await MType.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
-      await MType.findByIdAndUpdate(_id, { $set: { flag: flag } })
+      await MType.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session, new: true }) :
+      await MType.findByIdAndUpdate(_id, { $set: { flag: flag } }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

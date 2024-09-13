@@ -6,9 +6,7 @@ import { useTypeStore } from '@/store'
 import delay from 'delay'
 const typeStore = useTypeStore()
 
-onMounted(() => {
-  typeStore.getKey()
-})
+onMounted(() => { typeStore.getKey() })
 
 const keys = computed(() => typeStore.keys.map((x: string) => { return { text: $t(`types.${x}`), value: x } }))
 const filter = ref({
@@ -22,14 +20,14 @@ const optionFlag = [
   { text: $t(`global.activite`), value: 1 },
   { text: $t(`global.inactivite`), value: 0 },
 ]
-const items = ref([])
+const items = ref(typeStore.items)//ref([]) //computed(() => typeStore.items)
 const selected = ref([])
 const isLoading = ref(false)
 const isFinished = ref(false)
 const isRefresh = ref(false)
 const isShowFilter = ref(false)
 const isShowDelete = ref(false)
-const onLoadData = async () => {
+const onFetch = async () => {
   //Check pull refresh
   await delay(600)
   if (isRefresh.value) {
@@ -46,15 +44,23 @@ const onLoadData = async () => {
   //Load all row Finished
   if (items.value.length >= rowsNumber) isFinished.value = true
 }
+const onFirstFetch = () => {
+  if (typeStore.items && typeStore.items.length) {
+    isLoading.value = false
+    isFinished.value = true
+  } else {
+    onFetch()
+  }
+}
 const onRefresh = async () => {
   isFinished.value = false
   isLoading.value = true
-  await onLoadData()
+  await onFetch()
 }
 const onChangeFlag = async () => {
   isRefresh.value = true
   isShowFilter.value = false
-  await onLoadData()
+  await onFetch()
 }
 const onAdd = async () => {
   await typeStore.setItem()
@@ -69,7 +75,8 @@ const onToggleFlag = async (item) => {
   isShowDelete.value = true
 }
 const onConfirmFlag = async () => {
-  await typeStore.updateFlag(selected.value.map(x => { return { _id: x._id, flag: filter.value.flag == 1 ? 0 : 1 } }))
+  const rs = await typeStore.updateFlag(selected.value.map(x => { return { _id: x._id, flag: filter.value.flag == 1 ? 0 : 1 } }))
+  if (rs.status) typeStore.removeItems(rs.success, items.value)
 }
 
 </script>
@@ -78,8 +85,8 @@ const onConfirmFlag = async () => {
   <van-pull-refresh v-model="isRefresh" :pulling-text="$t('global.textPulling')"
     :loosing-text="$t('global.textLoosing')" :loading-text="$t('global.textLoading')" @refresh="onRefresh">
     <van-list v-model:loading="isLoading" :finished="isFinished" :finished-text="$t('global.textFinished')"
-      :loading-text="$t('global.textLoading')" :offset="50" @load="onLoadData">
-      <van-swipe-cell v-for="item in items" :key="item">
+      :loading-text="$t('global.textLoading')" :offset="50" @load="onFirstFetch">
+      <van-swipe-cell v-for="item in items" :key="item._id">
         <template #left>
           <van-button square icon="passed" type="primary" />
         </template>
