@@ -14,9 +14,6 @@ dist-ssr
 coverage
 *.local
 
-/cypress/videos/
-/cypress/screenshots/
-
 # Editor directories and files
 .idea
 *.suo
@@ -24,5 +21,3 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-
-/src/typings/components.d.ts

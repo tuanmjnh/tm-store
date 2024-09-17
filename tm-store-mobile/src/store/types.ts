@@ -1,7 +1,7 @@
 import { http } from '@/utils/http-axios'
 import { ICreated, IMeta, IResponseList, IResponseItem, IResponseFlag } from './interfaces/common'
 
-interface IType {
+export interface IModelType {
   _id?: string
   key: string
   code: string
@@ -11,16 +11,6 @@ interface IType {
   order: number
   flag: number
   created: ICreated
-}
-
-interface IState {
-  keys: Array<string>
-  all: IType[]
-  items: IType[]
-  rowsNumber: number
-  // metaKeys: []
-  // metaValues: []
-  item: IType
 }
 
 const constant = {
@@ -38,7 +28,15 @@ const constant = {
 const API_PATH = 'types'
 export const useTypeStore = defineStore('typeStore', {
   persist: true,
-  state: (): IState => ({
+  state: (): {
+    keys: Array<string>
+    all: IModelType[]
+    items: IModelType[]
+    rowsNumber: number
+    // metaKeys: []
+    // metaValues: []
+    item: IModelType
+  } => ({
     keys: [],
     all: [],
     items: [],
@@ -46,16 +44,12 @@ export const useTypeStore = defineStore('typeStore', {
     item: JSON.parse(JSON.stringify(constant)),
   }),
   getters: {
-    // /** Are you logged in? */
-    // isLogin(state) {
-    //   return Boolean(state.accessToken)
-    // },
   },
   actions: {
     async getAll(arg?: any): Promise<IResponseList> {
       try {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/all`, { params: arg })
-        this.all = rs.data as IType[]
+        this.all = rs.data as IModelType[]
         return rs
       } catch (e) { throw e }
     },
@@ -67,12 +61,19 @@ export const useTypeStore = defineStore('typeStore', {
         return rs
       } catch (e) { throw e }
     },
+    async getItem(arg?: any): Promise<IResponseList> {
+      try {
+        const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/${arg.id}`, { params: arg })
+        this.item = rs.data
+        return rs
+      } catch (e) { throw e }
+    },
     async getKey(arg?: any) {
       try {
         const rs = await http.axiosInstance.get(`/${API_PATH}/key`, { params: arg })
         if (!rs) return []
         this.keys = rs.data
-        return rs.data
+        return rs
       } catch (e) { throw e }
     },
     async getMeta(arg?: any) {
@@ -86,14 +87,14 @@ export const useTypeStore = defineStore('typeStore', {
       try {
         const rs: IResponseItem = await http.axiosInstance.post(`/${API_PATH}`, arg)
         if (rs.status) this.addItems(rs.data)
-        return rs.data
+        return rs
       } catch (e) { throw e }
     },
     async update(arg?: any) {
       try {
         const rs: IResponseItem = await http.axiosInstance.put(`/${API_PATH}`, arg)
         if (rs.status) this.updateItems(rs.data)
-        return rs.data
+        return rs
       } catch (e) { throw e }
     },
     async updateFlag(arg?: any) {
@@ -106,7 +107,7 @@ export const useTypeStore = defineStore('typeStore', {
     async setItem(arg?: any) {
       this.item = arg ? { ...arg } : JSON.parse(JSON.stringify(constant))
     },
-    async addItems(arg: any, items?: IType[]) {
+    async addItems(arg: any, items?: IModelType[]) {
       try {
         if (items) {
           if (Array.isArray(arg)) this.items.concat(arg)
@@ -117,7 +118,7 @@ export const useTypeStore = defineStore('typeStore', {
         }
       } catch (e) { throw e }
     },
-    async updateItems(arg: any, items?: IType[]) {
+    async updateItems(arg: any, items?: IModelType[]) {
       try {
         if (Array.isArray(arg)) {
           arg.forEach(e => {
@@ -135,7 +136,7 @@ export const useTypeStore = defineStore('typeStore', {
         }
       } catch (e) { throw e }
     },
-    async removeItems(arg: any, items?: IType[]) {
+    async removeItems(arg: any, items?: IModelType[]) {
       try {
         if (Array.isArray(arg)) {
           arg.forEach(e => {

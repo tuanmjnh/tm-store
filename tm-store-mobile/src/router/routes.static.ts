@@ -5,7 +5,7 @@ export const staticRoutes: RouteRecordRaw[] = [
     path: '/dashboard',
     component: () => import('@/views/dashboard/index.vue'),
     meta: {
-      title: 'Dashboard',
+      title: 'dashboard',
       requiresAuth: false,
       icon: 'icon-park-outline:analysis',
       menuType: 'dir',

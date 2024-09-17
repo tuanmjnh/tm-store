@@ -53,15 +53,15 @@ export function initMiddleware(router: Router) {
 
     next()
   })
-  
+
   // router.beforeResolve((to) => {
-    // Set menu highlight
-    // routeStore.setActiveMenu(to.meta.activeMenu ?? to.fullPath)
+  // Set menu highlight
+  // routeStore.setActiveMenu(to.meta.activeMenu ?? to.fullPath)
   // })
 
   router.afterEach((to) => {
     // Modify the webpage title
-    document.title = `${import.meta.env.VITE_APP_NAME} - ${$t(`route.${String(to.name)}`, to.meta.title)}`
+    document.title = `${import.meta.env.VITE_APP_NAME} - ${$t(`route.${to.meta.title}`, String(to.name))}`
     // End loadingBar
     NProgress.done();
   })

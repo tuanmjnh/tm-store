@@ -17,7 +17,7 @@ export interface IFileAttach {
   size: number
 }
 
-export enum EConfigType {
+enum EConfigType {
   STRING = 'string',
   INT = 'int',
   FLOAT = 'float',
@@ -26,21 +26,21 @@ export enum EConfigType {
 }
 
 export interface IResponseList {
-  data: Array<T>
+  data: Array<any>
   status: boolean
   rowsNumber: number
   message: string
 }
 
 export interface IResponseItem {
-  data: T
+  data: any
   status: boolean
   message: string
 }
 
 export interface IResponseFlag {
-  success: Array<T>
-  error: Array<T>
+  success: Array<any>
+  error: Array<any>
   status: boolean
   message: string
 }

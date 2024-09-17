@@ -16,47 +16,47 @@ export const rootRoute: RouteRecordRaw = {
 
 export const routes: RouteRecordRaw[] = [
   {
-    path: '/',
     name: 'root',
+    path: '/',
     // redirect: '/appRoot',
     redirect: VITE_APP_HOME_PATH,
     component: Layout,
     children: [],
   },
   {
-    path: '/login',
     name: 'login',
+    path: '/login',
     component: () => import('@/views/login/index.vue'), //Note that the file extension .vue is required
     meta: {
-      title: 'Login',
+      title: 'login',
       withoutTab: true,
     },
   },
   {
-    path: '/403',
     name: '403',
+    path: '/403',
     component: () => import('@/views/error/403/index.vue'),
     meta: {
-      title: 'User has no permission',
+      title: '403',
       withoutTab: true,
     },
   },
+  // {
+  //   name: '404',
+  //   path: '/404',
+  //   component: () => import('@/views/error/404/index.vue'),
+  //   meta: {
+  //     title: '404',
+  //     icon: 'icon-park-outline:ghost',
+  //     withoutTab: true,
+  //   },
+  // },
   {
-    path: '/404',
-    name: '404',
-    component: () => import('@/views/error/404/index.vue'),
-    meta: {
-      title: 'Page Not Found',
-      icon: 'icon-park-outline:ghost',
-      withoutTab: true,
-    },
-  },
-  {
-    path: '/500',
     name: '500',
+    path: '/500',
     component: () => import('@/views/error/500/index.vue'),
     meta: {
-      title: 'Server Error',
+      title: '500',
       icon: 'icon-park-outline:close-wifi',
       withoutTab: true,
     },
@@ -67,7 +67,7 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/views/error/404/index.vue'),
     name: '404',
     meta: {
-      title: 'Page Not Found',
+      title: '404',
       icon: 'icon-park-outline:ghost',
       withoutTab: true,
     }

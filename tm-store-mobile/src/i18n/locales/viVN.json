@@ -233,6 +233,7 @@
     "personNumber": "Số định danh",
     "dateBirth": "Ngày sinh",
     "gender": "Giới tính",
+    "roles": "Quyền",
     "address": "Địa chỉ",
     "avatar": "Ảnh đại diện",
     "note": "Gới thiệu",
@@ -265,8 +266,7 @@
     "title": "Quyền",
     "key": "Mã quyền",
     "name": "Tên quyền",
-    "list": "Danh sách quyền",
-    "menus": "Danh sách Menus"
+    "list": "Danh sách quyền"
   },
   "types": {
     "title": "Kiểu dữ liệu",
@@ -443,8 +443,9 @@
     "reportOrders": "Biểu đồ đơn hàng"
   },
   "tabs": {
-    "basicInf": "Thông tin cơ bản",
-    "detailsInf": "Thông tin chi tiết",
+    "basicInf": "Cơ bản",
+    "detailsInf": "Chi tiết",
+    "routes": "Điều hướng",
     "mediaInf": "Phương tiện truyền thông",
     "salesInf": "Thông tin bán hàng",
     "shippingInf": "Thông tin vận chuyển",
@@ -559,9 +560,9 @@
     "dashboard": "Bảng điều khiển",
     "QRCode": "Mã QR",
     "error": "Trang ngoại lệ",
-    "demo403": "403",
-    "demo404": "404",
-    "demo500": "500",
+    "403": "Lỗi quyền truy cập",
+    "404": "Trang không tồn tại",
+    "500": "Lỗi máy chủ",
     "setting": "Cài đặt hệ thống",
     "accountSetting": "Cài đặt người dùng",
     "profile": "Hồ sơ",
@@ -577,7 +578,8 @@
     "product": "Sản phẩm",
     "list": "Danh sách",
     "add": "Thêm mới",
-    "edit": "Cập nhật"
+    "edit": "Cập nhật",
+    "trash": "Thùng rác"
   },
   "error": {
     "system": "Lỗi hệ thống. Vui lòng thử lại!",

@@ -3,7 +3,7 @@ import { router } from '@/router'
 import { local } from '@/utils/storage'
 import { IUser } from './interfaces/user'
 
-interface AuthStatus {
+interface IModel {
   userInfo: IUser | null
   accessToken: string,
   routes: Array<string>
@@ -11,7 +11,7 @@ interface AuthStatus {
 const API_PATH = 'auth'
 export const useAuthStore = defineStore('authStore', {
   // persist: true,
-  state: (): AuthStatus => ({
+  state: (): IModel => ({
     userInfo: local.get('user-info'),
     accessToken: local.get('access-token') || '',
     routes: []

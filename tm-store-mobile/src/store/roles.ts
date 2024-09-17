@@ -1,59 +1,36 @@
 import { http } from '@/utils/http-axios'
 import { ICreated, IResponseList, IResponseItem, IResponseFlag } from './interfaces/common'
 
-export interface IModelUser {
+export interface IModelRole {
   _id?: string
-  username: string
-  password: string
-  group: string
-  salt: string
-  fullName: string
-  email: string
-  phone: string
-  personNumber: string
-  region: string
-  avatar: Array<string>
-  note: string
-  dateBirth: string,
-  gender: string
-  address: string
-  roles: Array<string>
-  userRoles: Array<any>
-  verified: boolean
-  enable: boolean
-  lastLogin: string,
-  lastChangePass: string,
+  key: string
+  name: string
+  desc: string
+  level: number
+  color: string
+  routes: Array<string>
+  flag: number
   created: ICreated
 }
 
 const constant = {
-  group: null,
-  username: null,
-  password: null,
-  fullName: null,
-  email: null,
-  phone: null,
-  personNumber: null,
-  region: null,
-  avatar: null,
-  note: '',
-  dateBirth: new Date(),
-  gender: null,
-  address: null,
-  roles: [],
-  verified: false,
-  enable: true,
-  lastLogin: null,
-  lastChangePass: null,
+  _id: null,
+  key: null,
+  name: null,
+  desc: null,
+  level: 1,
+  color: '#1bb5fe',
+  routes: Array<string>,
+  flag: 1,
   created: { at: null, by: null, ip: null }
 }
 
-const API_PATH = 'users'
-export const useUserStore = defineStore('userStore', {
+const API_PATH = 'roles'
+export const useRoleStore = defineStore('roleStore', {
   persist: false,
   state: (): {
-    items: IModelUser[]
-    item: IModelUser
+    items: IModelRole[]
+    item: IModelRole
     // metaKeys: []
     // metaValues: []
   } => ({
@@ -66,7 +43,7 @@ export const useUserStore = defineStore('userStore', {
     async getAll(arg?: any): Promise<IResponseList> {
       try {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/all`, { params: arg })
-        this.all = rs.data as IModelUser[]
+        this.all = rs.data as IModelRole[]
         return rs
       } catch (e) { throw e }
     },
@@ -106,7 +83,7 @@ export const useUserStore = defineStore('userStore', {
     async setItem(arg?: any) {
       this.item = arg ? { ...arg } : JSON.parse(JSON.stringify(constant))
     },
-    async addItems(arg: any, items?: IModelUser[]) {
+    async addItems(arg: any, items?: IModelRole[]) {
       try {
         if (items) {
           if (Array.isArray(arg)) this.items.concat(arg)
@@ -117,7 +94,7 @@ export const useUserStore = defineStore('userStore', {
         }
       } catch (e) { throw e }
     },
-    async updateItems(arg: any, items?: IModelUser[]) {
+    async updateItems(arg: any, items?: IModelRole[]) {
       try {
         if (Array.isArray(arg)) {
           arg.forEach(e => {
@@ -135,7 +112,7 @@ export const useUserStore = defineStore('userStore', {
         }
       } catch (e) { throw e }
     },
-    async removeItems(arg: any, items?: IModelUser[]) {
+    async removeItems(arg: any, items?: IModelRole[]) {
       try {
         if (Array.isArray(arg)) {
           arg.forEach(e => {

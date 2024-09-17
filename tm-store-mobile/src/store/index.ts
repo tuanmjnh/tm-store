@@ -5,7 +5,8 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 export * from './app'
 export * from './auth'
 export * from './types'
-// export * from './router'
+export * from './roles'
+export * from './users'
 // export * from './tab'
 
 // const store = createPinia();

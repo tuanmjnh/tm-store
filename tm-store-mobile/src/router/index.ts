@@ -89,5 +89,10 @@ export async function installRouter(app: App) {
   await router.isReady() // https://router.vuejs.org/zh/api/index.html#isready
 }
 
+export const historyBack = () => {
+  if (window.history.state.back) history.back()
+  else router.replace('/')
+}
+
 export default router;
 export { router }

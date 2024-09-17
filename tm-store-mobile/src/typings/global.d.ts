@@ -14,7 +14,7 @@ declare global {
   }
 }
 
-declare const history : any
+declare const history: any
 // interface Window {
 //   $loadingBar: import('naive-ui').LoadingBarApi
 //   $dialog: import('naive-ui').DialogApi

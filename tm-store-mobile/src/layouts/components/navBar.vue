@@ -7,16 +7,11 @@ const $route = useRoute()
 const storeApp = useAppStore()
 
 // const { VITE_APP_NAME } = import.meta.env
-const onBackPage = () => {
-  if (window.history.state.back) history.back()
-  else router.replace('/')
-  // router.push({ name: 'appRoot' }).catch(e => { })
-}
 const onClickRight = () => {
-  router.push({ name: 'setting' }).catch(e => { })
+  router.push({ name: 'setting' }).catch(() => { })
 }
 const getTitle = () => {
-  let rs = $t(`route.${$route.name.toString()}`, $t(`route.${$route.meta.title}`))
+  let rs = $t(`route.${$route.meta.title}`, $route.name.toString())
   if ($route.meta.parent) rs += ' ' + $t(`route.${$route.meta.parent}`).toLowerCase()
   return rs
 }

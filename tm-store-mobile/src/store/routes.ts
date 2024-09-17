@@ -4,7 +4,6 @@ import { local } from '@/utils/storage'
 import { router } from '@/router'
 import { staticRoutes } from '@/router/routes.static'
 import { useAuthStore } from '@/store/auth'
-import { arrayToTree } from '@/utils/tree'
 
 interface RoutesStatus {
   isInitAuthRoute: boolean

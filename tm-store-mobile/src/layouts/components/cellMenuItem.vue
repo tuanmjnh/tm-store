@@ -30,13 +30,7 @@ const onClick = (e) => {
   appStore.isLeftMenu = false
 }
 const showPopover = ref(false);
-const actions = [
-  { text: 'Option 1', icon: 'add-o' },
-  { text: 'Option 2', icon: 'music-o' },
-  { text: 'Option 3', icon: 'more-o' },
-];
 const onSelect = (action) => {
-  console.log(action)
   showPopover.value = false
   appStore.isLeftMenu = false
 }
@@ -48,16 +42,15 @@ const onSelect = (action) => {
 
 <template>
   <template v-if="item.children && item.children.length">
-    <van-cell v-if="item && item.meta && !item.meta.hide" is-link
-      :title="$t(`route.${item.name}`, $t(`route.${item.meta.title}`))" arrow-direction="down"
-      @click="showPopover = !showPopover">
+    <van-cell v-if="item && item.meta && !item.meta.hide" is-link :title="$t(`route.${item.meta.title}`, item.name)"
+      arrow-direction="down" @click="showPopover = !showPopover">
       <template #icon>
         <Icon v-if="item.meta.icon.match(/icon-park/g)" :icon="item.meta.icon"
           class="van-badge__wrapper van-icon van-cell__left-icon" />
-        <van-icon :name="item.meta.icon" class="van-cell__left-icon" />
+        <van-icon v-else :name="item.meta.icon" class="van-cell__left-icon" />
       </template>
       <template #value>
-        <van-popover v-model:show=" showPopover" placement="left-start" @select="onSelect">
+        <van-popover v-model:show="showPopover" placement="left-start" @select="onSelect">
           <van-list>
             <cell-menu-item v-for="(e, i) in item.children" :key="i" :item="e" />
           </van-list>
@@ -67,7 +60,7 @@ const onSelect = (action) => {
   </template>
   <template v-else>
     <van-cell v-if="item && item.meta && !item.meta.hide" is-link icon="shop-o" @click="onClick(item)"
-      :title="$t(`route.${item.name}`, $t(`route.${item.meta.title}`))">
+      :title="$t(`route.${item.meta.title}`, item.name)">
       <template #icon>
         <Icon v-if="item.meta.icon.match(/icon-park/g)" :icon="item.meta.icon"
           class="van-badge__wrapper van-icon van-cell__left-icon" />

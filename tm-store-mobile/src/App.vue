@@ -7,6 +7,7 @@ onMounted(() => {
   const typeStoreAll = get('typeStore.all')
   if (!typeStoreAll || !typeStoreAll.length) typeStore.getAll()
 })
+// console.log(window.matchMedia('(prefers-color-scheme: dark)').matches)
 </script>
 <template>
   <div class="app-wrapper">

@@ -57,7 +57,7 @@ const onRefresh = async () => {
   isLoading.value = true
   await onFetch()
 }
-const onChangeFlag = async () => {
+const onFilterFetch = async () => {
   isRefresh.value = true
   isShowFilter.value = false
   await onFetch()
@@ -113,7 +113,7 @@ const onConfirmFlag = async () => {
       <van-cell :title="$t('global.key')">
         <template #value>
           <van-dropdown-menu>
-            <van-dropdown-item v-model="filter.key" :options="keys" @change="onChangeFlag">
+            <van-dropdown-item v-model="filter.key" :options="keys" @change="onFilterFetch">
             </van-dropdown-item>
           </van-dropdown-menu>
         </template>
@@ -123,7 +123,7 @@ const onConfirmFlag = async () => {
       <van-cell :title="$t('global.status')">
         <template #value>
           <van-dropdown-menu>
-            <van-dropdown-item v-model="filter.flag" :options="optionFlag" @change="onChangeFlag">
+            <van-dropdown-item v-model="filter.flag" :options="optionFlag" @change="onFilterFetch">
             </van-dropdown-item>
           </van-dropdown-menu>
         </template>
