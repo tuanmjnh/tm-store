@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppStore, useAuthStore } from '@/store'
 import switchLanguage from "@/components/switchLanguage.vue";

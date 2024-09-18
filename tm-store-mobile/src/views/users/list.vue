@@ -17,7 +17,7 @@ const optionFlag = [
   { text: $t(`global.activite`), value: 1 },
   { text: $t(`global.inactivite`), value: 0 },
 ]
-const items = ref(userStore.items) //computed(() => typeStore.items)
+const items = ref([]) //computed(() => typeStore.items)
 const selected = ref([])
 const isLoading = ref(false)
 const isFinished = ref(false)

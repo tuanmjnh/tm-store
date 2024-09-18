@@ -7,10 +7,10 @@ const isDialogLanguage = ref(false)
 //Dark Mode
 // const checked = computed(() => storeApp.darkMode)
 const checked = ref<boolean>(isDark.value)
-watch(() => isDark.value, (newMode) => { checked.value = newMode }, { immediate: true })
-const onToggleDark = ()=> {
-  toggleDark()
-}
+// watch(() => isDark.value, (newMode) => { checked.value = newMode }, { immediate: true })
+// const onToggleDark = ()=> {
+//   toggleDark()
+// }
 
 const onSetLanguage = (language) => {
   if (storeApp.language != language.value) storeApp.setLanguage(language.value)
@@ -26,7 +26,7 @@ const languge = computed(() => {
   <van-cell-group>
     <van-cell :title="$t('app.darkMode')">
       <template #right-icon>
-        <VanSwitch v-model="checked" size="20px" aria-label="on/off Dark Mode" @click="onToggleDark()" />
+        <VanSwitch v-model="checked" size="20px" aria-label="on/off Dark Mode" @click="storeApp.toggleDarkMode()" />
       </template>
     </van-cell>
     <van-cell :title="$t('setting.title')" :value="languge.label" is-link

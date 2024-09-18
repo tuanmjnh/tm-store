@@ -90,7 +90,12 @@ const onConfirmFlag = async () => {
         <template #left>
           <van-button square icon="passed" type="primary" />
         </template>
-        <van-cell :title="item.code" :value="item.name" :label="item.desc" />
+        <van-cell :title="item.code" :value="item.name" :label="item.desc">
+          <template #title>
+            <van-tag type="primary" class="mr-2">{{ item.order }}</van-tag>
+            <span>{{ item.name }}</span>
+          </template>
+        </van-cell>
         <template #right>
           <van-button square icon="edit" type="success" @click="onEdit(item)" />
           <van-button v-if="filter.flag" square icon="close" type="danger" @click="onToggleFlag(item)" />

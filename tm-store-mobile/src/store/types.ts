@@ -44,6 +44,9 @@ export const useTypeStore = defineStore('typeStore', {
     item: JSON.parse(JSON.stringify(constant)),
   }),
   getters: {
+    getByKey: (state) => {
+      return (key) => state.all.filter(x => x.key == key).sort((a, b) => { return a.order - b.order })
+    }
   },
   actions: {
     async getAll(arg?: any): Promise<IResponseList> {

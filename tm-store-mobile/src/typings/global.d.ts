@@ -1,5 +1,7 @@
 /* Stores the database entity table type, the specific content is in ./entities */
+import moment from 'moment'
 import { $t } from '../utils'
+import { showNotify } from 'vant'
 declare namespace Entity {
 }
 
@@ -9,25 +11,23 @@ declare namespace Api {
 }
 
 declare global {
+  // const $moment: any
   interface Window {
     history: any
+    $loadingBar: import('van').LoadingBarApi
+    $dialog: import('naive-ui').DialogApi
+    $message: import('naive-ui').MessageApi
+    $notify: typeof showNotify
   }
 }
-
 declare const history: any
-// interface Window {
-//   $loadingBar: import('naive-ui').LoadingBarApi
-//   $dialog: import('naive-ui').DialogApi
-//   $message: import('naive-ui').MessageApi
-//   $notification: import('naive-ui').NotificationApi
-// }
-
 declare const AMap: any
 declare const BMap: any
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $t: typeof $t
+    $moment: typeof moment
   }
 }
 

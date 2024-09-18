@@ -12,6 +12,7 @@ declare module 'vue' {
     AppSetting: typeof import('./../components/appSetting.vue')['default']
     Charts: typeof import('./../components/charts/index.vue')['default']
     copy: typeof import('./../components/tree-view/index copy.vue')['default']
+    CustomFieldValue: typeof import('./../components/customFieldValue.vue')['default']
     ErrorTip: typeof import('./../components/ErrorTip.vue')['default']
     Icon: typeof import('~icons/ic/on')['default']
     IconParkOutlineAnalysis: typeof import('~icons/icon-park-outline/analysis')['default']

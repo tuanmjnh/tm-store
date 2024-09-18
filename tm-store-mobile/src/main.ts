@@ -1,3 +1,4 @@
+import type { App } from 'vue'
 import { createApp } from 'vue'
 import { i18n } from './i18n'
 import { installRouter } from '@/router'
@@ -5,6 +6,7 @@ import { installPinia } from '@/store'
 // import { store } from '@/store'
 import AppVue from './App.vue'
 import AppLoading from './components/AppLoading.vue'
+import { Notify } from 'vant'
 // import PrimeVue from 'primevue/config'
 // import Aura from '@/presets/lara';      //import preset
 // import presetBuild from '@/presetBuild'
@@ -16,7 +18,12 @@ import './styles/index.scss'
 import './styles/tailwind.css'
 // svg icon
 // import 'virtual:svg-icons-register'
-import { Notify } from 'vant'
+
+import 'vant/es/toast/style';
+import 'vant/es/dialog/style';
+import 'vant/es/notify/style';
+import 'vant/es/image-preview/style';
+import moment from 'moment'
 
 async function setupApp() {
   // Load the global loading status
@@ -43,8 +50,8 @@ async function setupApp() {
   //   pt: Aura                               //apply preset
   // });
 
-  // Register module directive/static resource
-  // Object.values(import.meta.glob<{ install: (app: App) => void }>('./modules/*.ts', { eager: true })).map(i => app.use(i))
+  // Register plugins directive/static resource
+  Object.values(import.meta.glob<{ install: (app: App) => void }>('./plugins/*.ts', { eager: true })).map(i => app.use(i))
 
   // Unloading animation
   appLoading.unmount()

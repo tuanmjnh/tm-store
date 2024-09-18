@@ -14,15 +14,15 @@ export interface IModelUser {
   region: string
   avatar: Array<string>
   note: string
-  dateBirth: string,
+  dateBirth: Date,
   gender: string
   address: string
   roles: Array<string>
   userRoles: Array<any>
   verified: boolean
   enable: boolean
-  lastLogin: string,
-  lastChangePass: string,
+  lastLogin: Date,
+  lastChangePass: Date,
   created: ICreated
 }
 

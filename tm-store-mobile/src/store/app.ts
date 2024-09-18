@@ -1,5 +1,6 @@
 // import { local } from '@/utils/storage'
 import { setLocale } from '@/i18n'
+import moment from 'moment'
 export type TransitionAnimation = '' | 'fade-slide' | 'fade-bottom' | 'fade-scale' | 'zoom-fade' | 'zoom-out'
 export type LayoutMode = 'leftMenu' | 'topMenu' | 'mixMenu'
 
@@ -17,6 +18,57 @@ const { system, store } = useColorMode({
 // export const toggleDark = useToggle(isDark)
 // export const preferredDark = usePreferredDark()
 
+interface IStateApp {
+  darkMode: globalThis.WritableComputedRef<boolean>
+  colorWeak: boolean
+  showLogo: boolean
+  showProgress: boolean
+  showBreadcrumb: boolean
+  showBreadcrumbIcon: boolean
+  showSetting: boolean
+  contentFullScreen: boolean
+  filter: string
+  isLeftMenu: boolean
+  rowsPerPageOptions: Array<number>
+  languages: Array<any>
+  language: string
+  transitionAnimation: TransitionAnimation
+  loading: {
+    get: boolean,
+    post: boolean,
+    put: boolean,
+    patch: boolean,
+    delete: boolean
+  },
+  routes: Array<any>
+  cacheRoutes: Array<any>
+  font: {
+    size: number
+    family: string
+    color: string
+    lineHeight: number
+  },
+  format: {
+    date: string
+    time: string
+  },
+  dialog: {
+    add: boolean,
+    edit: boolean,
+    import: boolean
+  },
+  dense: {
+    form: boolean,
+    button: boolean,
+    input: boolean,
+    table: boolean,
+    menu: boolean
+  },
+  shadow: {
+    table: boolean
+  }
+}
+
 const settings = {
   darkMode: false,
   language: 'vi-VN',
@@ -28,12 +80,8 @@ const settings = {
     lineHeight: 1.5
   },
   format: {
-    date: 'DD/MM/YYYY',
-    time: 'hh:mm:ss a',
-    dateTime: {
-      date: 'DD/MM/YYYY',
-      time: 'hh:mm:ss a'
-    }
+    date: 'YYYY-MM-DD',
+    time: 'hh:mm:ss A'
   },
   dialog: {
     add: true,
@@ -52,11 +100,8 @@ const settings = {
   }
 }
 export const useAppStore = defineStore('appStore', {
-  persist: true, //{
-  // storage: localStorage,
-  // key: 'app-store',
-  //},//{ storage: localStorage }
-  state: () => ({// useLocalStorage('app-store', {
+  persist: true,
+  state: (): IStateApp => ({
     darkMode: isDark,
     colorWeak: false,
     showLogo: true,
@@ -80,10 +125,30 @@ export const useAppStore = defineStore('appStore', {
     },
     routes: [],
     cacheRoutes: [],
+    font: {
+      size: 14,
+      family: '"Roboto", "-apple-system", "Helvetica Neue", Helvetica, Arial, sans-serif',
+      color: '#6b6b6b',
+      lineHeight: 1.5
+    },
     format: {
       date: settings.format.date,
-      time: settings.format.time,
-      dateTime: settings.format.dateTime,
+      time: settings.format.time
+    },
+    dialog: {
+      add: true,
+      edit: true,
+      import: true
+    },
+    dense: {
+      form: true,
+      button: true,
+      input: true,
+      table: true,
+      menu: false
+    },
+    shadow: {
+      table: false
     }
   }),
   getters: {
@@ -96,6 +161,56 @@ export const useAppStore = defineStore('appStore', {
     fullScreen() {
       return isFullscreen.value
     },
+    minDate() {
+      return (val?: number): Date => {
+        const now = new Date()
+        now.setFullYear(now.getFullYear() - (val || 100))
+        return now
+      }
+    },
+    maxDate() {
+      return (val?: number): Date => {
+        const now = new Date()
+        now.setFullYear(now.getFullYear() + (val || 0))
+        return now
+      }
+    },
+    formatDate(state) {
+      return (val?: string | Date): string => {
+        if (val) return moment(val).format(state.format.date)
+        else return ''
+      }
+    },
+    formatTime(state) {
+      return (val?: string | Date): string => {
+        if (val) return moment(val).format(state.format.time)
+        else return ''
+      }
+    },
+    formatDateTime(state) {
+      return (val?: string | Date): string => {
+        if (val) return moment(val).format(`${state.format.date} ${state.format.time}`)
+        else return ''
+      }
+    },
+    formatDateDefault() {
+      return (val?: string | Date): string => {
+        if (val) return moment(val).format(settings.format.date)
+        else return ''
+      }
+    },
+    formatTimeDefault() {
+      return (val?: string | Date): string => {
+        if (val) return moment(val).format(settings.format.time)
+        else return ''
+      }
+    },
+    formatDateToArray: () => {
+      return (val?: string | Date): Array<string> => {
+        if (val) return moment(val).format(settings.format.date).split('-')
+        else return []
+      }
+    }
   },
   actions: {
     // Reset All Settings
@@ -123,14 +238,15 @@ export const useAppStore = defineStore('appStore', {
       // local.set('lang', lang)
       this.language = lang
     },
-    setDarkMode() {
+    setColorMode(mode: 'light' | 'dark' | 'auto') {
+      store.value = mode
+    },
+    toggleDarkMode() {
+      toggleDark()
       // const toggleDark = useToggle(this.darkMode)
       // toggleDark()
       // useToggle(this.darkMode)
       // this.darkMode = !this.darkMode
-    },
-    setColorMode(mode: 'light' | 'dark' | 'auto') {
-      store.value = mode
     },
     /* Toggle sidebar collapse */
     toggleCollapse() {
