@@ -27,7 +27,7 @@ const constant = {
 
 const API_PATH = 'roles'
 export const useRoleStore = defineStore('roleStore', {
-  persist: false,
+  persist: true,
   state: (): {
     items: IModelRole[]
     item: IModelRole
@@ -51,7 +51,6 @@ export const useRoleStore = defineStore('roleStore', {
       try {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}`, { params: arg })
         this.items = rs.data
-        this.rowsNumber = rs.rowsNumber
         return rs
       } catch (e) { throw e }
     },

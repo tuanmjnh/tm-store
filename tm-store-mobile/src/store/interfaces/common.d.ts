@@ -44,3 +44,13 @@ export interface IResponseFlag {
   status: boolean
   message: string
 }
+
+export interface IImage {
+  id: string
+  name: string
+  size: number
+  thumbnail: string
+  type: string
+  url: string
+  download: string
+}

@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import { useAppStore, useTypeStore, useUserStore } from '@/store'
+import { useAppStore, useTypeStore, useRoleStore, useUserStore } from '@/store'
 import { historyBack } from '@/router'
 import { $t } from '@/i18n'
-import { showNotify } from 'vant'
+import { showImagePreview } from 'vant';
+
+// const tmFileList = defineAsyncComponent(() => import('@/components/tm-file-list/index.vue'))
+// const tmFileManager = defineAsyncComponent(() => import('@/components/tm-file-manager/index.vue'))
+// const tmUpload = defineAsyncComponent(() => import('@/components/tm-upload/index.vue'))
+// const tmViewBox = defineAsyncComponent(() => import('@/components/tmViewBox.vue'))
+const tmViewList = defineAsyncComponent(() => import('@/components/tmViewList.vue'))
 
 const route = useRoute()
 const appStore = useAppStore()
 const typeStore = useTypeStore()
+const roleStore = useRoleStore()
 const userStore = useUserStore()
 const genders = ref(typeStore.getByKey('gender').map(x => { return { text: x.name, value: x.code } }))
+// const images = ref([])
 const form = computed(() => userStore.item)
 const formDate = ref({
   dateBirth: [],
@@ -23,6 +31,8 @@ const showDatePicker = ref(false)
 const initForm = async () => {
   if (route.params.id && !form.value._id) await userStore.getItem(route.params)
   formDate.value.dateBirth = appStore.formatDateToArray(form.value.dateBirth)
+  // images.value = form.value.avatar
+  // console.log(images.value)
 }
 initForm()
 
@@ -52,6 +62,53 @@ const onSubmit = async () => {
   //   if (error.data && error.data.message) showNotify({ type: 'danger', message: $t(`error.${error.data.message}`) })
   //   else showNotify({ type: 'danger', message: $t(`http.${error.status}`) })
   // }
+}
+// const onPreview = () => {
+//   if (images.value && images.value.length)
+//     showImagePreview([images.value[0].url]);
+// }
+const imagesSelected = ref([])
+const images = ref([
+  {
+    name: 'image73',
+    type: 'webp',
+    alt: 'gallery',
+    src: 'https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp'
+  },
+  {
+    name: 'image74',
+    type: 'webp',
+    alt: 'gallery',
+    src: 'https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp'
+  },
+  {
+    name: 'image75',
+    type: 'webp',
+    alt: 'gallery',
+    src: 'https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(75).webp'
+  },
+  {
+    name: 'image70',
+    type: 'webp',
+    alt: 'gallery',
+    src: 'https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp'
+  },
+  {
+    name: 'image76',
+    type: 'webp',
+    alt: 'gallery',
+    src: 'https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(76).webp'
+  },
+  {
+    name: 'image72',
+    type: 'webp',
+    alt: 'gallery',
+    src: 'https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(72).webp'
+  }
+])
+const onDeleteIamge = (img) => {
+  // console.log(img)
+  // console.log(imagesSelected.value)
 }
 </script>
 <template>
@@ -108,9 +165,36 @@ const onSubmit = async () => {
           </van-field>
         </van-cell-group>
       </van-tab>
-      <van-tab :title="$t('user.roles')" name="roles">
+      <van-tab :title="$t('user.roles')" name="roles" class="px-6">
+        <van-checkbox-group v-model="form.roles" shape="square">
+          <van-space direction="vertical" fill>
+            <van-checkbox v-for="(e, i) in roleStore.items" :key="i" :name="e._id">{{ e.name }}</van-checkbox>
+          </van-space>
+        </van-checkbox-group>
       </van-tab>
       <van-tab :title="$t('global.avatar')" name="avatar">
+        <!-- <tm-fileList v-model="form.avatar" :multiple="false" center :is-delete="false" :is-tooltip="false"
+          :lblSelect="$t('global.select')" :lblView="$t('global.zoomIn')" :lblDelete="$t('global.delete')" size="83vw"
+          thumbnailView thumbnailSize="s300">
+          <template v-slot:tool-bar>
+            <q-toolbar-title></q-toolbar-title>
+            <q-btn round dense flat icon="file_upload" color="primary">
+              <q-tooltip>{{ $t('files.upload') }}</q-tooltip>
+            </q-btn>
+            <q-btn round dense flat icon="cloud_circle" color="secondary">
+              <q-tooltip>{{ $t('files.openFile') }}</q-tooltip>
+            </q-btn>
+          </template>
+        </tm-fileList> -->
+        <!-- <div class="flex justify-center mt-5">
+          <van-image width="10rem" height="10rem" fit="cover" lazy-load
+            :src="images && images.length ? images[0]?.thumbnail : ''" @click="onPreview" />
+        </div> -->
+        <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
+          <tm-view-box v-model="images" v-model:selected="imagesSelected" multiple is-trashed @onDelete="onDeleteIamge" />
+          <tm-view-list v-model="images" v-model:selected="imagesSelected" multiple :is-trashed="true"
+            @onDelete="onDeleteIamge" />
+        </div>
       </van-tab>
       <van-tab :title="$t('global.note')" name="note">
         <van-field v-model="form.note" type="textarea" rows="1" autosize name="note" :label="$t('global.note')"

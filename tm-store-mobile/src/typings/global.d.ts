@@ -14,6 +14,8 @@ declare global {
   // const $moment: any
   interface Window {
     history: any
+    onGapiLoad: any
+    gapi: any
     $loadingBar: import('van').LoadingBarApi
     $dialog: import('naive-ui').DialogApi
     $message: import('naive-ui').MessageApi

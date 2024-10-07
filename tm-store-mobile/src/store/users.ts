@@ -1,5 +1,5 @@
 import { http } from '@/utils/http-axios'
-import { ICreated, IResponseList, IResponseItem, IResponseFlag } from './interfaces/common'
+import { ICreated, IResponseList, IResponseItem, IResponseFlag, IImage } from './interfaces/common'
 
 export interface IModelUser {
   _id?: string
@@ -12,7 +12,7 @@ export interface IModelUser {
   phone: string
   personNumber: string
   region: string
-  avatar: Array<string>
+  avatar: Array<IImage>
   note: string
   dateBirth: Date,
   gender: string

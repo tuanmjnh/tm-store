@@ -12,7 +12,7 @@ const router = useRouter()
     <img v-if="type === '404'" src="@/assets/svg/error-404.svg" alt="" class="w-1/3">
     <img v-if="type === '500'" src="@/assets/svg/error-500.svg" alt="" class="w-1/3">
     <van-button type="primary" @click="router.push('/')">
-      {{ $t('app.backHome') }}
+      {{ $t('route.appRoot') }}
     </van-button>
   </div>
 </template>
