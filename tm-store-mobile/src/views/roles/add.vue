@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import treeView from '@/components/tree-view/index.vue'
 import { useRoleStore } from '@/store'
-import { historyBack } from '@/router'
-import { rootRoute } from '@/router/routes.inner'
+import { historyBack, routesTree } from '@/router'
+// import { rootRoute } from '@/router/routes.inner'
 import { $t } from '@/i18n'
 import { showNotify } from 'vant'
-const route = useRoute();
+const route = useRoute()
 const roleStore = useRoleStore()
 const form = computed(() => roleStore.item)
 const active = ref('basicInf')
@@ -46,7 +46,8 @@ const routesToTree = (routes) => {
 }
 const initForm = async () => {
   if (route.params.id && !form.value._id) await roleStore.getItem(route.params)
-  treeItems.value = routesToTree(rootRoute.children)
+  // treeItems.value = routesToTree(rootRoute.children)
+  treeItems.value = routesToTree(routesTree)
 }
 initForm()
 </script>

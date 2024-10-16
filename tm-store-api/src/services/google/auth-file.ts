@@ -1,10 +1,9 @@
-const fs = require('fs').promises;
-const path = require('path');
-const process = require('process');
-const jwtDecode = require('jwt-decode')
-const { authenticate } = require('@google-cloud/local-auth');
-const { google } = require('googleapis')
-const io = require('../../utils/io')
+import { join } from 'path'
+import { readFile, writeFile, rm } from 'fs/promises'
+import { jwtDecode } from 'jwt-decode'
+import { authenticate } from '@google-cloud/local-auth'
+import { google } from 'googleapis'
+import { createDir } from '../../utils/tm-io'
 const SCOPES = ['https://www.googleapis.com/auth/userinfo.profile']
 // If modifying these scopes, delete token.json.
 // The file token.json stores the user's access and refresh tokens, and is
@@ -14,38 +13,40 @@ const SCOPES = ['https://www.googleapis.com/auth/userinfo.profile']
 // const ROOT_PATH = process.env.NODE_ENV == 'production' ? '/tmp' : process.cwd()
 const ROOT_PATH = process.cwd()
 const CREDENTIALS_PATH = 'credentials/google'
-const CREDENTIALS = path.join(ROOT_PATH, CREDENTIALS_PATH, 'credentials.json');
-const CLIENT_ID = path.join(ROOT_PATH, CREDENTIALS_PATH, 'clientID.json');
+const CREDENTIALS = join(ROOT_PATH, CREDENTIALS_PATH, 'credentials.json')
+const CLIENT_ID = join(ROOT_PATH, CREDENTIALS_PATH, 'clientID.json')
 
-module.exports.loadClientID = async function () {
+export const loadConnect = () => { return true }
+
+export const loadClientID = async function () {
   try {
-    const clientId = await fs.readFile(CLIENT_ID);
-    return JSON.parse(clientId);
-  } catch (e) { return null; }
+    const clientId = (await readFile(CLIENT_ID)).toString()
+    return JSON.parse(clientId)
+  } catch (e) { return null }
 }
 
-module.exports.setClientID = async function (clientId) {
+export const setClientID = async function (clientId) {
   try {
-    await io.createDir({ root: ROOT_PATH, dir: CREDENTIALS_PATH })
+    await createDir({ root: ROOT_PATH, dir: CREDENTIALS_PATH })
     clientId = JSON.parse(clientId)
-    const payload = JSON.stringify(clientId);
-    await fs.writeFile(CLIENT_ID, payload);
+    const payload = JSON.stringify(clientId)
+    await writeFile(CLIENT_ID, payload)
     return true
   } catch (e) { throw new Error(e) }
 }
 
-module.exports.removeClientID = async function () {
+export const removeClientID = async function () {
   try {
-    await fs.rm(CLIENT_ID);
+    await rm(CLIENT_ID)
     return true
   } catch (e) { throw new Error(e) }
 }
 
 const loadCredentials = async function () {
   try {
-    const credentials = await fs.readFile(CREDENTIALS);
-    return JSON.parse(credentials);
-  } catch (e) { return null; }
+    const credentials = await readFile(CREDENTIALS).toString()
+    return JSON.parse(credentials)
+  } catch (e) { return null }
 }
 
 /**
@@ -56,8 +57,8 @@ const loadCredentials = async function () {
 async function authFromJSON() {
   try {
     const credentials = await loadCredentials()
-    return google.auth.fromJSON(credentials);
-  } catch (e) { return null; }
+    return google.auth.fromJSON(credentials)
+  } catch (e) { return null }
 }
 /**
  * Serializes credentials to a file comptible with GoogleAUth.fromJSON.
@@ -67,53 +68,55 @@ async function authFromJSON() {
  */
 async function saveCredentials(client) {
   try {
-    const content = await fs.readFile(CLIENT_ID);
-    const keys = JSON.parse(content);
-    const key = keys.installed || keys.web;
+    const content = await readFile(CLIENT_ID).toString()
+    const keys = JSON.parse(content)
+    const key = keys.installed || keys.web
     const payload = JSON.stringify({
       type: 'authorized_user',
       client_id: key.client_id,
       client_secret: key.client_secret,
       refresh_token: client.credentials.refresh_token,
       id_token: client.credentials.id_token
-    });
-    await fs.writeFile(CREDENTIALS, payload);
+    })
+    await writeFile(CREDENTIALS, payload)
   } catch (e) { throw new Error(e) }
 }
 
 /**
  * Load or request or authorization to call APIs.
  */
-module.exports.authorize = async function (scopes) {
+export const authorize = async function (scopes) {
   try {
-    let client = await authFromJSON();
-    if (client) return client;
-    const options = { keyfilePath: CLIENT_ID };
+    // console.log(scopes)
+    let auth = await authFromJSON() as any
+    if (auth) return auth
+    const options = { keyfilePath: CLIENT_ID } as any
     if (scopes) options.scopes = SCOPES.concat(scopes)
-    client = await authenticate(options);
-    if (client.credentials) await saveCredentials(client);
-    return client;
+    auth = await authenticate(options)
+    if (auth.credentials) await saveCredentials(auth)
+    return auth
   } catch (e) { throw new Error(e) }
 }
 
-module.exports.getProfile = async function () {
+export const getProfile = async function () {
   try {
     const credentials = await loadCredentials()
     if (!credentials) return null
+    // console.log(jwtDecode(credentials.id_token))
     return credentials.id_token ? jwtDecode(credentials.id_token) : null
   } catch (e) { throw new Error(e) }
 }
-module.exports.isAuth = async function () {
+export const isAuth = async function () {
   try {
     const credentials = await loadCredentials()
-    if (credentials) return true;
+    if (credentials) return true
     else return false
   } catch (e) { throw new Error(e) }
 }
 
-module.exports.revoke = async function () {
+export const revoke = async function () {
   try {
-    await fs.rm(CREDENTIALS);
+    await rm(CREDENTIALS)
     return true
   } catch (e) { throw new Error(e) }
 }

@@ -24,13 +24,14 @@ const languge = computed(() => {
 </script>
 <template>
   <van-cell-group>
-    <van-cell :title="$t('app.darkMode')">
+    <van-cell :title="$t('global.darkMode')">
       <template #right-icon>
         <VanSwitch v-model="checked" size="20px" aria-label="on/off Dark Mode" @click="storeApp.toggleDarkMode()" />
       </template>
     </van-cell>
     <van-cell :title="$t('setting.title')" :value="languge.label" is-link
       @click="isDialogLanguage = !isDialogLanguage" />
+    <van-cell :title="$t('global.connect')" @click="$router.push('connect')" is-link />
   </van-cell-group>
   <van-action-sheet v-model:show="isDialogLanguage" :cancel-text="$t('global.cancel')"
     :description="$t('setting.switchTitle')" close-on-click-action>

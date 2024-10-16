@@ -319,11 +319,12 @@ export const staticRoutes: RouteRecordRaw[] = [
     }
   },
   {
-    name: 'links',
-    path: '/links',
-    component: null,
+    name: 'connect',
+    path: '/connect',
+    redirect: { name: 'connect-list' },
+    // component: null,
     meta: {
-      title: 'links',
+      title: 'connect',
       requiresAuth: true,
       icon: 'link-o',
       menuType: 'dir',
@@ -332,55 +333,41 @@ export const staticRoutes: RouteRecordRaw[] = [
     }
   },
   {
-    name: 'links-list',
-    path: '/links/list',
-    component: () => import('@/views/links/list.vue'),
+    name: 'connect-list',
+    path: '/connect/list',
+    component: () => import('@/views/connect/index.vue'),
     meta: {
       title: 'list',
       requiresAuth: true,
       icon: 'icon-park-outline:list',
-      menuType: 'page',
-      parent: 'links',
-      level: 2,
+      menuType: 'dir',
+      parent: 'connect',
+      level: 2
     }
   },
   {
-    name: 'links-add',
-    path: '/links/add',
-    component: () => import('@/views/links/add.vue'),
+    name: 'connect-google-add',
+    path: '/connect/google-add',
+    component: () => import('@/views/connect/google-add.vue'),
     meta: {
-      title: 'add',
+      title: 'google-add',
       requiresAuth: true,
       icon: 'add-o',
       menuType: 'page',
-      parent: 'links',
+      parent: 'connect',
       level: 2,
     }
   },
   {
-    name: 'links-edit',
-    path: '/links/edit/:id?',
-    component: () => import('@/views/links/add.vue'),
+    name: 'connect-google-remove',
+    path: '/connect/google-remove',
+    component: () => import('@/views/connect/google-remove.vue'),
     meta: {
-      title: 'edit',
+      title: 'google-remove',
       requiresAuth: true,
-      icon: 'edit',
+      icon: 'close',
       menuType: 'page',
-      parent: 'links',
-      level: 2,
-      hide: true
-    }
-  },
-  {
-    name: 'links-trash',
-    path: '/links/trash',
-    component: () => import('@/views/links/list.vue'),
-    meta: {
-      title: 'trash',
-      requiresAuth: true,
-      icon: 'icon-park-outline:delete-one',
-      menuType: 'page',
-      parent: 'links',
+      parent: 'connect',
       level: 2,
       hide: true
     }

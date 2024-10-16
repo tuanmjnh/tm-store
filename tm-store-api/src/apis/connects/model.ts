@@ -1,7 +1,7 @@
 import { model, Schema, Document, Types } from 'mongoose'
 import { ICreated } from '@interfaces/common'
 
-export interface ILink {
+export interface IConnect {
   _id?: Types.ObjectId
   name: string
   key: string
@@ -31,4 +31,4 @@ const schema: Schema = new Schema({
   created: { type: Object, default: { at: new Date(), by: '', ip: '' } }
 })
 
-export const MLink = model<ILink & Document>('links', schema)
+export const MConnect = model<IConnect & Document>('connects', schema)

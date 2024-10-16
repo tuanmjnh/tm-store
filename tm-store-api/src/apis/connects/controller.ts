@@ -1,21 +1,21 @@
 import { NextFunction, Request, Response } from 'express'
 import { Container } from 'typedi'
-import { MLink, ILink } from './model'
-import { LinkService } from './service'
+import { MConnect, IConnect } from './model'
+import { ConnectService } from './service'
 import { HttpException } from '@/exceptions/http.exception'
 import { RequestMiddlewares } from '@/interfaces/auth.interface'
 import mongoose from 'mongoose'
 import { getIp } from '@/utils/tm-request'
 
-export class LinkController {
-  public link = Container.get(LinkService)
+export class ConnectController {
+  public Connect = Container.get(ConnectService)
 
   public get = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any
       queries.page = queries.page ? parseInt(queries.page) : 1
       queries.rowsPerPage = queries.rowsPerPage ? parseInt(queries.rowsPerPage) : 10
-      const rs = { data: [] as ILink[], rowsNumber: 0, status: false, message: 'find' }
+      const rs = { data: [] as IConnect[], rowsNumber: 0, status: false, message: 'find' }
       const conditions = { $and: [{ flag: queries.flag ? parseInt(queries.flag) : 1 }] } as any
       if (queries.filter) {
         conditions.$and = []
@@ -27,8 +27,8 @@ export class LinkController {
         })
       }
       if (!queries.sortBy) queries.sortBy = 'order'
-      rs.rowsNumber = (await MLink.countDocuments(conditions))
-      rs.data = await this.link.FindAll(conditions)
+      rs.rowsNumber = (await MConnect.countDocuments(conditions))
+      rs.data = await this.Connect.FindAll(conditions)
         .skip((parseInt(queries.page) - 1) * parseInt(queries.rowsPerPage))
         .limit(parseInt(queries.rowsPerPage))
         .sort({ [queries.sortBy]: queries.descending === 'true' ? -1 : 1 }) // 1 ASC, -1 DESC
@@ -43,8 +43,8 @@ export class LinkController {
   public getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any
-      const rs = { data: [] as ILink[], status: false, message: 'getAll' }
-      rs.data = await this.link.FindAll({ flag: queries.flag ? parseInt(queries.flag) : 1 })
+      const rs = { data: [] as IConnect[], status: false, message: 'getAll' }
+      rs.data = await this.Connect.FindAll({ flag: queries.flag ? parseInt(queries.flag) : 1 })
       if (rs.data) rs.status = true
       res.status(200).json(rs)
     } catch (error) {
@@ -57,21 +57,21 @@ export class LinkController {
       const queries = req.query as any
       if (queries._id) {
         if (Array.isArray(queries._id)) {
-          const rs = await this.link.FindAll({ _id: { $in: queries._id } }).exec()
+          const rs = await this.Connect.FindAll({ _id: { $in: queries._id } }).exec()
           if (!rs) next(new HttpException(404, 'noExist'))
           return res.status(200).json({ data: rs, message: 'findById' })
         } else {
-          const rs = await this.link.FindById(queries._id)
+          const rs = await this.Connect.FindById(queries._id)
           if (!rs) next(new HttpException(404, 'noExist'))
           return res.status(200).json({ data: rs, message: 'findById' })
         }
       } else if (queries.key) {
         if (Array.isArray(queries.key)) {
-          const rs = await this.link.FindAll({ key: { $in: queries.key } })
+          const rs = await this.Connect.FindAll({ key: { $in: queries.key } })
           if (!rs) next(new HttpException(404, 'noExist'))
           return res.status(200).json({ data: rs, message: 'findOneId' })
         } else {
-          const rs = await this.link.FindOne({ key: queries.key })
+          const rs = await this.Connect.FindOne({ key: queries.key })
           if (!rs) next(new HttpException(404, 'noExist'))
           return res.status(200).json({ data: rs, message: 'findOneId' })
         }
@@ -83,9 +83,9 @@ export class LinkController {
 
   public findById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const rs = { data: null as ILink, status: false, message: 'findOne' }
+      const rs = { data: null as IConnect, status: false, message: 'findOne' }
       const _id: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.id)
-      rs.data = await this.link.FindById(_id)
+      rs.data = await this.Connect.FindById(_id)
       if (rs.data) rs.status = true
       res.status(200).json(rs)
     } catch (error) {
@@ -97,7 +97,7 @@ export class LinkController {
     try {
       const queries = req.query as any
       const rs = { data: null, status: false, message: 'findExist' }
-      rs.data = await MLink.exists({ key: queries.key })
+      rs.data = await MConnect.exists({ key: queries.key })
       if (rs.data) rs.status = true
       res.status(200).json(rs)
     } catch (error) {
@@ -107,10 +107,10 @@ export class LinkController {
 
   public create = async (req: RequestMiddlewares, res: Response, next: NextFunction) => {
     try {
-      const body: ILink = req.body
-      const rs = { data: null as ILink, status: false, message: 'created' }
+      const body: IConnect = req.body
+      const rs = { data: null as IConnect, status: false, message: 'created' }
       body.created = { at: new Date(), by: req.verify._id.toString() || null, ip: getIp(req) }
-      rs.data = await this.link.Create(body)
+      rs.data = await this.Connect.Create(body)
       if (rs.data) rs.status = true
       res.status(201).json(rs)
     } catch (error) {
@@ -120,9 +120,9 @@ export class LinkController {
 
   public update = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const body: ILink = req.body
-      const rs = { data: null as ILink, status: false, message: 'updated' }
-      rs.data = await this.link.Update(body)
+      const body: IConnect = req.body
+      const rs = { data: null as IConnect, status: false, message: 'updated' }
+      rs.data = await this.Connect.Update(body)
       if (rs.data) rs.status = true
       res.status(201).json(rs)
     } catch (error) {
@@ -139,7 +139,7 @@ export class LinkController {
         try {
           session.startTransaction()
           for await (let obj of req.body.data) {
-            const item = await this.link.UpdateFlag(new mongoose.Types.ObjectId(obj._id), obj.flag, session)
+            const item = await this.Connect.UpdateFlag(new mongoose.Types.ObjectId(obj._id), obj.flag, session)
             if (!item) {
               rs.error.push(obj._id)
               next(new HttpException(401, 'update'))
@@ -157,7 +157,7 @@ export class LinkController {
           res.status(200).json(rs)
         }
       } else {
-        const rs: ILink = await this.link.UpdateFlag(new mongoose.Types.ObjectId(body._id), body.flag)
+        const rs: IConnect = await this.Connect.UpdateFlag(new mongoose.Types.ObjectId(body._id), body.flag)
         res.status(200).json({ data: rs, message: 'updated' })
       }
     } catch (error) {
@@ -167,9 +167,9 @@ export class LinkController {
 
   public delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const rs = { data: null as ILink, status: false, message: 'deleted' }
+      const rs = { data: null as IConnect, status: false, message: 'deleted' }
       const _id: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.id)
-      rs.data = await this.link.Delete(_id)
+      rs.data = await this.Connect.Delete(_id)
       if (rs.data) rs.status = true
       res.status(201).json(rs)
     } catch (error) {

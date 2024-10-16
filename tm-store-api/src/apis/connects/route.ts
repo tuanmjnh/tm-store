@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { LinkController } from './controller';
+import { ConnectController } from './controller';
 import { Routes } from '@interfaces/routes.interface';
 import { APIMiddleware } from '@middlewares/api.middleware';
 
-export class LinkRoute implements Routes {
-  public path = '/api/links';
+export class ConnectRoute implements Routes {
+  public path = '/api/connects';
   public router = Router();
-  public controller = new LinkController();
+  public controller = new ConnectController();
 
   constructor() {
     this.initializeRoutes();

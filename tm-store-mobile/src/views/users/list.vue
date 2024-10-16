@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import tabBarView from "@/components/tabBarView.vue";
+import tabBarView from "@/components/tabBarView.vue"
 import router from '@/router'
 import delay from 'delay'
 import { $t } from '@/i18n'

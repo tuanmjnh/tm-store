@@ -2,6 +2,7 @@
 import moment from 'moment'
 import { $t } from '../utils'
 import { showNotify } from 'vant'
+import type { Router } from 'vue-router'
 declare namespace Entity {
 }
 
@@ -12,10 +13,14 @@ declare namespace Api {
 
 declare global {
   // const $moment: any
+  const googleTokenClient: any
   interface Window {
     history: any
     onGapiLoad: any
+    onGisLoad: any
     gapi: any
+    google: any
+    googleTokenClient: any
     $loadingBar: import('van').LoadingBarApi
     $dialog: import('naive-ui').DialogApi
     $message: import('naive-ui').MessageApi
@@ -30,6 +35,7 @@ declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $t: typeof $t
     $moment: typeof moment
+    $router: Router
   }
 }
 

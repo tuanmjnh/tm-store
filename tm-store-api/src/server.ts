@@ -9,7 +9,7 @@ import { UserRoute } from '@apis/users/route';
 import { AuthRoute } from '@apis/auth/route';
 // import { FileManagerRoute } from '@apis/file-manager/route';
 import { GroupRoute } from '@apis/groups/route';
-import { LinkRoute } from '@apis/links/route';
+import { ConnectRoute } from '@/apis/connects/route';
 import { NewsRoute } from '@apis/news/route';
 import { ProductRoute } from '@apis/products/route';
 ValidateEnv();
@@ -22,7 +22,7 @@ const app = new App([
   new AuthRoute(),
   // new FileManagerRoute(),
   new GroupRoute(),
-  new LinkRoute(),
+  new ConnectRoute(),
   new NewsRoute(),
   new ProductRoute(),
 ]);

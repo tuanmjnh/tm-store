@@ -136,7 +136,13 @@
     "textPulling": "Kéo để làm mới...",
     "textLoosing": "Thả để làm mới...",
     "textLoading": "Đang tải...",
-    "textFinished": "Đã tải hết dữ liệu"
+    "textFinished": "Đã tải hết dữ liệu",
+    "darkMode": "Chế độ tối",
+    "lignt": "Màu sáng",
+    "dark": "Tối",
+    "notifications": "Thông báo",
+    "messages": "Tin nhắn",
+    "connect": "Kết nối"
   },
   "success": {
     "create": "Thêm mới thành công",
@@ -546,13 +552,6 @@
     "userControl": "Điều khiển",
     "dialog": "Mở hộp thoại"
   },
-  "app": {
-    "darkMode": "Chế độ tối",
-    "lignt": "Màu sáng",
-    "dark": "Tối",
-    "notifications": "Thông báo",
-    "messages": "Tin nhắn"
-  },
   "route": {
     "login": "Đăng nhập",
     "root": "Trang chủ",
@@ -572,6 +571,7 @@
     "roles": "Quyền truy cập",
     "users": "Tài khoản",
     "links": "Kết nối",
+    "connect": "Kết nối",
     "groupNews": "Nhóm tin tức",
     "news": "Tin tức",
     "groupProduct": "Nhóm sản phẩm",
@@ -579,7 +579,10 @@
     "list": "Danh sách",
     "add": "Thêm mới",
     "edit": "Cập nhật",
-    "trash": "Thùng rác"
+    "trash": "Thùng rác",
+    "delete": "Xóa",
+    "google-add": "Kết nối Google",
+    "google-remove": "Ngắt kết nối Google"
   },
   "error": {
     "system": "Lỗi hệ thống. Vui lòng thử lại!",
