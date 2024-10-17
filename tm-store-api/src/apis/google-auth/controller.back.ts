@@ -2,22 +2,23 @@ import { NextFunction, Request, Response } from 'express'
 // import { createReadStream, unlinkSync } from 'fs'
 // import { HttpException } from '@/exceptions/http.exception'
 import { RequestMiddlewares } from '@/interfaces/auth.interface'
-import { HttpException } from '@/exceptions/http.exception'
-// import { authorize, loadClientID, setClientID, removeClientID, revoke } from '../../services/google/auth'
-import { OAuth2ClientGetToken } from '../../services/google/auth-db'
+import { authorize, loadClientID, setClientID, removeClientID, revoke } from '../../services/google/auth'
+import { SCOPES } from '@services/google/drive'
 
-export class GoogleAuthController {
+export class FileManagerController {
   public get = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const queries = req.query as any
-      const tokens = OAuth2ClientGetToken(queries)
-      // console.log(queries)
-      const rs = { data: [] as any, status: false, message: 'getAuthCode' }
-      if (!rs) next(new HttpException(404, 'noExist'))
-      // res.render('google-auth', { title: 'Google auth', content: { clientId: rs } })
+      // if (process.env.USE_DB == 'true') {
+      //   const rs = await OAuthDB.loadAccLink()
+      //   if (rs && rs.clientID)
+      //     res.render('google-auth', { title: 'Google auth', content: { clientId: rs.clientID } })
+      //   else
+      //     res.render('google-auth', { title: 'Google auth', content: {} })
+      // } else {
+      const rs = await loadClientID()
+      res.render('google-auth', { title: 'Google auth', content: { clientId: rs } })
       // }
-      if (rs.data) rs.status = true
-      res.status(200).json(rs)
+      return res.status(200).json(rs)
     } catch (error) {
       next(error)
     }
@@ -25,12 +26,10 @@ export class GoogleAuthController {
 
   public post = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const body = req.body
-      console.log(body)
-      const rs = []//await authorize(SCOPES)
+      const rs = await authorize(SCOPES)
       // return res.status(200).json(rs)
       // res.render('google-auth', { title: 'Google auth', content: rs })
-      // res.redirect('/')
+      res.redirect('/')
     } catch (error) {
       next(error)
     }
@@ -47,7 +46,7 @@ export class GoogleAuthController {
       //   if (rs) res.redirect(`/google-auth`)//res.render(`google-auth`, { title: 'Google auth', content: { clientId: rs } })
       //   else res.render(`google-auth`, { title: 'Google auth', content: { error: 'error' } })
       // } else {
-      const rs = []//await setClientID(req.body.clientId)
+      const rs = await setClientID(req.body.clientId)
       if (rs) res.redirect(`/google-auth`)//res.render('google-auth', { title: 'Google auth', content: { clientId: rs } })
       else res.render('google-auth', { title: 'Google auth', content: { error: 'error' } })
       // }
@@ -58,7 +57,7 @@ export class GoogleAuthController {
 
   public patch = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // await removeClientID()
+      await removeClientID()
       res.redirect('/google-auth')
     } catch (error) {
       next(error)
@@ -67,7 +66,7 @@ export class GoogleAuthController {
 
   public delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // await revoke()
+      await revoke()
       res.redirect('/')
     } catch (error) {
       next(error)

@@ -6,12 +6,12 @@ export interface IConnect {
   name: string
   key: string
   order: number
-  clientID: object
-  credentials: object
+  clientID: any
+  credentials: any
   authUri: string
   redirectUris: string
-  profile: object
-  config: object
+  profile: any
+  config: any
   flag: number
   created: ICreated
 }

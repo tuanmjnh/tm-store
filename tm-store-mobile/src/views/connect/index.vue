@@ -7,9 +7,10 @@ const isLoadingFacebook = ref(false)
 const isLoadingTiktok = ref(false)
 const onGoogleConnect = () => {
   isLoadingGoogle.value = true
-  // GoogleOAuthSignIn()
-  router.push('google-add')
+  GoogleOAuthSignIn()
+  // router.push('google-add')
 }
+console.log(window.location.origin)
 </script>
 <template>
   <van-cell-group>

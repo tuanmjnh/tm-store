@@ -4,6 +4,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 export * from './app'
 export * from './auth'
+export * from './connect-google'
 export * from './types'
 export * from './roles'
 export * from './users'

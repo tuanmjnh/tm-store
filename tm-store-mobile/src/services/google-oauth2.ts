@@ -1,4 +1,5 @@
 export const callbackUrl = 'http://localhost:8000/connect/google-add#state=pass-through%20value&access_token=ya29.a0AcM612xHb2vKPT2RdrPtARfFybF1UsICZjWChnFYRA-fFgPOOpTrzLqnT---IVpKfB8h8liIqgshciYM0wxt_9sUVLNXNilCeh9VMID4Y7Brqv4p086SfvtAjDfHYAlvexGHr4GdCzvqKcmDLqHfssom0ocrKx5UuZL97FGeaCgYKAUESARMSFQHGX2Mi8bij0pYX5nX_i-ZIvhpMFQ0175&token_type=Bearer&expires_in=3599&scope=email%20https://www.googleapis.com/auth/userinfo.email%20openid%20https://www.googleapis.com/auth/drive.metadata.readonly%20https://www.googleapis.com/auth/drive%20https://www.googleapis.com/auth/spreadsheets&authuser=0&prompt=consent'
+const callbackUrlCode = 'http://localhost:8000/connect/google-add?state=pass-through+value&code=4/0AVG7fiRpUqV15kXtfwx2stIpM-DAsiSziAXuhfpTALc-m2fOHfF0_D92vlmbU5bdl3skVQ&scope=email+profile+https://www.googleapis.com/auth/drive+https://www.googleapis.com/auth/drive.metadata.readonly+https://www.googleapis.com/auth/spreadsheets+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+openid+https://www.googleapis.com/auth/documents&authuser=0&prompt=none'
 export const scopesData = {
   userinfo: 'https://www.googleapis.com/oauth2/v3/userinfo',
   tokeninfo: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
@@ -17,8 +18,9 @@ export const scopes = [ //https://developers.google.com/identity/protocols/oauth
 const oauth2Url = 'https://accounts.google.com/o/oauth2/v2/auth'
 
 // Parameters to pass to OAuth 2.0 endpoint.
-const params = {
-  'client_id': '235324461758-n9qs0f3kec5e8q8t2almq6edn0cjh704.apps.googleusercontent.com',
+export const CLIENT_ID = '235324461758-n9qs0f3kec5e8q8t2almq6edn0cjh704.apps.googleusercontent.com'
+const PARAMS = {
+  'client_id': CLIENT_ID,
   // 'API_KEY': 'AIzaSyC-ysFtHg8WdeTMtndJEOx8LaFnm0CWUmk',
   'redirect_uri': 'http://localhost:8000/connect/google-add',
   'response_type': 'code',//'token',
@@ -26,7 +28,7 @@ const params = {
   'scope': scopes.join(' '),
   'include_granted_scopes': 'true',
   'state': 'pass-through value',
-  'prompt': ''//consent
+  'prompt': 'consent'
 }
 
 export const getHash = () => {
@@ -49,8 +51,8 @@ export const GoogleOAuthSignIn = () => {
   // form.setAttribute('method', 'GET') // Send as a GET request.
   // form.setAttribute('action', oauth2Endpoint)
 
-  for (const p in params) {
-    oauth2Endpoint += `${p}=${params[p]}&`
+  for (const p in PARAMS) {
+    oauth2Endpoint += `${p}=${PARAMS[p]}&`
   }
   // Add form parameters as hidden input values.
   // for (var p in params) {
@@ -78,7 +80,7 @@ export const GoogleOAuthSignIn = () => {
 export const GoogleOAuthCallback = async () => {
   if (window.location.hash) {
     const hash = getHash()
-    console.log(hash)
+    // console.log(hash)
     // window.close()
   } else {
     // const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -87,46 +89,54 @@ export const GoogleOAuthCallback = async () => {
     const urlParams = new URLSearchParams(window.location.search)
     // const myParam = urlParams.get('myParam')
     const params = Object.fromEntries(urlParams.entries())
-    console.log(params)
-    const response = await fetch(oauth2Url, {
-      mode: 'no-cors',
-      method: "POST",
-      headers: {
-        // "Content-Type": "application/json",
-        // "cross-origin-resource-policy:": "cross-origin",
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        // "content-type": "application/x-www-form-urlencoded",
-        // 'Access-Control-Allow-Origin': '*',
-        //  "Access-Control-Allow-Headers": "Origin, X-Requested-With"
-        'Access-Control-Allow-Origin': 'http://localhost:8000',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept',
-        'Access-Control-Allow-Credentials': 'true'
-      },
-      body: JSON.stringify({
-        grant_type: "authorization_code",
-        client_id: params.client_id,
-        client_secret: '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',
-        code: params.code,
-        redirect_uri: 'http://localhost:8000/connect/google-add',
-      }),
-    })
-    console.log(response)
+    params.client_id = CLIENT_ID
+    // console.log(params)
 
-    // const rawResponse = await fetch('https://httpbin.org/post', {
-    //   method: 'POST',
+    // const paramsGetToken = {
+    //   grant_type: "authorization_code",
+    //   client_id: PARAMS.client_id,
+    //   client_secret: CLIENT_SECRET,
+    //   code: params.code,
+    //   redirect_uri: PARAMS.redirect_uri
+    // }
+    // const formDataGetToken = new URLSearchParams();
+    // for (const p in paramsGetToken) {
+    //   formDataGetToken.append(p, paramsGetToken[p])
+    // }
+    // const formDataGetToken = new FormData();
+    // for (const p in paramsGetToken) {
+    //   formDataGetToken.append(p, paramsGetToken[p])
+    // }
+    // formDataGetToken.append('name', 'John');
+    // formDataGetToken.append('password', 'John123');
+
+    // const response = await fetch('https://oauth2.googleapis.com/token', {
+    //   mode: 'no-cors',
+    //   method: "POST",
     //   headers: {
+    //     // "Content-Type": "application/json",
+    //     // "cross-origin-resource-policy:": "cross-origin",
     //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
+    //     // 'Content-Type': 'application/json',
+    //     // 'Content-Type': 'multipart/form-data',
+    //     'Content-Type': 'application/x-www-form-urlencoded',
+    //     // 'Access-Control-Allow-Origin': '*',
+    //     //  "Access-Control-Allow-Headers": "Origin, X-Requested-With"
+    //     'Access-Control-Allow-Origin': window.location.origin,
+    //     'Access-Control-Allow-Methods': 'POST',
+    //     'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept',
+    //     'Access-Control-Allow-Credentials': 'true'
     //   },
-    //   body: JSON.stringify({ a: 1, b: 'Textual content' })
-    // });
-    // const content = await rawResponse.json();
-
-    // console.log(content);
+    //   // body: JSON.stringify({
+    //   //   grant_type: "refresh_token",
+    //   //   client_id: params.client_id,
+    //   //   client_secret: client_secret,
+    //   //   code: params.code,
+    //   //   redirect_uri: 'http://localhost:8000/connect/google-add',
+    //   // }),
+    //   body: formDataGetToken
+    // })
+    // console.log(response)
+    return params
   }
-  //else {
-  //   oauthSignInGoogle()
-  // }
 }

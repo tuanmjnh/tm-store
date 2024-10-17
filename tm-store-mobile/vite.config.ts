@@ -105,7 +105,10 @@ export default defineConfig(({ mode }) => {
           secure: true,
           ws: false
         }
-      }
+      },
+      headers: {
+        "Cross-Origin-Embedder-Policy": "unsafe-none", // added this part
+      },
     },
     build: {
       rollupOptions: {

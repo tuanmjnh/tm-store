@@ -29,8 +29,6 @@ import 'vant/es/dialog/style'
 import 'vant/es/notify/style'
 import 'vant/es/image-preview/style'
 
-import './services/gapi-client'
-
 async function setupApp() {
   // Load the global loading status
   const appLoading = createApp(AppLoading)
@@ -52,7 +50,7 @@ async function setupApp() {
     disableClick: false
     // any other global options...
   })
-  
+
   //vant components
   app.use(Notify)
   app.use(Lazyload)

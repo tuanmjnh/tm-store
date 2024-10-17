@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { get } from '@/utils/localStorage'
-import { useAppStore, useTypeStore } from './store'
+import { useAppStore, useAuthStore, useTypeStore } from './store'
 const appStore = useAppStore()
+const authStore = useAuthStore()
 const typeStore = useTypeStore()
 onMounted(() => {
-  const typeStoreAll = get('typeStore.all')
-  if (!typeStoreAll || !typeStoreAll.length) typeStore.getAll()
+  if (authStore.accessToken) {
+    const typeStoreAll = get('typeStore.all')
+    if (!typeStoreAll || !typeStoreAll.length) typeStore.getAll()
+  }
 })
 // console.log(window.matchMedia('(prefers-color-scheme: dark)').matches)
 </script>

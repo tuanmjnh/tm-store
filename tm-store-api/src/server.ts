@@ -7,6 +7,7 @@ import { TypeRoute } from '@apis/types/route';
 import { RoleRoute } from '@apis/roles/route';
 import { UserRoute } from '@apis/users/route';
 import { AuthRoute } from '@apis/auth/route';
+import { GoogleAuthRoute } from '@apis/google-auth/route';
 // import { FileManagerRoute } from '@apis/file-manager/route';
 import { GroupRoute } from '@apis/groups/route';
 import { ConnectRoute } from '@/apis/connects/route';
@@ -20,6 +21,7 @@ const app = new App([
   new RoleRoute(),
   new UserRoute(),
   new AuthRoute(),
+  new GoogleAuthRoute(),
   // new FileManagerRoute(),
   new GroupRoute(),
   new ConnectRoute(),

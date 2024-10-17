@@ -2,9 +2,12 @@
 import { jwtDecode } from 'jwt-decode'
 // import { authenticate } from '@google-cloud/local-auth'
 import { google } from 'googleapis'
+import { MConnect, IConnect } from '../../apis/connects/model'
 const SCOPES = ['https://www.googleapis.com/auth/userinfo.profile']
-const MConnect = require('./model-connect')
 const currentAcc = { name: 'Google', key: 'google' }
+const CLIENT_ID = '235324461758-n9qs0f3kec5e8q8t2almq6edn0cjh704.apps.googleusercontent.com'
+const CLIENT_SECRET = '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'
+const LOCATION_HOST = 'http://localhost:8080'
 // export const connects = connects
 // If modifying these scopes, delete token.json.
 // The file token.json stores the user's access and refresh tokens, and is
@@ -177,21 +180,19 @@ export const revoke = async function () {
   } catch (e) { throw new Error(e) }
 }
 
-
-
-const google_auth_library_1 = require("google-auth-library")
-const http = require("http")
-const url_1 = require("url")
-const opn = require("open")
-const arrify = require("arrify")
-const destroyer = require("server-destroy")
+const google_auth_library_1 = require('google-auth-library')
+const http = require('http')
+const url_1 = require('url')
+const opn = require('open')
+const arrify = require('arrify')
+const destroyer = require('server-destroy')
 const invalidRedirectUri = `The provided keyfile does not define a valid
 redirect URI. There must be at least one redirect URI defined, and this sample
 assumes it redirects to 'http://localhost:3000/oauth2callback'.  Please edit
 your keyfile, and add a 'redirect_uris' section.  For example:
 
-"redirect_uris": [
-  "http://localhost:3000/oauth2callback"
+'redirect_uris': [
+  'http://localhost:3000/oauth2callback'
 ]
 `
 function isAddressInfo(addr) {
@@ -289,4 +290,65 @@ async function authenticate(options) {
     })
     destroyer(server)
   })
+}
+
+
+export const OAuth2ClientGetToken = async (args) => {
+  try {
+    const oauth2Client = new google.auth.OAuth2(
+      CLIENT_ID,
+      CLIENT_SECRET,
+      'http://localhost:8000/connect/google-add'
+    )
+    const { tokens } = await oauth2Client.getToken(args.code)
+    oauth2Client.setCredentials(tokens)
+    return tokens
+    // const paramsGetToken = {
+    //   client_id: CLIENT_ID,
+    //   client_secret: CLIENT_SECRET,
+    //   code: args.code,
+    //   grant_type: 'authorization_code',
+    //   access_type: 'offline',
+    //   prompt: 'consent',
+    //   redirect_uri: 'http://localhost:8000/connect/google-add'
+    // }
+    // const formDataGetToken = new URLSearchParams();
+    // for (const p in paramsGetToken) {
+    //   formDataGetToken.append(p, paramsGetToken[p])
+    // }
+    // // const formDataGetToken = new FormData();
+    // // for (const p in paramsGetToken) {
+    // //   formDataGetToken.append(p, paramsGetToken[p])
+    // // }
+    // // formDataGetToken.append('name', 'John');
+    // // formDataGetToken.append('password', 'John123');
+
+    // const response = await fetch('https://oauth2.googleapis.com/token', {
+    //   // mode: 'no-cors',
+    //   method: 'POST',
+    //   headers: {
+    //     // 'Content-Type': 'application/json',
+    //     // 'cross-origin-resource-policy:': 'cross-origin',
+    //     'Accept': 'application/json',
+    //     // 'Content-Type': 'application/json',
+    //     // 'Content-Type': 'multipart/form-data',
+    //     'Content-Type': 'application/x-www-form-urlencoded',
+    //     // 'Access-Control-Allow-Origin': '*',
+    //     //  'Access-Control-Allow-Headers': 'Origin, X-Requested-With'
+    //     // 'Access-Control-Allow-Origin': LOCATION_HOST,
+    //     // 'Access-Control-Allow-Methods': 'POST',
+    //     // 'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept',
+    //     // 'Access-Control-Allow-Credentials': 'true'
+    //   },
+    //   body: formDataGetToken
+    // })
+
+    // response.json().then(tokens => {
+    //   console.log(tokens)
+    //   console.log(jwtDecode(tokens.id_token))
+    //   // oauth2Client.setCredentials(tokens)
+    // })
+  } catch (error) {
+    console.log(error)
+  }
 }
