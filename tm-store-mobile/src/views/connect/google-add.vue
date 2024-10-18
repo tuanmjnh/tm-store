@@ -1,12 +1,13 @@
 <script setup lang="ts">
 // import { requestlAccessToken, initCodeClient } from '@/services/gapi-client'
-import { useConnectGoogleStore } from '@/store'
-const connectGoogleStore = useConnectGoogleStore()
-import { GoogleOAuthCallback } from '@/services/google-oauth2'
+import { useConnectsStore } from '@/store'
+const sonnectsStore = useConnectsStore()
+import { GoogleOAuthCallback } from '@/services/google/oauth2'
 GoogleOAuthCallback().then(args => {
-  connectGoogleStore.authCode(args).then(res => {
+  console.log(args)
+  sonnectsStore.googleAuthByCode(args).then(res => {
     console.log(res)
-  })
+  }).catch((e) => console.log(e)).finally(() => window.close())
 })
 </script>
 <template>

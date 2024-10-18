@@ -77,8 +77,8 @@ export class UserService {
     if (!Object.keys(set).length) return null
 
     const rs = session ?
-      await MUser.findByIdAndUpdate(data._id, { $set: set }, { session: session }) :
-      await MUser.findByIdAndUpdate(data._id, { $set: set })
+      await MUser.findByIdAndUpdate(data._id, { $set: set }, { session: session, new: true }) :
+      await MUser.findByIdAndUpdate(data._id, { $set: set }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -89,8 +89,8 @@ export class UserService {
     password = SHA256(password + salt)
     //  db.getCollection('customized').updateMany({ id: "6536350e17649c38f21b78f4" }, [{ $set: { background: { "draw": "$background", "filePath": null },files:[] } }]);
     const rs: IUser = session ?
-      await MUser.findByIdAndUpdate(_id, { $set: { password: password } }, { session: session }) :
-      await MUser.findByIdAndUpdate(_id, { $set: { password: password } })
+      await MUser.findByIdAndUpdate(_id, { $set: { password: password } }, { session: session, new: true }) :
+      await MUser.findByIdAndUpdate(_id, { $set: { password: password } }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -98,8 +98,8 @@ export class UserService {
 
   public async UpdateVerify(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IUser> {
     const rs: IUser = session ?
-      await MUser.findByIdAndUpdate(_id, { $set: { verified: flag } }, { session: session }) :
-      await MUser.findByIdAndUpdate(_id, { $set: { verified: flag } })
+      await MUser.findByIdAndUpdate(_id, { $set: { verified: flag } }, { session: session, new: true }) :
+      await MUser.findByIdAndUpdate(_id, { $set: { verified: flag } }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -107,8 +107,8 @@ export class UserService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IUser> {
     const rs: IUser = session ?
-      await MUser.findByIdAndUpdate(_id, { $set: { enable: flag } }, { session: session }) :
-      await MUser.findByIdAndUpdate(_id, { $set: { enable: flag } })
+      await MUser.findByIdAndUpdate(_id, { $set: { enable: flag } }, { session: session, new: true }) :
+      await MUser.findByIdAndUpdate(_id, { $set: { enable: flag } }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

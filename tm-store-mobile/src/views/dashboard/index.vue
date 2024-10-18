@@ -2,7 +2,6 @@
 import leftMenu from "@/layouts/components/leftMenu.vue";
 import Chart from '@/components/charts/index.vue'
 import { $t } from '@/i18n'
-
 const barOption = {
   title: {},
   tooltip: {},

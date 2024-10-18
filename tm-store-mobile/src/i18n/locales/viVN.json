@@ -286,7 +286,8 @@
     "unitPrice": "Đơn vị tiền",
     "userGroup": "Nhóm người dùng",
     "settings": "Cài đặt",
-    "reasonCancel": "Lý do hủy đơn"
+    "reasonCancel": "Lý do hủy đơn",
+    "connect": "Kết nối"
   },
   "reasonCancel": {
     "returns": "Trả hàng và hoàn tiền",

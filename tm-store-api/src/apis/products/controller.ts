@@ -192,7 +192,7 @@ export class ProductController {
     try {
       const body = req.body
       if (body && Array.isArray(body)) {
-        const rs = { success: [], error: [], status: false, message: 'updated' }
+        const rs = { success: [], error: [], status: false, message: 'updatedFlag' }
         const session = await mongoose.startSession()
         try {
           session.startTransaction()
@@ -200,7 +200,7 @@ export class ProductController {
             const item = await this.product.UpdateFlag(new mongoose.Types.ObjectId(obj._id), obj.flag, session)
             if (!item) {
               rs.error.push(obj._id)
-              next(new HttpException(401, 'update'))
+              next(new HttpException(401, 'updatedFlag'))
               break
             } else {
               rs.success.push(obj._id)
@@ -216,7 +216,7 @@ export class ProductController {
         }
       } else {
         const rs: IProduct = await this.product.UpdateFlag(new mongoose.Types.ObjectId(body._id), body.flag)
-        res.status(200).json({ data: rs, status: true, message: 'updated' })
+        res.status(200).json({ data: rs, status: true, message: 'updatedFlag' })
       }
     } catch (error) {
       next(error)

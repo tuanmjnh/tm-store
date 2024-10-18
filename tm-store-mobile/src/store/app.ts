@@ -97,7 +97,14 @@ const settings = {
   },
   shadow: {
     table: false
-  }
+  },
+  loading: {
+    get: false,
+    post: false,
+    put: false,
+    patch: false,
+    delete: false
+  },
 }
 export const useAppStore = defineStore('appStore', {
   persist: true,
@@ -210,7 +217,7 @@ export const useAppStore = defineStore('appStore', {
         if (val) return moment(val).format(settings.format.date).split('-')
         else return []
       }
-    }
+    },
   },
   actions: {
     // Reset All Settings
@@ -282,6 +289,10 @@ export const useAppStore = defineStore('appStore', {
     toggleGrayMode() {
       docEle.value.classList.toggle('gray-mode')
       this.grayMode = docEle.value.classList.contains('gray-mode')
+    },
+    setLoading(method?: string) {
+      if (method) this.loading[method] = true
+      else this.loading = settings.loading
     },
     // easily reset state using `$reset`
     clear() {

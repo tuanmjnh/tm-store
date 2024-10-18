@@ -1,10 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
+import { Container } from 'typedi'
 import { createReadStream, unlinkSync } from 'fs'
+import { FileManagerService } from './service'
 import { HttpException } from '@/exceptions/http.exception'
 import { RequestMiddlewares } from '@/interfaces/auth.interface'
-import GDrive from '@services/google/drive'
+import * as GDrive from '@services/google/drive'
 
 export class FileManagerController {
+  public fileManager = Container.get(FileManagerService)
+
   public get = async (req: Request, res: Response, next: NextFunction) => {
     try {
       // const files = await GDrive.getFiles()

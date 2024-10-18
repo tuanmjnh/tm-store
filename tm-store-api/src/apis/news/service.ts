@@ -63,8 +63,8 @@ export class NewsService {
     } as INews
 
     const rs = session ?
-      await MNews.findByIdAndUpdate(data._id, { $set: set }, { session: session }) :
-      await MNews.findByIdAndUpdate(data._id, { $set: set })
+      await MNews.findByIdAndUpdate(data._id, { $set: set }, { session: session, new: true }) :
+      await MNews.findByIdAndUpdate(data._id, { $set: set }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -72,8 +72,8 @@ export class NewsService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<INews> {
     const rs: INews = session ?
-      await MNews.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
-      await MNews.findByIdAndUpdate(_id, { $set: { flag: flag } })
+      await MNews.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session, new: true }) :
+      await MNews.findByIdAndUpdate(_id, { $set: { flag: flag } }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

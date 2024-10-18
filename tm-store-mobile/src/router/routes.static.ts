@@ -329,7 +329,8 @@ export const staticRoutes: RouteRecordRaw[] = [
       icon: 'link-o',
       menuType: 'dir',
       parent: null,
-      level: 2
+      level: 2,
+      hide: true
     }
   },
   {
@@ -342,7 +343,8 @@ export const staticRoutes: RouteRecordRaw[] = [
       icon: 'icon-park-outline:list',
       menuType: 'dir',
       parent: 'connect',
-      level: 2
+      level: 2,
+      hide: true
     }
   },
   {
@@ -356,6 +358,7 @@ export const staticRoutes: RouteRecordRaw[] = [
       menuType: 'page',
       parent: 'connect',
       level: 2,
+      hide: true
     }
   },
   {

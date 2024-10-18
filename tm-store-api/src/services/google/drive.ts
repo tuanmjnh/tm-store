@@ -1,7 +1,7 @@
 import { join } from 'path'
 // import { readFile, writeFile, rm } from 'fs/promises'
 import { google } from 'googleapis'
-import { authorize, loadConnect } from './auth'
+import { authorize } from './auth-file'
 
 // CONFIG
 const CONFIG_PATH = join(process.cwd(), 'credentials', 'google', 'config.json')
@@ -60,6 +60,19 @@ const onThumbnailLink = (url) => {
   return rs.length > 0 ? rs[0] : url
 }
 
+export const getDriveThumbnail = async ({ fileId }) => {
+  try {
+    const authClient = await authorize(SCOPES)
+    const GDrive = google.drive({ version: 'v3', auth: authClient })
+    const opts = {
+      fileId: fileId,
+      fields: 'thumbnailLink' // owners
+    }
+    const res = await GDrive.files.get(opts)
+    if (res.data) return res.data
+    else return null
+  } catch (e) { throw new Error(e) }
+}
 // export const setConfig = async ({ email_root, folder_root }) => {
 //   try {
 //     CONFIG.EMAIL_ROOT = email_root.trim().toLowerCase() || ''

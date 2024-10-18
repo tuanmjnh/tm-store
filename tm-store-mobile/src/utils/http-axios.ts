@@ -1,9 +1,10 @@
-import Axios, { type AxiosInstance, type AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios';
-import NProgress from './progress';
-import { showFailToast } from 'vant';
-import { local } from '@/utils/storage'
+import Axios, { type AxiosInstance, type AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios'
+import NProgress from './progress'
+import { showFailToast } from 'vant'
 import { $t } from '@/i18n'
-import 'vant/es/toast/style';
+import * as storage from './localStorage'
+import 'vant/es/toast/style'
+import { useAppStore } from '../store'
 
 export const CANCEL_TOKEN = Axios.CancelToken
 /**
@@ -34,105 +35,111 @@ const configDefault = {
   timeout: 0,
   baseURL: import.meta.env.VITE_APP_API,
   data: {}
-};
+}
 
 // Create API debonce
 let call
 
 class Http {
   // Current instance
-  private static axiosInstance: AxiosInstance;
+  private static axiosInstance: AxiosInstance
   // Request Configuration
-  private static axiosConfigDefault: AxiosRequestConfig;
+  private static axiosConfigDefault: AxiosRequestConfig
 
   // Request interception
   private httpInterceptorsRequest(): void {
     Http.axiosInstance.interceptors.request.use(
       config => {
-        NProgress.start();
+        NProgress.start()
+        useAppStore().setLoading(config.method)
+        // console.log(config)
         // Before sending a request, you can carry a token here
         // Add access-token to headers
-        const accessToken = local.get('access-token')
-        if (accessToken) config.headers['x-access-token'] = `Bearer ${accessToken}`;
-        return config;
+        const accessToken = storage.get('access-token')
+        if (accessToken) config.headers['x-access-token'] = `Bearer ${accessToken}`
+        return config
       },
       (error: AxiosError) => {
-        showFailToast(error.message);
-        return Promise.reject(error);
+        useAppStore().setLoading()
+        showFailToast(error.message)
+        return Promise.reject(error)
       }
-    );
+    )
   }
 
   // Response Interception
   private httpInterceptorsResponse(): void {
     Http.axiosInstance.interceptors.response.use(
       (res: AxiosResponse) => {
-        NProgress.done();
+        NProgress.done()
+        useAppStore().setLoading()
+        // console.log(appStore.loading)
         // // Add access-token to headers
-        // const accessToken = local.get('access-token')
+        // const accessToken = storage.get('access-token')
         // console.log(accessToken)
-        // if (accessToken) res.headers['x-access-token'] = `Bearer ${accessToken}`;
+        // if (accessToken) res.headers['x-access-token'] = `Bearer ${accessToken}`
         // The return fields of the contract with the backend
         return res.data
       },
       (error: AxiosError) => {
-        NProgress.done();
+        NProgress.done()
+        useAppStore().setLoading()
         // Handle HTTP network errors
-        let message = '';
+        let message = ''
         // HTTP Status Code
-        const status = error.response?.status;
+        const status = error.response?.status
         switch (status) {
           case 400:
-            message = $t('http.400', 'Request error');
-            break;
+            message = $t('http.400', 'Request error')
+            break
           case 401:
-            message = $t('http.401', 'Unauthorized, please log in');
+            message = $t('http.401', 'Unauthorized, please log in')
             // remove storage access-token and refresh page if 401
-            local.remove('access-token')
-            location.reload();
-            break;
+            storage.remove('access-token')
+            location.reload()
+            break
           case 403:
-            message = $t('http.403', 'Access denied');
-            break;
+            message = $t('http.403', 'Access denied')
+            break
           case 404:
-            message = $t('http.404', `Request address error: ${error.response?.config?.url}`);
-            break;
+            message = $t('http.404', `Request address error: ${error.response?.config?.url}`)
+            break
           case 408:
-            message = $t('http.408', 'Request timeout');
-            break;
+            message = $t('http.408', 'Request timeout')
+            break
           case 500:
-            message = $t('http.500', 'Server internal error');
-            break;
+            message = $t('http.500', 'Server internal error')
+            break
           case 501:
-            message = $t('http.501', 'Service not implemented');
-            break;
+            message = $t('http.501', 'Service not implemented')
+            break
           case 502:
-            message = $t('http.502', 'Gateway error');
-            break;
+            message = $t('http.502', 'Gateway error')
+            break
           case 503:
-            message = $t('http.503', 'Service unavailable');
-            break;
+            message = $t('http.503', 'Service unavailable')
+            break
           case 504:
-            message = $t('http.504', 'Gateway timeout');
-            break;
+            message = $t('http.504', 'Gateway timeout')
+            break
           case 505:
-            message = $t('http.505', 'HTTP version not supported');
-            break;
+            message = $t('http.505', 'HTTP version not supported')
+            break
           default:
-            message = $t('http.default', 'Network connection failure');
+            message = $t('http.default', 'Network connection failure')
         }
         if (status == 409) { }
-        else showFailToast(message);
-        return Promise.reject(error.response);
+        else showFailToast(message)
+        return Promise.reject(error.response)
       }
-    );
+    )
   }
   public axiosInstance: AxiosInstance
   constructor(config: AxiosRequestConfig) {
-    Http.axiosConfigDefault = config;
-    this.axiosInstance = Http.axiosInstance = Axios.create(config);
-    this.httpInterceptorsRequest();
-    this.httpInterceptorsResponse();
+    Http.axiosConfigDefault = config
+    this.axiosInstance = Http.axiosInstance = Axios.create(config)
+    this.httpInterceptorsRequest()
+    this.httpInterceptorsResponse()
   }
 
 
@@ -151,18 +158,18 @@ class Http {
 
   // Common request functions
   public request<T>(paramConfig: AxiosRequestConfig): Promise<T> {
-    const config = { ...Http.axiosConfigDefault, ...paramConfig };
+    const config = { ...Http.axiosConfigDefault, ...paramConfig }
     return new Promise((resolve, reject) => {
       Http.axiosInstance
         .request(config)
         .then((response: any) => {
-          resolve(response);
+          resolve(response)
         })
         .catch(error => {
-          reject(error);
-        });
-    });
+          reject(error)
+        })
+    })
   }
 }
 
-export const http = new Http(configDefault);
+export const http = new Http(configDefault)

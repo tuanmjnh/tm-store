@@ -64,8 +64,8 @@ export class GroupService {
     } as IGroup
 
     const rs = session ?
-      await MGroup.findByIdAndUpdate(data._id, { $set: set }, { session: session }) :
-      await MGroup.findByIdAndUpdate(data._id, { $set: set })
+      await MGroup.findByIdAndUpdate(data._id, { $set: set }, { session: session, new: true }) :
+      await MGroup.findByIdAndUpdate(data._id, { $set: set }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -78,8 +78,8 @@ export class GroupService {
       order: order
     }
     const rs: IGroup = session ?
-      await MGroup.findByIdAndUpdate(_id, { $set: set }, { session: session }) :
-      await MGroup.findByIdAndUpdate(_id, { $set: set })
+      await MGroup.findByIdAndUpdate(_id, { $set: set }, { session: session, new: true }) :
+      await MGroup.findByIdAndUpdate(_id, { $set: set }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -87,8 +87,8 @@ export class GroupService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IGroup> {
     const rs: IGroup = session ?
-      await MGroup.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
-      await MGroup.findByIdAndUpdate(_id, { $set: { flag: flag } })
+      await MGroup.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session, new: true }) :
+      await MGroup.findByIdAndUpdate(_id, { $set: { flag: flag } }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

@@ -31,7 +31,7 @@ export class TypeService {
   }
 
   public async Create(data: IType, session?: ClientSession): Promise<IType> {
-    const exist = await this.FindOne({ key: data.key })
+    const exist = await this.FindOne({ key: data.key, code: data.code })
     if (exist) throw new HttpException(409, `exist`)
     const rs = new MType(data)
     rs._id = new Types.ObjectId()

@@ -1,7 +1,8 @@
 import { http } from '@/utils/http-axios'
 import { router } from '@/router'
-import { local } from '@/utils/storage'
+// import { local } from '@/utils/storage'
 import { IUser } from './interfaces/user'
+import * as storage from '@/utils/localStorage'
 
 interface IModel {
   userInfo: IUser | null
@@ -12,8 +13,8 @@ const API_PATH = 'auth'
 export const useAuthStore = defineStore('authStore', {
   // persist: true,
   state: (): IModel => ({
-    userInfo: local.get('user-info'),
-    accessToken: local.get('access-token') || '',
+    userInfo: storage.get('user-info'),
+    accessToken: storage.get('access-token') || '',
     routes: []
   }),
   getters: {
@@ -26,9 +27,6 @@ export const useAuthStore = defineStore('authStore', {
     async verify(arg: any) {
       let rs
       try {
-        // api.post(`/${NAMESPACED}`, arg).then(x => {
-        //   console.log(x)
-        // })
         if (arg) rs = await http.axiosInstance.post(`/${API_PATH}`, arg)
         else rs = await http.axiosInstance.get(`/${API_PATH}`, { params: arg })
         if (rs) {
@@ -68,18 +66,18 @@ export const useAuthStore = defineStore('authStore', {
       // Save token and userInfo
       if (val.data) {
         this.userInfo = val.data
-        local.set('user-info', val.data)
+        storage.set('user-info', val.data)
       }
       if (val.accessToken) {
         this.accessToken = val.accessToken
-        local.set('access-token', val.accessToken)
+        storage.set('access-token', val.accessToken)
       }
       if (val.routes) {
         this.routes = val.routes
-        local.set('routes', val.routes)
+        storage.set('routes', val.routes)
       }
       if (val.refreshToken) {
-        local.set('refresh-token', val.refreshToken)
+        storage.set('refresh-token', val.refreshToken)
       }
       // Adding Routes and Menus
       // const routeStore = useRouteStore()
@@ -93,10 +91,10 @@ export const useAuthStore = defineStore('authStore', {
       })
     },
     clearAuthStorage() {
-      local.remove('access-token')
-      local.remove('refresh-token')
-      local.remove('user-info')
-      local.remove('routes')
+      storage.remove('access-token')
+      storage.remove('refresh-token')
+      storage.remove('user-info')
+      storage.remove('routes')
       this.accessToken = null
       this.userInfo = null
       this.routes = []

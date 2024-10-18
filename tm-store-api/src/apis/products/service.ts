@@ -69,8 +69,8 @@ export class ProductService {
     if (data.order !== undefined) set.order = data.order
 
     const rs = session ?
-      await MProduct.findByIdAndUpdate(data._id, { $set: set }, { session: session }) :
-      await MProduct.findByIdAndUpdate(data._id, { $set: set })
+      await MProduct.findByIdAndUpdate(data._id, { $set: set }, { session: session, new: true }) :
+      await MProduct.findByIdAndUpdate(data._id, { $set: set }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -82,8 +82,8 @@ export class ProductService {
     if (data.typeData) set.typeData = data.typeData
 
     const rs: IProduct = session ?
-      await MProduct.findByIdAndUpdate(data._id, { $set: set }, { session: session }) :
-      await MProduct.findByIdAndUpdate(data._id, { $set: set })
+      await MProduct.findByIdAndUpdate(data._id, { $set: set }, { session: session, new: true }) :
+      await MProduct.findByIdAndUpdate(data._id, { $set: set }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -95,8 +95,8 @@ export class ProductService {
     data.forEach(e => { nested = `${nested}.${e}` })
 
     const rs: IProduct = session ?
-      await MProduct.findByIdAndUpdate(data._id, { $inc: { nested: data.quantiy } }, { session: session }) :
-      await MProduct.findByIdAndUpdate(data._id, { $inc: { nested: data.quantiy } })
+      await MProduct.findByIdAndUpdate(data._id, { $inc: { nested: data.quantiy } }, { session: session, new: true }) :
+      await MProduct.findByIdAndUpdate(data._id, { $inc: { nested: data.quantiy } }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -109,8 +109,8 @@ export class ProductService {
     if (data.quantity) inc.quantity = data.quantity
 
     const rs: IProduct = session ?
-      await MProduct.findByIdAndUpdate(data._id, { $set: set, $inc: inc }, { session: session }) :
-      await MProduct.findByIdAndUpdate(data._id, { $set: set, $inc: inc })
+      await MProduct.findByIdAndUpdate(data._id, { $set: set, $inc: inc }, { session: session, new: true }) :
+      await MProduct.findByIdAndUpdate(data._id, { $set: set, $inc: inc }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -123,8 +123,8 @@ export class ProductService {
     if (data.quantity !== undefined) inc.quantity = data.quantity
 
     const rs: IProduct = session ?
-      await MProduct.findByIdAndUpdate(data._id, { $set: set, $inc: inc }, { session: session }) :
-      await MProduct.findByIdAndUpdate(data._id, { $set: set, $inc: inc })
+      await MProduct.findByIdAndUpdate(data._id, { $set: set, $inc: inc }, { session: session, new: true }) :
+      await MProduct.findByIdAndUpdate(data._id, { $set: set, $inc: inc }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -133,8 +133,8 @@ export class ProductService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IProduct> {
     const rs: IProduct = session ?
-      await MProduct.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
-      await MProduct.findByIdAndUpdate(_id, { $set: { flag: flag } })
+      await MProduct.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session, new: true }) :
+      await MProduct.findByIdAndUpdate(_id, { $set: { flag: flag } }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

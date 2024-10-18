@@ -153,7 +153,7 @@ export class ConfigController {
     try {
       const body = req.body
       if (body && Array.isArray(body)) {
-        const rs = { success: [], status: false, error: [], message: 'updated' }
+        const rs = { success: [], status: false, error: [], message: 'updatedFlag' }
         const session = await mongoose.startSession()
         try {
           session.startTransaction()
@@ -161,7 +161,7 @@ export class ConfigController {
             const item = await this.role.UpdateFlag(new mongoose.Types.ObjectId(obj._id), obj.flag, session)
             if (!item) {
               rs.error.push(obj._id)
-              next(new HttpException(401, 'update'))
+              next(new HttpException(401, 'updatedFlag'))
               break
             } else {
               rs.success.push(obj._id)
@@ -177,7 +177,7 @@ export class ConfigController {
         }
       } else {
         const rs: IRole = await this.role.UpdateFlag(new mongoose.Types.ObjectId(body._id), body.flag)
-        res.status(200).json({ data: rs, message: 'updated' })
+        res.status(200).json({ data: rs, message: 'updatedFlag' })
       }
     } catch (error) {
       next(error)

@@ -113,11 +113,23 @@ export const useTypeStore = defineStore('typeStore', {
     async addItems(arg: any, items?: IModelType[]) {
       try {
         if (items) {
-          if (Array.isArray(arg)) this.items.concat(arg)
-          else this.items.push(arg)
+          if (Array.isArray(arg)) {
+            this.items.concat(arg)
+            this.all.concat(arg)
+          }
+          else {
+            this.items.push(arg)
+            this.all.push(arg)
+          }
         } else {
-          if (Array.isArray(arg)) this.items.concat(arg)
-          else this.items.push(arg)
+          if (Array.isArray(arg)) {
+            this.items.concat(arg)
+            this.all.concat(arg)
+          }
+          else {
+            this.items.push(arg)
+            this.all.push(arg)
+          }
         }
       } catch (e) { throw e }
     },
@@ -129,13 +141,17 @@ export const useTypeStore = defineStore('typeStore', {
               const i = items.findIndex(x => x._id === e._id)
               if (i > -1) items.splice(i, 1, e)
             } else {
-              const i = this.items.findIndex(x => x._id === e._id)
+              let i = this.items.findIndex(x => x._id === e._id)
               if (i > -1) this.items.splice(i, 1, e)
+              i = this.all.findIndex(x => x._id === e._id)
+              if (i > -1) this.all.splice(i, 1, e)
             }
           })
         } else {
-          const i = this.items.findIndex(x => x._id === arg._id)
+          let i = this.items.findIndex(x => x._id === arg._id)
           if (i > -1) this.items.splice(i, 1, arg)
+          i = this.all.findIndex(x => x._id === arg._id)
+          if (i > -1) this.all.splice(i, 1, arg)
         }
       } catch (e) { throw e }
     },
@@ -144,11 +160,13 @@ export const useTypeStore = defineStore('typeStore', {
         if (Array.isArray(arg)) {
           arg.forEach(e => {
             if (items) {
-              const i = items.findIndex(x => x._id === e)
+              let i = items.findIndex(x => x._id === e)
               if (i > -1) items.splice(i, 1)
             } else {
-              const i = this.items.findIndex(x => x._id === e)
+              let i = this.items.findIndex(x => x._id === e)
               if (i > -1) this.items.splice(i, 1)
+              i = this.all.findIndex(x => x._id === e)
+              if (i > -1) this.all.splice(i, 1)
             }
           })
         } else {
@@ -156,8 +174,10 @@ export const useTypeStore = defineStore('typeStore', {
             const i = items.findIndex(x => x._id === arg)
             if (i > -1) items.splice(i, 1)
           } else {
-            const i = this.items.findIndex(x => x._id === arg)
+            let i = this.items.findIndex(x => x._id === arg)
             if (i > -1) this.items.splice(i, 1)
+            i = this.all.findIndex(x => x._id === arg)
+            if (i > -1) this.all.splice(i, 1)
           }
         }
       } catch (e) { throw e }

@@ -1,6 +1,6 @@
 import { Service } from 'typedi'
 import { HttpException } from '@exceptions/http.exception'
-import { MRole, IRole} from './model'
+import { MRole, IRole } from './model'
 import { Aggregate, ClientSession, Types } from 'mongoose'
 
 @Service()
@@ -50,8 +50,8 @@ export class RoleService {
     } as IRole
 
     const rs = session ?
-      await MRole.findByIdAndUpdate(data._id, { $set: set }, { session: session }) :
-      await MRole.findByIdAndUpdate(data._id, { $set: set })
+      await MRole.findByIdAndUpdate(data._id, { $set: set }, { session: session, new: true }) :
+      await MRole.findByIdAndUpdate(data._id, { $set: set }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -59,8 +59,8 @@ export class RoleService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IRole> {
     const rs: IRole = session ?
-      await MRole.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
-      await MRole.findByIdAndUpdate(_id, { $set: { flag: flag } })
+      await MRole.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session, new: true }) :
+      await MRole.findByIdAndUpdate(_id, { $set: { flag: flag } }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

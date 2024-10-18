@@ -82,8 +82,8 @@ export class ConfigService {
     } as IConfig
 
     const rs = session ?
-      await MConfig.findByIdAndUpdate(data._id, { $set: set }, { session: session }) :
-      await MConfig.findByIdAndUpdate(data._id, { $set: set })
+      await MConfig.findByIdAndUpdate(data._id, { $set: set }, { session: session, new: true }) :
+      await MConfig.findByIdAndUpdate(data._id, { $set: set }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs
@@ -91,8 +91,8 @@ export class ConfigService {
 
   public async UpdateFlag(_id: Types.ObjectId, flag: boolean, session?: ClientSession): Promise<IConfig> {
     const rs: IConfig = session ?
-      await MConfig.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session }) :
-      await MConfig.findByIdAndUpdate(_id, { $set: { flag: flag } })
+      await MConfig.findByIdAndUpdate(_id, { $set: { flag: flag } }, { session: session, new: true }) :
+      await MConfig.findByIdAndUpdate(_id, { $set: { flag: flag } }, { new: true })
 
     if (!rs) throw new HttpException(409, "noExist")
     return rs

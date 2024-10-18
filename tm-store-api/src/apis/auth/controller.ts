@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 import { Container } from 'typedi'
-import { RequestMiddlewares } from '@/interfaces/auth.interface';
-import { MUser } from '@apis/users/model';
-import { MRole, IRole } from '@apis/roles/model';
-import { constantUsers, constantRoutes } from './constant';
-import { AuthService } from './service';
-import { HttpException } from '@/exceptions/http.exception';
-import { SHA256 } from '@/utils/tm-crypto';
+import { RequestMiddlewares } from '@/interfaces/auth.interface'
+import { MUser } from '@apis/users/model'
+import { MRole, IRole } from '@apis/roles/model'
+import { constantUsers, constantRoutes } from './constant'
+import { AuthService } from './service'
+import { HttpException } from '@/exceptions/http.exception'
+import { SHA256 } from '@/utils/tm-crypto'
 import { sign } from 'jsonwebtoken'
 import { SECRET_KEY } from '@config'
 
@@ -52,7 +52,7 @@ export class AuthController {
   public logIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
       // check req data
-      if (!req.body.username || !req.body.password) { return res.status(404).json({ msg: 'no_exist' }) }
+      if (!req.body.username || !req.body.password) { return res.status(404).json({ message: 'no_exist' }) }
       // constant account
       let rs = constantUsers.find((x) => x.username === req.body.username && x.password === SHA256(req.body.password + x.salt))
       let routes = []
@@ -63,11 +63,11 @@ export class AuthController {
         // throw new Error('wrong')
         rs = await MUser.findOne({ username: req.body.username })
         // not exist username
-        if (!rs) return res.status(502).json({ msg: 'no_exist' })
+        if (!rs) return res.status(502).json({ message: 'no_exist' })
         // check password
-        if (rs.password !== SHA256(req.body.password + rs.salt)) return res.status(503).json({ msg: 'no_exist' })
+        if (rs.password !== SHA256(req.body.password + rs.salt)) return res.status(503).json({ message: 'no_exist' })
         // check lock
-        if (!rs.enable) return res.status(504).json({ msg: 'locked' })
+        if (!rs.enable) return res.status(504).json({ message: 'locked' })
         // Routes
         // rs.routes = await this.getAuthRoutes(rs.roles)
         routes = await this.getAuthRoutes(rs.roles)

@@ -37,7 +37,7 @@ const onCheckCapslock = ({ shiftKey, key } = {} as any) => {
   if (key === 'CapsLock' && isCapsTooltip.value === true) isCapsTooltip.value = false
 }
 const onSubmit = async () => {
-  storeAuth.verify(data.value).then(async rs => {
+  storeAuth.verify(toRaw(data.value)).then(async rs => {
     if (rs) {
       const redirect = $route.query && $route.query.redirect ? $route.query.redirect : '/'
       $router.push(redirect.toString()).catch((e) => { })

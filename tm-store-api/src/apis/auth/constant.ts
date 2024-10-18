@@ -1,5 +1,5 @@
-import { Types } from 'mongoose';
-import { IUserAuth } from './model';
+import { Types } from 'mongoose'
+import { IUserAuth } from './model'
 
 export const constantUsers: IUserAuth[] = [
   {
