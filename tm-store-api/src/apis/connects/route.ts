@@ -13,7 +13,7 @@ export class ConnectRoute implements Routes {
   }
   private initializeRoutes() {
     this.router.get(`${this.path}`, APIMiddleware, this.controller.get);
-    this.router.get(`${this.path}/:id`, APIMiddleware, this.controller.findById);
+    // this.router.get(`${this.path}/:id`, APIMiddleware, this.controller.findById);
     this.router.get(`${this.path}/find`, APIMiddleware, this.controller.find);
     this.router.get(`${this.path}/exist`, APIMiddleware, this.controller.findExist);
     this.router.patch(`${this.path}`, APIMiddleware, this.controller.updateFlag);
@@ -22,6 +22,7 @@ export class ConnectRoute implements Routes {
     this.router.get(`${this.path}/google`, APIMiddleware, this.controller.googleGetAuth);
     this.router.post(`${this.path}/google`, APIMiddleware, this.controller.googleAuthByCode);
     this.router.put(`${this.path}/google`, APIMiddleware, this.controller.googleSetClientID);
+    this.router.patch(`${this.path}/google`, APIMiddleware, this.controller.googleRemoveAuth);
     this.router.delete(`${this.path}/google`, APIMiddleware, this.controller.googleRemoveClientID);
   }
 }

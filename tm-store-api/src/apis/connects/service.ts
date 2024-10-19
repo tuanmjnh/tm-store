@@ -10,12 +10,12 @@ export class ConnectService {
     else MConnect.find()
   }
 
-  public async FindSelect(conditions: object, fields?: string): Promise<any> {
+  public async FindSelect(conditions: object, fields?: string): Promise<IConnect[]> {
     if (fields) return MConnect.find(conditions).select(fields)
     else return MConnect.find(conditions)
   }
 
-  public async FindOne(conditions: object, fields?: string): Promise<any> {
+  public async FindOne(conditions: object, fields?: string): Promise<IConnect> {
     if (fields) return MConnect.findOne(conditions).select(fields)
     else return MConnect.findOne(conditions)
   }
@@ -29,7 +29,7 @@ export class ConnectService {
     return await MConnect.findOne({ _id: _id })
   }
 
-  public async FindByKey(key: string, fields?: string): Promise<any> {
+  public async FindByKey(key: string, fields?: string): Promise<IConnect> {
     if (fields) return await MConnect.findOne({ key: key }).select(fields)
     return await MConnect.findOne({ key: key })
   }
@@ -54,14 +54,13 @@ export class ConnectService {
     //   config: data.config || null,
     // } as IConnect
     const set = {} as any
-    if (data.order != undefined) set.order = data.order
-    if (data.clientID != undefined) set.clientID = data.clientID
-    if (data.credentials != undefined) set.credentials = data.credentials
-    if (data.authUri != undefined) set.authUri = data.authUri
-    if (data.redirectUris != undefined) set.redirectUris = data.redirectUris
-    if (data.profile != undefined) set.profile = data.profile
-    if (data.config != undefined) set.config = data.config
-
+    if (data.order !== undefined) set.order = data.order
+    if (data.clientID !== undefined) set.clientID = data.clientID
+    if (data.credentials !== undefined) set.credentials = data.credentials
+    if (data.authUri !== undefined) set.authUri = data.authUri
+    if (data.redirectUris !== undefined) set.redirectUris = data.redirectUris
+    if (data.profile !== undefined) set.profile = data.profile
+    if (data.config !== undefined) set.config = data.config
     const rs = session ?
       await MConnect.findByIdAndUpdate(data._id, { $set: set }, { session: session, new: true }) :
       await MConnect.findByIdAndUpdate(data._id, { $set: set }, { new: true })

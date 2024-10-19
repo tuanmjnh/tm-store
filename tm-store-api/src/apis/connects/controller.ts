@@ -5,10 +5,12 @@ import { ConnectService } from './service'
 import { HttpException } from '@/exceptions/http.exception'
 import { RequestMiddlewares } from '@/interfaces/auth.interface'
 import { getIp } from '@/utils/tm-request'
-import { googleOAuth2ByCode, authorize } from '@/services/google/auth'
+import { googleOAuth2ByCode, refreshAccessToken } from '@/services/google/auth'
 import { jwtDecode } from 'jwt-decode'
 import mongoose from 'mongoose'
-const googleKey = { name: 'Google', key: 'google' }
+const CONNECTS = {
+  google: { name: 'Google', key: 'google' }
+}
 
 export class ConnectController {
   public Connect = Container.get(ConnectService)
@@ -16,8 +18,8 @@ export class ConnectController {
   public get = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any
-      const rs = { data: [] as IConnect[], status: false, message: 'getAll' }
-      rs.data = await this.Connect.FindAll({ flag: queries.flag ? parseInt(queries.flag) : 1 })
+      const rs = { data: [] as IConnect[], status: false, message: this.get.name }
+      const data = await this.Connect.FindAll({ flag: queries.flag ? parseInt(queries.flag) : 1 })
       if (rs.data) rs.status = true
       res.status(200).json(rs)
     } catch (error) {
@@ -28,8 +30,8 @@ export class ConnectController {
   public find = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any
-      const rs = { data: [] as IConnect[], status: false, message: 'findConnect' }
-      rs.data = await this.Connect.FindByKey(queries.key)
+      const rs = { data: [] as IConnect[], status: false, message: this.find.name }
+      rs.data = await this.Connect.FindAll({ key: queries.key })
       if (rs.data) rs.status = true
       res.status(200).json(rs)
     } catch (error) {
@@ -39,7 +41,7 @@ export class ConnectController {
 
   public findById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const rs = { data: null as IConnect, status: false, message: 'findOne' }
+      const rs = { data: null as IConnect, status: false, message: this.findById.name }
       const _id: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.id)
       rs.data = await this.Connect.FindById(_id)
       if (rs.data) rs.status = true
@@ -52,7 +54,7 @@ export class ConnectController {
   public findExist = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queries = req.query as any
-      const rs = { data: null, status: false, message: 'findExist' }
+      const rs = { data: null, status: false, message: this.findExist.name }
       rs.data = await MConnect.exists({ key: queries.key })
       if (rs.data) rs.status = true
       res.status(200).json(rs)
@@ -65,7 +67,7 @@ export class ConnectController {
     try {
       const body = req.body
       if (body && Array.isArray(body)) {
-        const rs = { success: [], error: [], status: false, message: 'updatedFlag' }
+        const rs = { success: [], error: [], status: false, message: this.updateFlag.name }
         const session = await mongoose.startSession()
         try {
           session.startTransaction()
@@ -73,7 +75,7 @@ export class ConnectController {
             const item = await this.Connect.UpdateFlag(new mongoose.Types.ObjectId(obj._id), obj.flag, session)
             if (!item) {
               rs.error.push(obj._id)
-              next(new HttpException(401, 'updatedFlag'))
+              next(new HttpException(401, this.updateFlag.name))
               break
             } else {
               rs.success.push(obj._id)
@@ -89,7 +91,7 @@ export class ConnectController {
         }
       } else {
         const rs: IConnect = await this.Connect.UpdateFlag(new mongoose.Types.ObjectId(body._id), body.flag)
-        res.status(200).json({ data: rs, message: 'updatedFlag' })
+        res.status(200).json({ data: rs, message: this.updateFlag.name })
       }
     } catch (error) {
       next(error)
@@ -98,7 +100,7 @@ export class ConnectController {
 
   public delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const rs = { data: null as IConnect, status: false, message: 'deleted' }
+      const rs = { data: null as IConnect, status: false, message: this.delete.name }
       const _id: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.id)
       rs.data = await this.Connect.Delete(_id)
       if (rs.data) rs.status = true
@@ -109,12 +111,52 @@ export class ConnectController {
   }
 
   // Google OAuth
+  private googleDataReturn = (data: IConnect) => {
+    return {
+      _id: data._id,
+      name: data.name,
+      key: data.key,
+      access_token: data.credentials && data.credentials.access_token ? data.credentials.access_token : null,
+      profile: {
+        email: data.profile?.email,
+        email_verified: data.profile?.email_verified,
+        name: data.profile?.name,
+        picture: data.profile?.picture,
+        given_name: data.profile?.given_name,
+        family_name: data.profile?.family_name,
+        iat: data.profile?.iat,
+        exp: data.profile?.exp
+      },
+      config: data.config,
+      order: data.order,
+      flag: data.flag,
+      created: data.created
+    }
+  }
   public googleGetAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const rs = { data: null, status: false, message: this.googleGetAuth.name }
-      const exist = await MConnect.findOne({ key: googleKey.key })
-      if (!exist) next(new HttpException(404, 'noExist'))
-      rs.data = await authorize(exist.credentials)
+      const exist = await this.Connect.FindByKey(CONNECTS.google.key)
+      if (!exist) return res.status(200).json(rs)
+      if (!exist.credentials) {
+        rs.data = this.googleDataReturn(exist)
+        return res.status(200).json(rs)
+      }
+      const credentials = await refreshAccessToken(exist.credentials)
+      if (!credentials) return next(new HttpException(404, 'ErrorCode'))
+      exist.credentials.access_token = credentials.access_token
+      exist.credentials.expiry_date = credentials.expiry_date
+      exist.credentials.scope = credentials.scope
+      exist.credentials.token_type = credentials.token_type
+      const data = await this.Connect.Update({
+        _id: exist._id,
+        credentials: exist.credentials,
+        // profile: credentials && credentials.id_token ? jwtDecode(credentials.id_token) : null
+      })
+      if (data) {
+        rs.status = true
+        rs.data = this.googleDataReturn(data)
+      }
       res.status(200).json(rs)
     } catch (error) {
       next(error)
@@ -128,38 +170,21 @@ export class ConnectController {
       const rs = { data: null, status: false, message: this.googleAuthByCode.name }
       const credentials = await googleOAuth2ByCode(body.code)
       if (!credentials) return next(new HttpException(404, 'ErrorCode'))
-      const exist = await MConnect.findOne({ key: googleKey.key })
+      const exist = await this.Connect.FindByKey(CONNECTS.google.key)
       if (exist) {//Update
-        rs.message = 'updateAuthGoogle'
-        const params = {
+        const data = await this.Connect.Update({
           _id: exist._id,
-          order: body.order || 1,
-          clientID: body.clientID || null,
-          credentials: credentials || null,
-          authUri: null,
-          redirectUris: null,
+          credentials: credentials,
           profile: credentials && credentials.id_token ? jwtDecode(credentials.id_token) : null,
-          config: null
-        }
-        const data = await this.Connect.Update(params)
+        })
         if (data) {
           rs.status = true
-          rs.data = {
-            _id: data._id,
-            name: data.name,
-            key: data.key,
-            access_token: credentials.access_token,
-            profile: data.profile,
-            config: data.config,
-            order: data.order,
-            flag: data.flag,
-            created: data.created
-          }
+          rs.data = this.googleDataReturn(data)
         }
       } else {//Insert
         const params: IConnect = {
-          name: googleKey.name,
-          key: googleKey.key,
+          name: CONNECTS.google.name,
+          key: CONNECTS.google.key,
           order: body.order || 1,
           clientID: body.clientID || null,
           credentials: credentials || null,
@@ -173,17 +198,7 @@ export class ConnectController {
         const data = await this.Connect.Create(params)
         if (data) {
           rs.status = true
-          rs.data = {
-            _id: data._id,
-            name: data.name,
-            key: data.key,
-            access_token: credentials.access_token,
-            profile: data.profile,
-            config: data.config,
-            order: data.order,
-            flag: data.flag,
-            created: data.created
-          }
+          rs.data = this.googleDataReturn(data)
         }
       }
       res.status(200).json(rs)
@@ -192,32 +207,18 @@ export class ConnectController {
     }
   }
 
-  public googleSetClientID = async (req: RequestMiddlewares, res: Response, next: NextFunction) => {
+  public googleRemoveAuth = async (req: RequestMiddlewares, res: Response, next: NextFunction) => {
     try {
       const body = req.body
-      if (!body.clientID) next(new HttpException(404, 'noExist'))
-      const rs = { data: null, status: false, message: this.googleSetClientID.name }
-      const exist = await MConnect.findOne({ key: googleKey.key })
+      const rs = { data: null, status: false, message: this.googleRemoveAuth.name }
+      const exist = await this.Connect.FindByKey(CONNECTS.google.key)
       if (exist) {//Update
-        rs.message = 'updateAuthGoogle'
-        const data = await this.Connect.Update({ _id: exist._id, clientID: body.clientID })
-        if (data) {
-          rs.status = true
-          rs.data = {
-            _id: data._id,
-            name: data.name,
-            key: data.key,
-            clientID: data.clientID,
-            config: data.config,
-            order: data.order,
-            flag: data.flag,
-            created: data.created
-          }
-        }
+        const data = await this.Connect.Update({ _id: exist._id, credentials: null, profile: null })
+        if (data) rs.status = true
       } else {//Insert
         const params: IConnect = {
-          name: googleKey.name,
-          key: googleKey.key,
+          name: CONNECTS.google.name,
+          key: CONNECTS.google.key,
           order: body.order || 1,
           clientID: body.clientID || null,
           credentials: null,
@@ -229,18 +230,45 @@ export class ConnectController {
           created: { at: new Date(), by: req.verify._id.toString() || null, ip: getIp(req) }
         }
         const data = await this.Connect.Create(params)
+        if (data) rs.status = true
+      }
+      res.status(201).json(rs)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  public googleSetClientID = async (req: RequestMiddlewares, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body
+      if (!body.clientID) next(new HttpException(404, 'noExist'))
+      const rs = { data: null, status: false, message: this.googleSetClientID.name }
+      const exist = await this.Connect.FindByKey(CONNECTS.google.key)
+      if (exist) {//Update
+        const data = await this.Connect.Update({ _id: exist._id, clientID: body.clientID })
         if (data) {
           rs.status = true
-          rs.data = {
-            _id: data._id,
-            name: data.name,
-            key: data.key,
-            clientID: data.clientID,
-            config: data.config,
-            order: data.order,
-            flag: data.flag,
-            created: data.created
-          }
+          rs.data = this.googleDataReturn(data)
+        }
+      } else {//Insert
+        const params: IConnect = {
+          name: CONNECTS.google.name,
+          key: CONNECTS.google.key,
+          order: body.order || 1,
+          clientID: body.clientID,
+          credentials: null,
+          authUri: null,
+          redirectUris: null,
+          profile: null,
+          config: null,
+          flag: 1,
+          created: { at: new Date(), by: req.verify._id.toString() || null, ip: getIp(req) }
+        }
+        const data = await this.Connect.Create(params)
+        if (data) {
+          rs.status = true
+          rs.data = this.googleDataReturn(data)
+          rs.data.clientID = data.clientID
         }
       }
       res.status(201).json(rs)
@@ -252,18 +280,18 @@ export class ConnectController {
     try {
       const body = req.body
       if (!body.clientID) next(new HttpException(404, 'noExist'))
-      const rs = { data: null, status: false, message: this.googleSetClientID.name }
-      const exist = await MConnect.findOne({ key: googleKey.key })
+      const rs = { data: null, status: false, message: this.googleRemoveClientID.name }
+      const exist = await this.Connect.FindByKey(CONNECTS.google.key)
       if (exist) {//Update
-        rs.message = 'updateAuthGoogle'
-        const data = await this.Connect.Update({ clientID: null, credentials: null })
+        const data = await this.Connect.Update({ clientID: null, credentials: null, profile: null })
         if (data) rs.status = true
+        // console.log(data)
       } else {//Insert
         const params: IConnect = {
-          name: googleKey.name,
-          key: googleKey.key,
+          name: CONNECTS.google.name,
+          key: CONNECTS.google.key,
           order: body.order || 1,
-          clientID: body.clientID || null,
+          clientID: null,
           credentials: null,
           authUri: null,
           redirectUris: null,

@@ -23,7 +23,8 @@ export const staticRoutes: RouteRecordRaw[] = [
       icon: 'icon-park-outline:search',
       menuType: 'dir',
       parent: null,
-      level: 1
+      level: 1,
+      hide: true
     }
   },
   {
@@ -36,7 +37,8 @@ export const staticRoutes: RouteRecordRaw[] = [
       icon: 'user-o',
       menuType: 'dir',
       parent: null,
-      level: 1
+      level: 1,
+      hide: true
     }
   },
   {
@@ -50,6 +52,7 @@ export const staticRoutes: RouteRecordRaw[] = [
       menuType: 'dir',
       parent: null,
       level: 2,
+      hide: true
     }
   },
   {

@@ -142,7 +142,9 @@
     "dark": "Tối",
     "notifications": "Thông báo",
     "messages": "Tin nhắn",
-    "connect": "Kết nối"
+    "connect": "Kết nối",
+    "reconnect": "Kết nối lại",
+    "removeConnect": "Ngắt kết nối"
   },
   "success": {
     "create": "Thêm mới thành công",
