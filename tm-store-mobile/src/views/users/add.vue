@@ -2,7 +2,8 @@
 import { useAppStore, useTypeStore, useRoleStore, useUserStore } from '@/store'
 import { historyBack } from '@/router'
 import { $t } from '@/i18n'
-import { showImagePreview } from 'vant';
+import { showImagePreview } from 'vant'
+import { GoogleDrive } from '@/services/google/drive-gapi'
 
 // const tmFileList = defineAsyncComponent(() => import('@/components/tm-file-list/index.vue'))
 // const tmFileManager = defineAsyncComponent(() => import('@/components/tm-file-manager/index.vue'))
@@ -10,6 +11,9 @@ import { showImagePreview } from 'vant';
 // const tmViewBox = defineAsyncComponent(() => import('@/components/tmViewBox.vue'))
 const tmViewList = defineAsyncComponent(() => import('@/components/tmViewList.vue'))
 
+const GDrive = new GoogleDrive()
+// GDrive.getFolders()
+GDrive.getFiles()
 const route = useRoute()
 const appStore = useAppStore()
 const typeStore = useTypeStore()
@@ -65,7 +69,7 @@ const onSubmit = async () => {
 }
 // const onPreview = () => {
 //   if (images.value && images.value.length)
-//     showImagePreview([images.value[0].url]);
+//     showImagePreview([images.value[0].url])
 // }
 const imagesSelected = ref([])
 const images = ref([
@@ -191,7 +195,8 @@ const onDeleteIamge = (img) => {
             :src="images && images.length ? images[0]?.thumbnail : ''" @click="onPreview" />
         </div> -->
         <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
-          <tm-view-box v-model="images" v-model:selected="imagesSelected" multiple is-trashed @onDelete="onDeleteIamge" />
+          <tm-view-box v-model="images" v-model:selected="imagesSelected" multiple is-trashed
+            @onDelete="onDeleteIamge" />
           <tm-view-list v-model="images" v-model:selected="imagesSelected" multiple :is-trashed="true"
             @onDelete="onDeleteIamge" />
         </div>

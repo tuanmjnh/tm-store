@@ -36,7 +36,12 @@
     },
     "types": [
       "node",
-      "vite/client"
+      "vite/client",
+      "gapi",
+      "gapi.auth2",
+      "gapi.client",
+      "gapi.client.drive",
+      "google.accounts"
     ]
   },
   "include": [

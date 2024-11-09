@@ -5,9 +5,10 @@ import { ConnectService } from './service'
 import { HttpException } from '@/exceptions/http.exception'
 import { RequestMiddlewares } from '@/interfaces/auth.interface'
 import { getIp } from '@/utils/tm-request'
-import { googleOAuth2ByCode, refreshAccessToken } from '@/services/google/auth'
+import { googleOAuth2ByCode, refreshAccessToken, verifyIdToken } from '@/services/google/auth'
 import { jwtDecode } from 'jwt-decode'
 import mongoose from 'mongoose'
+import { getUrl } from '@/utils/tm-url'
 const CONNECTS = {
   google: { name: 'Google', key: 'google' }
 }
@@ -133,6 +134,30 @@ export class ConnectController {
       created: data.created
     }
   }
+  public googleVerifyToken = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const queries = req.query as any
+      if (!queries.access_token) next(new HttpException(404, 'noExistAccessToken'))
+      const rs = { data: null, status: false, message: this.googleVerifyToken.name }
+      const exist = await this.Connect.FindByKey(CONNECTS.google.key)
+      if (!exist) return res.status(200).json(rs)
+      if (!exist.credentials) {
+        rs.data = this.googleDataReturn(exist)
+        return res.status(200).json(rs)
+      }
+      const redirectUri = `${getUrl(req.get('Referrer')).origin}/connect/google-add`
+      exist.credentials.access_token = queries.access_token
+      const ticket = await verifyIdToken(exist.credentials, exist.redirectUris && exist.redirectUris.length ? exist.redirectUris[0] : redirectUri)
+      console.log(ticket)
+      if (ticket) {
+        rs.status = true
+        // rs.data = this.googleDataReturn(ticket)
+      }
+      res.status(200).json(rs)
+    } catch (error) {
+      next(error)
+    }
+  }
   public googleGetAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const rs = { data: null, status: false, message: this.googleGetAuth.name }
@@ -142,7 +167,8 @@ export class ConnectController {
         rs.data = this.googleDataReturn(exist)
         return res.status(200).json(rs)
       }
-      const credentials = await refreshAccessToken(exist.credentials)
+      const redirectUri = `${getUrl(req.get('Referrer')).origin}/connect/google-add`
+      const credentials = await refreshAccessToken(exist.credentials, exist.redirectUris && exist.redirectUris.length ? exist.redirectUris[0] : redirectUri)
       if (!credentials) return next(new HttpException(404, 'ErrorCode'))
       exist.credentials.access_token = credentials.access_token
       exist.credentials.expiry_date = credentials.expiry_date
@@ -168,12 +194,19 @@ export class ConnectController {
       const body = req.body
       if (!body.code) next(new HttpException(404, 'noExistCode'))
       const rs = { data: null, status: false, message: this.googleAuthByCode.name }
-      const credentials = await googleOAuth2ByCode(body.code)
-      if (!credentials) return next(new HttpException(404, 'ErrorCode'))
       const exist = await this.Connect.FindByKey(CONNECTS.google.key)
+      exist.redirectUris = [`${getUrl(req.get('Referrer')).origin}/connect/google-add`]
+      const params = {
+        code: body.code,
+        redirectUri: exist.redirectUris[0]
+      }
+      const credentials = await googleOAuth2ByCode(params)
+      if (!credentials) return next(new HttpException(404, 'ErrorCode'))
+
       if (exist) {//Update
         const data = await this.Connect.Update({
           _id: exist._id,
+          redirectUris: exist.redirectUris,
           credentials: credentials,
           profile: credentials && credentials.id_token ? jwtDecode(credentials.id_token) : null,
         })
@@ -189,7 +222,7 @@ export class ConnectController {
           clientID: body.clientID || null,
           credentials: credentials || null,
           authUri: null,
-          redirectUris: null,
+          redirectUris: [`${getUrl(req.get('Referrer')).origin}/connect/google-add`],
           profile: credentials && credentials.id_token ? jwtDecode(credentials.id_token) : null,
           config: null,
           flag: 1,
@@ -223,7 +256,7 @@ export class ConnectController {
           clientID: body.clientID || null,
           credentials: null,
           authUri: null,
-          redirectUris: null,
+          redirectUris: [`${getUrl(req.get('Referrer')).origin}/connect/google-add`],
           profile: null,
           config: null,
           flag: 1,
@@ -258,7 +291,7 @@ export class ConnectController {
           clientID: body.clientID,
           credentials: null,
           authUri: null,
-          redirectUris: null,
+          redirectUris: [`${getUrl(req.get('Referrer')).origin}/connect/google-add`],
           profile: null,
           config: null,
           flag: 1,
@@ -294,7 +327,7 @@ export class ConnectController {
           clientID: null,
           credentials: null,
           authUri: null,
-          redirectUris: null,
+          redirectUris: [`${getUrl(req.get('Referrer')).origin}/connect/google-add`],
           profile: null,
           config: null,
           flag: 1,

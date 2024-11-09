@@ -1,5 +1,6 @@
 import { http } from '@/utils/http-axios'
 import { ICreated, IResponseList, IResponseItem } from './interfaces/common'
+import { GoogleTokenInfo } from '@/services/google/oauth2'
 
 export interface IModelConnectProfile {
   email?: string
@@ -38,6 +39,16 @@ export const useConnectsStore = defineStore('connectsStore', {
   getters: {
   },
   actions: {
+    async googleVerifyAccessToken(arg?: any): Promise<boolean> {
+      try {
+        const rs = await GoogleTokenInfo(this.google.access_token)
+        if (rs.exp) return true
+        else {
+          const credential = await this.googleGetAuth()
+          return credential.status
+        }
+      } catch (e) { throw e }
+    },
     async googleGetAuth(arg?: any): Promise<IResponseList> {
       try {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/google`, { params: arg })
@@ -59,7 +70,6 @@ export const useConnectsStore = defineStore('connectsStore', {
           this.google.access_token = null
           this.google.profile = null
         }
-        console.log(rs)
         return rs
       } catch (e) { throw e }
     },
@@ -77,18 +87,6 @@ export const useConnectsStore = defineStore('connectsStore', {
           this.google.access_token = null
           this.google.profile = null
         }
-        return rs
-      } catch (e) { throw e }
-    },
-    async create(arg?: any) {
-      try {
-        const rs: IResponseItem = await http.axiosInstance.post(`/${API_PATH}`, arg)
-        return rs
-      } catch (e) { throw e }
-    },
-    async update(arg?: any) {
-      try {
-        const rs: IResponseItem = await http.axiosInstance.put(`/${API_PATH}`, arg)
         return rs
       } catch (e) { throw e }
     },

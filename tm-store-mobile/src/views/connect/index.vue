@@ -7,6 +7,9 @@ import svgImage from '@/components/svgImage.vue'
 const appStore = useAppStore()
 const connectsStore = useConnectsStore()
 const connects = computed(() => connectsStore.$state)//ref(typeStore.getByKey('connect'))
+// watch(appStore.loading, val => {
+//   console.log(val.post)
+// }, { deep: true, immediate: true })
 const isDialogRemove = ref(false)
 const actions = ref([{ name: $t('global.removeConnect'), color: '#f56c6c' }]) as any
 connectsStore.googleGetAuth()
@@ -25,7 +28,7 @@ const onConfirmRemove = (args) => {
 </script>
 <template>
   <van-cell-group>
-    <van-cell v-for="(e, i) in connects" :key="i" :title="e.name" :label="e.profile?.name" is-link
+    <van-cell v-for=" (e, i) in connects" :key="i" :title="e.name" :label="e.profile?.name" is-link
       @click="onConnects(e)">
       <template v-if="!e.access_token" #right-icon>
         <van-loading v-if="appStore.loading.post" size="20" color="#1989fa" />

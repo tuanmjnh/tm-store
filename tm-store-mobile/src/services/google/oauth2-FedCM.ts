@@ -7,8 +7,6 @@ const googleRedirectUri = 'http://localhost:8000/connect/google-add';
 // Function to initiate the OAuth flow
 function initiateOAuth() {
   const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirectUri}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email`;
-
-
   window.open(googleAuthUrl, 'name', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,height=600,width=450');
 }
 

@@ -18,8 +18,8 @@ declare global {
     history: any
     onGapiLoad: any
     onGisLoad: any
-    gapi: any
-    google: any
+    gapi: typeof gapi
+    google: typeof google
     googleTokenClient: any
     $loadingBar: import('van').LoadingBarApi
     $dialog: import('naive-ui').DialogApi

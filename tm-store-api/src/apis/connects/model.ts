@@ -9,7 +9,7 @@ export interface IConnect {
   clientID: any
   credentials: any
   authUri: string
-  redirectUris: string
+  redirectUris: string[]
   profile: any
   config: any
   flag: number
@@ -24,7 +24,7 @@ const schema: Schema = new Schema({
   clientID: { type: Object, default: null },
   credentials: { type: Object, default: null },
   authUri: { type: String, default: null },
-  redirectUris: { type: String, default: null },
+  redirectUris: { type: Array, default: null },
   profile: { type: Object, default: null },
   config: { type: Object, default: null },
   flag: { type: Number, default: 1 },

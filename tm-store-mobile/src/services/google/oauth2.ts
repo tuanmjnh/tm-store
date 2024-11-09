@@ -17,7 +17,7 @@ export const scopes = [ //https://developers.google.com/identity/protocols/oauth
 const OAUTH2_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
 // Parameters to pass to OAuth 2.0 endpoint.
 export const CLIENT_ID = '235324461758-n9qs0f3kec5e8q8t2almq6edn0cjh704.apps.googleusercontent.com'
-const PARAMS = {
+export let PARAMS = {
   'client_id': CLIENT_ID,
   'redirect_uri': 'http://localhost:8000/connect/google-add',
   'response_type': 'code',//'token',
@@ -38,15 +38,16 @@ export const getHash = () => {
   return hash
 }
 
-export const GoogleOAuthSignIn = () => {
+export const GoogleOAuthSignIn = (params?) => {
   //https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow
   //https://accounts.google.com/o/oauth2/revoke?token={token}
   // Google's OAuth 2.0 endpoint for requesting an access token
   let oauth2Endpoint = `${OAUTH2_URL}?`
-
+  PARAMS = { ...PARAMS, ...params }
   for (const p in PARAMS) {
     oauth2Endpoint += `${p}=${PARAMS[p]}&`
   }
+  // console.log(PARAMS)
   const newWindow = window.open(oauth2Endpoint, 'name', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,height=600,width=450')
   if (window.focus && newWindow) {
     newWindow.focus()
@@ -55,7 +56,7 @@ export const GoogleOAuthSignIn = () => {
 
 export const GoogleOAuthCallback = async () => {
   if (window.location.hash) {
-    const hash = getHash()
+    // const hash = getHash()
     // console.log(hash)
     // window.close()
   } else {
@@ -66,7 +67,23 @@ export const GoogleOAuthCallback = async () => {
     // const myParam = urlParams.get('myParam')
     const params = Object.fromEntries(urlParams.entries())
     params.client_id = CLIENT_ID
+    // params.redirect_uri = PARAMS.redirect_uri
     // console.log(params)
     return params
   }
+}
+
+export const GoogleTokenInfo = async (access_token: string) => {
+  try {
+    const response = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${access_token}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
+    const rs = await response.json()
+    return rs
+  } catch (error) {
+    console.log(error)
+  }
+  //https://www.googleapis.com/oauth2/v3/userinfo?access_token=ya29.a0AeDClZDFvKgLMsVXXQCRIXgv1PjJeSy3OwxpvtDMy6kUmxxL--RTaTV6Vy2YLeSZicROloxO4yDE4fhNMKmapJFxoou4mwW-UwnOYI5-PYrqV9ql6u0xHOsuYWahTnIfzSuWcFvNQlMGdd2n1FOE8flAJNOew4iauquISt89mgaCgYKAesSARMSFQHGX2Mi5k063-ytKsiyp6MmWvmHBA0177
+  //https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=ya29.a0AeDClZDFvKgLMsVXXQCRIXgv1PjJeSy3OwxpvtDMy6kUmxxL--RTaTV6Vy2YLeSZicROloxO4yDE4fhNMKmapJFxoou4mwW-UwnOYI5-PYrqV9ql6u0xHOsuYWahTnIfzSuWcFvNQlMGdd2n1FOE8flAJNOew4iauquISt89mgaCgYKAesSARMSFQHGX2Mi5k063-ytKsiyp6MmWvmHBA0177
 }

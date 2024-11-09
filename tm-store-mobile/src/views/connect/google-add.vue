@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// import { requestlAccessToken, initCodeClient } from '@/services/gapi-client'
 import { useConnectsStore } from '@/store'
 const sonnectsStore = useConnectsStore()
 import { GoogleOAuthCallback } from '@/services/google/oauth2'

@@ -19,6 +19,7 @@ export class ConnectRoute implements Routes {
     this.router.patch(`${this.path}`, APIMiddleware, this.controller.updateFlag);
     // this.router.delete(`${this.path}/:id`, APIMiddleware, this.user.delete);
     //Google
+    this.router.get(`${this.path}/google/verify`, APIMiddleware, this.controller.googleVerifyToken);
     this.router.get(`${this.path}/google`, APIMiddleware, this.controller.googleGetAuth);
     this.router.post(`${this.path}/google`, APIMiddleware, this.controller.googleAuthByCode);
     this.router.put(`${this.path}/google`, APIMiddleware, this.controller.googleSetClientID);

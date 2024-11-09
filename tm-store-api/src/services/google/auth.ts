@@ -1,13 +1,11 @@
 // import { join } from 'path'
 // import { authenticate } from '@google-cloud/local-auth'
 import { google } from 'googleapis'
-import { JWTInput } from 'google-auth-library' // OAuth2Client
-import { ImpersonatedJWTInput } from 'google-auth-library/build/src/auth/credentials'
 const SCOPES = ['https://www.googleapis.com/auth/userinfo.profile']
 const CLIENT_ID = '235324461758-n9qs0f3kec5e8q8t2almq6edn0cjh704.apps.googleusercontent.com'
 const CLIENT_SECRET = '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'
 const LOCATION_HOST = 'http://localhost:8080'
-const OAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, LOCATION_HOST)
+// const OAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, LOCATION_HOST)
 // export const connects = connects
 // If modifying these scopes, delete token.json.
 // The file token.json stores the user's access and refresh tokens, and is
@@ -23,7 +21,7 @@ const OAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, LOCATION_H
 /**
  * Load or request or authorization to call APIs.
  */
-export const authorize = async function (credentials: JWTInput | ImpersonatedJWTInput) {
+export const authorize = async (credentials) => {
   try {
     return await google.auth.fromJSON(credentials)
   } catch (e) {
@@ -32,9 +30,10 @@ export const authorize = async function (credentials: JWTInput | ImpersonatedJWT
   }
 }
 
-export const googleOAuth2ByCode = async (code: string) => {
+export const googleOAuth2ByCode = async (args) => {
   try {
-    const { tokens } = await OAuth2Client.getToken(code)
+    const OAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, args.redirectUri)
+    const { tokens } = await OAuth2Client.getToken(args.code)
     OAuth2Client.setCredentials(tokens)
     return tokens
     // const paramsGetToken = {
@@ -87,8 +86,19 @@ export const googleOAuth2ByCode = async (code: string) => {
   }
 }
 
-export const refreshAccessToken = async (credentialsDB) => {
+export const verifyIdToken = async (credentialsDB, redirectUri) => {
   try {
+    const OAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, redirectUri)
+    const ticket = await OAuth2Client.verifyIdToken(credentialsDB)
+    return ticket
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const refreshAccessToken = async (credentialsDB, redirectUri) => {
+  try {
+    const OAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, redirectUri)
     OAuth2Client.setCredentials(credentialsDB)
     const { credentials } = await OAuth2Client.refreshAccessToken()
     return credentials
@@ -97,7 +107,8 @@ export const refreshAccessToken = async (credentialsDB) => {
   }
 }
 
-export const getRefreshToken = async (opts, code) => {
+export const getRefreshToken = async (args) => {
+  const OAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, args.redirectUri)
   // return new Promise(async (resolve, reject) => {
   // Create an oAuth client to authorize the API call. Secrets should be
   // downloaded from the Google Developers Console.
@@ -110,15 +121,15 @@ export const getRefreshToken = async (opts, code) => {
   // Generate the url that will be used for the consent dialog.
   const authorizeUrl = OAuth2Client.generateAuthUrl({
     access_type: 'offline',
-    scope: opts.scope
+    scope: args.scope
   })
 
   // Verify the integrity of the idToken through the authentication
   // code and use the user information contained in the token
-  const { tokens } = await OAuth2Client.getToken(code)
+  const { tokens } = await OAuth2Client.getToken(args.code)
   const ticket = await OAuth2Client.verifyIdToken({
     idToken: tokens.id_token!,
-    audience: opts.client_secret
+    audience: args.client_secret
   })
   const idInfo = ticket.getPayload()
   return tokens.refresh_token

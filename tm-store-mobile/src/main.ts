@@ -29,6 +29,10 @@ import 'vant/es/dialog/style'
 import 'vant/es/notify/style'
 import 'vant/es/image-preview/style'
 
+import { loadGapiInsideDOM } from 'gapi-script'
+// import { gapi } from 'gapi-script'
+// window.gapi = gapi
+// console.log(gapi)
 async function setupApp() {
   // Load the global loading status
   const appLoading = createApp(AppLoading)
@@ -72,6 +76,7 @@ async function setupApp() {
 
   // Mount
   app.mount('#app')
+  await loadGapiInsideDOM()
 }
 
 setupApp()
