@@ -7,6 +7,7 @@ import treeViewNode from "./treeNode.vue";
 
 const emit = defineEmits<{
   (e: "update:modelValue", values: any[]): void;
+  (e: 'onClick', item: any): any
 }>();
 
 const props = withDefaults(
@@ -15,10 +16,11 @@ const props = withDefaults(
     disabled?: boolean;
     radio?: boolean;
     openAll?: boolean;
+    openQuick?: boolean;
     selectable?: boolean;
     unopenable?: boolean;
     color?: string;
-    modelValue: any[];
+    modelValue?: any[];
     items: AppTypes.TreeViewNodeItem[];
     selectionMode?: AppTypes.TreeViewSelectionMode;
     itemKey?: string;
@@ -26,7 +28,7 @@ const props = withDefaults(
   {
     color: "#7e7ec2",
     selectionMode: "leaf",
-    selectable: true,
+    selectable: false,
     radio: false,
     itemKey: "id"
   }
@@ -36,6 +38,7 @@ const identifier = rand(1, 9999);
 
 const busOpenNode = useEventBus<any>(`open-node-${identifier}`);
 const busSelectNode = useEventBus<AppTypes.TreeViewNodeItem>(`select-node-${identifier}`);
+const busClickNode = useEventBus<AppTypes.TreeViewNodeItem>(`click-node-${identifier}`);
 
 const nodeOpened = (id: any) => {
   if (state.openedNodes.has(id)) {
@@ -80,17 +83,25 @@ const nodeSelected = (item: AppTypes.TreeViewNodeItem) => {
   }
 };
 
+const nodeclick = (item: AppTypes.TreeViewNodeItem) => {
+  state.clickNode = item as any;
+  emit('onClick', item);
+};
+
 const unsubscribeOpenNode = busOpenNode.on(nodeOpened);
 const unsubscribeSelectNode = busSelectNode.on(nodeSelected);
+const unsubscribeClickNode = busClickNode.on(nodeclick);
 
 const state = reactive({
   selectedNodes: new Set<any>(),
   openedNodes: new Set<any>(),
+  clickNode: new Set<any>(),
   stopRecursion: false
 });
 
 provide("selected-nodes", state.selectedNodes);
 provide("opened-nodes", state.openedNodes);
+provide("click-node", state.clickNode);
 
 const classes = computed(() => ({
   "treeview--dense": props.dense
@@ -106,7 +117,7 @@ watch(() => props.modelValue, (val) => {
     state.stopRecursion = false;
     return;
   }
-  if (val.length) {
+  if (val && val.length) {
     for (const n of [...new Set(val)]) state.selectedNodes.add(n);
     return;
   }
@@ -127,13 +138,14 @@ onMounted(() => {
 onUnmounted(() => {
   unsubscribeOpenNode();
   unsubscribeSelectNode();
+  unsubscribeClickNode();
 });
 </script>
 <template>
   <ul class="treeview" :class="classes">
     <tree-view-node v-for="item in props.items" :selectable="props.selectable" :color="props.color" :level="1"
       :key="item[props.itemKey]" :item="item" :item-key="props.itemKey" :disabled="item.disabled"
-      :unopenable="props.unopenable" :radio="props.radio" :identifier="identifier" />
+      :unopenable="props.unopenable" :radio="props.radio" :identifier="identifier" :openQuick="props.openQuick" />
   </ul>
 </template>
 <style>

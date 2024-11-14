@@ -72,7 +72,7 @@ initForm()
         <!-- <Tree v-model:selectionKeys="selectedKey" :value="routesTree" selectionMode="checkbox"
           class="primevue-tree w-full md:w-[30rem] border-none">
         </Tree> -->
-        <tree-view color="blue" :items="treeItems" v-model="treeSelected" dense />
+        <tree-view color="blue" :items="treeItems" v-model="treeSelected" dense selectable />
       </van-tab>
     </van-tabs>
     <van-action-bar placeholder>

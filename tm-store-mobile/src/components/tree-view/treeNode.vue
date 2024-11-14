@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<{
   radio?: boolean;
   disabled?: boolean;
   unopenable?: boolean;
+  openQuick?: boolean;
   color?: string;
   identifier: number;
   itemKey?: string;
@@ -30,7 +31,9 @@ const { emit: emitNodeOpen } = useEventBus<any>(
 const { emit: emitNodeSelected } = useEventBus<AppTypes.TreeViewNodeItem>(
   `select-node-${props.identifier}`
 );
-
+const { emit: emitNodeClicked } = useEventBus<AppTypes.TreeViewNodeItem>(
+  `click-node-${props.identifier}`
+);
 const classes = computed(() => ({
   "treeview-node--leaf": !hasChildren.value
 }));
@@ -87,6 +90,11 @@ const nodeSelected = () => {
   emitNodeSelected(props.item);
   emit("change");
 };
+
+const nodeClicked = () => {
+  if (hasChildren.value && !props.unopenable && props.openQuick) emitNodeOpen(props.item[props.itemKey]);
+  emitNodeClicked(props.item)
+}
 
 const openNode = () => {
   if (hasChildren.value && !props.unopenable) emitNodeOpen(props.item[props.itemKey]);
@@ -153,7 +161,7 @@ const openNode = () => {
         <van-icon v-else :name="item.icon" />
       </template>
       <!-- <span v-if="item.icon" class="pi pi-fw pi-inbox mr-2 text-surface-600 dark:text-white/70"></span> -->
-      <span class="text-surface-600 dark:text-white/70">{{ item.name }}</span>
+      <span class="text-surface-600 dark:text-white/70" @click="nodeClicked">{{ item.name }}</span>
     </div>
     <ul class="m-0 list-none p-0 pl-4 [&:not(ul)]:pl-0 [&:not(ul)]:my-[2px]" v-if="isOpen">
       <tree-node v-for="child in props.item.children" :selectable="props.selectable" :level="props.level + 1"

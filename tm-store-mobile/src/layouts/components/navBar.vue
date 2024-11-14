@@ -20,9 +20,10 @@ const getTitle = () => {
 <template>
   <van-nav-bar fixed placeholder :title="getTitle()" :left-arrow="$route.meta.level === 2" @click-right="onClickRight">
     <template #left>
-      <icon-park-outline-application-menu v-if="$route.meta.level === 1" @click="storeApp.isLeftMenu = true" />
+      <!-- <icon-park-outline-application-menu v-if="$route.meta.level === 1" @click="storeApp.isLeftMenu = true" /> -->
       <!-- <van-icon v-else name="wap-home-o" @click="router.replace('/')" /> -->
-      <icon-park-outline-analysis v-else @click="router.replace('/')" />
+      <!-- <icon-park-outline-analysis v-else @click="router.replace('/')" /> -->
+      <icon-park-outline-application-menu @click="storeApp.isLeftMenu = true" />
     </template>
     <template v-if="$route.meta.level === 1" #right>
       <icon-park-outline-setting />

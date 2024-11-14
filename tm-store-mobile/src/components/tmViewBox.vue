@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
 const emit = defineEmits<{
-  (e: 'onSelect', image: any): void
-  (e: 'onPreview', image: any): void
-  (e: 'onDelete', image: any): void
-  (e: 'onDeleted', image: any): void
-  (e: "update:selected", values: any[]): void
-  (e: "update:modelValue", values: any[]): void
+  (e: 'onSelect', image: any): any
+  (e: 'onClick', image: any): any
+  (e: 'onDelete', image: any): any
+  (e: 'onDeleted', image: any): any
+  (e: "update:selected", values: any[]): any
+  (e: "update:modelValue", values: any[]): any
 }>()//defineEmits(['onSelect', 'onPreview', 'onDelete'])
 const props = withDefaults(
   defineProps<{
@@ -15,6 +15,7 @@ const props = withDefaults(
     imageError?: string
     height?: string
     rounded?: string
+    border?: string
     multiple?: boolean
     isDelete?: boolean
     isTooltip?: boolean
@@ -32,6 +33,8 @@ const props = withDefaults(
     imageError: '/src/assets/svg/image.svg',
     height: 'h-28',
     rounded: 'rounded-lg',
+    border: 'border-2 border-solid',
+    multiple: false,
     isDelete: true,
     isTooltip: false,
     thumbnailView: false,
@@ -52,8 +55,12 @@ const onToggleSelect = (arg) => {
     if (index > -1) items.splice(index, 1)
     else items.push(arg)
     emit("update:selected", items)
+    emit('onSelect', items)
   } else {
-    emit("update:selected", props.selected.indexOf(arg) > -1 ? [] : [arg])
+    // console.log(arg)
+    const items = props.selected.indexOf(arg) > -1 ? [] : [arg]
+    emit("update:selected", items)
+    emit('onSelect', items)
   }
 }
 const onDelete = (arg, index) => {
@@ -76,10 +83,11 @@ const onCancelDelete = () => {
   selectedItem.value.item = null
   selectedItem.value.index = -1
 }
-const onShowPreview = (arg, index) => {
+const onClick = (arg, index) => {
   selectedItem.value.item = arg
   selectedItem.value.index = index
-  isDialogPreview.value = true
+  emit('onClick',toRaw(selectedItem.value))
+  if (props.isPreview) isDialogPreview.value = true
 }
 const onHidePreview = () => {
   selectedItem.value.item = null
@@ -88,7 +96,7 @@ const onHidePreview = () => {
 }
 </script>
 <template>
-  <div v-if="modelValue?.length > 0" class="-m-1 flex flex-wrap md:-m-2">
+  <div v-if="modelValue?.length > 0" class="-m-1 flex flex-wrap md:-m-2 content-center justify-center">
     <div v-for="(e, i) in modelValue" :key="i" class="flex w-1/2 flex-wrap">
       <div class="relative w-full p-1 md:p-2">
         <template v-if="selected != undefined">
@@ -99,21 +107,21 @@ const onHidePreview = () => {
             :class="['block h-28 w-full object-cover object-center border-2 border-solid dark:border-slate-700 border-slate-800/30', rounded, height,
               selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']"
             :src="imageError" />
-          <div @click="onShowPreview(e, i)"
+          <div @click="onClick(e, i)"
             :class="['absolute top-1 right-7 bg-sky-600/50 hover:bg-sky-700/50 rounded-tl-none rounded-tr-none rounded-br-none', rounded]">
-            <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-              height="24" fill="none" viewBox="0 0 24 24">
+            <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+              fill="none" viewBox="0 0 24 24">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M8 4H4m0 0v4m0-4 5 5m7-5h4m0 0v4m0-4-5 5M8 20H4m0 0v-4m0 4 5-5m7 5h4m0 0v-4m0 4-5-5" />
             </svg>
           </div>
         </template>
         <template v-else>
-          <img v-if="e.src" :alt="e.alt || ''" @click="onShowPreview(e, i)"
-            :class="['block h-28 w-full object-cover object-center border-2 border-solid dark:border-slate-700 border-slate-800/3', rounded, height]"
+          <img v-if="e.src" :alt="e.alt || ''" @click="onClick(e, i)"
+            :class="['block h-28 w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
             :src="e.src" />
-          <img v-else="e.alt || ''" @click="onShowPreview(e, i)"
-            :class="['block h-28 w-full object-cover object-center border-2 border-solid dark:border-slate-700 border-slate-800/30', rounded, height]"
+          <img v-else="e.alt || ''" @click="onClick(e, i)"
+            :class="['block h-28 w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
             :src="imageError" />
         </template>
         <div v-if="isTrashed" @click="onDelete(e, i)"
@@ -127,7 +135,7 @@ const onHidePreview = () => {
       </div>
     </div>
   </div>
-  <TransitionRoot v-if="isPreview" appear :show="isDialogPreview" as="template">
+  <TransitionRoot appear :show="isDialogPreview" as="template">
     <Dialog as="div" @close="onHidePreview" class="relative z-10">
       <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
         leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">

@@ -4,13 +4,20 @@ import { historyBack } from '@/router'
 import { $t } from '@/i18n'
 import { showImagePreview } from 'vant'
 import { GoogleDrive } from '@/services/google/drive-gapi'
-const GDrive = new GoogleDrive()
+
 // const tmFileList = defineAsyncComponent(() => import('@/components/tm-file-list/index.vue'))
 // const tmFileManager = defineAsyncComponent(() => import('@/components/tm-file-manager/index.vue'))
 // const tmUpload = defineAsyncComponent(() => import('@/components/tm-upload/index.vue'))
 // const tmViewBox = defineAsyncComponent(() => import('@/components/tmViewBox.vue'))
-const googleDrive = defineAsyncComponent(() => import('@/components/google-drive.vue'))
 const tmViewList = defineAsyncComponent(() => import('@/components/tmViewList.vue'))
+
+const GDrive = new GoogleDrive()
+// GDrive.getFolders()
+GDrive.getFiles({ folderName: '5eccbc9e9071001d87fd4df1', isFolder: false,parents:'root' }).then(x=>{
+})
+// GDrive.getFile({ folderName: 'Capture.PNG' }).then(x => {
+//   console.log(x)
+// })
 
 const route = useRoute()
 const appStore = useAppStore()
@@ -18,6 +25,7 @@ const typeStore = useTypeStore()
 const roleStore = useRoleStore()
 const userStore = useUserStore()
 const genders = ref(typeStore.getByKey('gender').map(x => { return { text: x.name, value: x.code } }))
+// const images = ref([])
 const form = computed(() => userStore.item)
 const formDate = ref({
   dateBirth: [],
@@ -28,22 +36,15 @@ const formDate = ref({
 const active = ref('basicInf')
 const showGender = ref(false)
 const showDatePicker = ref(false)
-const isDialogDrive = ref(false)
 
 const initForm = async () => {
   if (route.params.id && !form.value._id) await userStore.getItem(route.params)
   formDate.value.dateBirth = appStore.formatDateToArray(form.value.dateBirth)
-  GDrive.getFiles({ folderName: '5eccbc9e9071001d87fd4df1', isFolder: false, parents: 'root' }).then(x => {
-  })
   // images.value = form.value.avatar
   // console.log(images.value)
 }
 initForm()
 
-const onSelectAvatar = (val) => {
-  // console.log(val)
-  isDialogDrive.value = true
-}
 const onConfirmGender = ({ selectedOptions }) => {
   form.value.gender = selectedOptions[0].value
   showGender.value = false
@@ -201,9 +202,10 @@ const onDeleteIamge = (img) => {
             :src="images && images.length ? images[0]?.thumbnail : ''" @click="onPreview" />
         </div> -->
         <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
-          <tm-view-box v-model="form.avatar" border="" :isPreview="false" @onClick="onSelectAvatar" />
-          <!-- <tm-view-list v-model="images" v-model:selected="imagesSelected" multiple :is-trashed="true"
-            @onDelete="onDeleteIamge" /> -->
+          <tm-view-box v-model="images" v-model:selected="imagesSelected" multiple is-trashed
+            @onDelete="onDeleteIamge" />
+          <tm-view-list v-model="images" v-model:selected="imagesSelected" multiple :is-trashed="true"
+            @onDelete="onDeleteIamge" />
         </div>
       </van-tab>
       <van-tab :title="$t('global.note')" name="note">
@@ -228,19 +230,4 @@ const onDeleteIamge = (img) => {
       :min-date="appStore.minDate()" :max-date="appStore.maxDate()" :cancel-button-text="$t('global.cancel')"
       @cancel="showDatePicker = false" @confirm="onConfirmDatePicker" />
   </van-popup>
-  <van-dialog v-model:show="isDialogDrive" title="Drive" :show-cancel-button="false" :showConfirmButton="false">
-    <template #title>
-      <div class="flex">
-        <div class="flex flex-none h-6 w-12 items-center justify-center pl-5">
-          Drive
-        </div>
-        <div class="flex h-6 grow">
-        </div>
-        <div class="flex flex-none h-6 w-12 items-center justify-center">
-          <van-icon name="cross" @click="isDialogDrive = false" />
-        </div>
-      </div>
-    </template>
-    <google-drive />
-  </van-dialog>
 </template>

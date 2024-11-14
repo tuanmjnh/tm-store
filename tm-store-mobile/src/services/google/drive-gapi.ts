@@ -2,22 +2,36 @@ import delay from 'delay'
 import { API_KEY, CLIENT_ID } from './gapi-client'
 import { get } from '@/utils/localStorage'
 
-interface IGoogleFile extends gapi.client.drive.File {
+export interface IGoogleFile extends gapi.client.drive.File {
   children?: Array<IGoogleFile>
+}
+
+interface IAgrument {
+  trashed?: boolean
+  fields?: string
+  name?: string
+  parents?: string
+  pageSize?: number
+  folderId?: string
+  rootFolder?: string
+  nextPageToken?: string
+  folderName?: string
+  mimeType?: string
+  isFolder?: boolean
 }
 
 export class GoogleDrive {
   constructor() {
     this.initialize()
   }
-  private googleConnect = get('connectsStore.google')
-  private DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
-  private SCOPES = ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.metadata.readonly']
-  private DEFAULTS = {
+  public googleConnect = get('connectsStore.google')
+  public DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
+  public SCOPES = ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.metadata.readonly']
+  public DEFAULTS = {
     PAGE_SIZE: 20,
     FOLDER_ROOT: 'root',
     FIELDS_FOLDER: 'id,name,mimeType,parents',//'id,title,mimeType,userPermission,editable,copyable,shared,fileSize,owners'
-    FIELDS_FILE: 'id,name,mimeType,size,parents,webContentLink,thumbnailLink'
+    FIELDS_FILE: 'id,name,mimeType,size,parents,imageMediaMetadata,webViewLink,webContentLink,thumbnailLink'
   }
   private initialize() {
     return (async () => {
@@ -71,54 +85,48 @@ export class GoogleDrive {
       else reject('timeout')
     })
   }
-  public getFolder = async (args?) => {
+  public getFolder = async (args?: IAgrument) => {
     try {
       if (!args) args = {}
+      args.trashed = args.trashed || false
       const isReady = await this.checkClient()
       if (!isReady) throw new Error('Error Client')
       const opts = {
-        pageSize: args.pageSize || this.DEFAULTS.PAGE_SIZE,
-        fields: `files(${args.fields || this.DEFAULTS.FIELDS_FOLDER})`,
-        q: `mimeType='${this.MIME_TYPE.folder}'`,
-        spaces: 'drive'
+        spaces: 'drive',
+        supportsAllDrives: true,
+        supportsTeamDrives: true,
+        q: `trashed=${args.trashed} and mimeType='${this.MIME_TYPE.folder}'`,
+        pageSize: 1,
+        fields: `files(${args.fields || this.DEFAULTS.FIELDS_FOLDER})`
       }
       // Find folder name
-      opts.q = `${opts.q} and name='${args.name}'`
+      opts.q += ` and name='${args.name}'`
       // Find in Parent folder or root folder
-      opts.q = `${opts.q} and '${args.parents || this.DEFAULTS.FOLDER_ROOT}' in parents`
-      // Find in folder is trashed
-      opts.q = `${opts.q} and trashed=${args.trashed !== undefined ? args.trashed : false}`
-
-      const res = await window.gapi.client.drive.files.list(opts)//.then(function (response) {
-      //   var files = response.result.files;
-      //   if (files && files.length > 0) {
-      //     // document.getElementById('most-popular').innerText = 'Eureka! Successful connection.';
-      //   } else {
-      //     // document.getElementById('most-popular').innerText = 'Eureka! Successful connection, but no files found.';
-      //   }
-      // }).catch(function (error) {
-      //   // document.getElementById('most-popular').innerText = 'Sorry! Connection unsuccessful.';
-      //   console.error('Error:', error);
-      // });
-      return res.result.files[0]
+      if (args.parents) opts.q += ` and '${args.parents}' in parents`
+      // console.log(opts.q)
+      const res = await window.gapi.client.drive.files.list(opts)
+      return res.result.files && res.result.files.length ? res.result.files[0] : null
     } catch (e) { throw new Error(e) }
   }
-  public getFolders = async (args?) => {
+  public getFolders = async (args?: IAgrument) => {
     try {
       if (!args) args = {}
+      args.trashed = args.trashed || false
       const isReady = await this.checkClient()
       if (!isReady) throw new Error('Error Client')
       let rs = [] as Array<IGoogleFile>
       const opts = {
+        spaces: 'drive',
+        supportsAllDrives: true,
+        supportsTeamDrives: true,
+        q: `trashed=${args.trashed} and mimeType='${this.MIME_TYPE.folder}'`,
         pageSize: args.pageSize || this.DEFAULTS.PAGE_SIZE,
-        fields: `files(${args.fields || this.DEFAULTS.FIELDS_FOLDER})`,
-        q: `mimeType='${this.MIME_TYPE.folder}'`,
-        spaces: 'drive'
+        fields: `files(${args.fields || this.DEFAULTS.FIELDS_FOLDER})`
       }
-      if (args.folderId) opts.q = `${opts.q} and '${args.folderId}' in parents`
+      if (args.folderId) opts.q += ` and '${args.folderId}' in parents`
       else {
         if (args.parents) {
-          opts.q = `${opts.q} and '${args.parents}' in parents`
+          opts.q += ` and '${args.parents}' in parents`
           rs.push({
             id: args.parents,
             name: 'Root',
@@ -129,7 +137,7 @@ export class GoogleDrive {
         } else {
           const folderID = await this.getFolder({ name: args.rootFolder, pageSize: args.pageSize, trashed: args.trashed, fields: null, parents: null })
           if (folderID) {
-            opts.q = `${opts.q} and '${folderID.id}' in parents`
+            opts.q += ` and '${folderID.id}' in parents`
             rs.push({
               id: folderID.id,
               name: 'Root',
@@ -138,13 +146,13 @@ export class GoogleDrive {
               children: [] as Array<IGoogleFile>
             })
           } else if (this.DEFAULTS.FOLDER_ROOT) {
-            opts.q = `${opts.q} and '${this.DEFAULTS.FOLDER_ROOT}' in parents`
+            opts.q += ` and '${this.DEFAULTS.FOLDER_ROOT}' in parents`
             rs.push({
               id: this.DEFAULTS.FOLDER_ROOT,
               name: 'Root',
               parents: null,
               mimeType: this.MIME_TYPE.folder,
-              children: []
+              children: [] as Array<IGoogleFile>
             })
           } else {
             rs.push({
@@ -152,95 +160,74 @@ export class GoogleDrive {
               name: 'Drive',
               parents: null,
               mimeType: this.MIME_TYPE.folder,
-              children: []
+              children: [] as Array<IGoogleFile>
             })
           }
         }
       }
-      opts.q = `${opts.q} and trashed=${args.trashed !== undefined ? args.trashed : false}`
       const res = await window.gapi.client.drive.files.list(opts)
       if (res.result.files) {
         if (rs.length && rs[0].children) rs[0].children = res.result.files
         else rs = rs.concat(res.result.files)
-        // for await (const e of res.result.files) {
-        //   if (rs.length && rs[0].children) rs[0].children.push({
-        //     id: e.id,
-        //     name: e.name
-        //   })
-        //   else rs.push({
-        //     id: e.id,
-        //     name: e.name
-        //   })
-        // }
       }
-      console.log(rs)
       return rs
     } catch (e) { throw new Error(e) }
   }
-  public getFile = async (args?) => {
-    try {
-      // const metadataRequest = gapi.client.drive.files.get({
-      //   fileId: fileId,
-      //   supportsTeamDrives: true,
-      //   fields: DEFAULT_FIELDS
-      // });
-      // const contentRequest = gapi.client.drive.files.get({
-      //   fileId: fileId,
-      //   supportsTeamDrives: true,
-      //   alt: 'media'
-      // });
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  public getFiles = async (args?) => {
+  public getFile = async (args?: IAgrument) => {
     try {
       if (!args) args = {}
+      args.trashed = args.trashed || false
       const isReady = await this.checkClient()
       if (!isReady) throw new Error('Error Client')
-      const rs = { files: [] as Array<IGoogleFile>, nextPageToken: null }
       const opts = {
-        pageSize: args.pageSize || this.DEFAULTS.PAGE_SIZE,
-        fields: `nextPageToken, files(${args.fields || this.DEFAULTS.FIELDS_FILE})`,
-        q: `trashed=${args.trashed !== undefined ? args.trashed : false}`,
-        pageToken: args.nextPageToken,
-        spaces: 'drive'
+        spaces: 'drive',
+        supportsAllDrives: true,
+        supportsTeamDrives: true,
+        q: `trashed=${args.trashed} and mimeType != '${this.MIME_TYPE.folder}'`,
+        pageSize: 1,
+        fields: `nextPageToken, files(${args.fields || this.DEFAULTS.FIELDS_FILE})`
       }
-      if (args.containFolder === undefined || !args.containFolder) opts.q = `${opts.q} and mimeType != '${this.MIME_TYPE.folder}'`
-      if (this.DEFAULTS.FOLDER_ROOT) opts.q = `${opts.q} and '${this.DEFAULTS.FOLDER_ROOT}' in parents`
-      if (args.folderId) opts.q = `${opts.q} and '${args.folderId}' in parents`
-      else if (args.rootFolder) {
-        const folderID = await this.getFolder({ name: args.rootFolder, trashed: args.trashed, fields: null, pageSize: null, parents: null })
-        if (folderID) opts.q = `${opts.q} and '${folderID.id}' in parents`
-      }
-      if (args.mimeType) opts.q = `${opts.q} and mimeType contains '${args.mimeType}'`
-      console.log(opts.q)
+
+      // Find file by id
+      // if (args.id) opts.q += ` and id='${args.id}'`
+      // Find file by name
+      opts.q += ` and name='${args.name}'`
+      // Find in Parent folder or root folder
+      opts.q += ` and '${args.parents || this.DEFAULTS.FOLDER_ROOT}' in parents`
+      // console.log(opts.q)
       const res = await window.gapi.client.drive.files.list(opts)
-      if (res.result.files && res.result.files.length) {
-        rs.nextPageToken = res.result.nextPageToken
-        for await (const e of res.result.files) {
-          if (e.mimeType === this.MIME_TYPE.folder) rs.files.push({
-            id: e.id,
-            name: e.name,
-            mimeType: this.MIME_TYPE.folder
-          })
-          else rs.files
-          //   .push({
-          //   id: e.id,
-          //   name: e.name,
-          //   mimeType: e.mimeType,
-          //   size: e.size,
-          //   webContentLink: getViewUrl(e.id),
-          //   // thumbnail: e.thumbnailLink ? onThumbnailLink(e.thumbnailLink) : null,
-          //   thumbnail: e.thumbnailLink ? getThumbnail(e.id) : null,
-          //   download: e.webContentLink
-          // })
-        }
-      }
-      return rs
+      return res.result.files && res.result.files.length ? res.result.files[0] as IGoogleFile : null
     } catch (e) { throw new Error(e) }
   }
-  public uploadFile = async (args?) => {
+  public getFiles = async (args?: IAgrument) => {
+    try {
+      if (!args) args = {}
+      args.trashed = args.trashed || false
+      const isReady = await this.checkClient()
+      if (!isReady) throw new Error('Error Client')
+      const opts = {
+        spaces: 'drive',
+        supportsAllDrives: true,
+        supportsTeamDrives: true,
+        q: `trashed=${args.trashed}`,
+        pageToken: args.nextPageToken || null,
+        pageSize: args.pageSize || this.DEFAULTS.PAGE_SIZE,
+        fields: `nextPageToken, files(${args.fields || this.DEFAULTS.FIELDS_FILE})`
+      }
+
+      if (args.isFolder === undefined || !args.isFolder) opts.q += ` and mimeType != '${this.MIME_TYPE.folder}'`
+      if (args.folderId) opts.q += ` and '${args.folderId || this.DEFAULTS.FOLDER_ROOT}' in parents`
+      else if (args.folderName) {
+        const folder = await this.getFolder({ name: args.folderName, trashed: args.trashed, fields: null, pageSize: null, parents: null })
+        if (folder) opts.q += ` and '${folder.id}' in parents`
+      }
+      if (args.mimeType) opts.q += ` and mimeType contains '${args.mimeType}'`
+      // console.log(opts.q)
+      const res = await window.gapi.client.drive.files.list(opts)
+      return res.result as IGoogleFile[]
+    } catch (e) { throw new Error(e) }
+  }
+  public uploadFile = async (args?: IAgrument) => {
     try {
 
     } catch (error) {
