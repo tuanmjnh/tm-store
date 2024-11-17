@@ -107,6 +107,17 @@ const classes = computed(() => ({
   "treeview--dense": props.dense
 }));
 
+const onOpenNodes = () => {
+  if (props.openAll === true) {
+    let allVals: any[] = [];
+    for (const node of props.items) {
+      let x = gatherAllNodeIds(node, props.itemKey, []);
+      allVals = [...allVals, ...x];
+    }
+    for (const n of [...new Set(allVals)]) state.openedNodes.add(n);
+  }
+}
+
 watch(() => state.selectedNodes, (val) => {
   emit("update:modelValue", [...val]);
   state.stopRecursion = true;
@@ -124,15 +135,12 @@ watch(() => props.modelValue, (val) => {
   state.selectedNodes.clear();
 }, { immediate: true });
 
+watch(() => props.items, (val) => {
+  onOpenNodes()
+}, { deep: true, immediate: true });
+
 onMounted(() => {
-  if (props.openAll === true) {
-    let allVals: any[] = [];
-    for (const node of props.items) {
-      let x = gatherAllNodeIds(node, props.itemKey, []);
-      allVals = [...allVals, ...x];
-    }
-    for (const n of [...new Set(allVals)]) state.openedNodes.add(n);
-  }
+  onOpenNodes()
 });
 
 onUnmounted(() => {

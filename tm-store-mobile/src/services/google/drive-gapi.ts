@@ -224,7 +224,7 @@ export class GoogleDrive {
       if (args.mimeType) opts.q += ` and mimeType contains '${args.mimeType}'`
       // console.log(opts.q)
       const res = await window.gapi.client.drive.files.list(opts)
-      return res.result as IGoogleFile[]
+      return res.result
     } catch (e) { throw new Error(e) }
   }
   public uploadFile = async (args?: IAgrument) => {

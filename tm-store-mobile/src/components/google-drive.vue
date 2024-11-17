@@ -2,12 +2,15 @@
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
 import treeView from './tree-view/index.vue'
 import { GoogleDrive, IGoogleFile } from '@/services/google/drive-gapi'
+import delay from 'delay'
+import { lazyLoad } from '@/utils/images'
 
 const GDrive = new GoogleDrive()
 const tab = ref('folders')
 const selectedItem = ref({ item: null, index: -1 })
 const folders = ref([])
-const files = ref<IGoogleFile[]>([])
+const fileList = ref<gapi.client.drive.FileList>()
+const isLoading = ref(false)
 const emit = defineEmits<{
   (e: 'onSelect', image: any): void
   (e: 'onPreview', image: any): void
@@ -56,18 +59,24 @@ const props = withDefaults(
 
 
 const initFolders = async () => {
+  isLoading.value = true
   folders.value = await GDrive.getFolders()
-  // GDrive.getFiles({ folderName: '5eccbc9e9071001d87fd4df1', isFolder: false, parents: 'root' }).then(x => {
-  // })
   // console.log(folders.value)
+  fileList.value = await GDrive.getFiles({ folderId: folders.value && folders.value.length ? folders.value[0].id : null })
+  // console.log(fileList.value)
+  isLoading.value = false
 }
 initFolders()
 
-const onGetFileFolder = async (arg) => {
+const onGetClickFolder = async (arg) => {
+  isLoading.value = true
   if (!arg.children) arg.children = await GDrive.getFolders({ folderId: arg.id })
-  console.log(arg)
-  // files.value = await GDrive.getFiles({ folderId: arg.id })
-  // console.log(files.value)
+  await delay(300)
+  fileList.value = await GDrive.getFiles({ folderId: arg.id })
+  isLoading.value = false
+}
+const onChangeTab = async (arg) => {
+  if (arg == 'files') lazyLoad(fileList.value.files.map(x => x.thumbnailLink))
 }
 const onToggleSelect = (arg) => {
   if (props.multiple) {
@@ -82,23 +91,34 @@ const onToggleSelect = (arg) => {
 }
 </script>
 <template>
-  <van-tabs v-model:active="tab">
+  <van-tabs v-model:active="tab" @change="onChangeTab">
     <van-tab name="folders">
       <template #title>
         <!-- <Icon icon="icon-park-outline:folder-open" class="van-badge__wrapper van-icon van-cell__left-icon" /> -->
         <icon-park-outline-folder-open />
       </template>
-      <tree-view color="blue" :items="folders" dense @onClick="onGetFileFolder" />
+      <div class="overscroll-none overflow-auto min-h-60 max-h-128">
+        <tree-view color="blue" :items="folders" dense open-all @onClick="onGetClickFolder" />
+      </div>
     </van-tab>
     <van-tab name="files">
       <template #title>
         <icon-park-outline-pic-one />
       </template>
-      Files
+      <div class="overscroll-none overflow-auto min-h-60 max-h-128">
+        <div id="drive-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        </div>
+        <!-- <div v-for=" (e, i) in fileList.files" :key="i">{{ e.name }}</div> -->
+        <!-- <div v-for=" (e, i) in fileList.files" :key="i" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div>
+            <img class="h-auto max-w-full rounded-lg" :src="e.thumbnailLink" :alt="e.name">
+          </div>
+        </div> -->
+      </div>
     </van-tab>
   </van-tabs>
-  <div
-    class="absolute items-center block max-w-sm p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-800 dark:hover:bg-gray-700">
+  <div v-if="isLoading"
+    class="absolute items-center block max-w-sm p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800/80 dark:border-gray-800 dark:hover:bg-gray-700 top-0 left-0 h-full w-full z-10">
     <div role="status" class="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
       <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
         viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -113,3 +133,9 @@ const onToggleSelect = (arg) => {
     </div>
   </div>
 </template>
+
+<style>
+.max-h-128 {
+  max-height: 34rem;
+}
+</style>
