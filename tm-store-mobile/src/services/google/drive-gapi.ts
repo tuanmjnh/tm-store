@@ -53,6 +53,7 @@ export class GoogleDrive {
     })()
   }
   public MIME_TYPE = {
+    google: 'application/vnd.google-apps.',
     audio: 'application/vnd.google-apps.audio',
     docs: 'application/vnd.google-apps.document',
     '3rd_party_shortcut': 'application/vnd.google-apps.drive-sdk',
@@ -73,7 +74,7 @@ export class GoogleDrive {
     video: 'application/vnd.google-apps.video',
     image: 'image'
   }
-  private checkClient = async () => {
+  private CheckClient = async () => {
     return new Promise(async (resolve, reject) => {
       const timeout = { min: 0, max: 6000 }
       while ((!window.gapi.client || !window.gapi.client.drive) && timeout.min < timeout.max) {
@@ -85,11 +86,11 @@ export class GoogleDrive {
       else reject('timeout')
     })
   }
-  public getFolder = async (args?: IAgrument) => {
+  public GetFolder = async (args?: IAgrument) => {
     try {
       if (!args) args = {}
       args.trashed = args.trashed || false
-      const isReady = await this.checkClient()
+      const isReady = await this.CheckClient()
       if (!isReady) throw new Error('Error Client')
       const opts = {
         spaces: 'drive',
@@ -108,11 +109,11 @@ export class GoogleDrive {
       return res.result.files && res.result.files.length ? res.result.files[0] : null
     } catch (e) { throw new Error(e) }
   }
-  public getFolders = async (args?: IAgrument) => {
+  public GetFolders = async (args?: IAgrument) => {
     try {
       if (!args) args = {}
       args.trashed = args.trashed || false
-      const isReady = await this.checkClient()
+      const isReady = await this.CheckClient()
       if (!isReady) throw new Error('Error Client')
       let rs = [] as Array<IGoogleFile>
       const opts = {
@@ -135,7 +136,7 @@ export class GoogleDrive {
             children: [] as Array<IGoogleFile>
           })
         } else {
-          const folderID = await this.getFolder({ name: args.rootFolder, pageSize: args.pageSize, trashed: args.trashed, fields: null, parents: null })
+          const folderID = await this.GetFolder({ name: args.rootFolder, pageSize: args.pageSize, trashed: args.trashed, fields: null, parents: null })
           if (folderID) {
             opts.q += ` and '${folderID.id}' in parents`
             rs.push({
@@ -173,11 +174,11 @@ export class GoogleDrive {
       return rs
     } catch (e) { throw new Error(e) }
   }
-  public getFile = async (args?: IAgrument) => {
+  public GetFile = async (args?: IAgrument) => {
     try {
       if (!args) args = {}
       args.trashed = args.trashed || false
-      const isReady = await this.checkClient()
+      const isReady = await this.CheckClient()
       if (!isReady) throw new Error('Error Client')
       const opts = {
         spaces: 'drive',
@@ -194,16 +195,17 @@ export class GoogleDrive {
       opts.q += ` and name='${args.name}'`
       // Find in Parent folder or root folder
       opts.q += ` and '${args.parents || this.DEFAULTS.FOLDER_ROOT}' in parents`
+      if (args.mimeType) opts.q += ` and mimeType contains '${args.mimeType}'`
       // console.log(opts.q)
       const res = await window.gapi.client.drive.files.list(opts)
       return res.result.files && res.result.files.length ? res.result.files[0] as IGoogleFile : null
     } catch (e) { throw new Error(e) }
   }
-  public getFiles = async (args?: IAgrument) => {
+  public GetFiles = async (args?: IAgrument) => {
     try {
       if (!args) args = {}
       args.trashed = args.trashed || false
-      const isReady = await this.checkClient()
+      const isReady = await this.CheckClient()
       if (!isReady) throw new Error('Error Client')
       const opts = {
         spaces: 'drive',
@@ -214,22 +216,99 @@ export class GoogleDrive {
         pageSize: args.pageSize || this.DEFAULTS.PAGE_SIZE,
         fields: `nextPageToken, files(${args.fields || this.DEFAULTS.FIELDS_FILE})`
       }
-
-      if (args.isFolder === undefined || !args.isFolder) opts.q += ` and mimeType != '${this.MIME_TYPE.folder}'`
+      if (args.isFolder === undefined || !args.isFolder) opts.q += ` and mimeType!='${this.MIME_TYPE.folder}'`
+      if (args.mimeType) opts.q += ` and mimeType contains '${args.mimeType}'`
       if (args.folderId) opts.q += ` and '${args.folderId || this.DEFAULTS.FOLDER_ROOT}' in parents`
       else if (args.folderName) {
-        const folder = await this.getFolder({ name: args.folderName, trashed: args.trashed, fields: null, pageSize: null, parents: null })
+        const folder = await this.GetFolder({ name: args.folderName, trashed: args.trashed, fields: null, pageSize: null, parents: null })
         if (folder) opts.q += ` and '${folder.id}' in parents`
       }
-      if (args.mimeType) opts.q += ` and mimeType contains '${args.mimeType}'`
       // console.log(opts.q)
       const res = await window.gapi.client.drive.files.list(opts)
       return res.result
     } catch (e) { throw new Error(e) }
   }
-  public uploadFile = async (args?: IAgrument) => {
+  public CreateFolder = async (args?: IAgrument) => {
     try {
+      if (!args) args = {}
+      args.trashed = args.trashed || false
+      const isReady = await this.CheckClient()
+      if (!isReady) throw new Error('Error Client')
+      const resource = {
+        name: args.name,
+        parents: args.parents ? [args.parents] : [this.DEFAULTS.FOLDER_ROOT],
+        mimeType: this.MIME_TYPE.folder
+      } as any;
+      // const fields = args.fields || this.DEFAULTS.FIELDS_FOLDER as any
+      const res = await window.gapi.client.drive.files.create(resource)
+      if (res.result) res.result.parents = resource.parents
+      return res.result
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+  }
+  public UploadFile = async (args?: IAgrument) => {
+    try {
+      if (!args) args = {}
+      args.trashed = args.trashed || false
+      const isReady = await this.CheckClient()
+      if (!isReady) throw new Error('Error Client')
+      const opts = {
 
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  public UpdateFile = async (args?: IAgrument) => {
+    try {
+      if (!args) args = {}
+      args.trashed = args.trashed || false
+      const isReady = await this.CheckClient()
+      if (!isReady) throw new Error('Error Client')
+      const opts = {
+
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  public UpdateTrashFile = async (args?: IAgrument) => {
+    try {
+      if (!args) args = {}
+      args.trashed = args.trashed || false
+      const isReady = await this.CheckClient()
+      if (!isReady) throw new Error('Error Client')
+      const opts = {
+
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  public DeleteFile = async (args?: IAgrument) => {
+    try {
+      if (!args) args = {}
+      args.trashed = args.trashed || false
+      const isReady = await this.CheckClient()
+      if (!isReady) throw new Error('Error Client')
+      const opts = {
+
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  public EmptyTrash = async (args?: IAgrument) => {
+    try {
+      if (!args) args = {}
+      args.trashed = args.trashed || false
+      const isReady = await this.CheckClient()
+      if (!isReady) throw new Error('Error Client')
+      const opts = {
+
+      }
     } catch (error) {
       console.log(error)
     }

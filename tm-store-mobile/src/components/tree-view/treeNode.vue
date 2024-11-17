@@ -1,69 +1,65 @@
 <script lang="ts" setup>
 // import { useEventBus } from "@vueuse/core";
 // import { computed, inject } from "vue";
-import { checkChildSelectStatus } from "./helpers";
-import { Icon } from '@iconify/vue';
+import { checkChildSelectStatus } from './helpers'
+import { Icon } from '@iconify/vue'
 
-const emit = defineEmits<{ (e: "change"): void }>();
+const emit = defineEmits<{ (e: 'change'): void }>()
 
-const selectedNodes = inject<Set<any>>("selected-nodes");
-const openedNodes = inject<Set<any>>("opened-nodes");
+const selectedNodes = inject<Set<any>>('selected-nodes')
+const openedNodes = inject<Set<any>>('opened-nodes')
 
-const props = withDefaults(defineProps<{
-  level: number;
-  item: AppTypes.TreeViewNodeItem;
-  selectable?: boolean;
-  radio?: boolean;
-  disabled?: boolean;
-  unopenable?: boolean;
-  openQuick?: boolean;
-  color?: string;
-  identifier: number;
-  itemKey?: string;
-}>(),
+const props = withDefaults(
+  defineProps<{
+    level: number
+    item: AppTypes.TreeViewNodeItem
+    selectable?: boolean
+    radio?: boolean
+    disabled?: boolean
+    unopenable?: boolean
+    openQuick?: boolean
+    color?: string
+    identifier: number
+    itemKey?: string
+  }>(),
   {
     itemKey: 'id'
-  })
+  }
+)
 
-const { emit: emitNodeOpen } = useEventBus<any>(
-  `open-node-${props.identifier}`
-);
-const { emit: emitNodeSelected } = useEventBus<AppTypes.TreeViewNodeItem>(
-  `select-node-${props.identifier}`
-);
-const { emit: emitNodeClicked } = useEventBus<AppTypes.TreeViewNodeItem>(
-  `click-node-${props.identifier}`
-);
+const { emit: emitNodeOpen } = useEventBus<any>(`open-node-${props.identifier}`)
+const { emit: emitNodeSelected } = useEventBus<AppTypes.TreeViewNodeItem>(`select-node-${props.identifier}`)
+const { emit: emitNodeClicked } = useEventBus<AppTypes.TreeViewNodeItem>(`click-node-${props.identifier}`)
 const classes = computed(() => ({
-  "treeview-node--leaf": !hasChildren.value
-}));
+  'treeview-node--leaf': !hasChildren.value
+}))
 
-const isOpen = computed(() => openedNodes?.has(props.item[props.itemKey]));
+const isOpen = computed(() => openedNodes?.has(props.item[props.itemKey]))
 
-const isSelected = computed(() => selectedNodes?.has(props.item[props.itemKey]));
+const isSelected = computed(() => selectedNodes?.has(props.item[props.itemKey]))
 
-const hasChildren = computed(() => !!props.item.children && !!props.item.children.length);
+const hasChildren = computed(() => !!props.item.children && !!props.item.children.length)
 
-const allChildrenSelected = computed(() => checkChildSelectStatus(selectedNodes!, props.item, props.itemKey, "all"));
+const allChildrenSelected = computed(() => checkChildSelectStatus(selectedNodes!, props.item, props.itemKey, 'all'))
 
-const atLeastOneChildSelected = computed(() => checkChildSelectStatus(selectedNodes!, props.item, props.itemKey, "atLeastOne"));
+const atLeastOneChildSelected = computed(() => checkChildSelectStatus(selectedNodes!, props.item, props.itemKey, 'atLeastOne'))
 
 const isChecked = computed(() => {
   if (hasChildren.value) {
-    if (allChildrenSelected.value) return true;
-    if (atLeastOneChildSelected.value) return false;
-    return false;
+    if (allChildrenSelected.value) return true
+    if (atLeastOneChildSelected.value) return false
+    return false
   }
-  return isSelected.value;
-});
+  return isSelected.value
+})
 
 const isIndeterminate = computed(() => {
   if (hasChildren.value) {
-    if (allChildrenSelected.value) return false;
-    if (atLeastOneChildSelected.value) return true;
+    if (allChildrenSelected.value) return false
+    if (atLeastOneChildSelected.value) return true
   }
-  return false;
-});
+  return false
+})
 
 // const numberOfLevels = computed(() => {
 //   if (hasChildren.value || props.level !== 1) return props.level - 1;
@@ -71,34 +67,34 @@ const isIndeterminate = computed(() => {
 // });
 
 const childNodeChanged = () => {
-  const id = props.item[props.itemKey];
+  const id = props.item[props.itemKey]
   if (hasChildren.value) {
     if (allChildrenSelected.value) {
-      if (!isSelected.value) nodeSelected();
+      if (!isSelected.value) nodeSelected()
     } else {
       if (atLeastOneChildSelected.value) {
-        if (!isSelected.value) selectedNodes!.add(id);
+        if (!isSelected.value) selectedNodes!.add(id)
       } else {
-        if (isSelected.value) nodeSelected();
+        if (isSelected.value) nodeSelected()
       }
     }
-    emit("change");
+    emit('change')
   }
-};
+}
 
 const nodeSelected = () => {
-  emitNodeSelected(props.item);
-  emit("change");
-};
+  emitNodeSelected(props.item)
+  emit('change')
+}
 
 const nodeClicked = () => {
-  if (hasChildren.value && !props.unopenable && props.openQuick) emitNodeOpen(props.item[props.itemKey]);
+  if (hasChildren.value && !props.unopenable && props.openQuick) emitNodeOpen(props.item[props.itemKey])
   emitNodeClicked(props.item)
 }
 
 const openNode = () => {
-  if (hasChildren.value && !props.unopenable) emitNodeOpen(props.item[props.itemKey]);
-};
+  if (hasChildren.value && !props.unopenable) emitNodeOpen(props.item[props.itemKey])
+}
 </script>
 <template>
   <li :class="classes" class="p-0 my-[2px] mx-0 first:mt-0 rounded-md">
@@ -111,8 +107,8 @@ const openNode = () => {
           src="./chevron.svg" width="15" height="15" v-if="hasChildren" class="treeview-node__toggle"
           @click.stop="openNode" />
         <div class="treeview-node__level" v-else /> -->
-      <button type="button" tabindex="-1" v-if="hasChildren" @click.stop="openNode" :class="['inline-flex items-center justify-center border-0 rounded-full w-7 h-7 bg-transparent text-surface-600 dark:text-white/70 transition duration-200 cursor-pointer select-none',
-        { open: isOpen, close: !isOpen }]">
+      <button type="button" tabindex="-1" v-if="hasChildren" @click.stop="openNode"
+        :class="['inline-flex items-center justify-center border-0 rounded-full w-7 h-7 bg-transparent text-surface-600 dark:text-white/70 transition duration-200 cursor-pointer select-none', { open: isOpen, close: !isOpen }]">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M4.38708 13C4.28408 13.0005 4.18203 12.9804 4.08691 12.9409C3.99178 12.9014 3.9055 12.8433 3.83313 12.7701C3.68634 12.6231 3.60388 12.4238 3.60388 12.2161C3.60388 12.0084 3.68634 11.8091 3.83313 11.6622L8.50507 6.99022L3.83313 2.31827C3.69467 2.16968 3.61928 1.97313 3.62287 1.77005C3.62645 1.56698 3.70872 1.37322 3.85234 1.22959C3.99596 1.08597 4.18972 1.00371 4.3928 1.00012C4.59588 0.996539 4.79242 1.07192 4.94102 1.21039L10.1669 6.43628C10.3137 6.58325 10.3962 6.78249 10.3962 6.99022C10.3962 7.19795 10.3137 7.39718 10.1669 7.54416L4.94102 12.7701C4.86865 12.8433 4.78237 12.9014 4.68724 12.9409C4.59212 12.9804 4.49007 13.0005 4.38708 13Z"
@@ -132,11 +128,10 @@ const openNode = () => {
             <input type="checkbox" :disabled="props.disabled" :indeterminate="isIndeterminate" :checked="isChecked"
               @click="nodeSelected"
               class="peer w-full h-full absolute top-0 left-0 z-10 p-0 m-0 opacity-0 rounded outline-none border border-surface-300 dark:border-surface-700 appearance-none cursor-pointer"
-              tabindex="-1">
+              tabindex="-1" />
             <!-- border-color: var(--van-gray-8); -->
-            <div :class="['flex items-center justify-center w-5 h-5 rounded border transition-colors duration-200',
-              isChecked || isIndeterminate ? 'checked' : 'border-surface-300 dark:border-surface-700 bg-surface-0 dark:bg-surface-950',
-              props.disabled ? 'border-disable' : '']">
+            <div
+              :class="['flex items-center justify-center w-5 h-5 rounded border transition-colors duration-200', isChecked || isIndeterminate ? 'checked' : 'border-surface-300 dark:border-surface-700 bg-surface-0 dark:bg-surface-950', props.disabled ? 'border-disable' : '']">
               <svg v-if="isChecked" width="14" height="14" viewBox="0 0 14 14" fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 :class="['w-[0.875rem] h-[0.875rem]  transition-all duration-200', props.disabled ? '' : 'text-white dark:text-surface-950']">
@@ -162,12 +157,17 @@ const openNode = () => {
       </template>
       <!-- <span v-if="item.icon" class="pi pi-fw pi-inbox mr-2 text-surface-600 dark:text-white/70"></span> -->
       <span class="text-surface-600 dark:text-white/70" @click="nodeClicked">{{ item.name }}</span>
+      <slot name="append" :item="item"></slot>
     </div>
     <ul class="m-0 list-none p-0 pl-4 [&:not(ul)]:pl-0 [&:not(ul)]:my-[2px]" v-if="isOpen">
       <tree-node v-for="child in props.item.children" :selectable="props.selectable" :level="props.level + 1"
         :key="child[props.itemKey]" :item="child" :item-key="props.itemKey" :color="props.color"
         :disabled="props.disabled" :unopenable="props.unopenable" :identifier="props.identifier" :radio="props.radio"
-        @change="childNodeChanged" />
+        @change="childNodeChanged">
+        <template #append="state">
+          <slot name="append" :item="state.item"></slot>
+        </template>
+      </tree-node>
     </ul>
   </li>
 </template>

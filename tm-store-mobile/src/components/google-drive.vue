@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
-import treeView from './tree-view/index.vue'
 import { GoogleDrive, IGoogleFile } from '@/services/google/drive-gapi'
-import delay from 'delay'
 import { lazyLoad } from '@/utils/images'
+import delay from 'delay'
+import treeView from './tree-view/index.vue'
 
 const GDrive = new GoogleDrive()
 const tab = ref('folders')
@@ -11,14 +11,15 @@ const selectedItem = ref({ item: null, index: -1 })
 const folders = ref([])
 const fileList = ref<gapi.client.drive.FileList>()
 const isLoading = ref(false)
+const isDialogFolder = ref(false)
 const emit = defineEmits<{
   (e: 'onSelect', image: any): void
   (e: 'onPreview', image: any): void
   (e: 'onDelete', image: any): void
   (e: 'onDeleted', image: any): void
-  (e: "update:selected", values: any[]): void
-  (e: "update:modelValue", values: any[]): void
-}>()//defineEmits(['onSelect', 'onPreview', 'onDelete'])
+  (e: 'update:selected', values: any[]): void
+  (e: 'update:modelValue', values: any[]): void
+}>() //defineEmits(['onSelect', 'onPreview', 'onDelete'])
 const props = withDefaults(
   defineProps<{
     modelValue?: Array<any>
@@ -35,7 +36,9 @@ const props = withDefaults(
     isTrashed?: boolean
     isPreview?: boolean
     titleDelete?: string
-    lblOk?: string
+    lblAdd?: string
+    lblUpdate?: string
+    lblDelete?: string
     lblCancel?: string
   }>(),
   {
@@ -53,30 +56,56 @@ const props = withDefaults(
     isTrashed: false,
     isPreview: true,
     titleDelete: 'Are you sure you want to delete this record?',
-    lblOk: 'Confirm',
+    lblAdd: 'Add',
+    lblUpdate: 'Update',
+    lblDelete: 'Delete',
     lblCancel: 'Cancel'
-  })
+  }
+)
 
+const onChangeTab = async (arg) => {
+  if (arg == 'files') lazyLoad(fileList.value.files.map((x) => x.thumbnailLink))
+}
 
 const initFolders = async () => {
   isLoading.value = true
-  folders.value = await GDrive.getFolders()
+  folders.value = await GDrive.GetFolders()
   // console.log(folders.value)
-  fileList.value = await GDrive.getFiles({ folderId: folders.value && folders.value.length ? folders.value[0].id : null })
-  // console.log(fileList.value)
+  fileList.value = await GDrive.GetFiles({
+    folderId: folders.value && folders.value.length ? folders.value[0].id : null,
+    mimeType: GDrive.MIME_TYPE.image
+  })
   isLoading.value = false
 }
 initFolders()
 
 const onGetClickFolder = async (arg) => {
   isLoading.value = true
-  if (!arg.children) arg.children = await GDrive.getFolders({ folderId: arg.id })
+  if (!arg.children) arg.children = await GDrive.GetFolders({ folderId: arg.id })
   await delay(300)
-  fileList.value = await GDrive.getFiles({ folderId: arg.id })
+  fileList.value = await GDrive.GetFiles({ folderId: arg.id, mimeType: GDrive.MIME_TYPE.image })
   isLoading.value = false
 }
-const onChangeTab = async (arg) => {
-  if (arg == 'files') lazyLoad(fileList.value.files.map(x => x.thumbnailLink))
+const onAddFolder = async (arg) => {
+  selectedItem.value.item = arg
+  isDialogFolder.value = true
+}
+const onCancelAddFolder = async (arg) => {
+  isDialogFolder.value = false
+  selectedItem.value.item = null
+}
+const onConfirmUpdateFolder = async (arg) => {
+  console.log(arg)
+}
+const onConfirmAddFolder = async (arg) => {
+  const folder = await GDrive.CreateFolder({ name: 'test3' })
+  if (folder) {
+    if (arg.children) arg.children.push(folder)
+    else arg.children = [folder]
+  }
+}
+const onConfirmDeleteFolder = async (arg) => {
+  console.log(arg)
 }
 const onToggleSelect = (arg) => {
   if (props.multiple) {
@@ -84,9 +113,9 @@ const onToggleSelect = (arg) => {
     const index = props.selected.indexOf(arg)
     if (index > -1) items.splice(index, 1)
     else items.push(arg)
-    emit("update:selected", items)
+    emit('update:selected', items)
   } else {
-    emit("update:selected", props.selected.indexOf(arg) > -1 ? [] : [arg])
+    emit('update:selected', props.selected.indexOf(arg) > -1 ? [] : [arg])
   }
 }
 </script>
@@ -98,7 +127,11 @@ const onToggleSelect = (arg) => {
         <icon-park-outline-folder-open />
       </template>
       <div class="overscroll-none overflow-auto min-h-60 max-h-128">
-        <tree-view color="blue" :items="folders" dense open-all @onClick="onGetClickFolder" />
+        <tree-view color="blue" :items="folders" dense open-all @onClick="onGetClickFolder">
+          <template #append="props">
+            <van-icon name="records-o" @click="onAddFolder(props.item)" />
+          </template>
+        </tree-view>
       </div>
     </van-tab>
     <van-tab name="files">
@@ -106,8 +139,7 @@ const onToggleSelect = (arg) => {
         <icon-park-outline-pic-one />
       </template>
       <div class="overscroll-none overflow-auto min-h-60 max-h-128">
-        <div id="drive-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        </div>
+        <div id="drive-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
         <!-- <div v-for=" (e, i) in fileList.files" :key="i">{{ e.name }}</div> -->
         <!-- <div v-for=" (e, i) in fileList.files" :key="i" class="grid grid-cols-2 md:grid-cols-3 gap-4">
           <div>
@@ -132,6 +164,60 @@ const onToggleSelect = (arg) => {
       <span class="sr-only">Loading...</span>
     </div>
   </div>
+  <TransitionRoot appear :show="isDialogFolder" as="template">
+    <Dialog as="div" @close="onCancelAddFolder" class="relative" style="z-index: 2002;">
+      <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
+        leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
+        <div class="fixed inset-0 bg-black/25" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center">
+          <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95">
+            <DialogPanel
+              class="w-full max-w-md transform overflow-hidden rounded-2xlbg-white border border-gray-100 rounded-lg dark:bg-gray-800/80 dark:border-gray-800 p-6 text-left align-middle shadow-xl transition-all">
+              <DialogTitle as="h3" class="text-lg font-medium leading-6 text-surface-600 dark:text-white/70">
+                {{ selectedItem && selectedItem.item ? selectedItem.item.name : '' }}
+              </DialogTitle>
+              <!-- <div class="mt-2">
+                <p class="text-sm text-gray-500">
+                  Your payment has been successfully submitted. We’ve sent you
+                  an email with all of the details of your order.
+                </p>
+              </div> -->
+              <input type="text" id="first_name"
+                class="bg-gray-50 border border-gray-300 text-surface-600 dark:text-white/70 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="New folder" />
+              <div class="mt-4 flex justify-end">
+                <button type="button"
+                  class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-green-600 mr-3"
+                  @click="onConfirmUpdateFolder">
+                  {{ lblAdd }}
+                </button>
+                <button type="button"
+                  class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-500 mr-3"
+                  @click="onConfirmAddFolder">
+                  {{ lblUpdate }}
+                </button>
+                <button type="button"
+                  class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-red-500 mr-3"
+                  @click="onConfirmDeleteFolder">
+                  {{ lblDelete }}
+                </button>
+                <button type="button"
+                  class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-gray-900"
+                  @click="onCancelAddFolder">
+                  {{ lblCancel }}
+                </button>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
 </template>
 
 <style>

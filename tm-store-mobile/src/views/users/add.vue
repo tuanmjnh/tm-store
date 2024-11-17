@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { useAppStore, useTypeStore, useRoleStore, useUserStore } from '@/store'
-import { historyBack } from '@/router'
-import { $t } from '@/i18n'
-import { showImagePreview } from 'vant'
-import { GoogleDrive } from '@/services/google/drive-gapi'
-const GDrive = new GoogleDrive()
+import {useAppStore, useTypeStore, useRoleStore, useUserStore} from '@/store'
+import {historyBack} from '@/router'
+import {$t} from '@/i18n'
+import {showImagePreview} from 'vant'
 // const tmFileList = defineAsyncComponent(() => import('@/components/tm-file-list/index.vue'))
 // const tmFileManager = defineAsyncComponent(() => import('@/components/tm-file-manager/index.vue'))
 // const tmUpload = defineAsyncComponent(() => import('@/components/tm-upload/index.vue'))
@@ -17,12 +15,16 @@ const appStore = useAppStore()
 const typeStore = useTypeStore()
 const roleStore = useRoleStore()
 const userStore = useUserStore()
-const genders = ref(typeStore.getByKey('gender').map(x => { return { text: x.name, value: x.code } }))
+const genders = ref(
+  typeStore.getByKey('gender').map((x) => {
+    return {text: x.name, value: x.code}
+  })
+)
 const form = computed(() => userStore.item)
 const formDate = ref({
   dateBirth: [],
   lastLogin: [],
-  lastChangePass: [],
+  lastChangePass: []
 })
 
 const active = ref('basicInf')
@@ -33,10 +35,6 @@ const isDialogDrive = ref(false)
 const initForm = async () => {
   if (route.params.id && !form.value._id) await userStore.getItem(route.params)
   formDate.value.dateBirth = appStore.formatDateToArray(form.value.dateBirth)
-  GDrive.getFiles({ folderName: '5eccbc9e9071001d87fd4df1', isFolder: false, parents: 'root' }).then(x => {
-  })
-  // images.value = form.value.avatar
-  // console.log(images.value)
 }
 initForm()
 
@@ -44,11 +42,11 @@ const onSelectAvatar = (val) => {
   // console.log(val)
   isDialogDrive.value = true
 }
-const onConfirmGender = ({ selectedOptions }) => {
+const onConfirmGender = ({selectedOptions}) => {
   form.value.gender = selectedOptions[0].value
   showGender.value = false
 }
-const onConfirmDatePicker = ({ selectedValues }) => {
+const onConfirmDatePicker = ({selectedValues}) => {
   form.value.dateBirth = new Date(selectedValues.join('-'))
   showDatePicker.value = false
 }
@@ -126,30 +124,21 @@ const onDeleteIamge = (img) => {
     <van-tabs v-model:active="active">
       <van-tab :title="$t('tabs.basicInf')" name="basicInf">
         <van-cell-group inset>
-          <van-field v-model="form.username" name="username" :label="$t('user.username')" disabled
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field v-model="form.fullName" name="fullName" :label="$t('user.fullName')"
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field is-link readonly name="dateBirth" :label="$t('user.dateBirth')"
-            :placeholder="$t('global.inputPlaceholder')" @click="showDatePicker = true">
+          <van-field v-model="form.username" name="username" :label="$t('user.username')" disabled :placeholder="$t('global.inputPlaceholder')" :rules="[{required: true, message: $t('error.required')}]" />
+          <van-field v-model="form.fullName" name="fullName" :label="$t('user.fullName')" :placeholder="$t('global.inputPlaceholder')" :rules="[{required: true, message: $t('error.required')}]" />
+          <van-field is-link readonly name="dateBirth" :label="$t('user.dateBirth')" :placeholder="$t('global.inputPlaceholder')" @click="showDatePicker = true">
             <template #input>
               {{ appStore.formatDate(form.dateBirth) }}
             </template>
           </van-field>
-          <van-field v-model="form.email" name="email" :label="$t('user.email')"
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field v-model="form.phone" name="phone" :label="$t('user.phone')"
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field v-model="form.personNumber" name="personNumber" :label="$t('user.personNumber')"
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field v-model="form.region" name="region" :label="$t('user.region')"
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field v-model="form.address" type="textarea" rows="1" autosize name="address" :label="$t('user.address')"
-            :placeholder="$t('global.inputPlaceholder')" />
-          <van-field is-link readonly name="gender" :label="$t('user.gender')"
-            :placeholder="$t('global.inputPlaceholder')" @click="showGender = true">
+          <van-field v-model="form.email" name="email" :label="$t('user.email')" :placeholder="$t('global.inputPlaceholder')" :rules="[{required: true, message: $t('error.required')}]" />
+          <van-field v-model="form.phone" name="phone" :label="$t('user.phone')" :placeholder="$t('global.inputPlaceholder')" :rules="[{required: true, message: $t('error.required')}]" />
+          <van-field v-model="form.personNumber" name="personNumber" :label="$t('user.personNumber')" :placeholder="$t('global.inputPlaceholder')" :rules="[{required: true, message: $t('error.required')}]" />
+          <van-field v-model="form.region" name="region" :label="$t('user.region')" :placeholder="$t('global.inputPlaceholder')" :rules="[{required: true, message: $t('error.required')}]" />
+          <van-field v-model="form.address" type="textarea" rows="1" autosize name="address" :label="$t('user.address')" :placeholder="$t('global.inputPlaceholder')" />
+          <van-field is-link readonly name="gender" :label="$t('user.gender')" :placeholder="$t('global.inputPlaceholder')" @click="showGender = true">
             <template #input>
-              {{ genders?.find(x => x.value == form.gender)?.text }}
+              {{ genders?.find((x) => x.value == form.gender)?.text }}
             </template>
           </van-field>
           <van-field name="verified" :label="$t('user.verified')" :placeholder="$t('global.inputPlaceholder')">
@@ -167,8 +156,7 @@ const onDeleteIamge = (img) => {
               {{ appStore.formatDateTime(form.lastLogin) }}
             </template>
           </van-field>
-          <van-field readonly name="lastChangePass" :label="$t('user.lastChangePass')"
-            :placeholder="$t('table.noData')">
+          <van-field readonly name="lastChangePass" :label="$t('user.lastChangePass')" :placeholder="$t('table.noData')">
             <template #input>
               {{ appStore.formatDateTime(form.lastChangePass) }}
             </template>
@@ -207,8 +195,7 @@ const onDeleteIamge = (img) => {
         </div>
       </van-tab>
       <van-tab :title="$t('global.note')" name="note">
-        <van-field v-model="form.note" type="textarea" rows="1" autosize name="note" :label="$t('global.note')"
-          :placeholder="$t('global.inputPlaceholder')" />
+        <van-field v-model="form.note" type="textarea" rows="1" autosize name="note" :label="$t('global.note')" :placeholder="$t('global.inputPlaceholder')" />
       </van-tab>
     </van-tabs>
     <van-action-bar placeholder>
@@ -220,22 +207,16 @@ const onDeleteIamge = (img) => {
     </van-action-bar>
   </van-form>
   <van-popup v-model:show="showGender" position="bottom">
-    <van-picker :columns="genders" @confirm="onConfirmGender" @cancel="showGender = false"
-      :confirm-button-text="$t('global.confirm')" :cancel-button-text="$t('global.cancel')" />
+    <van-picker :columns="genders" @confirm="onConfirmGender" @cancel="showGender = false" :confirm-button-text="$t('global.confirm')" :cancel-button-text="$t('global.cancel')" />
   </van-popup>
   <van-popup v-model:show="showDatePicker" position="bottom">
-    <van-date-picker v-model="formDate.dateBirth" :confirm-button-text="$t('global.confirm')"
-      :min-date="appStore.minDate()" :max-date="appStore.maxDate()" :cancel-button-text="$t('global.cancel')"
-      @cancel="showDatePicker = false" @confirm="onConfirmDatePicker" />
+    <van-date-picker v-model="formDate.dateBirth" :confirm-button-text="$t('global.confirm')" :min-date="appStore.minDate()" :max-date="appStore.maxDate()" :cancel-button-text="$t('global.cancel')" @cancel="showDatePicker = false" @confirm="onConfirmDatePicker" />
   </van-popup>
   <van-dialog v-model:show="isDialogDrive" title="Drive" :show-cancel-button="false" :showConfirmButton="false">
     <template #title>
       <div class="flex">
-        <div class="flex flex-none h-6 w-12 items-center justify-center pl-5">
-          Drive
-        </div>
-        <div class="flex h-6 grow">
-        </div>
+        <div class="flex flex-none h-6 w-12 items-center justify-center pl-5">Drive</div>
+        <div class="flex h-6 grow"></div>
         <div class="flex flex-none h-6 w-12 items-center justify-center">
           <van-icon name="cross" @click="isDialogDrive = false" />
         </div>

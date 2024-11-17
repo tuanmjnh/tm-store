@@ -153,7 +153,11 @@ onUnmounted(() => {
   <ul class="treeview" :class="classes">
     <tree-view-node v-for="item in props.items" :selectable="props.selectable" :color="props.color" :level="1"
       :key="item[props.itemKey]" :item="item" :item-key="props.itemKey" :disabled="item.disabled"
-      :unopenable="props.unopenable" :radio="props.radio" :identifier="identifier" :openQuick="props.openQuick" />
+      :unopenable="props.unopenable" :radio="props.radio" :identifier="identifier" :openQuick="props.openQuick">
+      <template #append="state">
+        <slot name="append" :item="state.item"></slot>
+      </template>
+    </tree-view-node>
   </ul>
 </template>
 <style>
