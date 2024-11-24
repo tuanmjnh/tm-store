@@ -301,11 +301,12 @@
     "right": "Phải",
     "bot": "Dưới"
   },
-  "category": {
+  "group": {
     "title": "Danh mục",
     "titleproduct": "Danh mục sản phẩm",
     "titlenews": "Danh mục tin tức",
     "titlesub": "Danh mục con",
+    "parent": "Nhóm cha",
     "noithatvanphong": "Nội thất văn phòng",
     "hitCode": "Mã của danh mục",
     "select": "Chọn danh mục",

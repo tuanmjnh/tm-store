@@ -35,3 +35,7 @@ export function arrayToTree(arr: any[]) {
   // Return the organized tree structure array
   return res
 }
+
+export const sortByKey = (arr: any[], key: string) => {
+  arr.sort((a, b) => a[key] - b[key])
+}

@@ -69,7 +69,6 @@ export const useGroupStore = defineStore('groupStore', {
       try {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/all`, { params: arg })
         this.all = rs.data as IModelGroup[]
-        console.log(rs)
         return rs
       } catch (e) { throw e }
     },
