@@ -1,60 +1,75 @@
 import { http } from '@/utils/http-axios'
-import { ICreated, IResponseList, IResponseItem, IResponseFlag } from './interfaces/common'
+import { ICreated, IResponseList, IResponseItem, IResponseFlag, IMeta, IProductType, IProductTypeData } from './interfaces/common'
 import { IGoogleFile } from '@/services/google/drive-gapi'
-
-export interface IModelUser {
+export interface IModelProduct {
   _id?: string
-  username: string
-  password: string
-  group: string
-  salt: string
-  fullName: string
-  email: string
-  phone: string
-  personNumber: string
-  region: string
-  avatar: Array<IGoogleFile>
-  note: string
-  dateBirth: Date,
-  gender: string
-  address: string
-  roles: Array<string>
-  userRoles: Array<any>
-  verified: boolean
-  enable: boolean
-  lastLogin: Date,
-  lastChangePass: Date,
+  code: string
+  groups: Array<string>
+  title: string
+  desc: string
+  content: string
+  types: Array<IProductType>
+  typeData: IProductTypeData
+  quantity: number
+  price: number
+  priceImport: number
+  priceExport: number
+  unit: string
+  brand: string
+  originName: string
+  originAddress: string
+  weight: number
+  date: string
+  pins: Array<string>
+  tags: Array<string>
+  attr: Array<IMeta>
+  meta: Array<IMeta>
+  images: Array<IGoogleFile>
+  attach: Array<IGoogleFile>
+  qrcode: string
+  barcode: string
+  order: number
+  flag: number
   created: ICreated
 }
 
 const constant = {
-  group: null,
-  username: null,
-  password: null,
-  fullName: null,
-  email: null,
-  phone: null,
-  personNumber: null,
-  region: null,
-  avatar: null,
-  note: '',
-  dateBirth: new Date(),
-  gender: null,
-  address: null,
-  roles: [],
-  verified: false,
-  enable: true,
-  lastLogin: null,
-  lastChangePass: null,
+  code: null,
+  groups: null,
+  title: null,
+  desc: null,
+  content: null,
+  types: null,
+  typeData: null,
+  quantity: null,
+  price: null,
+  priceImport: null,
+  priceExport: null,
+  unit: null,
+  brand: null,
+  originName: null,
+  originAddress: null,
+  weight: null,
+  date: null,
+  pins: null,
+  tags: null,
+  attr: null,
+  meta: null,
+  images: null,
+  attach: null,
+  qrcode: null,
+  barcode: null,
+  order: 1,
+  flag: 1,
   created: { at: null, by: null, ip: null }
 }
 
-const API_PATH = 'users'
-export const useUserStore = defineStore('userStore', {
+const API_PATH = 'products'
+export const useProductStore = defineStore('productStore', {
   persist: false,
   state: (): {
-    items: IModelUser[]
-    item: IModelUser
+    items: IModelProduct[]
+    item: IModelProduct
     // metaKeys: []
     // metaValues: []
   } => ({
@@ -67,7 +82,7 @@ export const useUserStore = defineStore('userStore', {
     async getAll(arg?: any): Promise<IResponseList> {
       try {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/all`, { params: arg })
-        this.all = rs.data as IModelUser[]
+        this.all = rs.data as IModelProduct[]
         return rs
       } catch (e) { throw e }
     },
@@ -107,7 +122,7 @@ export const useUserStore = defineStore('userStore', {
     async setItem(arg?: any) {
       this.item = arg ? { ...arg } : JSON.parse(JSON.stringify(constant))
     },
-    async addItems(arg: any, items?: IModelUser[]) {
+    async addItems(arg: any, items?: IModelProduct[]) {
       try {
         if (items) {
           if (Array.isArray(arg)) this.items.concat(arg)
@@ -118,7 +133,7 @@ export const useUserStore = defineStore('userStore', {
         }
       } catch (e) { throw e }
     },
-    async updateItems(arg: any, items?: IModelUser[]) {
+    async updateItems(arg: any, items?: IModelProduct[]) {
       try {
         if (Array.isArray(arg)) {
           arg.forEach(e => {
@@ -136,7 +151,7 @@ export const useUserStore = defineStore('userStore', {
         }
       } catch (e) { throw e }
     },
-    async removeItems(arg: any, items?: IModelUser[]) {
+    async removeItems(arg: any, items?: IModelProduct[]) {
       try {
         if (Array.isArray(arg)) {
           arg.forEach(e => {

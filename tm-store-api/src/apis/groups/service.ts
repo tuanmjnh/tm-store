@@ -5,7 +5,7 @@ import { Aggregate, ClientSession, Types } from 'mongoose'
 
 @Service()
 export class GroupService {
-  public FindAll(conditions: object): Aggregate<IGroup[]> {
+  public FindAll(conditions?: object): Aggregate<IGroup[]> {
     if (conditions) return MGroup.aggregate([{ $match: conditions }])
     else MGroup.find()
   }

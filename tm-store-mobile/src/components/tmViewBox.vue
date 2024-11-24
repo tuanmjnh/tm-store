@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
 const emit = defineEmits<{
   (e: 'onSelect', image: any): any
   (e: 'onClick', image: any): any
@@ -31,7 +30,7 @@ const props = withDefaults(
     modelValue: null,
     selected: undefined,
     imageError: '/src/assets/svg/image.svg',
-    height: 'h-28',
+    height: '',
     rounded: 'rounded-lg',
     border: 'border-2 border-solid',
     multiple: false,
@@ -86,8 +85,8 @@ const onCancelDelete = () => {
 const onClick = (arg, index) => {
   selectedItem.value.item = arg
   selectedItem.value.index = index
-  emit('onClick',toRaw(selectedItem.value))
   if (props.isPreview) isDialogPreview.value = true
+  else emit('onClick', toRaw(selectedItem.value))
 }
 const onHidePreview = () => {
   selectedItem.value.item = null
@@ -100,11 +99,11 @@ const onHidePreview = () => {
     <div v-for="(e, i) in modelValue" :key="i" class="flex w-1/2 flex-wrap">
       <div class="relative w-full p-1 md:p-2">
         <template v-if="selected != undefined">
-          <img v-if="e.src" :alt="e.alt || ''" @click="onToggleSelect(e)"
-            :class="['block h-28 w-full object-cover object-center border-2 border-solid', rounded, height,
+          <img v-if="e.src || e.thumbnailLink" :alt="e.alt || e.name" @click="onToggleSelect(e)"
+            :class="['block w-full object-cover object-center border-2 border-solid', rounded, height,
               selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']" :src="e.src" />
           <img v-else="e.alt || ''" @click="onToggleSelect(e)"
-            :class="['block h-28 w-full object-cover object-center border-2 border-solid dark:border-slate-700 border-slate-800/30', rounded, height,
+            :class="['block w-full object-cover object-center border-2 border-solid dark:border-slate-700 border-slate-800/30', rounded, height,
               selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']"
             :src="imageError" />
           <div @click="onClick(e, i)"
@@ -117,11 +116,11 @@ const onHidePreview = () => {
           </div>
         </template>
         <template v-else>
-          <img v-if="e.src" :alt="e.alt || ''" @click="onClick(e, i)"
-            :class="['block h-28 w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
-            :src="e.src" />
-          <img v-else="e.alt || ''" @click="onClick(e, i)"
-            :class="['block h-28 w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
+          <img v-if="e.src || e.thumbnailLink" :alt="e.alt || e.name" @click="onClick(e, i)"
+            :class="['block w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
+            :src="e.src || e.thumbnailLink" />
+          <img v-else="e.alt ||e.name" @click="onClick(e, i)"
+            :class="['block w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
             :src="imageError" />
         </template>
         <div v-if="isTrashed" @click="onDelete(e, i)"
@@ -135,66 +134,33 @@ const onHidePreview = () => {
       </div>
     </div>
   </div>
-  <TransitionRoot appear :show="isDialogPreview" as="template">
-    <Dialog as="div" @close="onHidePreview" class="relative z-10">
-      <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
-        leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
-        <div class="fixed inset-0 bg-black/90" />
-      </TransitionChild>
-      <div class="fixed inset-0 overflow-y-auto">
-        <div class="flex min-h-full items-center justify-center p-1 text-center">
-          <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
-            enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
-            leave-to="opacity-0 scale-95">
-            <DialogPanel
-              class="h-full w-full max-w-md transform overflow-hidden rounded-2xltext-left align-middle shadow-xl transition-all">
-              <img v-if="selectedItem.item" :src="selectedItem.item.src"
-                class="block h-full w-full object-cover object-center border-2 border-solid" />
-            </DialogPanel>
-          </TransitionChild>
-        </div>
-      </div>
-    </Dialog>
-  </TransitionRoot>
-  <TransitionRoot appear :show="isDialogDelete" as="template">
-    <Dialog as="div" @close="onCancelDelete" class="relative z-10">
-      <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
-        leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
-        <div class="fixed inset-0 bg-black/25" />
-      </TransitionChild>
 
-      <div class="fixed inset-0 overflow-y-auto">
-        <div class="flex min-h-full items-center justify-center p-4 text-center">
-          <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
-            enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
-            leave-to="opacity-0 scale-95">
-            <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-              <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
-                {{ titleDelete }}
-              </DialogTitle>
-              <!-- <div class="mt-2">
-                <p class="text-sm text-gray-500">
-                  Your payment has been successfully submitted. We’ve sent you
-                  an email with all of the details of your order.
-                </p>
-              </div> -->
-              <div class="mt-4 flex justify-end">
-                <button type="button"
-                  class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 mr-3"
-                  @click="onConfirmDelete">
-                  {{ lblOk }}
-                </button>
-                <button type="button"
-                  class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900"
-                  @click="onCancelDelete">
-                  {{ lblCancel }}
-                </button>
-              </div>
-            </DialogPanel>
-          </TransitionChild>
+  <van-dialog v-model:show="isDialogPreview" :title="selectedItem.item ? selectedItem.item.name : ''"
+    :show-confirm-button="false" closeOnClickOverlay>
+    <div class="inset-0 overflow-y-auto">
+      <div class="flex min-h-full items-center justify-center p-1 text-center">
+        <div
+          class="h-full w-full max-w-md transform overflow-hidden rounded-2xltext-left align-middle shadow-xl transition-all">
+          <img v-if="selectedItem.item" :src="selectedItem.item.src"
+            class="block h-full w-full object-cover object-center border-2 border-solid" />
         </div>
       </div>
-    </Dialog>
-  </TransitionRoot>
+    </div>
+  </van-dialog>
+
+  <van-dialog v-model:show="isDialogDelete" :title="titleDelete" show-cancel-button :cancelButtonText="lblCancel"
+    :confirmButtonText="lblOk" @close="onCancelDelete" @confirm="onConfirmDelete">
+    <!-- <div class="mt-4 flex justify-end">
+      <button type="button"
+        class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 mr-3"
+        @click="onConfirmDelete">
+        {{ lblOk }}
+      </button>
+      <button type="button"
+        class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900"
+        @click="onCancelDelete">
+        {{ lblCancel }}
+      </button>
+    </div> -->
+  </van-dialog>
 </template>

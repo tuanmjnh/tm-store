@@ -20,10 +20,12 @@ const props = withDefaults(
     openQuick?: boolean
     color?: string
     identifier: number
-    itemKey?: string
+    idKey?: string
+    nameKey?: string
   }>(),
   {
-    itemKey: 'id'
+    idKey: 'id',
+    nameKey: 'name'
   }
 )
 
@@ -34,15 +36,15 @@ const classes = computed(() => ({
   'treeview-node--leaf': !hasChildren.value
 }))
 
-const isOpen = computed(() => openedNodes?.has(props.item[props.itemKey]))
+const isOpen = computed(() => openedNodes?.has(props.item[props.idKey]))
 
-const isSelected = computed(() => selectedNodes?.has(props.item[props.itemKey]))
+const isSelected = computed(() => selectedNodes?.has(props.item[props.idKey]))
 
 const hasChildren = computed(() => !!props.item.children && !!props.item.children.length)
 
-const allChildrenSelected = computed(() => checkChildSelectStatus(selectedNodes!, props.item, props.itemKey, 'all'))
+const allChildrenSelected = computed(() => checkChildSelectStatus(selectedNodes!, props.item, props.idKey, 'all'))
 
-const atLeastOneChildSelected = computed(() => checkChildSelectStatus(selectedNodes!, props.item, props.itemKey, 'atLeastOne'))
+const atLeastOneChildSelected = computed(() => checkChildSelectStatus(selectedNodes!, props.item, props.idKey, 'atLeastOne'))
 
 const isChecked = computed(() => {
   if (hasChildren.value) {
@@ -67,7 +69,7 @@ const isIndeterminate = computed(() => {
 // });
 
 const childNodeChanged = () => {
-  const id = props.item[props.itemKey]
+  const id = props.item[props.idKey]
   if (hasChildren.value) {
     if (allChildrenSelected.value) {
       if (!isSelected.value) nodeSelected()
@@ -88,12 +90,12 @@ const nodeSelected = () => {
 }
 
 const nodeClicked = () => {
-  if (hasChildren.value && !props.unopenable && props.openQuick) emitNodeOpen(props.item[props.itemKey])
+  if (hasChildren.value && !props.unopenable && props.openQuick) emitNodeOpen(props.item[props.idKey])
   emitNodeClicked(props.item)
 }
 
 const openNode = () => {
-  if (hasChildren.value && !props.unopenable) emitNodeOpen(props.item[props.itemKey])
+  if (hasChildren.value && !props.unopenable) emitNodeOpen(props.item[props.idKey])
 }
 </script>
 <template>
@@ -120,7 +122,7 @@ const openNode = () => {
         <div class="radio-group" v-if="props.radio">
           <input :disabled="props.disabled" class="radio" @click="nodeSelected" type="radio" :checked="isChecked" />
           <span>
-            {{ item.name }}
+            {{ item[props.nameKey] }}
           </span>
         </div>
         <template v-else>
@@ -156,12 +158,12 @@ const openNode = () => {
         <van-icon v-else :name="item.icon" />
       </template>
       <!-- <span v-if="item.icon" class="pi pi-fw pi-inbox mr-2 text-surface-600 dark:text-white/70"></span> -->
-      <span class="text-surface-600 dark:text-white/70" @click="nodeClicked">{{ item.name }}</span>
+      <span class="text-surface-600 dark:text-white/70" @click="nodeClicked">{{ item[props.nameKey] }}</span>
       <slot name="append" :item="item"></slot>
     </div>
     <ul class="m-0 list-none p-0 pl-4 [&:not(ul)]:pl-0 [&:not(ul)]:my-[2px]" v-if="isOpen">
       <tree-node v-for="child in props.item.children" :selectable="props.selectable" :level="props.level + 1"
-        :key="child[props.itemKey]" :item="child" :item-key="props.itemKey" :color="props.color"
+        :key="child[props.idKey]" :item="child" :item-key="props.idKey" :name-key="props.nameKey" :color="props.color"
         :disabled="props.disabled" :unopenable="props.unopenable" :identifier="props.identifier" :radio="props.radio"
         @change="childNodeChanged">
         <template #append="state">

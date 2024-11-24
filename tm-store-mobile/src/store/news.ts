@@ -1,60 +1,57 @@
 import { http } from '@/utils/http-axios'
-import { ICreated, IResponseList, IResponseItem, IResponseFlag } from './interfaces/common'
+import { ICreated, IResponseList, IResponseItem, IResponseFlag, IMeta } from './interfaces/common'
 import { IGoogleFile } from '@/services/google/drive-gapi'
-
-export interface IModelUser {
+export interface IModelNews {
   _id?: string
-  username: string
-  password: string
-  group: string
-  salt: string
-  fullName: string
-  email: string
-  phone: string
-  personNumber: string
-  region: string
-  avatar: Array<IGoogleFile>
-  note: string
-  dateBirth: Date,
-  gender: string
-  address: string
-  roles: Array<string>
-  userRoles: Array<any>
-  verified: boolean
-  enable: boolean
-  lastLogin: Date,
-  lastChangePass: Date,
+  code: string
+  groups: Array<string>
+  title: string
+  desc: string
+  content: string
+  url: string
+  author: string
+  date: Date
+  pins: Array<string>
+  tags: Array<string>
+  attr: Array<IMeta>
+  meta: Array<IMeta>
+  images: Array<IGoogleFile>
+  attach: Array<IGoogleFile>
+  startAt: Date
+  endAt: Date
+  order: number
+  flag: number
   created: ICreated
 }
 
 const constant = {
-  group: null,
-  username: null,
-  password: null,
-  fullName: null,
-  email: null,
-  phone: null,
-  personNumber: null,
-  region: null,
-  avatar: null,
-  note: '',
-  dateBirth: new Date(),
-  gender: null,
-  address: null,
-  roles: [],
-  verified: false,
-  enable: true,
-  lastLogin: null,
-  lastChangePass: null,
+  code: null,
+  groups: null,
+  title: null,
+  desc: null,
+  content: null,
+  url: null,
+  author: null,
+  date: null,
+  pins: null,
+  tags: null,
+  attr: null,
+  meta: null,
+  images: null,
+  attach: null,
+  startAt: null,
+  endAt: null,
+  order: 1,
+  flag: 1,
   created: { at: null, by: null, ip: null }
 }
 
-const API_PATH = 'users'
-export const useUserStore = defineStore('userStore', {
+const API_PATH = 'news'
+export const useNewsStore = defineStore('newsStore', {
   persist: false,
   state: (): {
-    items: IModelUser[]
-    item: IModelUser
+    items: IModelNews[]
+    item: IModelNews
     // metaKeys: []
     // metaValues: []
   } => ({
@@ -67,7 +64,7 @@ export const useUserStore = defineStore('userStore', {
     async getAll(arg?: any): Promise<IResponseList> {
       try {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/all`, { params: arg })
-        this.all = rs.data as IModelUser[]
+        this.all = rs.data as IModelNews[]
         return rs
       } catch (e) { throw e }
     },
@@ -107,7 +104,7 @@ export const useUserStore = defineStore('userStore', {
     async setItem(arg?: any) {
       this.item = arg ? { ...arg } : JSON.parse(JSON.stringify(constant))
     },
-    async addItems(arg: any, items?: IModelUser[]) {
+    async addItems(arg: any, items?: IModelNews[]) {
       try {
         if (items) {
           if (Array.isArray(arg)) this.items.concat(arg)
@@ -118,7 +115,7 @@ export const useUserStore = defineStore('userStore', {
         }
       } catch (e) { throw e }
     },
-    async updateItems(arg: any, items?: IModelUser[]) {
+    async updateItems(arg: any, items?: IModelNews[]) {
       try {
         if (Array.isArray(arg)) {
           arg.forEach(e => {
@@ -136,7 +133,7 @@ export const useUserStore = defineStore('userStore', {
         }
       } catch (e) { throw e }
     },
-    async removeItems(arg: any, items?: IModelUser[]) {
+    async removeItems(arg: any, items?: IModelNews[]) {
       try {
         if (Array.isArray(arg)) {
           arg.forEach(e => {

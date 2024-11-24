@@ -388,7 +388,8 @@ export const staticRoutes: RouteRecordRaw[] = [
       icon: 'icon-park-outline:category-management',
       menuType: 'dir',
       parent: null,
-      level: 2
+      level: 2,
+      module: 'news'
     }
   },
   {
@@ -397,11 +398,13 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/groups/list.vue'),
     meta: {
       title: 'list',
+      label: 'groupNews',
       requiresAuth: true,
       icon: 'icon-park-outline:list',
       menuType: 'page',
       parent: 'group-news',
       level: 2,
+      module: 'news'
     }
   },
   {
@@ -410,11 +413,13 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/groups/add.vue'),
     meta: {
       title: 'add',
+      label: 'groupNews',
       requiresAuth: true,
       icon: 'add-o',
       menuType: 'page',
       parent: 'group-news',
       level: 2,
+      module: 'news'
     }
   },
   {
@@ -423,12 +428,14 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/groups/add.vue'),
     meta: {
       title: 'edit',
+      label: 'groupNews',
       requiresAuth: true,
       icon: 'edit',
       menuType: 'page',
       parent: 'group-news',
       level: 2,
-      hide: true
+      hide: true,
+      module: 'news'
     }
   },
   {
@@ -437,12 +444,14 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/groups/list.vue'),
     meta: {
       title: 'trash',
+      label: 'groupNews',
       requiresAuth: true,
       icon: 'icon-park-outline:delete-one',
       menuType: 'page',
       parent: 'group-news',
       level: 2,
-      hide: true
+      hide: true,
+      module: 'news'
     }
   },
   {
@@ -522,7 +531,8 @@ export const staticRoutes: RouteRecordRaw[] = [
       icon: 'icon-park-outline:tree-list',
       menuType: 'dir',
       parent: null,
-      level: 2
+      level: 2,
+      module: 'product'
     }
   },
   {
@@ -531,9 +541,11 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/groups/list.vue'),
     meta: {
       title: 'list',
+      label: 'groupProduct',
       requiresAuth: true,
       icon: 'icon-park-outline:list',
       menuType: 'page',
+      module: 'product',
       parent: 'group-product',
       level: 2,
     }
@@ -544,11 +556,13 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/groups/add.vue'),
     meta: {
       title: 'add',
+      label: 'groupProduct',
       requiresAuth: true,
       icon: 'add-o',
       menuType: 'page',
       parent: 'group-product',
       level: 2,
+      module: 'product'
     }
   },
   {
@@ -557,12 +571,14 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/groups/add.vue'),
     meta: {
       title: 'edit',
+      label: 'groupProduct',
       requiresAuth: true,
       icon: 'edit',
       menuType: 'page',
       parent: 'group-product',
       level: 2,
-      hide: true
+      hide: true,
+      module: 'product'
     }
   },
   {
@@ -571,12 +587,14 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/groups/list.vue'),
     meta: {
       title: 'trash',
+      label: 'groupProduct',
       requiresAuth: true,
       icon: 'icon-park-outline:delete-one',
       menuType: 'page',
       parent: 'group-product',
       level: 2,
-      hide: true
+      hide: true,
+      module: 'product'
     }
   },
   {

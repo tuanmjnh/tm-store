@@ -12,7 +12,7 @@ const onClickRight = () => {
 }
 const getTitle = () => {
   let rs = $t(`route.${$route.meta.title}`, $route.name.toString())
-  if ($route.meta.parent) rs += ' ' + $t(`route.${$route.meta.parent}`).toLowerCase()
+  if ($route.meta.parent) rs += ' ' + $t(`route.${$route.meta.parent}`, $t(`route.${$route.meta.label}`)).toLowerCase()
   return rs
 }
 </script>

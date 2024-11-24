@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
 import { GoogleDrive, IGoogleFile } from '@/services/google/drive-gapi'
-import { lazyLoad } from '@/utils/images'
+import { lazyLoadImage } from '@/utils/images'
 import delay from 'delay'
 import treeView from './tree-view/index.vue'
 
@@ -11,12 +10,14 @@ const selectedItem = ref({ item: null, index: -1 })
 const folders = ref([])
 const fileList = ref<gapi.client.drive.FileList>()
 const isLoading = ref(false)
-const isDialogFolder = ref(false)
+const isDialogShowFolder = ref(false)
+const isDialogEditFolder = ref(false)
 const emit = defineEmits<{
   (e: 'onSelect', image: any): void
   (e: 'onPreview', image: any): void
   (e: 'onDelete', image: any): void
   (e: 'onDeleted', image: any): void
+  (e: 'onClose'): void
   (e: 'update:selected', values: any[]): void
   (e: 'update:modelValue', values: any[]): void
 }>() //defineEmits(['onSelect', 'onPreview', 'onDelete'])
@@ -64,9 +65,11 @@ const props = withDefaults(
 )
 
 const onChangeTab = async (arg) => {
-  if (arg == 'files') lazyLoad(fileList.value.files.map((x) => x.thumbnailLink))
+  if (arg == 'files') lazyLoadImage() //lazyLoad(fileList.value.files, 'thumbnailLink')
 }
-
+const onClose = async () => {
+  emit('onClose')
+}
 const initFolders = async () => {
   isLoading.value = true
   folders.value = await GDrive.GetFolders()
@@ -75,23 +78,26 @@ const initFolders = async () => {
     folderId: folders.value && folders.value.length ? folders.value[0].id : null,
     mimeType: GDrive.MIME_TYPE.image
   })
+  lazyLoadImage()//lazyLoad(fileList.value.files, 'thumbnailLink')
   isLoading.value = false
 }
 initFolders()
 
 const onGetClickFolder = async (arg) => {
   isLoading.value = true
+  isDialogShowFolder.value = false
   if (!arg.children) arg.children = await GDrive.GetFolders({ folderId: arg.id })
   await delay(300)
   fileList.value = await GDrive.GetFiles({ folderId: arg.id, mimeType: GDrive.MIME_TYPE.image })
+  lazyLoadImage() //lazyLoad(fileList.value.files.map((x) => x.thumbnailLink))
   isLoading.value = false
 }
-const onAddFolder = async (arg) => {
+const onEditFolder = async (arg) => {
   selectedItem.value.item = arg
-  isDialogFolder.value = true
+  isDialogEditFolder.value = true
 }
-const onCancelAddFolder = async (arg) => {
-  isDialogFolder.value = false
+const onCancelEditFolder = async (arg) => {
+  isDialogEditFolder.value = false
   selectedItem.value.item = null
 }
 const onConfirmUpdateFolder = async (arg) => {
@@ -107,48 +113,39 @@ const onConfirmAddFolder = async (arg) => {
 const onConfirmDeleteFolder = async (arg) => {
   console.log(arg)
 }
-const onToggleSelect = (arg) => {
-  if (props.multiple) {
-    const items = props.selected == null ? [] : props.selected
-    const index = props.selected.indexOf(arg)
-    if (index > -1) items.splice(index, 1)
-    else items.push(arg)
-    emit('update:selected', items)
-  } else {
-    emit('update:selected', props.selected.indexOf(arg) > -1 ? [] : [arg])
-  }
+const onSelectImage = async (args) => {
+  // console.log(args)
+  emit('onSelect', args)
 }
 </script>
 <template>
-  <van-tabs v-model:active="tab" @change="onChangeTab">
-    <van-tab name="folders">
-      <template #title>
-        <!-- <Icon icon="icon-park-outline:folder-open" class="van-badge__wrapper van-icon van-cell__left-icon" /> -->
-        <icon-park-outline-folder-open />
-      </template>
-      <div class="overscroll-none overflow-auto min-h-60 max-h-128">
-        <tree-view color="blue" :items="folders" dense open-all @onClick="onGetClickFolder">
-          <template #append="props">
-            <van-icon name="records-o" @click="onAddFolder(props.item)" />
-          </template>
-        </tree-view>
+  <div class="flex flex-none p-2 mb-3">
+    <div class="h-6 w-24 items-center justify-center pl-5" @click="isDialogShowFolder = !isDialogShowFolder">
+      <van-icon name="apps-o" class="pr-1" />
+      <span>Drive</span>
+    </div>
+    <div class="flex h-6 grow"></div>
+    <div class="flex flex-none h-6 w-12 items-center justify-center">
+      <van-icon name="cross" @click="onClose" />
+    </div>
+  </div>
+  <div class="overscroll-none overflow-auto min-h-60 max-h-128">
+    <div v-show="!isDialogShowFolder" id="drive-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div v-if="fileList && fileList.files" v-for="(e, i) in fileList.files" :key="i"
+        class="relative overflow-hidden aspect-w-16 aspect-h-9">
+        <div class="absolute inset-0 bg-neutral-200 animate-pulse w-full h-full min-h-24"></div>
+        <img class="lazy-image w-full h-auto object-cover transition-opacity duration-300 opacity-0 rounded-lg"
+          :data-src="e.thumbnailLink" @click="onSelectImage(e)">
       </div>
-    </van-tab>
-    <van-tab name="files">
-      <template #title>
-        <icon-park-outline-pic-one />
+
+    </div>
+    <tree-view v-show="isDialogShowFolder" color="blue" :items="folders" dense open-all @onClick="onGetClickFolder"
+      class="overscroll-none overflow-auto h-120">
+      <template #append="props">
+        <van-icon id="edit-folder" name="records-o" @click="onEditFolder(props.item)" />
       </template>
-      <div class="overscroll-none overflow-auto min-h-60 max-h-128">
-        <div id="drive-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
-        <!-- <div v-for=" (e, i) in fileList.files" :key="i">{{ e.name }}</div> -->
-        <!-- <div v-for=" (e, i) in fileList.files" :key="i" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <div>
-            <img class="h-auto max-w-full rounded-lg" :src="e.thumbnailLink" :alt="e.name">
-          </div>
-        </div> -->
-      </div>
-    </van-tab>
-  </van-tabs>
+    </tree-view>
+  </div>
   <div v-if="isLoading"
     class="absolute items-center block max-w-sm p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800/80 dark:border-gray-800 dark:hover:bg-gray-700 top-0 left-0 h-full w-full z-10">
     <div role="status" class="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
@@ -164,63 +161,29 @@ const onToggleSelect = (arg) => {
       <span class="sr-only">Loading...</span>
     </div>
   </div>
-  <TransitionRoot appear :show="isDialogFolder" as="template">
-    <Dialog as="div" @close="onCancelAddFolder" class="relative" style="z-index: 2002;">
-      <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
-        leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
-        <div class="fixed inset-0 bg-black/25" />
-      </TransitionChild>
-
-      <div class="fixed inset-0 overflow-y-auto">
-        <div class="flex min-h-full items-center justify-center p-4 text-center">
-          <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
-            enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
-            leave-to="opacity-0 scale-95">
-            <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xlbg-white border border-gray-100 rounded-lg dark:bg-gray-800/80 dark:border-gray-800 p-6 text-left align-middle shadow-xl transition-all">
-              <DialogTitle as="h3" class="text-lg font-medium leading-6 text-surface-600 dark:text-white/70">
-                {{ selectedItem && selectedItem.item ? selectedItem.item.name : '' }}
-              </DialogTitle>
-              <!-- <div class="mt-2">
-                <p class="text-sm text-gray-500">
-                  Your payment has been successfully submitted. We’ve sent you
-                  an email with all of the details of your order.
-                </p>
-              </div> -->
-              <input type="text" id="first_name"
-                class="bg-gray-50 border border-gray-300 text-surface-600 dark:text-white/70 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="New folder" />
-              <div class="mt-4 flex justify-end">
-                <button type="button"
-                  class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-green-600 mr-3"
-                  @click="onConfirmUpdateFolder">
-                  {{ lblAdd }}
-                </button>
-                <button type="button"
-                  class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-500 mr-3"
-                  @click="onConfirmAddFolder">
-                  {{ lblUpdate }}
-                </button>
-                <button type="button"
-                  class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-red-500 mr-3"
-                  @click="onConfirmDeleteFolder">
-                  {{ lblDelete }}
-                </button>
-                <button type="button"
-                  class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-gray-900"
-                  @click="onCancelAddFolder">
-                  {{ lblCancel }}
-                </button>
-              </div>
-            </DialogPanel>
-          </TransitionChild>
-        </div>
-      </div>
-    </Dialog>
-  </TransitionRoot>
+  <van-action-sheet v-model:show="isDialogEditFolder"
+    :title="selectedItem && selectedItem.item ? selectedItem.item.name : ''" :cancel-text="lblCancel"
+    close-on-click-action @close="onCancelEditFolder">
+    <div class="p-2 mb-3">
+      <input type="text" id="first_name"
+        class="bg-gray-50 border border-gray-300 text-surface-600 dark:text-white/70 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="New folder" />
+    </div>
+    <van-cell :title="lblUpdate" is-link @click="onConfirmUpdateFolder" />
+    <van-cell :title="lblAdd" is-link @click="onConfirmAddFolder" />
+    <van-cell :title="lblDelete" is-link @click="onConfirmDeleteFolder" />
+  </van-action-sheet>
 </template>
 
 <style>
+.h-120 {
+  height: 32rem;
+}
+
+.min-h-128 {
+  min-height: 34rem;
+}
+
 .max-h-128 {
   max-height: 34rem;
 }

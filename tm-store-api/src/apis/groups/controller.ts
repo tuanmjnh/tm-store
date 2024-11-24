@@ -46,10 +46,11 @@ export class GroupController {
 
   public getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const queries = req.query as any
+      // const queries = req.query as any
       const rs = { data: [] as IGroup[], status: false, message: 'getAll' }
-      rs.data = await this.group.FindAll({ flag: queries.flag ? parseInt(queries.flag) : 1 })
+      rs.data = await MGroup.find()//this.group.FindAll({ flag: queries.flag ? parseInt(queries.flag) : 1 })
       if (rs.data) rs.status = true
+      console.log(rs)
       res.status(200).json(rs)
     } catch (error) {
       next(error)

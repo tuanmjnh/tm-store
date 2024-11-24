@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
 import tmSwipe from './tmSwipe.vue'
 const emit = defineEmits<{
   (e: 'onSelect', image: any): void
@@ -111,7 +110,7 @@ const onHidePreview = () => {
       <tm-swipe>
         <template #content>
           <div class="flex-shrink-0">
-            <img class="w-8 h-8 rounded-full" :src="e.src" :alt="e.alt" @click="onShowPreview(e, i)">
+            <img class="w-8 h-8 rounded-full" :src="e.src || e.thumbnailLink" :alt="e.alt||e.name" @click="onShowPreview(e, i)">
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-gray-900 truncate dark:text-white">

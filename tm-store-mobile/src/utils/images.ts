@@ -25,14 +25,17 @@ const createImageElement = (url, index) => {
   return div;
 }
 
-export const lazyLoad = async (imageUrls, isAppend = false) => {
+export const lazyLoad = async (files, srcKey = 'src', isAppend = false) => {
   await delay(300)
   // Create and append image elements
   const gallery = document.getElementById("drive-gallery")
   if (gallery) {
     if (!isAppend) gallery.innerHTML = null
-    imageUrls.forEach((url, index) => {
-      const imageElement = createImageElement(url, index)
+    files.forEach((file, index) => {
+      const imageElement = createImageElement(file[srcKey], index)
+      imageElement.addEventListener('click', e => {
+        console.log(file)
+      })
       gallery.appendChild(imageElement)
     });
 
@@ -46,6 +49,45 @@ export const lazyLoad = async (imageUrls, isAppend = false) => {
       entries.forEach(async (entry) => {
         if (entry.isIntersecting) {
           await delay(200)
+          const img = entry.target as any
+          img.src = img.dataset.src
+          img.onload = () => {
+            img.classList.remove("opacity-0")
+            if (img && img.previousElementSibling) img.previousElementSibling.remove() // Remove placeholder
+          }
+          observer.unobserve(img)
+        }
+      })
+    }, options)
+    images.forEach((img) => imageObserver.observe(img))
+  }
+}
+
+export const lazyLoadImage = async (imageClass = 'img.lazy-image') => {
+  await delay(300)
+  // Create and append image elements
+  const gallery = document.getElementById("drive-gallery")
+  if (gallery) {
+    // if (!isAppend) gallery.innerHTML = null
+    // files.forEach((file, index) => {
+    //   const imageElement = createImageElement(file[srcKey], index)
+    //   imageElement.addEventListener('click', e => {
+    //     console.log(file)
+    //   })
+    //   gallery.appendChild(imageElement)
+    // });
+
+    const images = document.querySelectorAll(imageClass)
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1,
+    }
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      // for(const e of entries)
+      entries.forEach(async (entry) => {
+        if (entry.isIntersecting) {
+          await delay(300)
           const img = entry.target as any
           img.src = img.dataset.src
           img.onload = () => {

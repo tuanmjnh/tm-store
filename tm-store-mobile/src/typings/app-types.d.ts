@@ -5,6 +5,7 @@ declare namespace AppTypes {
     id: number;
     name: string;
     icon?: string;
+    parent?: string;
     checked?: boolean;
     disabled?: boolean;
     children?: TreeViewNodeItem[];

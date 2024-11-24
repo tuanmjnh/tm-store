@@ -8,6 +8,9 @@ export * from './connects'
 export * from './types'
 export * from './roles'
 export * from './users'
+export * from './groups'
+export * from './news'
+export * from './products'
 // export * from './tab'
 
 // const store = createPinia();

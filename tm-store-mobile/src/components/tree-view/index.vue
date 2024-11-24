@@ -12,25 +12,27 @@ const emit = defineEmits<{
 
 const props = withDefaults(
   defineProps<{
-    dense?: boolean;
-    disabled?: boolean;
-    radio?: boolean;
-    openAll?: boolean;
-    openQuick?: boolean;
-    selectable?: boolean;
-    unopenable?: boolean;
-    color?: string;
-    modelValue?: any[];
-    items: AppTypes.TreeViewNodeItem[];
-    selectionMode?: AppTypes.TreeViewSelectionMode;
-    itemKey?: string;
+    dense?: boolean
+    disabled?: boolean
+    radio?: boolean
+    openAll?: boolean
+    openQuick?: boolean
+    selectable?: boolean
+    unopenable?: boolean
+    color?: string
+    modelValue?: any[]
+    items: AppTypes.TreeViewNodeItem[]
+    selectionMode?: AppTypes.TreeViewSelectionMode
+    idKey?: string
+    nameKey?: string
   }>(),
   {
-    color: "#7e7ec2",
-    selectionMode: "leaf",
+    color: '#7e7ec2',
+    selectionMode: 'leaf',
     selectable: false,
     radio: false,
-    itemKey: "id"
+    idKey: 'id',
+    nameKey: 'name'
   }
 );
 
@@ -65,21 +67,21 @@ const toggleNode = (id: any) => {
 const nodeSelected = (item: AppTypes.TreeViewNodeItem) => {
   if (!!item.children && !!item.children.length) {
     if (
-      state.selectedNodes.has(item[props.itemKey]) &&
-      checkChildSelectStatus(state.selectedNodes, item, props.itemKey, "atLeastOne") &&
-      !checkChildSelectStatus(state.selectedNodes, item, props.itemKey, "all")
+      state.selectedNodes.has(item[props.idKey]) &&
+      checkChildSelectStatus(state.selectedNodes, item, props.idKey, "atLeastOne") &&
+      !checkChildSelectStatus(state.selectedNodes, item, props.idKey, "all")
     ) {
-      applyToAllChildren(item, props.itemKey, selectNode);
+      applyToAllChildren(item, props.idKey, selectNode);
     } else {
-      toggleNode(item[props.itemKey]);
+      toggleNode(item[props.idKey]);
       applyToAllChildren(
         item,
-        props.itemKey,
-        state.selectedNodes.has(item[props.itemKey]) ? selectNode : unselectNode
+        props.idKey,
+        state.selectedNodes.has(item[props.idKey]) ? selectNode : unselectNode
       );
     }
   } else {
-    toggleNode(item[props.itemKey]);
+    toggleNode(item[props.idKey]);
   }
 };
 
@@ -111,7 +113,7 @@ const onOpenNodes = () => {
   if (props.openAll === true) {
     let allVals: any[] = [];
     for (const node of props.items) {
-      let x = gatherAllNodeIds(node, props.itemKey, []);
+      let x = gatherAllNodeIds(node, props.idKey, []);
       allVals = [...allVals, ...x];
     }
     for (const n of [...new Set(allVals)]) state.openedNodes.add(n);
@@ -152,7 +154,7 @@ onUnmounted(() => {
 <template>
   <ul class="treeview" :class="classes">
     <tree-view-node v-for="item in props.items" :selectable="props.selectable" :color="props.color" :level="1"
-      :key="item[props.itemKey]" :item="item" :item-key="props.itemKey" :disabled="item.disabled"
+      :key="item[props.idKey]" :item="item" :id-key="props.idKey" :name-key="props.nameKey" :disabled="item.disabled"
       :unopenable="props.unopenable" :radio="props.radio" :identifier="identifier" :openQuick="props.openQuick">
       <template #append="state">
         <slot name="append" :item="state.item"></slot>
