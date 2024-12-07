@@ -43,7 +43,7 @@ const onAdd = async () => {
 }
 const onEdit = async (item) => {
   await groupStore.setItem(item)
-  router.push(`edit/${item.id}`)
+  router.push(`edit/${item._id}`)
 }
 const onToggleFlag = async (item) => {
   selected.value = [toRaw(item)]

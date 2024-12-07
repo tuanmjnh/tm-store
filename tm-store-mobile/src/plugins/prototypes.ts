@@ -1,3 +1,29 @@
+declare global {
+  interface String {
+    convertToAscii(): string;
+    removeChars(): string;
+    removeCharsFolder(): string;
+    toHtml(): string;
+    toUpperCaseFirst(): string;
+    toUpperCaseSpace(): string;
+    splitBrackets(include?: boolean): Array<string> | null;
+  }
+  interface Number {
+    formatFileSize(si: boolean, dp: number): string;
+    toThousandFilter(number: number): string;
+    NumberFormat(): string;
+  }
+  interface Array<T> {
+    pushIfNotExist<T>(element: any, key: any): void;
+    pushIfNotExistUpdate<T>(element: any, key: any): void;
+    distinctArray<T>(): Array<T>;
+    distinctArrayObject<T>(key: string): Array<T>;
+    sum<T>(obj?: any): number;
+    max<T>(): number;
+    min<T>(): number;
+  }
+}
+
 String.prototype.convertToAscii = function () {
   // let $this = String(this)
   return this.toLowerCase()
@@ -13,14 +39,30 @@ String.prototype.convertToAscii = function () {
     .replace(/[đ]/g, 'd')
     .replace(/[~\`!@#$%^&*()--+={}\\|;:\'\"<,>.?/”“‘’„‰‾–—]/g, '')
 }
+
 String.prototype.removeChars = function () {
   return this.replace(/[~`!@#$%^&*()\[{}\]\\|;:\'\",<>./?]/g, '')
 }
+
+String.prototype.removeCharsFolder = function () {
+  // < (less than)
+  // > (greater than)
+  // : (colon)
+  // " (double quote)
+  // / (forward slash)
+  // \ (backslash)
+  // | (vertical bar or pipe)
+  // ? (question mark)
+  // * (asterisk)
+  return this.replace(/[<>:"/\\|?*]/g, '')
+}
+
 String.prototype.toHtml = function () {
   if (!this) return this
-  var el = document.createElement('div')
-  el.innerHTML = this
-  return el.firstChild.data
+  const el = document.createElement('div') as HTMLElement;
+  el.innerHTML = this as string
+  const child = el.firstChild as any
+  return child.data
 }
 String.prototype.toUpperCaseFirst = function () {
   if (!this) return this
@@ -29,12 +71,17 @@ String.prototype.toUpperCaseFirst = function () {
 String.prototype.toUpperCaseSpace = function () {
   if (!this) return this
   const arr = this.trim().split(' ')
-  const rs = ''
+  let rs = ''
   for (let i = 0; i < arr.length; i++) {
     rs += arr[i].charAt(0).toUpperCase() + arr[i].slice(1)
     if (i < arr.length - 1) rs += ' '
   }
   return rs
+}
+String.prototype.splitBrackets = function (include?) {
+  if (!this) return this
+  if (include) return this.trim().match(/\[(.*?)\]/g)
+  else return this.trim().match(/(?<=\[)[^\]\[\r\n]*(?=\])/g)
 }
 // String.prototype.formatDate = function (format = 'DD/MM/YYYY') {
 //   if (!this) return this
@@ -43,10 +90,10 @@ String.prototype.toUpperCaseSpace = function () {
 
 // Number
 Number.prototype.formatFileSize = function (si = true, dp = 1) {
-  let bytes = this
+  let bytes = parseInt(this.toString())
   const thresh = si ? 1000 : 1024
 
-  if (Math.abs(bytes) < thresh) return bytes + ' B'
+  if (Math.abs((bytes)) < thresh) return bytes + ' B'
 
   const units = si ? ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
   let u = -1
@@ -63,7 +110,7 @@ Number.prototype.toThousandFilter = function (num) {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
 Number.prototype.NumberFormat = function (language = 'en-US') {
-  return new Intl.NumberFormat(language).format(this)
+  return new Intl.NumberFormat(language).format(parseInt(this.toString()))
 }
 
 // Array
@@ -112,34 +159,30 @@ Array.prototype.pushIfNotExistUpdate = function (element, key) {
     }
   }
 }
+Array.prototype.distinctArray = function () {
+  return [...new Set(this)] as any
+}
+Array.prototype.distinctArrayObject = function (key) {
+  return [...new Set(this.map(x => x[key]))] as any
+}
 Array.prototype.sum = function (prop) {
-  var total = 0
+  let total = 0
   if (prop) {
-    for (var i = 0, length = this.length; i < length; i++) {
+    for (let i = 0, length = this.length; i < length; i++) {
       const number = parseInt(this[i][prop])
       if (number) total = total + number
     }
   } else {
-    for (var i = 0, length = this.length; i < length; i++) {
+    for (let i = 0, length = this.length; i < length; i++) {
       const number = parseInt(this[i])
       if (number) total = total + number
     }
   }
   return total
 }
-
-Array.prototype.distinctArry = function () {
-  return [...new Set(this)]
-}
-
-Array.prototype.distinctArrayObject = function (key) {
-  return [...new Set(this.map(x => x[key]))]
-}
-
 Array.prototype.max = function () {
   return Math.max.apply(null, this)
 }
-
 Array.prototype.min = function () {
   return Math.min.apply(null, this)
 }
@@ -152,3 +195,5 @@ Array.prototype.min = function () {
 //   if (keyA > keyB) return 1
 //   return 0
 // }
+
+export { }

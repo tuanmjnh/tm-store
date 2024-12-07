@@ -54,21 +54,48 @@ export const useGroupStore = defineStore('groupStore', {
   state: (): {
     all: IModelGroup[]
     items: IModelGroup[]
-    item: IModelGroup
+    item: IModelGroup,
+    root: IModelGroup
     // metaKeys: []
     // metaValues: []
   } => ({
     all: [],
     items: [],
     item: JSON.parse(JSON.stringify(constant)),
+    root: {
+      _id: null,
+      type: null,
+      parent: null,
+      code: null,
+      title: 'Root',
+      desc: null,
+      level: 0,
+      content: null,
+      url: null,
+      images: null,
+      quantity: null,
+      position: null,
+      tags: null,
+      icon: null,
+      color: null,
+      meta: null,
+      startAt: null,
+      endAt: null,
+      order: 0,
+      flag: 1,
+      created: { at: null, by: null, ip: null }
+    }
   }),
   getters: {
+    getByType: (state) => {
+      return (type) => state.all.filter(x => x.type == type).sort((a, b) => { return a.order - b.order })
+    }
   },
   actions: {
     async getAll(arg?: any): Promise<IResponseList> {
       try {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/all`, { params: arg })
-        this.all = rs.data as IModelGroup[]
+        this.all = rs.data.sort((a, b) => { return a.order - b.order }) as IModelGroup[]
         return rs
       } catch (e) { throw e }
     },
@@ -90,12 +117,14 @@ export const useGroupStore = defineStore('groupStore', {
     async create(arg?: any) {
       try {
         const rs: IResponseItem = await http.axiosInstance.post(`/${API_PATH}`, arg)
+        if (rs.status) this.addItems(rs.data)
         return rs
       } catch (e) { throw e }
     },
     async update(arg?: any) {
       try {
         const rs: IResponseItem = await http.axiosInstance.put(`/${API_PATH}`, arg)
+        if (rs.status) this.updateItems(rs.data)
         return rs
       } catch (e) { throw e }
     },
@@ -111,11 +140,23 @@ export const useGroupStore = defineStore('groupStore', {
     async addItems(arg: any, items?: IModelGroup[]) {
       try {
         if (items) {
-          if (Array.isArray(arg)) this.items.concat(arg)
-          else this.items.push(arg)
+          if (Array.isArray(arg)) {
+            this.items.concat(arg)
+            this.all.concat(arg)
+          }
+          else {
+            this.items.push(arg)
+            this.all.push(arg)
+          }
         } else {
-          if (Array.isArray(arg)) this.items.concat(arg)
-          else this.items.push(arg)
+          if (Array.isArray(arg)) {
+            this.items.concat(arg)
+            this.all.concat(arg)
+          }
+          else {
+            this.items.push(arg)
+            this.all.push(arg)
+          }
         }
       } catch (e) { throw e }
     },
@@ -127,13 +168,17 @@ export const useGroupStore = defineStore('groupStore', {
               const i = items.findIndex(x => x._id === e._id)
               if (i > -1) items.splice(i, 1, e)
             } else {
-              const i = this.items.findIndex(x => x._id === e._id)
+              let i = this.items.findIndex(x => x._id === e._id)
               if (i > -1) this.items.splice(i, 1, e)
+              i = this.all.findIndex(x => x._id === e._id)
+              if (i > -1) this.all.splice(i, 1, e)
             }
           })
         } else {
-          const i = this.items.findIndex(x => x._id === arg._id)
+          let i = this.items.findIndex(x => x._id === arg._id)
           if (i > -1) this.items.splice(i, 1, arg)
+          i = this.all.findIndex(x => x._id === arg._id)
+          if (i > -1) this.all.splice(i, 1, arg)
         }
       } catch (e) { throw e }
     },
@@ -142,11 +187,13 @@ export const useGroupStore = defineStore('groupStore', {
         if (Array.isArray(arg)) {
           arg.forEach(e => {
             if (items) {
-              const i = items.findIndex(x => x._id === e)
+              let i = items.findIndex(x => x._id === e)
               if (i > -1) items.splice(i, 1)
             } else {
-              const i = this.items.findIndex(x => x._id === e)
+              let i = this.items.findIndex(x => x._id === e)
               if (i > -1) this.items.splice(i, 1)
+              i = this.all.findIndex(x => x._id === e)
+              if (i > -1) this.all.splice(i, 1)
             }
           })
         } else {
@@ -154,8 +201,10 @@ export const useGroupStore = defineStore('groupStore', {
             const i = items.findIndex(x => x._id === arg)
             if (i > -1) items.splice(i, 1)
           } else {
-            const i = this.items.findIndex(x => x._id === arg)
+            let i = this.items.findIndex(x => x._id === arg)
             if (i > -1) this.items.splice(i, 1)
+            i = this.all.findIndex(x => x._id === arg)
+            if (i > -1) this.all.splice(i, 1)
           }
         }
       } catch (e) { throw e }

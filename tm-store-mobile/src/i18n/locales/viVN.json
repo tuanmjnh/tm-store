@@ -494,7 +494,7 @@
     "icon": "Icon",
     "name": "Tên",
     "type": "Kiểu",
-    "url": "Địa chỉ tệp",
+    "url": "Đường dẫn",
     "inputUrl": "Nhập đường dẫn",
     "googleSheet": "Google sheet",
     "manager": "Quản lý tệp",

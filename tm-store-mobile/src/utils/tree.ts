@@ -3,17 +3,16 @@ import keyBy from 'lodash.keyby';
 
 function createTree(array, rootNodes, customID, childrenProperty) {
   const tree = [];
+  for (const rootNode of rootNodes) {
+    // const node = rootNodes[rootNode];
+    const childNode = array[rootNode[customID]];
 
-  for (const rootNode in rootNodes) {
-    const node = rootNodes[rootNode];
-    const childNode = array[node[customID]];
-
-    if (!node && !rootNodes.hasOwnProperty(rootNode)) {
+    if (!rootNode && !rootNodes.hasOwnProperty(rootNode)) {
       continue;
     }
 
     if (childNode) {
-      node[childrenProperty] = createTree(
+      rootNode[childrenProperty] = createTree(
         array,
         childNode,
         customID,
@@ -21,9 +20,8 @@ function createTree(array, rootNodes, customID, childrenProperty) {
       );
     }
 
-    tree.push(node);
+    tree.push(rootNode);
   }
-
   return tree;
 }
 
@@ -93,7 +91,6 @@ export const arrayToTree = (data, options) => {
     },
     options
   );
-
   if (!Array.isArray(data)) {
     throw new TypeError('Expected an array but got an invalid argument');
   }

@@ -1,3 +1,7 @@
+import { random } from '../utils/number'
+export const delay = ms => new Promise(res => setTimeout(res, ms))
+export const delayRandom = (msMin, msMax) => new Promise(res => setTimeout(res, random(msMin, msMax)))
+
 
 export function debounce1(func, wait) {
   var timeout, value

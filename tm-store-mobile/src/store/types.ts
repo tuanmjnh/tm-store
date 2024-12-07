@@ -52,7 +52,7 @@ export const useTypeStore = defineStore('typeStore', {
     async getAll(arg?: any): Promise<IResponseList> {
       try {
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}/all`, { params: arg })
-        this.all = rs.data as IModelType[]
+        this.all = rs.data.sort((a, b) => { return a.order - b.order }) as IModelType[]
         return rs
       } catch (e) { throw e }
     },

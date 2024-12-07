@@ -1,6 +1,7 @@
 import type { App } from 'vue'
 import { createApp } from 'vue'
 import { i18n } from './i18n'
+import { installPlugins } from './plugins'
 import { installRouter } from '@/router'
 import { installPinia } from '@/store'
 // import Vue3TouchEvents from "vue3-touch-events"
@@ -28,6 +29,7 @@ import 'vant/es/toast/style'
 import 'vant/es/dialog/style'
 import 'vant/es/notify/style'
 import 'vant/es/image-preview/style'
+import 'md-editor-v3/lib/style.css'
 
 import { loadGapiInsideDOM } from 'gapi-script'
 // import { gapi } from 'gapi-script'
@@ -40,15 +42,10 @@ async function setupApp() {
 
   // Create a Vue instance
   const app = createApp(AppVue)
-
-  // Registration module Pinia
-  await installPinia(app)
+  installPlugins(app) // Register Plugins
+  await installPinia(app) // Registration module Pinia
   // app.use(store)
-
-  // Register Module Vue-router
-  await installRouter(app)
-
-  //
+  await installRouter(app)// Register Module Vue-router
   // app.use(Vue3TouchEvents)
   app.use<Vue3TouchEventsOptions>(Vue3TouchEvents, {
     disableClick: false
@@ -69,7 +66,7 @@ async function setupApp() {
   // })
 
   // Register plugins directive/static resource
-  Object.values(import.meta.glob<{ install: (app: App) => void }>('./plugins/*.ts', { eager: true })).map(i => app.use(i))
+  // Object.values(import.meta.glob<{ install: (app: App) => void }>('./plugins/*.ts', { eager: true })).map(i => app.use(i))
 
   // Unloading animation
   appLoading.unmount()

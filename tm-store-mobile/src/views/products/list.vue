@@ -7,7 +7,7 @@ import { useProductStore } from '@/store'
 const productStore = useProductStore()
 const filter = ref({
   text: '',
-  enable: true,
+  flag: 1,
   page: 1,
   rowsPerPage: 15
 })
@@ -15,7 +15,7 @@ const optionFlag = [
   { text: $t(`global.activite`), value: 1 },
   { text: $t(`global.inactivite`), value: 0 },
 ]
-const items = ref([]) //computed(() => typeStore.items)
+const items = ref([])
 const selected = ref([])
 const isLoading = ref(false)
 const isFinished = ref(false)
@@ -62,7 +62,7 @@ const onToggleFlag = async (item) => {
   isShowDelete.value = true
 }
 const onConfirmFlag = async () => {
-  const rs = await productStore.updateFlag(selected.value.map(x => { return { _id: x._id, flag: filter.value.enable ? false : true } }))
+  const rs = await productStore.updateFlag(selected.value.map(x => { return { _id: x._id, flag: filter.value.flag ? false : true } }))
   if (rs.status) productStore.removeItems(rs.success, items.value)
 }
 const onGetRoles = (item) => {
@@ -83,15 +83,20 @@ const onGetRoles = (item) => {
         <template #left>
           <van-button square icon="passed" type="primary" />
         </template>
-        <van-cell :title="item.username" :value="onGetRoles(item.userRoles)" :label="item.fullName">
+        <van-cell :title="item.title" :value="onGetRoles(item.userRoles)" :label="item.fullName">
           <template #title>
-            <span class="mr-2">{{ item.username }}</span>
-            <van-tag type="primary">{{ item.group }}</van-tag>
+            <span class="mr-2">{{ item.title }}</span>
+          </template>
+          <template #label>
+            <van-tag type="primary">{{ item.code }}</van-tag>
+          </template>
+           <template #value>
+            <van-tag type="primary">{{ item.price.format }}</van-tag>
           </template>
         </van-cell>
         <template #right>
           <van-button square icon="edit" type="success" @click="onEdit(item)" />
-          <van-button v-if="filter.enable" square icon="close" type="danger" @click="onToggleFlag(item)" />
+          <van-button v-if="filter.flag" square icon="close" type="danger" @click="onToggleFlag(item)" />
           <van-button v-else square icon="replay" type="warning" @click="onToggleFlag(item)" />
         </template>
       </van-swipe-cell>
@@ -111,7 +116,7 @@ const onGetRoles = (item) => {
       <van-cell :title="$t('global.status')">
         <template #value>
           <van-dropdown-menu>
-            <van-dropdown-item v-model="filter.enable" :options="optionFlag" @change="onFilterFetch">
+            <van-dropdown-item v-model="filter.flag" :options="optionFlag" @change="onFilterFetch">
             </van-dropdown-item>
           </van-dropdown-menu>
         </template>
@@ -119,7 +124,7 @@ const onGetRoles = (item) => {
     </van-cell-group>
   </van-popup>
   <van-action-sheet v-model:show="isShowDelete" :cancel-text="$t('global.cancel')" close-on-click-action
-    :actions="[{ name: filter.enable ? $t('global.delete') : $t('global.recover'), color: filter.enable ? '#f56c6c' : '#e6a23c' }]"
+    :actions="[{ name: filter.flag ? $t('global.delete') : $t('global.recover'), color: filter.flag ? '#f56c6c' : '#e6a23c' }]"
     @select="onConfirmFlag">
     <!-- <van-cell :title="$t('global.accept')" /> -->
   </van-action-sheet>
