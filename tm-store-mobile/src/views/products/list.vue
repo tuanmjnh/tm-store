@@ -85,17 +85,18 @@ const onGetRoles = (item) => {
         </template>
         <van-cell :title="item.title" :value="onGetRoles(item.userRoles)" :label="item.fullName">
           <template #title>
-            <span class="mr-2">{{ item.title }}</span>
+            <span class="mr-2 truncate">{{ item.title }}</span>
           </template>
           <template #label>
             <van-tag type="primary">{{ item.code }}</van-tag>
           </template>
-           <template #value>
-            <van-tag type="primary">{{ item.price.format }}</van-tag>
+          <template #value>
+            <div class="text-blue-600 dark:text-white">{{ item.price.NumberFormat() }}</div>
+            <!-- <van-tag type="primary">{{ item.code }}</van-tag> -->
           </template>
         </van-cell>
         <template #right>
-          <van-button square icon="edit" type="success" @click="onEdit(item)" />
+          <van-button square icon="edit" type="success" @click="onEdit(item)" class="h-full" />
           <van-button v-if="filter.flag" square icon="close" type="danger" @click="onToggleFlag(item)" />
           <van-button v-else square icon="replay" type="warning" @click="onToggleFlag(item)" />
         </template>

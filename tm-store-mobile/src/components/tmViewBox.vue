@@ -9,7 +9,7 @@ const emit = defineEmits<{
 }>()//defineEmits(['onSelect', 'onPreview', 'onDelete'])
 const props = withDefaults(
   defineProps<{
-    modelValue: Array<any>
+    modelValue: Array<any> | null
     selected?: Array<any>
     imageError?: string
     height?: string

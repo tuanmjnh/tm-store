@@ -10,7 +10,7 @@ const emit = defineEmits<{
 }>()//defineEmits(['onSelect', 'onPreview', 'onDelete'])
 const props = withDefaults(
   defineProps<{
-    modelValue: Array<any>
+    modelValue: Array<any> | null
     selected?: Array<any>
     imageError?: string
     height?: string
@@ -110,7 +110,8 @@ const onHidePreview = () => {
       <tm-swipe>
         <template #content>
           <div class="flex-shrink-0">
-            <img class="w-8 h-8 rounded-full" :src="e.src || e.thumbnailLink" :alt="e.alt||e.name" @click="onShowPreview(e, i)">
+            <img class="w-8 h-8 rounded-full" :src="e.src || e.thumbnailLink" :alt="e.alt || e.name"
+              @click="onShowPreview(e, i)">
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-gray-900 truncate dark:text-white">

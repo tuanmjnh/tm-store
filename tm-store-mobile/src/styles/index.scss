@@ -244,6 +244,11 @@ a:hover {
   // background: initial !important;
 }
 
+.van-swipe-cell {
+  .van-button {
+    height: 100%;
+  }
+}
 // .van-notify--primary {
 //   background: var(--van-notify-primary-background);
 // }
