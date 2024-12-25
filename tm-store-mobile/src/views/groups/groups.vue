@@ -18,6 +18,7 @@ const props = withDefaults(
     type: string | any,
     selected?: Array<any> | undefined,
     root?: boolean,
+    isBot?: boolean,
     lblSubmit?: string,
     lblCancel?: string
   }>(),
@@ -27,6 +28,7 @@ const props = withDefaults(
     type: 'product',
     selected: null,
     root: true,
+    isBot: false,
     lblSubmit: 'Submit',
     lblCancel: 'Cancel'
   })
@@ -56,8 +58,8 @@ const onCancel = async (arg) => {
       </template> -->
     </tree-view>
   </div>
-  <div class="w-full border"></div>
-  <div class="flex justify-center mb-3 mt-3">
+  <hr class="border-gray-300 dark:border-gray-100">
+  <div v-if="isBot" class="flex justify-center mb-3 mt-3">
     <van-button type="primary" square size="small" @click="onSubmit">{{ lblSubmit }}</van-button>
     <div class="w-6"></div>
     <van-button type="default" square size="small" @click="onCancel">{{ lblCancel }}</van-button>

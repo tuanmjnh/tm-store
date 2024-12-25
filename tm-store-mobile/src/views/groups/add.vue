@@ -81,7 +81,7 @@ const onSubmit = async () => {
 
     <van-dialog v-model:show="isDialogGroup"
       :title="$route.meta.module == 'product' ? $t('group.titleproduct') : $t('group.titlenews')" show-cancel-button
-      :show-confirm-button="false">
+      :cancel-button-text="$t('global.back')" :placeholder="$t('global.inputPlaceholder')" :show-confirm-button="false">
       <componentGroup :flag="1" text="" :type="$route.meta.module" @on-select="onSelectParent" />
     </van-dialog>
     <van-action-bar placeholder>

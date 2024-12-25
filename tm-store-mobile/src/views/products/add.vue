@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAppStore, useGroupStore, useProductStore } from '@/store'
+import { useAppStore, useTypeStore, useGroupStore, useProductStore } from '@/store'
 import { historyBack } from '@/router'
 import { $t } from '@/i18n'
 import { showImagePreview } from 'vant'
@@ -11,10 +11,14 @@ const tmViewList = defineAsyncComponent(() => import('@/components/tmViewList.vu
 
 const route = useRoute()
 const appStore = useAppStore()
+const typeStore = useTypeStore()
 const groupStore = useGroupStore()
 const productStore = useProductStore()
 const form = computed(() => productStore.item)
 const isDialogGroup = ref(false)
+const isDialogUnits = ref(false)
+const units = ref(typeStore.all.filter(x => x.flag == 1 && x.key == 'unit').sort((a, b) => a.order - b.order))
+const unit = ref(null)
 const groups = ref([])
 const formDate = ref({
   dateBirth: [],
@@ -29,10 +33,11 @@ const initForm = async () => {
   if (route.params.id && !form.value._id) await productStore.getItem(route.params)
   groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
   flag.value = form.value.flag ? true : false
+  unit.value = units.value.find(x => x.code === form.value.unit)
 }
 initForm()
 
-const onSelectParent = async (arg) => {
+const onSelectGroup = async (arg) => {
   try {
     if (!arg || arg.length < 1) {
       showNotify({ type: 'warning', message: $t(`error.required`) })
@@ -40,10 +45,16 @@ const onSelectParent = async (arg) => {
     }
     isDialogGroup.value = false
     groups.value = groupStore.all.filter(x => arg.includes(x._id)).sort((a, b) => a.level - b.level)
+    form.value.groups = groups.value.map(x => x._id)
   } catch (error) {
     if (error.data && error.data.message) showNotify({ type: 'danger', message: $t(`error.${error.data.message}`) })
     else showNotify({ type: 'danger', message: $t(`http.${error.status}`) })
   }
+}
+const onChangeUnit = (val) => {
+  isDialogUnits.value = false
+  unit.value = val
+  form.value.unit = unit.value ? unit.value.code : null
 }
 const onSelectImages = (val) => {
   // console.log(val)
@@ -58,11 +69,10 @@ const onSelectDriveImage = (arg) => {
   // form.value.avatar = [arg]
 }
 const onSubmit = async () => {
-  console.log(form.value)
-  // window.$notify("abc")
   try {
     if (form.value._id) {
       form.value.flag = flag.value ? 1 : 0
+      console.log(form.value)
       const rs = await productStore.update(form.value)
       if (rs.data) showNotify({ type: 'success', message: $t('success.update') })
     } else {
@@ -73,6 +83,7 @@ const onSubmit = async () => {
       }
     }
   } catch (error) {
+    console.log(error)
     if (error.data && error.data.message) showNotify({ type: 'danger', message: $t(`error.${error.data.message}`) })
     else showNotify({ type: 'danger', message: $t(`http.${error.status}`) })
   }
@@ -85,7 +96,7 @@ const onSubmit = async () => {
         <van-cell-group inset>
           <van-field v-model="form.code" name="code" :label="$t('global.code')" disabled
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field name="parent" :label="$t('group.titleproduct')" readonly right-icon="arrow"
+          <van-field v-model="groups.length" name="groups" :label="$t('group.titleproduct')" readonly right-icon="arrow"
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]"
             @click="isDialogGroup = true">
             <template #input>
@@ -94,8 +105,13 @@ const onSubmit = async () => {
           </van-field>
           <van-field v-model="form.title" name="title" :label="$t('global.title')"
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field v-model="form.unit" name="unit" :label="$t('global.unit')"
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
+          <van-field v-model="form.unit" name="unit" :label="$t('global.unit')" right-icon="arrow"
+            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]"
+            @click="isDialogUnits = true">
+            <template #input>
+              {{ unit ? unit.name : $t('global.updating') }}
+            </template>
+          </van-field>
           <van-field name="weight" :label="$t('product.weight')">
             <template #input>
               <van-stepper v-model="form.weight" />
@@ -171,10 +187,16 @@ const onSubmit = async () => {
   <van-dialog v-model:show="isDialogGroup" :title="$t('group.titleproduct')" :show-cancel-button="false"
     :show-confirm-button="false">
     <componentGroup :flag="1" text="" type="product" :root="false" :selected="form.groups"
-      :lbl-submit="$t('global.confirm')" :lbl-cancel="$t('global.back')" @on-submit="onSelectParent"
+      :lbl-submit="$t('global.confirm')" :lbl-cancel="$t('global.back')" is-bot @on-submit="onSelectGroup"
       @on-cancel="isDialogGroup = false" />
   </van-dialog>
-  <van-dialog v-model:show="isDialogDrive" title="Drive" :show-cancel-button="false" :showConfirmButton="false"
+  <van-dialog v-model:show="isDialogUnits" :title="$t('global.unit')" close-on-click-overlay
+    :show-confirm-button="false" :show-cancel-button="false">
+    <div class="overscroll-none overflow-auto h-96">
+      <van-cell v-for="(e, i) in units" :title="e.name" :value="e.code" is-link @click="onChangeUnit(e)" />
+    </div>
+  </van-dialog>
+  <van-dialog v-model:show="isDialogDrive" title="Drive" :show-cancel-button="false" :show-confirm-button="false"
     close-on-click-action>
     <template #title>
       <!-- <div class="flex">
