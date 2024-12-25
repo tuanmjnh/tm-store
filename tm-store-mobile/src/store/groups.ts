@@ -67,7 +67,7 @@ export const useGroupStore = defineStore('groupStore', {
       type: null,
       parent: null,
       code: null,
-      title: 'Root',
+      title: 'Root',//$t('group.root'),//'Root'
       desc: null,
       level: 0,
       content: null,
@@ -76,7 +76,7 @@ export const useGroupStore = defineStore('groupStore', {
       quantity: null,
       position: null,
       tags: null,
-      icon: null,
+      icon: 'spa',
       color: null,
       meta: null,
       startAt: null,

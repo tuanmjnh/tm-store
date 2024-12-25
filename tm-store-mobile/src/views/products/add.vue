@@ -5,6 +5,7 @@ import { $t } from '@/i18n'
 import { showImagePreview } from 'vant'
 import { showNotify } from 'vant'
 import { MdEditor } from 'md-editor-v3'
+import componentGroup from "@/views/groups/groups.vue"
 const googleDrive = defineAsyncComponent(() => import('@/components/google-drive.vue'))
 const tmViewList = defineAsyncComponent(() => import('@/components/tmViewList.vue'))
 
@@ -14,7 +15,7 @@ const groupStore = useGroupStore()
 const productStore = useProductStore()
 const form = computed(() => productStore.item)
 const isDialogGroup = ref(false)
-const groupParent = ref(groupStore.root)
+const groups = ref([])
 const formDate = ref({
   dateBirth: [],
   lastLogin: [],
@@ -26,11 +27,36 @@ const isDialogDrive = ref(false)
 
 const initForm = async () => {
   if (route.params.id && !form.value._id) await productStore.getItem(route.params)
-  console.log(form.value)
+  groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
   flag.value = form.value.flag ? true : false
 }
 initForm()
 
+const onSelectParent = async (arg) => {
+  try {
+    if (!arg || arg.length < 1) {
+      showNotify({ type: 'warning', message: $t(`error.required`) })
+      return
+    }
+    isDialogGroup.value = false
+    groups.value = groupStore.all.filter(x => arg.includes(x._id)).sort((a, b) => a.level - b.level)
+  } catch (error) {
+    if (error.data && error.data.message) showNotify({ type: 'danger', message: $t(`error.${error.data.message}`) })
+    else showNotify({ type: 'danger', message: $t(`http.${error.status}`) })
+  }
+}
+const onSelectImages = (val) => {
+  // console.log(val)
+  isDialogDrive.value = true
+}
+const onDeleteIamge = (img) => {
+  // console.log(img)
+  // console.log(imagesSelected.value)
+}
+const onSelectDriveImage = (arg) => {
+  isDialogDrive.value = false
+  // form.value.avatar = [arg]
+}
 const onSubmit = async () => {
   console.log(form.value)
   // window.$notify("abc")
@@ -51,18 +77,6 @@ const onSubmit = async () => {
     else showNotify({ type: 'danger', message: $t(`http.${error.status}`) })
   }
 }
-const onSelectImages = (val) => {
-  // console.log(val)
-  isDialogDrive.value = true
-}
-const onDeleteIamge = (img) => {
-  // console.log(img)
-  // console.log(imagesSelected.value)
-}
-const onSelectDriveImage = (arg) => {
-  isDialogDrive.value = false
-  // form.value.avatar = [arg]
-}
 </script>
 <template>
   <van-form required="auto" @submit="onSubmit">
@@ -71,11 +85,11 @@ const onSelectDriveImage = (arg) => {
         <van-cell-group inset>
           <van-field v-model="form.code" name="code" :label="$t('global.code')" disabled
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field v-model="groupParent.title" name="parent" :label="$t('group.parent')" readonly right-icon="arrow"
+          <van-field name="parent" :label="$t('group.titleproduct')" readonly right-icon="arrow"
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]"
             @click="isDialogGroup = true">
             <template #input>
-              {{ groupParent ? groupParent.title : 'Root' }}
+              {{ groups && groups.length ? groups.map(x => x.title).join(', ') : 'Root' }}
             </template>
           </van-field>
           <van-field v-model="form.title" name="title" :label="$t('global.title')"
@@ -132,12 +146,9 @@ const onSelectDriveImage = (arg) => {
           <van-field name="originAddress" :label="$t('product.originAddress')"
             :placeholder="$t('global.inputPlaceholder')" />
           <van-field name="date" :label="$t('product.date')" :placeholder="$t('global.inputPlaceholder')" />
-          <van-field name="attr" :label="$t('global.attributes')" :placeholder="$t('global.inputPlaceholder')"
-            :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field name="tags" :label="$t('global.tags')" :placeholder="$t('global.inputPlaceholder')"
-            :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field name="meta" :label="$t('global.meta')" :placeholder="$t('global.inputPlaceholder')"
-            :rules="[{ required: true, message: $t('error.required') }]" />
+          <van-field name="attr" :label="$t('global.attributes')" :placeholder="$t('global.inputPlaceholder')" />
+          <van-field name="tags" :label="$t('global.tags')" :placeholder="$t('global.inputPlaceholder')" />
+          <van-field name="meta" label="Meta" :placeholder="$t('global.inputPlaceholder')" />
         </van-cell-group>
       </van-tab>
       <van-tab :title="$t('global.content')" name="content">
@@ -157,6 +168,12 @@ const onSelectDriveImage = (arg) => {
       <van-action-bar-button v-else type="primary" native-type="submit" :text="$t('global.add')" />
     </van-action-bar>
   </van-form>
+  <van-dialog v-model:show="isDialogGroup" :title="$t('group.titleproduct')" :show-cancel-button="false"
+    :show-confirm-button="false">
+    <componentGroup :flag="1" text="" type="product" :root="false" :selected="form.groups"
+      :lbl-submit="$t('global.confirm')" :lbl-cancel="$t('global.back')" @on-submit="onSelectParent"
+      @on-cancel="isDialogGroup = false" />
+  </van-dialog>
   <van-dialog v-model:show="isDialogDrive" title="Drive" :show-cancel-button="false" :showConfirmButton="false"
     close-on-click-action>
     <template #title>

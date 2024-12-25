@@ -307,12 +307,12 @@
     "titlenews": "Danh mục tin tức",
     "titlesub": "Danh mục con",
     "parent": "Nhóm cha",
-    "noithatvanphong": "Nội thất văn phòng",
     "hitCode": "Mã của danh mục",
     "select": "Chọn danh mục",
     "selectAll": "-- Chọn tất cả --",
     "attributes": "Thuộc tính danh mục",
-    "basic": "Danh mục cơ bản"
+    "basic": "Danh mục cơ bản",
+    "root": "Danh mục chính"
   },
   "product": {
     "title": "Sản phẩm",

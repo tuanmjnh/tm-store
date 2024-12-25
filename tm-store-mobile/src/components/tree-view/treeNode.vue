@@ -163,7 +163,7 @@ const openNode = () => {
     </div>
     <ul class="m-0 list-none p-0 pl-4 [&:not(ul)]:pl-0 [&:not(ul)]:my-[2px]" v-if="isOpen">
       <tree-node v-for="child in props.item.children" :selectable="props.selectable" :level="props.level + 1"
-        :key="child[props.idKey]" :item="child" :item-key="props.idKey" :name-key="props.nameKey" :color="props.color"
+        :key="child[props.idKey]" :item="child" :id-key="props.idKey" :name-key="props.nameKey" :color="props.color"
         :disabled="props.disabled" :unopenable="props.unopenable" :identifier="props.identifier" :radio="props.radio"
         @change="childNodeChanged">
         <template #append="state">
