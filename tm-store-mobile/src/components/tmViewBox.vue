@@ -1,11 +1,11 @@
 <script setup lang="ts">
 const emit = defineEmits<{
-  (e: 'onSelect', image: any): any
-  (e: 'onClick', image: any): any
-  (e: 'onDelete', image: any): any
-  (e: 'onDeleted', image: any): any
-  (e: "update:selected", values: any[]): any
-  (e: "update:modelValue", values: any[]): any
+  (e: 'onSelect', value: any): any
+  (e: 'onClick', value: any): any
+  (e: 'onDelete', value: any): any
+  (e: 'onDeleted', value: any): any
+  (e: 'update:selected', value: any[]): any
+  (e: 'update:modelValue', value: any[]): any
 }>()//defineEmits(['onSelect', 'onPreview', 'onDelete'])
 const props = withDefaults(
   defineProps<{
@@ -53,12 +53,12 @@ const onToggleSelect = (arg) => {
     const index = props.selected.indexOf(arg)
     if (index > -1) items.splice(index, 1)
     else items.push(arg)
-    emit("update:selected", items)
+    emit('update:selected', items)
     emit('onSelect', items)
   } else {
     // console.log(arg)
     const items = props.selected.indexOf(arg) > -1 ? [] : [arg]
-    emit("update:selected", items)
+    emit('update:selected', items)
     emit('onSelect', items)
   }
 }
@@ -73,7 +73,7 @@ const onConfirmDelete = () => {
   if (selectedItem.value.item && selectedItem.value.index > -1) {
     const items = props.modelValue == null ? [] : props.modelValue
     items.splice(selectedItem.value.index, 1)
-    emit("update:modelValue", items)
+    emit('update:modelValue', items)
     emit('onDeleted', selectedItem.value)
   }
 }

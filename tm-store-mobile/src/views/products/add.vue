@@ -8,6 +8,7 @@ import { MdEditor } from 'md-editor-v3'
 import componentGroup from "@/views/groups/groups.vue"
 const googleDrive = defineAsyncComponent(() => import('@/components/google-drive.vue'))
 const tmViewList = defineAsyncComponent(() => import('@/components/tmViewList.vue'))
+const componentTypes = defineAsyncComponent(() => import('./types.vue'))
 
 const route = useRoute()
 const appStore = useAppStore()
@@ -17,14 +18,11 @@ const productStore = useProductStore()
 const form = computed(() => productStore.item)
 const isDialogGroup = ref(false)
 const isDialogUnits = ref(false)
+const isDialogTypes = ref(false)
+const typeView = ref(0)
 const units = ref(typeStore.all.filter(x => x.flag == 1 && x.key == 'unit').sort((a, b) => a.order - b.order))
 const unit = ref(null)
 const groups = ref([])
-const formDate = ref({
-  dateBirth: [],
-  lastLogin: [],
-  lastChangePass: []
-})
 const flag = ref(false)
 const active = ref('basicInf')
 const isDialogDrive = ref(false)
@@ -34,6 +32,7 @@ const initForm = async () => {
   groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
   flag.value = form.value.flag ? true : false
   unit.value = units.value.find(x => x.code === form.value.unit)
+  console.log(form.value)
 }
 initForm()
 
@@ -68,6 +67,10 @@ const onSelectDriveImage = (arg) => {
   isDialogDrive.value = false
   // form.value.avatar = [arg]
 }
+const onEditType = (arg) => {
+  isDialogTypes.value = true
+  typeView.value = arg
+}
 const onSubmit = async () => {
   try {
     if (form.value._id) {
@@ -96,7 +99,7 @@ const onSubmit = async () => {
         <van-cell-group inset>
           <van-field v-model="form.code" name="code" :label="$t('global.code')" disabled
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field v-model="groups.length" name="groups" :label="$t('group.titleproduct')" readonly right-icon="arrow"
+          <van-field v-model="groups.length" name="groups" :label="$t('group.title')" readonly is-link
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]"
             @click="isDialogGroup = true">
             <template #input>
@@ -105,11 +108,29 @@ const onSubmit = async () => {
           </van-field>
           <van-field v-model="form.title" name="title" :label="$t('global.title')"
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field v-model="form.unit" name="unit" :label="$t('global.unit')" right-icon="arrow"
+          <van-field v-model="form.unit" name="unit" :label="$t('global.unit')" is-link
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]"
             @click="isDialogUnits = true">
             <template #input>
               {{ unit ? unit.name : $t('global.updating') }}
+            </template>
+          </van-field>
+          <van-field name="unit" :label="$t('product.type')" is-link :placeholder="$t('global.inputPlaceholder')"
+            @click="onEditType(0)">
+            <template #input>
+              Phân loại hàng
+            </template>
+          </van-field>
+          <van-field name="unit" :label="$t('product.price')" is-link :placeholder="$t('global.inputPlaceholder')"
+            @click="onEditType(1)">
+            <template #input>
+              Phân loại hàng
+            </template>
+          </van-field>
+          <van-field name="unit" :label="$t('product.quantity')" is-link :placeholder="$t('global.inputPlaceholder')"
+            @click="onEditType(1)">
+            <template #input>
+              Phân loại hàng
             </template>
           </van-field>
           <van-field name="weight" :label="$t('product.weight')">
@@ -131,7 +152,17 @@ const onSubmit = async () => {
             :placeholder="$t('global.inputPlaceholder')" />
         </van-cell-group>
       </van-tab>
-      <van-tab :title="$t('global.images')" name="images">
+      <!-- <van-tab :title="$t('tabs.price')" name="priceInf">
+        <van-cell-group inset>
+          <van-cell v-for="(e, i) in form.types" is-link>
+            <template #title>{{ e.label }}</template>
+            <template #label>
+
+            </template>
+          </van-cell>
+        </van-cell-group>
+      </van-tab> -->
+      <van-tab :title="$t('tabs.mediaInf')" name="mediaInf">
         <!-- <tm-fileList v-model="form.avatar" :multiple="false" center :is-delete="false" :is-tooltip="false"
           :lblSelect="$t('global.select')" :lblView="$t('global.zoomIn')" :lblDelete="$t('global.delete')" size="83vw"
           thumbnailView thumbnailSize="s300">
@@ -208,5 +239,18 @@ const onSubmit = async () => {
       </div> -->
     </template>
     <google-drive @on-close="isDialogDrive = false" @on-select="onSelectDriveImage" />
+  </van-dialog>
+  <van-dialog v-model:show="isDialogTypes" :title="$t('global.unit')" class="full-screen footer" close-on-click-overlay
+    :show-confirm-button="false" :show-cancel-button="false">
+    <template #title></template> <!-- <template #title>
+      <div class="flex justify-between">
+        <van-icon name="arrow-left" class="ml-5" @click="isDialogTypes = false" />
+        <div>{{ $t('product.type') }}</div>
+        <div class="mr-5"></div>
+      </div>
+    </template> -->
+    <component-types :types="form.types" :typeData="form.typeData" v-model:typeView="typeView"
+      @on-close="isDialogTypes = false" />
+    <template #footer></template>
   </van-dialog>
 </template>
