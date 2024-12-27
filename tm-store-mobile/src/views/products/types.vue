@@ -2,8 +2,11 @@
 import { IProductType, IProductTypeOption, IProductTypeData } from '@/store/interfaces/product'
 import { useProductStore } from '@/store'
 const productStore = useProductStore()
+const typeOneSelected = ref(null)
 const emit = defineEmits<{
   (e: 'onClose', value: any): any,
+  (e: 'onUpdate', value: any): any,
+  (e: 'onUpdateAll', value: any): any,
   (e: 'update:typeView', value: number): number
 }>()
 const props = defineProps<{
@@ -12,65 +15,33 @@ const props = defineProps<{
   typeView: number
 }>()
 const onClose = async (arg) => {
-  if (props.typeView) emit('update:typeView', 0)
-  else emit('onClose', true)
+  const v = props.typeView - 1
+  if (v < 0) emit('onClose', true)
+  else emit('update:typeView', v)
 }
 const onChangeTypeView = (arg) => {
   emit('update:typeView', arg)
 }
 const onSelectTypeOption = (arg, index) => {
-  if (arg && arg.length && index > -1)
+  if (arg && arg.length && index > -1) {
     for (let i = 0; i < arg.length; i++) {
       if (i === index) arg[i].selected = true
       else arg[i].selected = false
     }
+    typeOneSelected.value = arg[index]
+  }
 }
 onSelectTypeOption(props.types[0].options, 0)
+const onUpdate = (arg) => {
+  emit('onUpdate', true)
+}
+const onUpdateAll = (arg) => {
+  emit('onUpdateAll', true)
+  emit('update:typeView', arg)
+}
 </script>
 <template>
-  <div v-if="typeView">
-    <div class="title">
-      <div class="flex justify-between">
-        <svg @click="onClose" class="ml-5" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-          viewBox="0 0 48 48">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
-            d="M5.799 24h36m-24 12l-12-12l12-12" />
-        </svg>
-        <div>{{ $t('product.typeUpdate') }}</div>
-        <div class="mr-5"></div>
-      </div>
-    </div>
-    <div class="overscroll-none overflow-auto content">
-      <div class="pl-6 pr-6">
-        <div v-if="types && types.length" class="flex justify-center pt-5">
-          <div v-if="types[0] && types[0].options.length" class="inline-flex rounded-md shadow-sm" role="group">
-            <button type="button" v-for="(e, i) in types[0].options" @click="onSelectTypeOption(types[0].options, i)"
-              :class="['px-2 py-1 text-xs font-medium text-gray-900 bg-white border dark:bg-gray-800  dark:text-white', e.selected ? 'border-blue-500' : ' border-gray-500 dark:border-gray-800']">
-              {{ e.label }}
-            </button>
-          </div>
-        </div>
-        <hr class="border-gray-300 dark:border-gray-100 mt-5">
-        <div v-if="types && types.length > 1" class="flex justify-center pt-5">
-          <div v-if="types[1] && types[1].options.length" class="inline-flex rounded-md shadow-sm" role="group">
-            <button type="button" v-for="(e, i) in types[1].options" @click="onSelectTypeOption(types[1].options, i)"
-              :class="['px-2 py-1 text-xs font-medium text-gray-900 bg-white border dark:bg-gray-800  dark:text-white', e.selected ? 'border-blue-500' : ' border-gray-500 dark:border-gray-800']">
-              {{ e.label }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="footer">
-      <div class="flex justify-center">
-        <button v-if="types.length" type="button" @click="onChangeTypeView(1)"
-          class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-sky-500 rounded-lg dark:bg-sky-600">
-          <span class="mr-2">{{ $t('global.update') }}</span>
-        </button>
-      </div>
-    </div>
-  </div>
-  <div v-else>
+  <div v-if="typeView == 0">
     <div class="title">
       <div class="flex justify-between">
         <svg @click="onClose" class="ml-5" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -86,7 +57,6 @@ onSelectTypeOption(props.types[0].options, 0)
       <div class="pl-6 pr-6">
         <div class="pt-5 pb-8" v-for="(e, i) in types">
           <div class="flex justify-between pb-5">
-            <!-- <span class="text-sm font-bold text-sky-500">{{ e.label }}</span> -->
             <input type="text" v-model="e.label" :placeholder="$t('product.typeGroup')"
               class="block p-2 text-gray-900 text-xs bg-transparent dark:text-sky-500">
             <div class="flex space-x-3">
@@ -95,18 +65,6 @@ onSelectTypeOption(props.types[0].options, 0)
                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
                   d="m24.06 10l-.036 28M10 24h28" />
               </svg>
-              <!-- <svg class="text-green-600" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
-                <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
-                  <path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Z" />
-                  <path stroke-linecap="round" d="M24 16v16m-8-8h16" />
-                </g>
-              </svg> -->
-              <!-- <svg class="text-green-600" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
-                <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
-                  <path stroke-linecap="round" d="M7 42h36" />
-                  <path d="M11 26.72V34h7.317L39 13.308L31.695 6z" />
-                </g>
-              </svg> -->
               <svg class="text-rose-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"
                 @click="productStore.removeTypeGroup(types, i)">
                 <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
@@ -117,16 +75,9 @@ onSelectTypeOption(props.types[0].options, 0)
             </div>
           </div>
           <div class="flex justify-between pb-5" v-for="(o, j) in e.options">
-            <!-- <span class="text-sm">{{ o.label }}</span> -->
             <input type="text" :value="o.label" :placeholder="$t('product.typeOption')"
               class="block p-2 text-gray-900 border border-gray-300 rounded-lg bg-transparent text-xs focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <div class="flex space-x-3">
-              <!-- <svg class="text-green-600" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
-                <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
-                  <path stroke-linecap="round" d="M7 42h36" />
-                  <path d="M11 26.72V34h7.317L39 13.308L31.695 6z" />
-                </g>
-              </svg> -->
               <svg class="text-rose-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"
                 @click="productStore.removeTypeOption(e.options, o.id)">
                 <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
@@ -150,15 +101,169 @@ onSelectTypeOption(props.types[0].options, 0)
         </button>
       </div>
     </div>
-    <div class="footer">
+    <div class="footer pt-3">
       <div class="flex justify-center">
         <button v-if="types.length" type="button" @click="onChangeTypeView(1)"
-          class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-sky-500 rounded-lg dark:bg-sky-600">
+          class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-sky-500 dark:bg-sky-600">
           <span class="mr-2">{{ $t('global.next') }}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
+          <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
               d="M42 24H6m24-12l12 12l-12 12" />
-          </svg>
+          </svg> -->
+        </button>
+      </div>
+    </div>
+  </div>
+  <div v-if="typeView == 1">
+    <div class="title">
+      <div class="flex justify-between">
+        <svg @click="onClose" class="ml-5" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+          viewBox="0 0 48 48">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
+            d="M5.799 24h36m-24 12l-12-12l12-12" />
+        </svg>
+        <div>{{ $t('product.typeUpdate') }}</div>
+        <div class="mr-5"></div>
+      </div>
+      <div v-if="types && types.length > 1" class="flex justify-center pt-5">
+        <div v-if="types[0] && types[0].options.length" class="inline-flex rounded-md shadow-sm" role="group">
+          <button type="button" v-for="(e, i) in types[0].options" @click="onSelectTypeOption(types[0].options, i)"
+            :class="['px-2 py-1 text-xs font-medium text-gray-900 bg-white border dark:bg-gray-800  dark:text-white', e.selected ? 'border-blue-500' : ' border-gray-500 dark:border-gray-800']">
+            {{ e.label }}
+          </button>
+        </div>
+      </div>
+      <hr class="border-gray-300 dark:border-gray-100 mt-5">
+    </div>
+    <div class="overscroll-none overflow-auto content2">
+      <div class="pl-6 pr-6">
+        <div v-if="types && types.length == 1" class="pt-5">
+          <div v-for="(e, i) in types[0].options" class="pb-5">
+            <div class="relative inline-flex items-center w-full py-2 text-sm font-medium">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="20" height="20" viewBox="0 0 48 48">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+                  <path d="M10 44h28a2 2 0 0 0 2-2V14H30V4H10a2 2 0 0 0-2 2v36a2 2 0 0 0 2 2M30 4l10 10" />
+                  <circle cx="18" cy="17" r="4" />
+                  <path d="M15 28v9h18V21l-9.51 10.5z" />
+                </g>
+              </svg>
+              <span class="text-gray-900 dark:text-white"> {{ e.label }}</span>
+            </div>
+            <div class="flex-row">
+              <div class="flex justify-center justify-items-center content-center items-center">
+                <!-- <span>{{ typeData[e.id].priceImport }}</span> -->
+                <input type="number" v-model="typeData[e.id].priceImport" :placeholder="$t('product.priceImport')"
+                  class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
+                <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
+                  <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
+                    <path stroke-linecap="round" d="M42 26v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h14" />
+                    <path d="M14 26.72V34h7.317L42 13.308L34.695 6z" />
+                  </g>
+                </svg> -->
+              </div>
+              <div class="flex justify-center justify-items-center content-center items-center">
+                <input type="number" v-model="typeData[e.id].price" :placeholder="$t('product.priceSale')"
+                  class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
+              </div>
+              <div class="flex justify-center justify-items-center content-center items-center">
+                <input type="number" v-model="typeData[e.id].quantity" :placeholder="$t('product.quantity')"
+                  class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="types && types.length > 1" class="pt-5">
+          <div v-for="(e, i) in types[1].options" class="pb-5">
+            <div class="relative inline-flex items-center w-full py-2 text-sm font-medium">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="20" height="20" viewBox="0 0 48 48">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+                  <path d="M10 44h28a2 2 0 0 0 2-2V14H30V4H10a2 2 0 0 0-2 2v36a2 2 0 0 0 2 2M30 4l10 10" />
+                  <circle cx="18" cy="17" r="4" />
+                  <path d="M15 28v9h18V21l-9.51 10.5z" />
+                </g>
+              </svg>
+              <span class="text-gray-900 dark:text-white"> {{ e.label }}</span>
+            </div>
+            <div class="flex-row">
+              <div class="flex justify-center justify-items-center content-center items-center">
+                <!-- <span>{{ typeData[e.id].priceImport }}</span> -->
+                <input type="number" v-model="typeData[typeOneSelected.id][e.id].priceImport"
+                  :placeholder="$t('product.priceImport')"
+                  class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
+                <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
+                  <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
+                    <path stroke-linecap="round" d="M42 26v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h14" />
+                    <path d="M14 26.72V34h7.317L42 13.308L34.695 6z" />
+                  </g>
+                </svg> -->
+              </div>
+              <div class="flex justify-center justify-items-center content-center items-center">
+                <input type="number" v-model="typeData[typeOneSelected.id][e.id].price"
+                  :placeholder="$t('product.priceSale')"
+                  class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
+              </div>
+              <div class="flex justify-center justify-items-center content-center items-center">
+                <input type="number" v-model="typeData[typeOneSelected.id][e.id].quantity"
+                  :placeholder="$t('product.quantity')"
+                  class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer pt-5">
+      <div class="flex justify-center">
+        <!-- <button v-if="types.length" type="button" @click="onChangeTypeView(1)"
+          class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-sky-500 rounded-lg dark:bg-sky-600">
+          <span class="mr-2">{{ $t('global.update') }}</span>
+        </button> -->
+        <button v-if="types.length" type="button" @click="onChangeTypeView(2)"
+          class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-indigo-500 dark:bg-indigo-600">
+          <span class="mr-2">{{ $t('product.typeUpdates') }}</span>
+        </button>
+        <button v-if="types.length" type="button" @click="onUpdate"
+          class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-sky-500 dark:bg-sky-600">
+          <span class="mr-2">{{ $t('global.update') }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div v-if="typeView == 2">
+    <div class="title">
+      <div class="flex justify-between">
+        <svg @click="onClose" class="ml-5" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+          viewBox="0 0 48 48">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
+            d="M5.799 24h36m-24 12l-12-12l12-12" />
+        </svg>
+        <div>{{ $t('product.typeUpdate') }}</div>
+        <div class="mr-5"></div>
+      </div>
+      <div v-if="types && types.length > 1" class="flex justify-center pt-5">
+        <div v-if="types[0] && types[0].options.length" class="inline-flex rounded-md shadow-sm" role="group">
+          <button type="button" v-for="(e, i) in types[0].options" @click="onSelectTypeOption(types[0].options, i)"
+            :class="['px-2 py-1 text-xs font-medium text-gray-900 bg-white border dark:bg-gray-800  dark:text-white', e.selected ? 'border-blue-500' : ' border-gray-500 dark:border-gray-800']">
+            {{ e.label }}
+          </button>
+        </div>
+      </div>
+      <hr class="border-gray-300 dark:border-gray-100 mt-5">
+    </div>
+    <div class="overscroll-none overflow-auto content2">
+      <div class="pl-6 pr-6">
+
+      </div>
+    </div>
+    <div class="footer pt-5">
+      <div class="flex justify-center">
+        <button v-if="types.length" type="button" @click="onChangeTypeView(2)"
+          class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-indigo-500 dark:bg-indigo-600">
+          <span class="mr-2">{{ $t('product.typeUpdates') }}</span>
+        </button>
+        <button v-if="types.length" type="button" @click="onUpdate"
+          class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-sky-500 dark:bg-sky-600">
+          <span class="mr-2">{{ $t('global.update') }}</span>
         </button>
       </div>
     </div>

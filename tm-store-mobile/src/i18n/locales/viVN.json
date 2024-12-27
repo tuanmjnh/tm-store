@@ -344,6 +344,7 @@
     "quantityExport": "Số lượng xuất",
     "type": "Phân loại",
     "typeUpdate": "Cập nhật phân loại",
+    "typeUpdates": "Thay đổi hàng loạt",
     "addGroupType": "Thêm nhóm phân loại hàng",
     "addType": "Thêm phân loại hàng",
     "typeGroup": "Nhóm phân loại",

@@ -263,7 +263,10 @@ a:hover {
     height: calc(100vh - 50px);
   }
   &.footer .content {
-    height: calc(100vh - 115px);
+    height: calc(100vh - 101px);
+  }
+  &.footer .content2 {
+    height: calc(100vh - 176px);
   }
 }
 // .van-notify--primary {

@@ -250,7 +250,7 @@ const onSubmit = async () => {
       </div>
     </template> -->
     <component-types :types="form.types" :typeData="form.typeData" v-model:typeView="typeView"
-      @on-close="isDialogTypes = false" />
+      @on-close="isDialogTypes = false" @on-update="isDialogTypes = false" />
     <template #footer></template>
   </van-dialog>
 </template>
