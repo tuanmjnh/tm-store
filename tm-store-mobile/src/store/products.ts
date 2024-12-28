@@ -260,7 +260,7 @@ export const useProductStore = defineStore('productStore', {
       }
       return typeData
     },
-    updateAllTypeData(types: IProductType[], typeData: IProductTypeData, quickConfig) {
+    async updateAllTypeData(types: IProductType[], typeData: IProductTypeData, quickConfig: IProductTypeData) {
       if (types.length < 2) {
         for (const e in typeData) {
           typeData[e].price = quickConfig.price ? quickConfig.price : typeData[e].price
