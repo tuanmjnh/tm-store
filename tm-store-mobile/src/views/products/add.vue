@@ -118,19 +118,24 @@ const onSubmit = async () => {
           <van-field name="unit" :label="$t('product.type')" is-link :placeholder="$t('global.inputPlaceholder')"
             @click="onEditType(0)">
             <template #input>
-              Phân loại hàng
+              {{ form.types && form.types.length ? form.types.map(x => x.label).join(', ') : $t('global.updating') }}
+              <!-- {{ form.types.length ? form.types.map(x => x.label).join(', ') : $t('global.updating') }} -->
             </template>
           </van-field>
           <van-field name="unit" :label="$t('product.price')" is-link :placeholder="$t('global.inputPlaceholder')"
             @click="onEditType(1)">
             <template #input>
-              Phân loại hàng
+              {{
+                form.typeData ? productStore.getValueTypeDataMinMax(form, 'price').join(' - ') : $t('global.updating')
+              }}
             </template>
           </van-field>
           <van-field name="unit" :label="$t('product.quantity')" is-link :placeholder="$t('global.inputPlaceholder')"
             @click="onEditType(1)">
             <template #input>
-              Phân loại hàng
+              {{
+                form.typeData ? productStore.getValueTypeDataMinMax(form, 'quantity').join(' - ') : $t('global.updating')
+              }}
             </template>
           </van-field>
           <van-field name="weight" :label="$t('product.weight')">
@@ -230,25 +235,12 @@ const onSubmit = async () => {
   <van-dialog v-model:show="isDialogDrive" title="Drive" :show-cancel-button="false" :show-confirm-button="false"
     close-on-click-action>
     <template #title>
-      <!-- <div class="flex">
-        <div class="flex flex-none h-6 w-12 items-center justify-center pl-5">Drive</div>
-        <div class="flex h-6 grow"></div>
-        <div class="flex flex-none h-6 w-12 items-center justify-center">
-          <van-icon name="cross" @click="isDialogDrive = false" />
-        </div>
-      </div> -->
     </template>
     <google-drive @on-close="isDialogDrive = false" @on-select="onSelectDriveImage" />
   </van-dialog>
   <van-dialog v-model:show="isDialogTypes" :title="$t('global.unit')" class="full-screen footer" close-on-click-overlay
     :show-confirm-button="false" :show-cancel-button="false">
-    <template #title></template> <!-- <template #title>
-      <div class="flex justify-between">
-        <van-icon name="arrow-left" class="ml-5" @click="isDialogTypes = false" />
-        <div>{{ $t('product.type') }}</div>
-        <div class="mr-5"></div>
-      </div>
-    </template> -->
+    <template #title></template>
     <component-types :types="form.types" :typeData="form.typeData" v-model:typeView="typeView"
       @on-close="isDialogTypes = false" @on-update="isDialogTypes = false" />
     <template #footer></template>

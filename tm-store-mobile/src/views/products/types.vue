@@ -12,7 +12,7 @@ const emit = defineEmits<{
 }>()
 const props = defineProps<{
   types: Array<any>,//IProductType[],
-  typeData: IProductTypeData,
+  typeData: Object,
   typeView: number
 }>()
 const onClose = async () => {

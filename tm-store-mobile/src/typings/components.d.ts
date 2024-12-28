@@ -12,6 +12,7 @@ declare module 'vue' {
     AppSetting: typeof import('./../components/appSetting.vue')['default']
     Charts: typeof import('./../components/charts/index.vue')['default']
     CustomFieldValue: typeof import('./../components/customFieldValue.vue')['default']
+    Dialog: typeof import('./../components/dialog.vue')['default']
     ErrorTip: typeof import('./../components/ErrorTip.vue')['default']
     GoogleDrive: typeof import('./../components/google-drive.vue')['default']
     IconParkOutlineApplicationMenu: typeof import('~icons/icon-park-outline/application-menu')['default']

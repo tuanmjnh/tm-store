@@ -10,7 +10,7 @@ export interface IModelProduct {
   desc: string
   content: string
   types: Array<IProductType>
-  typeData: IProductTypeData
+  typeData: Object
   quantity: number
   price: number
   priceImport: number
@@ -235,7 +235,6 @@ export const useProductStore = defineStore('productStore', {
         }
       }
       return typeData
-      // console.log(typeData)
     },
     removeTypeDataGroup(types: IProductType[], typeData: IProductTypeData, indexGroup: number) {
       if (!types || types.length < 1) return null
@@ -260,7 +259,7 @@ export const useProductStore = defineStore('productStore', {
       }
       return typeData
     },
-    async updateAllTypeData(types: IProductType[], typeData: IProductTypeData, quickConfig: IProductTypeData) {
+    async updateAllTypeData(types: IProductType[], typeData: Object, quickConfig: IProductTypeData) {
       if (types.length < 2) {
         for (const e in typeData) {
           typeData[e].price = quickConfig.price ? quickConfig.price : typeData[e].price
@@ -278,7 +277,7 @@ export const useProductStore = defineStore('productStore', {
       }
       return typeData
     },
-    generateTypes(item) {
+    generateTypes(item: IModelProduct) {
       const rs = []
       if (item.types && item.types.length && item.typeData) {
         if (item.types.length === 1) {
@@ -294,6 +293,27 @@ export const useProductStore = defineStore('productStore', {
         }
       } else rs.push({ quantity: item.quantity, price: item.price, priceImport: item.priceImport })
       return rs
+    },
+    getValueTypeData(item: IModelProduct, key: string): Array<number> {
+      const rs = [] as Array<number>
+      if (item.types.length == 1) {
+        for (const e in item.typeData) {
+          rs.push(item.typeData[e][key])
+        }
+      } else if (item.types.length == 2) {
+        for (const e in item.typeData) {
+          for (const p in item.typeData[e]) {
+            rs.push(item.typeData[e][p][key])
+          }
+        }
+      } else {
+        rs.push(item[key])
+      }
+      return rs
+    },
+    getValueTypeDataMinMax(item: IModelProduct, key: string) {
+      const rs = this.getValueTypeData(item, key)
+      return [rs.min(), rs.max()]
     },
     // easily reset state using `$reset`
     clear() {

@@ -7,5 +7,7 @@
 			"path": "tm-store-mobile"
 		}
 	],
-  "settings": {}
+  "settings": {
+    "editor.codeActionsOnSave": {}
+  }
 }
