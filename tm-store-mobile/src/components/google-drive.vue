@@ -119,17 +119,20 @@ const onSelectImage = async (args) => {
 }
 </script>
 <template>
-  <div class="flex flex-none p-2 mb-3">
-    <div class="h-6 w-24 items-center justify-center pl-5" @click="isDialogShowFolder = !isDialogShowFolder">
-      <van-icon name="apps-o" class="pr-1" />
-      <span>Drive</span>
+  <div class="fixed right-0 left-0 top-0">
+    <div class="flex flex-none p-2">
+      <div class="h-6 w-24 items-center justify-center pl-5" @click="isDialogShowFolder = !isDialogShowFolder">
+        <van-icon name="apps-o" class="pr-1" />
+        <span>Drive</span>
+      </div>
+      <div class="flex h-6 grow"></div>
+      <div class="flex flex-none h-6 w-12 items-center justify-center">
+        <van-icon name="cross" @click="onClose" />
+      </div>
     </div>
-    <div class="flex h-6 grow"></div>
-    <div class="flex flex-none h-6 w-12 items-center justify-center">
-      <van-icon name="cross" @click="onClose" />
-    </div>
+    <hr class="border-gray-300 dark:border-gray-100">
   </div>
-  <div class="overscroll-none overflow-auto min-h-60 max-h-128">
+  <div class="overscroll-none overflow-auto mt-5 min-h-60" style="height: calc(100vh - 46px);">
     <div v-show="!isDialogShowFolder" id="drive-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4">
       <div v-if="fileList && fileList.files" v-for="(e, i) in fileList.files" :key="i"
         class="relative overflow-hidden aspect-w-16 aspect-h-9">
@@ -140,7 +143,7 @@ const onSelectImage = async (args) => {
 
     </div>
     <tree-view v-show="isDialogShowFolder" color="blue" :items="folders" dense open-all @onClick="onGetClickFolder"
-      class="overscroll-none overflow-auto h-120">
+      class="overscroll-none overflow-auto">
       <template #append="props">
         <van-icon id="edit-folder" name="records-o" @click="onEditFolder(props.item)" />
       </template>

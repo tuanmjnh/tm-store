@@ -11,7 +11,7 @@ declare global {
   interface Number {
     formatFileSize(si: boolean, dp: number): string;
     toThousandFilter(number: number): string;
-    NumberFormat(): string;
+    format(): string;
   }
   interface Array<T> {
     pushIfNotExist<T>(element: any, key: any): void;
@@ -109,7 +109,7 @@ Number.prototype.formatFileSize = function (si = true, dp = 1) {
 Number.prototype.toThousandFilter = function (num) {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
-Number.prototype.NumberFormat = function (language = 'en-US') {
+Number.prototype.format = function (language = 'en-US') {
   return new Intl.NumberFormat(language).format(parseInt(this.toString()))
 }
 

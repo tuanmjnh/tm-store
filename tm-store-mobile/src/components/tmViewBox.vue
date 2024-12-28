@@ -18,6 +18,7 @@ const props = withDefaults(
     multiple?: boolean
     isDelete?: boolean
     isTooltip?: boolean
+    isCenter?: boolean
     thumbnailView?: boolean
     thumbnailSize?: string
     isTrashed?: boolean
@@ -36,6 +37,7 @@ const props = withDefaults(
     multiple: false,
     isDelete: true,
     isTooltip: false,
+    isCenter: false,
     thumbnailView: false,
     thumbnailSize: 'w128',
     isTrashed: false,
@@ -95,15 +97,16 @@ const onHidePreview = () => {
 }
 </script>
 <template>
-  <div v-if="modelValue?.length > 0" class="-m-1 flex flex-wrap md:-m-2 content-center justify-center">
+  <div v-if="modelValue?.length > 0"
+    :class="['-m-1 flex flex-wrap md:-m-2', isCenter ? 'content-center justify-center' : '']">
     <div v-for="(e, i) in modelValue" :key="i" class="flex w-1/2 flex-wrap">
       <div class="relative w-full p-1 md:p-2">
         <template v-if="selected != undefined">
           <img v-if="e.src || e.thumbnailLink" :alt="e.alt || e.name" @click="onToggleSelect(e)"
-            :class="['block w-full object-cover object-center border-2 border-solid', rounded, height,
-              selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']" :src="e.src" />
+            :class="['block h-full w-full object-cover object-center border-2 border-solid', rounded, height,
+              selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']" :src="e.src || e.thumbnailLink" />
           <img v-else="e.alt || ''" @click="onToggleSelect(e)"
-            :class="['block w-full object-cover object-center border-2 border-solid dark:border-slate-700 border-slate-800/30', rounded, height,
+            :class="['block h-full w-full object-cover object-center border-2 border-solid dark:border-slate-700 border-slate-800/30', rounded, height,
               selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']"
             :src="imageError" />
           <div @click="onClick(e, i)"
@@ -117,10 +120,10 @@ const onHidePreview = () => {
         </template>
         <template v-else>
           <img v-if="e.src || e.thumbnailLink" :alt="e.alt || e.name" @click="onClick(e, i)"
-            :class="['block w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
+            :class="['block h-full w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
             :src="e.src || e.thumbnailLink" />
           <img v-else="e.alt ||e.name" @click="onClick(e, i)"
-            :class="['block w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
+            :class="['block h-full w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
             :src="imageError" />
         </template>
         <div v-if="isTrashed" @click="onDelete(e, i)"

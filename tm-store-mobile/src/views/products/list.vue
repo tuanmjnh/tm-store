@@ -91,7 +91,7 @@ const onGetRoles = (item) => {
             <van-tag type="primary">{{ item.code }}</van-tag>
           </template>
           <template #value>
-            <div class="text-blue-600 dark:text-white">{{ item.price.NumberFormat() }}</div>
+            <div class="text-blue-600 dark:text-white">{{ item.price.format() }}</div>
             <!-- <van-tag type="primary">{{ item.code }}</van-tag> -->
           </template>
         </van-cell>

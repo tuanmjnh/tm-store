@@ -204,7 +204,7 @@ const onSelectDriveImage = (arg) => {
             :src="images && images.length ? images[0]?.thumbnail : ''" @click="onPreview" />
         </div> -->
         <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
-          <tm-view-box v-model="form.avatar" border="" :isPreview="false" @onClick="onSelectAvatar" />
+          <tm-view-box v-model="form.avatar" border="" :isPreview="false" is-center @onClick="onSelectAvatar" />
           <!-- <tm-view-list v-model="images" v-model:selected="imagesSelected" multiple :is-trashed="true"
             @onDelete="onDeleteIamge" /> -->
         </div>
