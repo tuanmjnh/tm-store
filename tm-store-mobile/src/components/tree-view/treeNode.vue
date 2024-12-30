@@ -32,9 +32,7 @@ const props = withDefaults(
 const { emit: emitNodeOpen } = useEventBus<any>(`open-node-${props.identifier}`)
 const { emit: emitNodeSelected } = useEventBus<AppTypes.TreeViewNodeItem>(`select-node-${props.identifier}`)
 const { emit: emitNodeClicked } = useEventBus<AppTypes.TreeViewNodeItem>(`click-node-${props.identifier}`)
-const classes = computed(() => ({
-  'treeview-node--leaf': !hasChildren.value
-}))
+const classes = computed(() => ({ 'treeview-node--leaf': !hasChildren.value }))
 
 const isOpen = computed(() => openedNodes?.has(props.item[props.idKey]))
 

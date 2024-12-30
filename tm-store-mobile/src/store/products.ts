@@ -95,7 +95,9 @@ export const useProductStore = defineStore('productStore', {
     },
     async getItems(arg?: any): Promise<IResponseList> {
       try {
-        const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}`, { params: arg })
+        const params = { ...{}, ...arg }
+        if (params.groups && params.groups.length) params.groups = JSON.stringify(params.groups)
+        const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}`, { params: params })
         this.items = rs.data
         this.rowsNumber = rs.rowsNumber
         return rs

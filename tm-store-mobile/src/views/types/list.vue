@@ -42,7 +42,7 @@ const onFetch = async () => {
   isLoading.value = false
 
   //Load all row Finished
-  if (items.value.length >= rowsNumber) isFinished.value = true
+  if (items.value.length >= rowsNumber || !data.length) isFinished.value = true
 }
 const onFirstFetch = () => {
   if (typeStore.items && typeStore.items.length) {

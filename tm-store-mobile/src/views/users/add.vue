@@ -231,17 +231,10 @@ const onSelectDriveImage = (arg) => {
       :min-date="appStore.minDate()" :max-date="appStore.maxDate()" :cancel-button-text="$t('global.cancel')"
       @cancel="showDatePicker = false" @confirm="onConfirmDatePicker" />
   </van-popup>
-  <van-dialog v-model:show="isDialogDrive" title="Drive" :show-cancel-button="false" :showConfirmButton="false"
-    close-on-click-action>
-    <template #title>
-      <!-- <div class="flex">
-        <div class="flex flex-none h-6 w-12 items-center justify-center pl-5">Drive</div>
-        <div class="flex h-6 grow"></div>
-        <div class="flex flex-none h-6 w-12 items-center justify-center">
-          <van-icon name="cross" @click="isDialogDrive = false" />
-        </div>
-      </div> -->
-    </template>
-    <google-drive @on-close="isDialogDrive = false" @on-select="onSelectDriveImage" />
+  <van-dialog v-model:show="isDialogDrive" title="Drive" class="full-screen" :show-cancel-button="false"
+    :showConfirmButton="false" close-on-click-action>
+    <template #title></template>
+    <google-drive @on-close="isDialogDrive = false" parent="1eXXHIUPOtZznomHe4Pwm5XPlH9drLXTZ"
+      @on-select="onSelectDriveImage" />
   </van-dialog>
 </template>

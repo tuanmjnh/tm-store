@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import 'utils/prototypes';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
@@ -63,6 +64,11 @@ export class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    // bodyParser
+    // app.use(bodyParser.json())
+    // app.use(bodyParser.urlencoded({ extended: true }))
+    this.app.use(bodyParser.json({ limit: '50mb' }))
+    this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
     // this.app.use(APIMiddleware);
   }
 

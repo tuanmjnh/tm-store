@@ -3,28 +3,11 @@ import { GoogleDrive, IGoogleFile } from '@/services/google/drive-gapi'
 import { lazyLoadImage } from '@/utils/images'
 import delay from 'delay'
 import treeView from './tree-view/index.vue'
-
-const GDrive = new GoogleDrive()
-const tab = ref('folders')
-const selectedItem = ref({ item: null, index: -1 })
-const folders = ref([])
-const fileList = ref<gapi.client.drive.FileList>()
-const isLoading = ref(false)
-const isDialogShowFolder = ref(false)
-const isDialogEditFolder = ref(false)
-const emit = defineEmits<{
-  (e: 'onSelect', image: any): void
-  (e: 'onPreview', image: any): void
-  (e: 'onDelete', image: any): void
-  (e: 'onDeleted', image: any): void
-  (e: 'onClose'): void
-  (e: 'update:selected', values: any[]): void
-  (e: 'update:modelValue', values: any[]): void
-}>() //defineEmits(['onSelect', 'onPreview', 'onDelete'])
 const props = withDefaults(
   defineProps<{
     modelValue?: Array<any>
     selected?: Array<any>
+    parent?: string
     imageError?: string
     height?: string
     rounded?: string
@@ -45,6 +28,7 @@ const props = withDefaults(
   {
     modelValue: null,
     selected: undefined,
+    parent: '1DFDqKNAf2pCR_PFu3iS1gtMyGRWgf8jV',
     imageError: '/src/assets/svg/image.svg',
     height: 'h-28',
     rounded: 'rounded-lg',
@@ -63,6 +47,24 @@ const props = withDefaults(
     lblCancel: 'Cancel'
   }
 )
+const emit = defineEmits<{
+  (e: 'onSelect', image: any): void
+  (e: 'onPreview', image: any): void
+  (e: 'onDelete', image: any): void
+  (e: 'onDeleted', image: any): void
+  (e: 'onClose'): void
+  (e: 'update:selected', values: any[]): void
+  (e: 'update:modelValue', values: any[]): void
+}>() //defineEmits(['onSelect', 'onPreview', 'onDelete'])
+
+const tab = ref('folders')
+const selectedItem = ref({ item: null, index: -1 })
+const folders = ref([])
+const fileList = ref<gapi.client.drive.FileList>()
+const isLoading = ref(false)
+const isDialogShowFolder = ref(false)
+const isDialogEditFolder = ref(false)
+const GDrive = new GoogleDrive({ root: props.parent })
 
 const onChangeTab = async (arg) => {
   if (arg == 'files') lazyLoadImage() //lazyLoad(fileList.value.files, 'thumbnailLink')
@@ -133,14 +135,16 @@ const onSelectImage = async (args) => {
     <hr class="border-gray-300 dark:border-gray-100">
   </div>
   <div class="overscroll-none overflow-auto mt-5 min-h-60" style="height: calc(100vh - 46px);">
-    <div v-show="!isDialogShowFolder" id="drive-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div v-show="!isDialogShowFolder" id="drive-gallery" class="m-1 flex flex-wrap md:-m-2 mb-10">
       <div v-if="fileList && fileList.files" v-for="(e, i) in fileList.files" :key="i"
-        class="relative overflow-hidden aspect-w-16 aspect-h-9">
-        <div class="absolute inset-0 bg-neutral-200 animate-pulse w-full h-full min-h-24"></div>
-        <img class="lazy-image w-full h-auto object-cover transition-opacity duration-300 opacity-0 rounded-lg"
-          :data-src="e.thumbnailLink" @click="onSelectImage(e)">
+        class="flex w-1/2 min-h-48 flex-wrap">
+        <div class="relative w-full h-48 p-1 md:p-2">
+          <div class="absolute inset-0 bg-neutral-200 animate-pulse w-full h-full min-h-24"></div>
+          <img class="lazy-image h-full w-full object-cover transition-opacity duration-300 opacity-0 rounded-lg"
+            :data-src="e.thumbnailLink" src="/src/assets/svg/image.svg" onerror="this.src='/src/assets/svg/image.svg'"
+            @click="onSelectImage(e)">
+        </div>
       </div>
-
     </div>
     <tree-view v-show="isDialogShowFolder" color="blue" :items="folders" dense open-all @onClick="onGetClickFolder"
       class="overscroll-none overflow-auto">
@@ -150,7 +154,7 @@ const onSelectImage = async (args) => {
     </tree-view>
   </div>
   <div v-if="isLoading"
-    class="absolute items-center block max-w-sm p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800/80 dark:border-gray-800 dark:hover:bg-gray-700 top-0 left-0 h-full w-full z-10">
+    class="absolute items-center block p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800/80 dark:border-gray-800 dark:hover:bg-gray-700 top-0 left-0 h-full w-full z-10">
     <div role="status" class="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
       <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
         viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

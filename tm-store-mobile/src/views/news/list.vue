@@ -36,7 +36,7 @@ const onFetch = async () => {
   filter.value.page++
   isLoading.value = false
   //Load all row Finished
-  if (items.value.length >= rowsNumber) isFinished.value = true
+  if (items.value.length >= rowsNumber || !data.length) isFinished.value = true
 }
 
 const onRefresh = async () => {

@@ -21,7 +21,8 @@ interface IAgrument {
 }
 
 export class GoogleDrive {
-  constructor() {
+  constructor(args?: any) {
+    this.DEFAULTS.FOLDER_ROOT = args.root
     this.initialize()
   }
   public googleConnect = get('connectsStore.google')
@@ -34,6 +35,7 @@ export class GoogleDrive {
     FIELDS_FILE: 'id,name,mimeType,size,parents,imageMediaMetadata,webViewLink,webContentLink,thumbnailLink'
   }
   private initialize() {
+    console.log(this.DEFAULTS.FOLDER_ROOT)
     return (async () => {
       window.gapi.load('client', {
         callback: async (e) => {
@@ -248,15 +250,45 @@ export class GoogleDrive {
       return null
     }
   }
-  public UploadFile = async (args?: IAgrument) => {
+  public UploadFile = async (file: File, args?: IAgrument): Promise<IGoogleFile> => {
     try {
+      if (!file) throw new Error('noExist')
       if (!args) args = {}
       args.trashed = args.trashed || false
       const isReady = await this.CheckClient()
       if (!isReady) throw new Error('Error Client')
-      const opts = {
-
+      const metadata = {
+        name: file.name,
+        mimeType: file.type,
+        parents: args.parents ? [args.parents] : [this.DEFAULTS.FOLDER_ROOT],//['1UKxDg8Z3eR4ra4ohrs2Jp3aHMVF6yCAk']
+        fields: args.fields || this.DEFAULTS.FIELDS_FILE
       }
+      const formData = new FormData()
+      formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }))
+      formData.append('file', file)
+      const response = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${args.fields || this.DEFAULTS.FIELDS_FILE}`, {
+        method: 'POST',
+        headers: new Headers({ Authorization: `Bearer ${gapi.auth.getToken().access_token}` }),
+        body: formData
+      })//.then((res) => res.json()).then((data) => {
+      //  console.log('File uploaded successfully:', data)
+      // }).catch((error) => {
+      //  console.error('Error uploading file:', error)
+      //})
+      const rs = await response.json()
+      return rs
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  public UploadFiles = async (files: Array<any>, args?: IAgrument): Promise<IGoogleFile[]> => {
+    try {
+      const rs: IGoogleFile[] = []
+      for (const f of files) {
+        const gFile = await this.UploadFile(f, args)
+        rs.push(gFile)
+      }
+      return rs
     } catch (error) {
       console.log(error)
     }

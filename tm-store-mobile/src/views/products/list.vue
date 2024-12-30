@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import tabBarView from "@/components/tabBarView.vue"
+import componentGroup from "@/views/groups/groups.vue"
 import router from '@/router'
 import delay from 'delay'
 import { $t } from '@/i18n'
-import { useProductStore } from '@/store'
+import { useGroupStore, useProductStore } from '@/store'
+const groupStore = useGroupStore()
 const productStore = useProductStore()
+
 const filter = ref({
   text: '',
+  groups: [],
   flag: 1,
   page: 1,
   rowsPerPage: 15
@@ -22,6 +26,10 @@ const isFinished = ref(false)
 const isRefresh = ref(false)
 const isShowFilter = ref(false)
 const isShowDelete = ref(false)
+const isDialogGroup = ref(false)
+onMounted(() => {
+  // groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
+})
 const onFetch = async () => {
   //Check pull refresh
   await delay(600)
@@ -36,7 +44,7 @@ const onFetch = async () => {
   filter.value.page++
   isLoading.value = false
   //Load all row Finished
-  if (items.value.length >= rowsNumber) isFinished.value = true
+  if (items.value.length >= rowsNumber || !data.length) isFinished.value = true
 }
 
 const onRefresh = async () => {
@@ -47,6 +55,13 @@ const onRefresh = async () => {
 const onFilterFetch = async () => {
   isRefresh.value = true
   isShowFilter.value = false
+  await onFetch()
+}
+const onFilterChangeGroup = async () => {
+  isRefresh.value = true
+  isShowFilter.value = false
+  isDialogGroup.value = false
+  console.log(filter.value)
   await onFetch()
 }
 const onAdd = async () => {
@@ -113,6 +128,9 @@ const onGetRoles = (item) => {
 
   <van-popup v-model:show="isShowFilter" position="bottom" :style="{ height: '30%' }">
     <van-search v-model="filter.text" :placeholder="$t('global.search')" />
+    <van-cell title="Cell title" is-link @click="isDialogGroup = true">
+      <template #title>Nhóm</template>
+    </van-cell>
     <van-cell-group>
       <van-cell :title="$t('global.status')">
         <template #value>
@@ -129,4 +147,10 @@ const onGetRoles = (item) => {
     @select="onConfirmFlag">
     <!-- <van-cell :title="$t('global.accept')" /> -->
   </van-action-sheet>
+  <van-dialog v-model:show="isDialogGroup" :title="$t('group.titleproduct')" :show-cancel-button="false"
+    :show-confirm-button="false">
+    <componentGroup :flag="1" text="" type="product" :root="false" selectionMode="leaf" v-model:selected="filter.groups"
+      :lbl-submit="$t('global.confirm')" :lbl-cancel="$t('global.back')" is-bot @on-submit="onFilterChangeGroup"
+      @on-cancel="isDialogGroup = false" />
+  </van-dialog>
 </template>

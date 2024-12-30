@@ -65,6 +65,7 @@ const toggleNode = (id: any) => {
 };
 
 const nodeSelected = (item: AppTypes.TreeViewNodeItem) => {
+  console.log(state.selectedNodes)
   if (!!item.children && !!item.children.length) {
     if (
       state.selectedNodes.has(item[props.idKey]) &&
@@ -105,9 +106,7 @@ provide("selected-nodes", state.selectedNodes);
 provide("opened-nodes", state.openedNodes);
 provide("click-node", state.clickNode);
 
-const classes = computed(() => ({
-  "treeview--dense": props.dense
-}));
+const classes = computed(() => ({ "treeview--dense": props.dense }));
 
 const onOpenNodes = () => {
   if (props.openAll === true) {

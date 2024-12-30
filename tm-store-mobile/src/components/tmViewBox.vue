@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { lazyLoadImage } from '@/utils/images'
 const emit = defineEmits<{
   (e: 'onSelect', value: any): any
   (e: 'onClick', value: any): any
@@ -46,6 +47,12 @@ const props = withDefaults(
     lblOk: 'Confirm',
     lblCancel: 'Cancel'
   })
+
+onMounted(() => { lazyLoadImage('tm-view-box-gallery') })
+watch(() => props.modelValue, n => {
+  lazyLoadImage('tm-view-box-gallery')
+}, { immediate: true, deep: true })
+
 const isDialogPreview = ref(false)
 const isDialogDelete = ref(false)
 const selectedItem = ref({ item: null, index: -1 })
@@ -97,18 +104,19 @@ const onHidePreview = () => {
 }
 </script>
 <template>
-  <div v-if="modelValue?.length > 0"
+  <div id="tm-view-box-gallery" v-if="modelValue?.length > 0"
     :class="['-m-1 flex flex-wrap md:-m-2', isCenter ? 'content-center justify-center' : '']">
-    <div v-for="(e, i) in modelValue" :key="i" class="flex w-1/2 flex-wrap">
-      <div class="relative w-full p-1 md:p-2">
+    <div v-for="(e, i) in modelValue" :key="i" class="flex w-1/2 min-h-48 flex-wrap">
+      <div class="relative w-full h-48 p-1 md:p-2">
         <template v-if="selected != undefined">
           <img v-if="e.src || e.thumbnailLink" :alt="e.alt || e.name" @click="onToggleSelect(e)"
-            :class="['block h-full w-full object-cover object-center border-2 border-solid', rounded, height,
-              selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']" :src="e.src || e.thumbnailLink" />
-          <img v-else="e.alt || ''" @click="onToggleSelect(e)"
-            :class="['block h-full w-full object-cover object-center border-2 border-solid dark:border-slate-700 border-slate-800/30', rounded, height,
+            :class="['lazy-image block h-full w-full object-cover object-center border-2 border-solid', rounded, height,
+              selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']" :data-src="e.src || e.thumbnailLink"
+            onerror="this.src='/src/assets/svg/image.svg'" src="/src/assets/svg/image.svg" />
+          <img v-else=" e.alt || ''" @click=" onToggleSelect(e)"
+            :class="['lazy-image block h-full w-full object-cover object-center border-2 border-solid dark:border-slate-700 border-slate-800/30', rounded, height,
               selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']"
-            :src="imageError" />
+            :data-src="imageError" src="/src/assets/svg/image.svg" />
           <div @click="onClick(e, i)"
             :class="['absolute top-1 right-7 bg-sky-600/50 hover:bg-sky-700/50 rounded-tl-none rounded-tr-none rounded-br-none', rounded]">
             <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -120,11 +128,12 @@ const onHidePreview = () => {
         </template>
         <template v-else>
           <img v-if="e.src || e.thumbnailLink" :alt="e.alt || e.name" @click="onClick(e, i)"
-            :class="['block h-full w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
-            :src="e.src || e.thumbnailLink" />
+            :class="['lazy-image block h-full w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
+            :data-src="e.src || e.thumbnailLink" src="/src/assets/svg/image.svg"
+            onerror="this.src='/src/assets/svg/image.svg'" />
           <img v-else="e.alt ||e.name" @click="onClick(e, i)"
-            :class="['block h-full w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
-            :src="imageError" />
+            :class="['lazy-image block h-full w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
+            :data-src="imageError" src="/src/assets/svg/image.svg" />
         </template>
         <div v-if="isTrashed" @click="onDelete(e, i)"
           :class="['absolute top-1 right-1 bg-red-600/50 hover:bg-red-700/50 rounded-tl-none rounded-bl-none rounded-br-none', rounded]">
@@ -144,8 +153,8 @@ const onHidePreview = () => {
       <div class="flex min-h-full items-center justify-center p-1 text-center">
         <div
           class="h-full w-full max-w-md transform overflow-hidden rounded-2xltext-left align-middle shadow-xl transition-all">
-          <img v-if="selectedItem.item" :src="selectedItem.item.src"
-            class="block h-full w-full object-cover object-center border-2 border-solid" />
+          <img v-if="selectedItem.item" :src="selectedItem.item.src || selectedItem.item.thumbnailLink"
+            class="lazy-image block h-full w-full object-cover object-center border-2 border-solid" />
         </div>
       </div>
     </div>
@@ -153,17 +162,5 @@ const onHidePreview = () => {
 
   <van-dialog v-model:show="isDialogDelete" :title="titleDelete" show-cancel-button :cancelButtonText="lblCancel"
     :confirmButtonText="lblOk" @close="onCancelDelete" @confirm="onConfirmDelete">
-    <!-- <div class="mt-4 flex justify-end">
-      <button type="button"
-        class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 mr-3"
-        @click="onConfirmDelete">
-        {{ lblOk }}
-      </button>
-      <button type="button"
-        class="inline-flex rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900"
-        @click="onCancelDelete">
-        {{ lblCancel }}
-      </button>
-    </div> -->
   </van-dialog>
 </template>

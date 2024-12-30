@@ -2,12 +2,11 @@
 import { useAppStore, useTypeStore, useGroupStore, useProductStore } from '@/store'
 import { historyBack } from '@/router'
 import { $t } from '@/i18n'
-import { showImagePreview } from 'vant'
 import { showNotify } from 'vant'
 import { MdEditor } from 'md-editor-v3'
 import componentGroup from "@/views/groups/groups.vue"
+import googleDriveUpload from "@/components/google-drive-upload.vue"
 const googleDrive = defineAsyncComponent(() => import('@/components/google-drive.vue'))
-const tmViewList = defineAsyncComponent(() => import('@/components/tmViewList.vue'))
 const componentTypes = defineAsyncComponent(() => import('./types.vue'))
 
 const route = useRoute()
@@ -20,7 +19,10 @@ const isDialogGroup = ref(false)
 const isDialogUnits = ref(false)
 const isDialogTypes = ref(false)
 const isDialogDrive = ref(false)
+const isDialogUpload = ref(false)
+const fileUploadList = ref([])
 const typeView = ref(0)
+const mediaView = ref(0)
 const units = ref(typeStore.all.filter(x => x.flag == 1 && x.key == 'unit').sort((a, b) => a.order - b.order))
 const unit = ref(null)
 const groups = ref([])
@@ -56,22 +58,22 @@ const onChangeUnit = (val) => {
   unit.value = val
   form.value.unit = unit.value ? unit.value.code : null
 }
-const onSelectImages = (val) => {
-  // console.log(val)
-  isDialogDrive.value = true
-}
-const onDeleteIamge = (img) => {
-  // console.log(img)
-  // console.log(imagesSelected.value)
-}
 const onSelectDriveImage = (arg) => {
-  console.log(arg)
   isDialogDrive.value = false
-  form.value.images.push(arg)
+  if (arg) {
+    if (!form.value.images || !form.value.images.length) form.value.images = [arg]
+    else form.value.images.push(arg)
+  }
 }
 const onEditType = (arg) => {
   isDialogTypes.value = true
   typeView.value = arg
+}
+const onFileUploaded = (args) => {
+  if (args && args.length) {
+    form.value.images = !form.value.images || !form.value.images.length ? args : form.value.images.concat(args)
+    isDialogUpload.value = false
+  }
 }
 const onSubmit = async () => {
   try {
@@ -128,7 +130,8 @@ const onSubmit = async () => {
             @click="onEditType(1)">
             <template #input>
               {{
-                form.typeData ? productStore.getValueTypeDataMinMax(form, 'price', ' - ', true) : $t('global.updating')
+                form.types && form.types.length ? productStore.getValueTypeDataMinMax(form, 'price', ' - ', true) :
+                  form.price
               }}
             </template>
           </van-field>
@@ -136,7 +139,8 @@ const onSubmit = async () => {
             @click="onEditType(1)">
             <template #input>
               {{
-                form.typeData ? productStore.getValueTypeDataMinMax(form, 'quantity', ' - ', true) : $t('global.updating')
+                form.types && form.types.length ? productStore.getValueTypeDataMinMax(form, 'quantity', ' - ', true) :
+                  form.quantity
               }}
             </template>
           </van-field>
@@ -169,18 +173,34 @@ const onSubmit = async () => {
           </van-cell>
         </van-cell-group>
       </van-tab> -->
-      <van-tab :title="$t('tabs.mediaInf')" name="mediaInf">
-        <div class="flex justify-end">
-          <div class="pr-3" @click="isDialogDrive = true">
+      <van-tab title="Media" name="mediaInf">
+        <div class="flex justify-end p-3 pr-5">
+          <div class="pl-3" @click="isDialogUpload = true">
             <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 48 48">
+              <g fill="none">
+                <path fill="currentColor"
+                  d="M44 24a2 2 0 1 0-4 0zM24 8a2 2 0 1 0 0-4zm15 32H9v4h30zM8 39V9H4v30zm32-15v15h4V24zM9 8h15V4H9zm0 32a1 1 0 0 1-1-1H4a5 5 0 0 0 5 5zm30 4a5 5 0 0 0 5-5h-4a1 1 0 0 1-1 1zM8 9a1 1 0 0 1 1-1V4a5 5 0 0 0-5 5z" />
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
+                  d="m6 35l10.693-9.802a2 2 0 0 1 2.653-.044L32 36m-4-5l4.773-4.773a2 2 0 0 1 2.615-.186L42 31m-5-13V6m-5 5l5-5l5 5" />
+              </g>
+            </svg>
+          </div>
+          <div class="pl-3" @click="isDialogDrive = true">
+            <!-- <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 48 48">
               <g fill="none" stroke="currentColor" stroke-width="4">
                 <path stroke-linejoin="round"
                   d="M5 8a2 2 0 0 1 2-2h12l5 6h17a2 2 0 0 1 2 2v26a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" />
                 <path stroke-linecap="round" d="M18 27h12m-6-6v12" />
               </g>
+            </svg> -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 48 48">
+              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+                <path d="M4 9v32l5-20h30.5v-6a2 2 0 0 0-2-2H24l-5-6H6a2 2 0 0 0-2 2" />
+                <path d="m40 41l4-20H8.813L4 41z" />
+              </g>
             </svg>
           </div>
-          <div class="pr-3">
+          <div class="pl-3" @click="mediaView = 0">
             <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 48 48">
               <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
                 <rect width="38" height="38" x="5" y="5" rx="2" />
@@ -188,7 +208,7 @@ const onSubmit = async () => {
               </g>
             </svg>
           </div>
-          <div class="pr-3">
+          <div class="pl-3" @click="mediaView = 1">
             <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 48 48">
               <g fill="none">
                 <rect width="32" height="40" x="8" y="4" stroke="currentColor" stroke-linejoin="round" stroke-width="4"
@@ -203,10 +223,12 @@ const onSubmit = async () => {
           </div>
         </div>
         <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
-          <tm-view-box v-model="form.images" border="" v-model:selected="imagesSelected" is-preview multiple is-delete
-            is-trashed />
-          <!-- <tm-view-list v-model="images" v-model:selected="imagesSelected" multiple :is-trashed="true"
-            @onDelete="onDeleteIamge" /> -->
+          <tm-view-box v-if="mediaView == 0" v-model="form.images" border="" v-model:selected="imagesSelected"
+            is-preview multiple is-delete is-trashed :title-delete="$t('messageBox.delete')"
+            :lbl-ok="$t('messageBox.confirm')" :lbl-cancel="$t('global.back')" />
+          <tm-view-list v-else v-model="form.images" v-model:selected="imagesSelected" multiple is-preview is-delete
+            is-trashed :title-delete="$t('messageBox.delete')" :lbl-ok="$t('messageBox.confirm')"
+            :lbl-cancel="$t('global.back')" />
         </div>
       </van-tab>
       <van-tab :title="$t('global.attributes')" name="attributes">
@@ -250,12 +272,6 @@ const onSubmit = async () => {
       <van-cell v-for="(e, i) in units" :title="e.name" :value="e.code" is-link @click="onChangeUnit(e)" />
     </div>
   </van-dialog>
-  <van-dialog v-model:show="isDialogDrive" title="Drive" class="full-screen" :show-cancel-button="false"
-    :show-confirm-button="false" close-on-click-action>
-    <template #title>
-    </template>
-    <google-drive @on-close="isDialogDrive = false" multiple @on-select="onSelectDriveImage" />
-  </van-dialog>
   <van-dialog v-model:show="isDialogTypes" :title="$t('global.unit')" class="full-screen footer" close-on-click-overlay
     :show-confirm-button="false" :show-cancel-button="false">
     <template #title></template>
@@ -263,4 +279,34 @@ const onSubmit = async () => {
       @on-close="isDialogTypes = false" @on-update="isDialogTypes = false" />
     <template #footer></template>
   </van-dialog>
+  <van-dialog v-model:show="isDialogDrive" title="Drive" class="full-screen" :show-cancel-button="false"
+    :show-confirm-button="false" close-on-click-action>
+    <template #title></template>
+    <google-drive @on-close="isDialogDrive = false" multiple parent="1A4_7e1ElUPhwbHrKm12I7VU_9CwnChHV"
+      @on-select="onSelectDriveImage" />
+  </van-dialog>
+  <van-dialog v-model:show="isDialogUpload" title="Upload" close-on-click-overlay :show-cancel-button="false"
+    :show-confirm-button="false" @close="fileUploadList = []">
+    <template #title>{{ $t('files.upload') }}</template>
+    <!-- <van-uploader multiple :after-read="onAfterReadFileUpload">
+      <template #preview-cover="{ file }">
+        <div class="preview-cover van-ellipsis">{{ file.name }}</div>
+      </template>
+    </van-uploader> -->
+    <google-drive-upload v-model="fileUploadList" multiple parent="1A4_7e1ElUPhwbHrKm12I7VU_9CwnChHV"
+      @on-uploaded="onFileUploaded" />
+  </van-dialog>
 </template>
+<style>
+.preview-cover {
+  position: absolute;
+  bottom: 0;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 4px;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+}
+</style>

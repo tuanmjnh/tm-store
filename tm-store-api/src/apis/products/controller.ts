@@ -22,8 +22,11 @@ export class ProductController {
       if (queries.filter) conditions.$and.push({ $text: { $search: queries.filter } })
       if (!queries.sortBy) queries.sortBy = 'order'
       rs.rowsNumber = (await MProduct.countDocuments(conditions))
-
-      if (queries.group) conditions.$and.push({ group: { $in: [queries.group] } })
+      if (queries.groups && queries.groups.length) {
+        queries.groups = JSON.parse(queries.groups as any)
+        console.log(queries.groups)
+        if (queries.groups) conditions.$and.push({ groups: { $in: queries.groups } })
+      }
       if (queries.quantity !== undefined) conditions.$and.push({ quantity: { $gt: parseInt(queries.quantity) } })
 
       rs.data = await this.product.FindAll(conditions)

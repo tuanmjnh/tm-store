@@ -7,9 +7,10 @@ const $route = useRoute()
 const groupStore = useGroupStore()
 
 const emit = defineEmits<{
-  (e: 'onSelect', image: any): any
-  (e: 'onSubmit', selected: any): any
-  (e: 'onCancel'): any
+  (e: 'onSelect', value: any): any
+  (e: 'onSubmit', value: any): any
+  (e: 'onCancel', value?: any): any,
+  (e: 'update:selected', value): any
 }>()
 const props = withDefaults(
   defineProps<{
@@ -19,6 +20,7 @@ const props = withDefaults(
     selected?: Array<any> | undefined,
     root?: boolean,
     isBot?: boolean,
+    selectionMode?: AppTypes.TreeViewSelectionMode,
     lblSubmit?: string,
     lblCancel?: string
   }>(),
@@ -29,6 +31,7 @@ const props = withDefaults(
     selected: null,
     root: true,
     isBot: false,
+    selectionMode: 'leaf',
     lblSubmit: 'Submit',
     lblCancel: 'Cancel'
   })
@@ -43,6 +46,7 @@ const onSelect = async (arg) => {
   emit('onSelect', arg)
 }
 const onSubmit = async (arg) => {
+  emit('update:selected', treeSelected.value)
   emit('onSubmit', treeSelected.value)
 }
 const onCancel = async (arg) => {
@@ -52,7 +56,7 @@ const onCancel = async (arg) => {
 <template>
   <div class="overscroll-none overflow-auto h-96">
     <tree-view v-model="treeSelected" :items="items" id-key="_id" name-key="title" dense open-all
-      :selectable="selected ? true : false" color="blue" @on-click="onSelect">
+      :selectable="selected ? true : false" :selection-mode="selectionMode" color="blue" @on-click="onSelect">
       <!-- <template #append="props">
         <van-icon id="edit-folder" name="records-o" @click="onSelect(props.item)" />
       </template> -->
