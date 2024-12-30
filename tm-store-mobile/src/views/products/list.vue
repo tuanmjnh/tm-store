@@ -100,14 +100,23 @@ const onGetRoles = (item) => {
         </template>
         <van-cell :title="item.title" :value="onGetRoles(item.userRoles)" :label="item.fullName">
           <template #title>
-            <span class="mr-2 truncate">{{ item.title }}</span>
+            <span class="mr-2 block overflow-hidden truncate w-52">{{ item.title }}</span>
           </template>
           <template #label>
             <van-tag type="primary">{{ item.code }}</van-tag>
           </template>
           <template #value>
-            <div class="text-blue-600 dark:text-white">{{ item.price.format() }}</div>
-            <!-- <van-tag type="primary">{{ item.code }}</van-tag> -->
+            <div class="grid grid-flow-row">
+              <!-- <div class="text-blue-600 dark:text-white">{{ productStore.getValueType(item, 'price', ' - ', true) }}</div> -->
+              <div>
+                <span v-for="(p, pi) in productStore.getValueType(item, 'price', null, true)">
+                  <b class="text-sky-600">{{ p }}</b>{{ pi < 1 ? ' - ' : '' }} </span>
+              </div>
+              <div>
+                <span v-for="(p, pi) in productStore.getValueType(item, 'quantity', null, true)">
+                  <b class="text-green-700">{{ p }}</b>{{ pi < 1 ? ' - ' : '' }} </span>
+              </div>
+            </div>
           </template>
         </van-cell>
         <template #right>
@@ -149,8 +158,8 @@ const onGetRoles = (item) => {
   </van-action-sheet>
   <van-dialog v-model:show="isDialogGroup" :title="$t('group.titleproduct')" :show-cancel-button="false"
     :show-confirm-button="false">
-    <componentGroup :flag="1" text="" type="product" :root="false" selectionMode="leaf" v-model:selected="filter.groups"
-      :lbl-submit="$t('global.confirm')" :lbl-cancel="$t('global.back')" is-bot @on-submit="onFilterChangeGroup"
-      @on-cancel="isDialogGroup = false" />
+    <componentGroup :flag="1" text="" type="product" :root="false" selectionMode="independent"
+      v-model:selected="filter.groups" :lbl-submit="$t('global.confirm')" :lbl-cancel="$t('global.back')" is-bot
+      @on-submit="onFilterChangeGroup" @on-cancel="isDialogGroup = false" />
   </van-dialog>
 </template>

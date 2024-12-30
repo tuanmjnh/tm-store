@@ -1,5 +1,5 @@
 import { model, Schema, Document, Types } from 'mongoose'
-import { ICreated, IMeta } from '@interfaces/common'
+import { ICreated, IMeta } from '../../interfaces/common'
 
 export interface IType {
   _id?: Types.ObjectId

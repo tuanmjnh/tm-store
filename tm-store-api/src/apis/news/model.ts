@@ -1,5 +1,5 @@
 import { model, Schema, Document, Types } from 'mongoose'
-import { ICreated, IMeta, IFileAttach } from '@interfaces/common'
+import { ICreated, IMeta, IFileAttach } from '../../interfaces/common'
 
 export interface INews {
   _id?: Types.ObjectId

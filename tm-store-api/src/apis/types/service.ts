@@ -1,5 +1,5 @@
 import { Service } from 'typedi'
-import { HttpException } from '@exceptions/http.exception'
+import { HttpException } from '../../exceptions/http.exception'
 import { MType, IType } from './model'
 import { Aggregate, ClientSession, Types } from 'mongoose'
 

@@ -14,6 +14,7 @@ const props = withDefaults(
     level: number
     item: AppTypes.TreeViewNodeItem
     selectable?: boolean
+    selectionMode?: AppTypes.TreeViewSelectionMode
     radio?: boolean
     disabled?: boolean
     unopenable?: boolean
@@ -25,7 +26,8 @@ const props = withDefaults(
   }>(),
   {
     idKey: 'id',
-    nameKey: 'name'
+    nameKey: 'name',
+    selectionMode: 'leaf',
   }
 )
 
@@ -45,7 +47,7 @@ const allChildrenSelected = computed(() => checkChildSelectStatus(selectedNodes!
 const atLeastOneChildSelected = computed(() => checkChildSelectStatus(selectedNodes!, props.item, props.idKey, 'atLeastOne'))
 
 const isChecked = computed(() => {
-  if (hasChildren.value) {
+  if (hasChildren.value && props.selectionMode == 'leaf') {
     if (allChildrenSelected.value) return true
     if (atLeastOneChildSelected.value) return false
     return false
@@ -54,7 +56,7 @@ const isChecked = computed(() => {
 })
 
 const isIndeterminate = computed(() => {
-  if (hasChildren.value) {
+  if (hasChildren.value && props.selectionMode == 'leaf') {
     if (allChildrenSelected.value) return false
     if (atLeastOneChildSelected.value) return true
   }
@@ -68,7 +70,7 @@ const isIndeterminate = computed(() => {
 
 const childNodeChanged = () => {
   const id = props.item[props.idKey]
-  if (hasChildren.value) {
+  if (hasChildren.value && props.selectionMode == 'leaf') {
     if (allChildrenSelected.value) {
       if (!isSelected.value) nodeSelected()
     } else {
@@ -90,6 +92,8 @@ const nodeSelected = () => {
 const nodeClicked = () => {
   if (hasChildren.value && !props.unopenable && props.openQuick) emitNodeOpen(props.item[props.idKey])
   emitNodeClicked(props.item)
+  emitNodeSelected(props.item)
+  emit('change')
 }
 
 const openNode = () => {
@@ -117,16 +121,15 @@ const openNode = () => {
       </button>
       <div v-else class="w-7 h-7"></div>
       <template v-if="props.selectable">
-        <div class="radio-group" v-if="props.radio">
-          <input :disabled="props.disabled" class="radio" @click="nodeSelected" type="radio" :checked="isChecked" />
+        <div class="radio-group" v-if="props.radio" @click="nodeSelected">
+          <input :disabled="props.disabled" class="radio" type="radio" :checked="isChecked" />
           <span>
             {{ item[props.nameKey] }}
           </span>
         </div>
         <template v-else>
-          <div class="relative inline-flex align-bottom w-5 h-5 cursor-pointer select-none">
+          <div class="relative inline-flex align-bottom w-5 h-5 cursor-pointer select-none" @click="nodeSelected">
             <input type="checkbox" :disabled="props.disabled" :indeterminate="isIndeterminate" :checked="isChecked"
-              @click="nodeSelected"
               class="peer w-full h-full absolute top-0 left-0 z-10 p-0 m-0 opacity-0 rounded outline-none border border-surface-300 dark:border-surface-700 appearance-none cursor-pointer"
               tabindex="-1" />
             <!-- border-color: var(--van-gray-8); -->
@@ -139,7 +142,7 @@ const openNode = () => {
                   d="M4.86199 11.5948C4.78717 11.5923 4.71366 11.5745 4.64596 11.5426C4.57826 11.5107 4.51779 11.4652 4.46827 11.4091L0.753985 7.69483C0.683167 7.64891 0.623706 7.58751 0.580092 7.51525C0.536478 7.44299 0.509851 7.36177 0.502221 7.27771C0.49459 7.19366 0.506156 7.10897 0.536046 7.03004C0.565935 6.95111 0.613367 6.88 0.674759 6.82208C0.736151 6.76416 0.8099 6.72095 0.890436 6.69571C0.970973 6.67046 1.05619 6.66385 1.13966 6.67635C1.22313 6.68886 1.30266 6.72017 1.37226 6.76792C1.44186 6.81567 1.4997 6.8786 1.54141 6.95197L4.86199 10.2503L12.6397 2.49483C12.7444 2.42694 12.8689 2.39617 12.9932 2.40745C13.1174 2.41873 13.2343 2.47141 13.3251 2.55705C13.4159 2.64268 13.4753 2.75632 13.4938 2.87973C13.5123 3.00315 13.4888 3.1292 13.4271 3.23768L5.2557 11.4091C5.20618 11.4652 5.14571 11.5107 5.07801 11.5426C5.01031 11.5745 4.9368 11.5923 4.86199 11.5948Z"
                   fill="currentColor"></path>
               </svg>
-              <svg v-else v-if="isIndeterminate" width="14" height="14" viewBox="0 0 14 14" fill="none"
+              <svg v-if="isIndeterminate" width="14" height="14" viewBox="0 0 14 14" fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 :class="['w-[0.875rem] h-[0.875rem] transition-all duration-200', props.disabled ? '' : 'text-white dark:text-surface-950']">
                 <path
@@ -151,7 +154,7 @@ const openNode = () => {
         </template>
       </template>
 
-      <template v-if="item.icon">
+      <template v-if="item.icon" @click="nodeSelected">
         <Icon v-if="item.icon.match(/icon-park/g)" :icon="item.icon" class="van-badge__wrapper van-icon" />
         <van-icon v-else :name="item.icon" />
       </template>
@@ -163,7 +166,7 @@ const openNode = () => {
       <tree-node v-for="child in props.item.children" :selectable="props.selectable" :level="props.level + 1"
         :key="child[props.idKey]" :item="child" :id-key="props.idKey" :name-key="props.nameKey" :color="props.color"
         :disabled="props.disabled" :unopenable="props.unopenable" :identifier="props.identifier" :radio="props.radio"
-        @change="childNodeChanged">
+        :selectionMode="props.selectionMode" @change="childNodeChanged">
         <template #append="state">
           <slot name="append" :item="state.item"></slot>
         </template>

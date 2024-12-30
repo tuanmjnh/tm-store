@@ -11,7 +11,6 @@ declare module 'vue' {
     AppLoading: typeof import('./../components/AppLoading.vue')['default']
     AppSetting: typeof import('./../components/appSetting.vue')['default']
     Charts: typeof import('./../components/charts/index.vue')['default']
-    copy: typeof import('./../components/google-drive copy.vue')['default']
     CustomFieldValue: typeof import('./../components/customFieldValue.vue')['default']
     Dialog: typeof import('./../components/dialog.vue')['default']
     ErrorTip: typeof import('./../components/ErrorTip.vue')['default']

@@ -2,13 +2,14 @@ import { NextFunction, Request, Response } from 'express'
 import { Container } from 'typedi'
 import { MConnect, IConnect } from './model'
 import { ConnectService } from './service'
-import { HttpException } from '@/exceptions/http.exception'
-import { RequestMiddlewares } from '@/interfaces/auth.interface'
-import { getIp } from '@/utils/tm-request'
-import { googleOAuth2ByCode, refreshAccessToken, verifyIdToken } from '@/services/google/auth'
+import { HttpException } from '../../exceptions/http.exception'
+import { RequestMiddlewares } from '../../interfaces/auth.interface'
+import { getIp } from '../../utils/tm-request'
+import { googleOAuth2ByCode, refreshAccessToken, verifyIdToken } from '../../services/google/auth'
 import { jwtDecode } from 'jwt-decode'
+import { getUrl } from '../../utils/tm-url'
 import mongoose from 'mongoose'
-import { getUrl } from '@/utils/tm-url'
+
 const CONNECTS = {
   google: { name: 'Google', key: 'google' }
 }

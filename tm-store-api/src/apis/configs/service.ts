@@ -1,8 +1,8 @@
 import { Service } from 'typedi'
-import { HttpException } from '@exceptions/http.exception'
+import { HttpException } from '../../exceptions/http.exception'
 import { MConfig, IConfig } from './model'
 import { Aggregate, ClientSession, Types } from 'mongoose'
-import { EConfigType } from '@interfaces/common'
+import { EConfigType } from '../../interfaces/common'
 import moment from 'moment'
 export const InitializeConfig = async (app) => {
   try {
@@ -13,19 +13,19 @@ export const InitializeConfig = async (app) => {
           switch (e.type) {
             case EConfigType.INT:
               app.locals.configs[e.key] = parseInt(e.value)
-              break;
+              break
             case EConfigType.FLOAT:
               app.locals.configs[e.key] = parseFloat(e.value)
-              break;
+              break
             case EConfigType.BOOLEAN:
               app.locals.configs[e.key] = e.value === 'true' ? true : false
-              break;
+              break
             case EConfigType.DATE:
               app.locals.configs[e.key] = moment(e.value)
-              break;
+              break
             default:
               app.locals.configs[e.key] = e.value
-              break;
+              break
           }
         } else app.locals.configs[e.key] = e.value
         if (e.key == 'upload_max_size') process.env.UPLOAD_MAX_SIZE = e.value

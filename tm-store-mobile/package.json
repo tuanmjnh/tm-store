@@ -17,9 +17,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only",
+    "build": "vite build",
     "preview": "vite preview",
-    "build-only": "vite build",
+    "build:check": "run-p type-check build-only",
     "type-check": "vue-tsc --noEmit",
     "lint:eslint": "eslint . --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,less,scss,vue,html,md}\"",

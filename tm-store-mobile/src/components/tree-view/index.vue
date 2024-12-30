@@ -65,21 +65,24 @@ const toggleNode = (id: any) => {
 };
 
 const nodeSelected = (item: AppTypes.TreeViewNodeItem) => {
-  console.log(state.selectedNodes)
-  if (!!item.children && !!item.children.length) {
-    if (
-      state.selectedNodes.has(item[props.idKey]) &&
-      checkChildSelectStatus(state.selectedNodes, item, props.idKey, "atLeastOne") &&
-      !checkChildSelectStatus(state.selectedNodes, item, props.idKey, "all")
-    ) {
-      applyToAllChildren(item, props.idKey, selectNode);
+  if (props.selectionMode == 'leaf') {
+    if (!!item.children && !!item.children.length) {
+      if (
+        state.selectedNodes.has(item[props.idKey]) &&
+        checkChildSelectStatus(state.selectedNodes, item, props.idKey, "atLeastOne") &&
+        !checkChildSelectStatus(state.selectedNodes, item, props.idKey, "all")
+      ) {
+        applyToAllChildren(item, props.idKey, selectNode);
+      } else {
+        toggleNode(item[props.idKey]);
+        applyToAllChildren(
+          item,
+          props.idKey,
+          state.selectedNodes.has(item[props.idKey]) ? selectNode : unselectNode
+        );
+      }
     } else {
       toggleNode(item[props.idKey]);
-      applyToAllChildren(
-        item,
-        props.idKey,
-        state.selectedNodes.has(item[props.idKey]) ? selectNode : unselectNode
-      );
     }
   } else {
     toggleNode(item[props.idKey]);
@@ -154,7 +157,8 @@ onUnmounted(() => {
   <ul class="treeview" :class="classes">
     <tree-view-node v-for="item in props.items" :selectable="props.selectable" :color="props.color" :level="1"
       :key="item[props.idKey]" :item="item" :id-key="props.idKey" :name-key="props.nameKey" :disabled="item.disabled"
-      :unopenable="props.unopenable" :radio="props.radio" :identifier="identifier" :openQuick="props.openQuick">
+      :unopenable="props.unopenable" :radio="props.radio" :identifier="identifier" :openQuick="props.openQuick"
+      :selectionMode="props.selectionMode">
       <template #append="state">
         <slot name="append" :item="state.item"></slot>
       </template>

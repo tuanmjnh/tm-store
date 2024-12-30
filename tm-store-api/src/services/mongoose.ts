@@ -1,5 +1,5 @@
-import { connect, set } from 'mongoose';
-import { NODE_ENV } from '@config';
+import { connect, set } from 'mongoose'
+import { NODE_ENV } from '../config'
 export const dbConnection = async () => {
   const dbConfig = {
     url: process.env.MONGO_DB,
@@ -8,10 +8,10 @@ export const dbConnection = async () => {
       // useUnifiedTopology: true,
       retryWrites: false
     },
-  };
+  }
 
   if (NODE_ENV !== 'production') {
-    set('debug', true);
+    set('debug', true)
   }
 
   await connect(dbConfig.url, dbConfig.options).then(

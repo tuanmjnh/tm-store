@@ -1,8 +1,8 @@
 import { Service } from 'typedi'
 import multer from 'multer'
 import { existsSync, mkdirSync } from 'fs'
-import { NewGuid } from '@utils/tm-crypto'
-import { getExtention } from '@/utils/tm-files'
+import { NewGuid } from '../../utils/tm-crypto'
+import { getExtention } from '../../utils/tm-files'
 import { promisify } from 'util'
 
 @Service()

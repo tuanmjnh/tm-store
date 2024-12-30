@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
 import { Container } from 'typedi'
-import { RequestMiddlewares } from '@/interfaces/auth.interface'
-import { MUser } from '@apis/users/model'
-import { MRole, IRole } from '@apis/roles/model'
+import { RequestMiddlewares } from '../../interfaces/auth.interface'
+import { MUser } from '../users/model'
+import { MRole, IRole } from '../roles/model'
 import { constantUsers, constantRoutes } from './constant'
 import { AuthService } from './service'
-import { HttpException } from '@/exceptions/http.exception'
-import { SHA256 } from '@/utils/tm-crypto'
+import { HttpException } from '../../exceptions/http.exception'
+import { SHA256 } from '../../utils/tm-crypto'
 import { sign } from 'jsonwebtoken'
-import { SECRET_KEY } from '@config'
+import { SECRET_KEY } from '../../config'
 
 // export interface IUserAuth extends IUser {
 //   routes: Array<string>

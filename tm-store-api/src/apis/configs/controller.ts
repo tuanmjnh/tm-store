@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from 'express'
 import { Container } from 'typedi'
 import { MConfig, IConfig } from './model'
 import { ConfigService } from './service'
-import { HttpException } from '@/exceptions/http.exception'
-import { RequestMiddlewares } from '@/interfaces/auth.interface'
+import { HttpException } from '../../exceptions/http.exception'
+import { RequestMiddlewares } from '../../interfaces/auth.interface'
+import { NewGuid } from '../../utils/tm-crypto'
+import { getIp } from '../../utils/tm-request'
 import mongoose from 'mongoose'
-import { NewGuid } from '@/utils/tm-crypto'
-import { getIp } from '@/utils/tm-request'
 
 export class ConfigController {
   public config = Container.get(ConfigService)

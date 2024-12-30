@@ -1,8 +1,8 @@
 import { NextFunction, Response } from 'express'
 import { verify, sign } from 'jsonwebtoken'
-import { SECRET_KEY } from '@config'
-import { HttpException } from '@exceptions/http.exception'
-import { DataStoredInToken, RequestMiddlewares } from '@interfaces/auth.interface'
+import { SECRET_KEY } from '../config'
+import { HttpException } from '../exceptions/http.exception'
+import { DataStoredInToken, RequestMiddlewares } from '../interfaces/auth.interface'
 // import { UserModel } from '@modules/users/model'
 
 export const APISign = ({ params, secret, expires }) => {

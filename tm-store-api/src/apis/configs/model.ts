@@ -1,5 +1,5 @@
 import { model, Schema, Document, Types } from 'mongoose'
-import { ICreated } from '@interfaces/common'
+import { ICreated } from '../../interfaces/common'
 
 export interface IConfig {
   _id?: Types.ObjectId

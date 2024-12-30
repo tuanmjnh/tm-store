@@ -1,19 +1,19 @@
-import { Request } from 'express';
-import { User } from '@interfaces/users.interface';
-import { Types } from 'mongoose';
+import { Request } from 'express'
+import { User } from '@interfaces/users.interface'
+import { Types } from 'mongoose'
 
 export interface DataStoredInToken {
-  _id: Types.ObjectId;
+  _id: Types.ObjectId
 }
 
 export interface TokenData {
-  token: string;
-  expiresIn: number;
+  token: string
+  expiresIn: number
 }
 
 export interface RequestWithUser extends Request {
-  [x: string]: any;
-  user: User;
+  [x: string]: any
+  user: User
 }
 
 export interface RequestMiddlewares extends Request {
@@ -22,5 +22,5 @@ export interface RequestMiddlewares extends Request {
     token: string,
     secret: string
   }
-  user: User;
+  user: User
 }

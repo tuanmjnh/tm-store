@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from 'express'
 import { Container } from 'typedi'
 import { createReadStream, unlinkSync } from 'fs'
 import { FileManagerService } from './service'
-import { HttpException } from '@/exceptions/http.exception'
-import { RequestMiddlewares } from '@/interfaces/auth.interface'
-import * as GDrive from '@services/google/drive'
+import { HttpException } from '../../exceptions/http.exception'
+import { RequestMiddlewares } from '../../interfaces/auth.interface'
+import * as GDrive from '../../services/google/drive'
 
 export class FileManagerController {
   public fileManager = Container.get(FileManagerService)

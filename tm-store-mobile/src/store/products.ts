@@ -318,6 +318,12 @@ export const useProductStore = defineStore('productStore', {
       if (join) return [format ? rs.min().format() : rs.min(), format ? rs.max().format() : rs.max()].join(join)
       else return [format ? rs.min().format() : rs.min(), format ? rs.max().format() : rs.max()]
     },
+    getValueType(item: IModelProduct, key: string, join?: string, format?: boolean) {
+      if (item.types && item.types.length)
+        return this.getValueTypeDataMinMax(item, key, join, format)
+      else
+        return item[key] ? item[key].format() : '0'
+    },
     // easily reset state using `$reset`
     clear() {
       this.$reset()

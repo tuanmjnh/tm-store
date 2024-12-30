@@ -110,6 +110,7 @@ Number.prototype.toThousandFilter = function (num) {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
 Number.prototype.format = function (language = 'en-US') {
+  if (!this) return '0'
   return new Intl.NumberFormat(language).format(parseInt(this.toString()))
 }
 

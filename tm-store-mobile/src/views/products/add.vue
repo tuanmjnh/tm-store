@@ -35,7 +35,7 @@ const initForm = async () => {
   groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
   flag.value = form.value.flag ? true : false
   unit.value = units.value.find(x => x.code === form.value.unit)
-  console.log(form.value)
+  // console.log(form.value)
 }
 initForm()
 
@@ -79,7 +79,7 @@ const onSubmit = async () => {
   try {
     if (form.value._id) {
       form.value.flag = flag.value ? 1 : 0
-      console.log(form.value)
+      // console.log(form.value)
       const rs = await productStore.update(form.value)
       if (rs.data) showNotify({ type: 'success', message: $t('success.update') })
     } else {
@@ -90,7 +90,7 @@ const onSubmit = async () => {
       }
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     if (error.data && error.data.message) showNotify({ type: 'danger', message: $t(`error.${error.data.message}`) })
     else showNotify({ type: 'danger', message: $t(`http.${error.status}`) })
   }
@@ -129,19 +129,13 @@ const onSubmit = async () => {
           <van-field name="unit" :label="$t('product.price')" is-link :placeholder="$t('global.inputPlaceholder')"
             @click="onEditType(1)">
             <template #input>
-              {{
-                form.types && form.types.length ? productStore.getValueTypeDataMinMax(form, 'price', ' - ', true) :
-                  form.price
-              }}
+              {{ productStore.getValueType(form, 'price', ' - ', true) }}
             </template>
           </van-field>
           <van-field name="unit" :label="$t('product.quantity')" is-link :placeholder="$t('global.inputPlaceholder')"
             @click="onEditType(1)">
             <template #input>
-              {{
-                form.types && form.types.length ? productStore.getValueTypeDataMinMax(form, 'quantity', ' - ', true) :
-                  form.quantity
-              }}
+              {{ productStore.getValueType(form, 'quantity', ' - ', true) }}
             </template>
           </van-field>
           <van-field name="weight" :label="$t('product.weight')">

@@ -2,12 +2,12 @@ import { NextFunction, Request, Response } from 'express'
 import { Container } from 'typedi'
 import { MGroup, IGroup } from './model'
 import { GroupService } from './service'
-import { HttpException } from '@/exceptions/http.exception'
-import { RequestMiddlewares } from '@/interfaces/auth.interface'
+import { HttpException } from '../../exceptions/http.exception'
+import { RequestMiddlewares } from '../../interfaces/auth.interface'
+import { getIp } from '../../utils/tm-request'
+import { getPagination } from '../../utils/tm-pagination'
+import { NewGuid } from '../../utils/tm-crypto'
 import mongoose from 'mongoose'
-import { getIp } from '@/utils/tm-request'
-import { getPagination } from '@utils/tm-pagination'
-import { NewGuid } from '@/utils/tm-crypto'
 
 export class GroupController {
   public group = Container.get(GroupService)

@@ -15,6 +15,9 @@ dist-ssr
 coverage
 *.local
 
+# deploy
+deploy/spa
+
 # Editor directories and files
 .idea
 *.suo

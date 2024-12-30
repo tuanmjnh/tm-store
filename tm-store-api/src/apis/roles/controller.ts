@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from 'express'
 import { Container } from 'typedi'
 import { MRole, IRole } from './model'
 import { RoleService } from './service'
-import { HttpException } from '@/exceptions/http.exception'
-import { RequestMiddlewares } from '@/interfaces/auth.interface'
+import { HttpException } from '../../exceptions/http.exception'
+import { RequestMiddlewares } from '../../interfaces/auth.interface'
+import { getIp } from '../../utils/tm-request'
+import { NewGuid } from '../../utils/tm-crypto'
 import mongoose from 'mongoose'
-import { getIp } from '@/utils/tm-request'
-import { NewGuid } from '@/utils/tm-crypto'
 
 export class ConfigController {
   public role = Container.get(RoleService)
