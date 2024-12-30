@@ -39,8 +39,8 @@ export class App {
 
   public listen() {
     this.app.listen(this.port, () => {
-      // console.log(`Web server listening on: http://127.0.0.1:${process.env.PORT || 8080}`)
-      console.log(`Mode: ${this.env}`)
+      console.log(`Web server listening on: http://127.0.0.1:${this.port}`)
+      console.log(`Mode: ${process.env.NODE_ENV}`)
       console.log(`Base URL: ${process.env.BASE_URL}`)
       // logger.info(`=================================`)
       // logger.info(`======= ENV: ${this.env} =======`)
@@ -60,7 +60,10 @@ export class App {
 
   private initializeMiddlewares() {
     // this.app.use(morgan(LOG_FORMAT, { stream }))
-    this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }))
+    // this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }))
+    // CORS middleware
+    this.app.use(cors())
+    // this.app.options('*', cors())
     this.app.use(hpp())
     this.app.use(helmet())
     this.app.use(compression())
@@ -88,7 +91,7 @@ export class App {
       // const a = io.getDirectories({ root: process.env.ROOT_PATH, dir: '/' })
       let rs = `TM-Store Express Server api\r\n`
       rs = `${rs}version: ${PACKAGE.version}\r\n`
-      rs = `${rs}Mode: ${this.env}\r\n`
+      rs = `${rs}Mode: ${process.env.NODE_ENV}\r\n`
       res.end(rs)
     })
   }

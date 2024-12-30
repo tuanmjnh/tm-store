@@ -1,5 +1,4 @@
 import { config } from 'dotenv'
-console.log(config)
 config({ path: process.env.NODE_ENV == 'production' ? '.env' : `.env.${process.env.NODE_ENV || 'development'}` })
 export const ROOT_PATH = process.cwd()//__dirname
 export const PACKAGE = require('../../package.json')

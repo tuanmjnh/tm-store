@@ -98,7 +98,7 @@ export default defineConfig(({ mode }) => {
       hmr: false,
       proxy: {
         '/api': {
-          // target: 'https://tm-store-api.herokuapp.com',
+          // target: 'https://tm-store-api.vercel.app',
           target: 'http://localhost:8080',
           // pathRewrite: { '^/api': '' },
           changeOrigin: true,
