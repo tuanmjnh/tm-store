@@ -525,6 +525,7 @@
     "qrCodeDefault": "Đặt bằng ID",
     "qrCodeEdit": "Cập nhật mã QR",
     "qrCodeEditHelp": "Ấn vào mã QR để cập nhật",
+    "generator": "Tạo mã",
     "barCode": "Mã Bar",
     "barCodeScanner": "Quét mã Bar",
     "barCodeRandom": "Đặt Mã Bar ngẫu nhiên",

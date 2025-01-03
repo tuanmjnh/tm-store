@@ -20,7 +20,7 @@ export class ProductRoute implements Routes {
     this.router.get(`${this.path}/meta`, APIMiddleware, this.controller.getMeta)
     this.router.get(`${this.path}/attr`, APIMiddleware, this.controller.getAttr)
     this.router.post(`${this.path}`, APIMiddleware, this.controller.create)
-    this.router.post(`${this.path}/copy`, APIMiddleware, this.controller.copy)
+    this.router.post(`${this.path}/duplicate`, APIMiddleware, this.controller.duplicate)
     this.router.post(`${this.path}/import`, APIMiddleware, this.controller.import)
     this.router.put(`${this.path}`, APIMiddleware, this.controller.update)
     this.router.patch(`${this.path}`, APIMiddleware, this.controller.updateFlag)

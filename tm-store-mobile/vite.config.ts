@@ -1,34 +1,35 @@
-import { fileURLToPath, URL } from "node:url";
-import { defineConfig, loadEnv } from "vite";
-import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
-import Components from "unplugin-vue-components/vite";
+import { fileURLToPath, URL } from "node:url"
+import { defineConfig, loadEnv } from "vite"
+import vue from "@vitejs/plugin-vue"
+import vueJsx from "@vitejs/plugin-vue-jsx"
+import Components from "unplugin-vue-components/vite"
 import AutoImport from 'unplugin-auto-import/vite'
-import { VantResolver } from "unplugin-vue-components/resolvers";
-// import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import { VantResolver } from "unplugin-vue-components/resolvers"
+// import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
 import Icons from 'unplugin-icons/vite'
 import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 // https://github.com/antfu/unplugin-icons
 import IconsResolver from 'unplugin-icons/resolver'
-import mockDevServerPlugin from "vite-plugin-mock-dev-server";
-import vueSetupExtend from "vite-plugin-vue-setup-extend";
-import viteCompression from "vite-plugin-compression";
-import { createHtmlPlugin } from "vite-plugin-html";
-import { enableCDN } from "./build/cdn";
-
+import mockDevServerPlugin from "vite-plugin-mock-dev-server"
+import vueSetupExtend from "vite-plugin-vue-setup-extend"
+import viteCompression from "vite-plugin-compression"
+import { createHtmlPlugin } from "vite-plugin-html"
+import { enableCDN } from "./build/cdn"
+import mkcert from 'vite-plugin-mkcert'
 // 当前工作目录路径
-const root: string = process.cwd();
+const root: string = process.cwd()
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // 环境变量
-  const env = loadEnv(mode, root, "");
+  const env = loadEnv(mode, root, "")
   return {
     base: env.VITE_APP_PUBLIC_PATH || "/",
     plugins: [
       vue(),
       vueJsx(),
       mockDevServerPlugin(),
+      mkcert(),
       // auto import api of lib
       AutoImport({
         imports: [
@@ -93,6 +94,7 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       open: false,
+      // https: true,
       host: true,
       port: 8000,
       hmr: false,
@@ -119,5 +121,5 @@ export default defineConfig(({ mode }) => {
         }
       }
     }
-  };
-});
+  }
+})

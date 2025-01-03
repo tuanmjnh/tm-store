@@ -162,14 +162,14 @@ export class ProductController {
     }
   }
 
-  public copy = async (req: RequestMiddlewares, res: Response, next: NextFunction) => {
+  public duplicate = async (req: RequestMiddlewares, res: Response, next: NextFunction) => {
     try {
       const body: IProduct = req.body
       const rs = { data: null as IProduct, status: false, message: 'copy' }
       body.code = NewGuid().split('-')[0]
       body.flag = 0
-      body.title = `${req.body.data.title} - duplicate`
-      if (req.body.data._id) delete body._id
+      body.title = `${body.title} - duplicate`
+      if (body._id) delete body._id
       body.created = { at: new Date(), by: req.verify._id.toString() || null, ip: getIp(req) }
       rs.data = await this.product.Create(body)
       if (rs.data) rs.status = true

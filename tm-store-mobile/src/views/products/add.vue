@@ -6,8 +6,11 @@ import { showNotify } from 'vant'
 import { MdEditor } from 'md-editor-v3'
 import componentGroup from "@/views/groups/groups.vue"
 import googleDriveUpload from "@/components/google-drive-upload.vue"
+import vueQrcodeReader from '@/components/vueQrcodeReader.vue'
 const googleDrive = defineAsyncComponent(() => import('@/components/google-drive.vue'))
 const componentTypes = defineAsyncComponent(() => import('./types.vue'))
+const qrcodeGenerator = defineAsyncComponent(() => import('@/components/qrcodeGenerator.vue'))
+const barcodeGenerator = defineAsyncComponent(() => import('@/components/barcodeGenerator.vue'))
 
 const route = useRoute()
 const appStore = useAppStore()
@@ -20,6 +23,9 @@ const isDialogUnits = ref(false)
 const isDialogTypes = ref(false)
 const isDialogDrive = ref(false)
 const isDialogUpload = ref(false)
+const isDialogQRCode = ref(false)
+const isDialogQRCodeScanner = ref(false)
+const isDialogBarCode = ref(false)
 const fileUploadList = ref([])
 const typeView = ref(0)
 const mediaView = ref(0)
@@ -32,10 +38,11 @@ const activeTab = ref('basicInf')
 
 const initForm = async () => {
   if (route.params.id && !form.value._id) await productStore.getItem(route.params)
-  groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
+  if (form.value.groups && form.value.groups.length) groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
   flag.value = form.value.flag ? true : false
   unit.value = units.value.find(x => x.code === form.value.unit)
-  // console.log(form.value)
+  console.log(form.value)
+  // console.log(form.value.groups)
 }
 initForm()
 
@@ -48,6 +55,7 @@ const onSelectGroup = async (arg) => {
     isDialogGroup.value = false
     groups.value = groupStore.all.filter(x => arg.includes(x._id)).sort((a, b) => a.level - b.level)
     form.value.groups = groups.value.map(x => x._id)
+    if (groups.value.length && !form.value.code) form.value.code = `${groups.value[groups.value.length - 1].code}-`
   } catch (error) {
     if (error.data && error.data.message) showNotify({ type: 'danger', message: $t(`error.${error.data.message}`) })
     else showNotify({ type: 'danger', message: $t(`http.${error.status}`) })
@@ -75,6 +83,17 @@ const onFileUploaded = (args) => {
     isDialogUpload.value = false
   }
 }
+const onQRCodeDetect = (args) => {
+  if (args)
+    form.value.qrcode = args.code
+  else
+    showNotify({ type: 'warning', message: $t('error.qrError') })
+  isDialogQRCodeScanner.value = false
+}
+const onQRCodeError = async (args) => {
+  // console.log(args)
+  showNotify({ type: 'danger', message: `[${args.name}] - ${args.value}` })
+}
 const onSubmit = async () => {
   try {
     if (form.value._id) {
@@ -101,28 +120,30 @@ const onSubmit = async () => {
     <van-tabs v-model:active="activeTab">
       <van-tab :title="$t('tabs.basicInf')" name="basicInf">
         <van-cell-group inset>
-          <van-field v-model="form.code" name="code" :label="$t('global.code')" disabled
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
           <van-field v-model="groups.length" name="groups" :label="$t('group.title')" readonly is-link
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]"
+            :placeholder="$t('global.inputPlaceholder')"
+            :rules="[{ required: true, message: $t('error.required') }, { validator: (v) => !!v, message: $t('error.required') }]"
             @click="isDialogGroup = true">
             <template #input>
-              {{ groups && groups.length ? groups.map(x => x.title).join(', ') : 'Root' }}
+              {{ groups && groups.length ? groups.map(x => x.title).join(', ') : $t('group.select') }}
             </template>
           </van-field>
+          <van-field v-model="form.code" name="code" :label="$t('global.code')" :disabled="!!form._id"
+            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
           <van-field v-model="form.title" name="title" :label="$t('global.title')"
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
           <van-field v-model="form.unit" name="unit" :label="$t('global.unit')" is-link
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]"
             @click="isDialogUnits = true">
             <template #input>
-              {{ unit ? unit.name : $t('global.updating') }}
+              {{ unit ? unit.name : $t('global.inputPlaceholder') }}
             </template>
           </van-field>
           <van-field name="unit" :label="$t('product.type')" is-link :placeholder="$t('global.inputPlaceholder')"
             @click="onEditType(0)">
             <template #input>
-              {{ form.types && form.types.length ? form.types.map(x => x.label).join(', ') : $t('global.updating') }}
+              {{ form.types && form.types.length ? form.types.map(x => x.label).join(', ') :
+                $t('global.inputPlaceholder') }}
               <!-- {{ form.types.length ? form.types.map(x => x.label).join(', ') : $t('global.updating') }} -->
             </template>
           </van-field>
@@ -148,13 +169,23 @@ const onSubmit = async () => {
               <van-stepper v-model="form.order" />
             </template>
           </van-field>
+          <van-field v-model="form.qrcode" name="qrcode" :label="$t('qrCode.qrCode')" is-link
+            :placeholder="$t('qrCode.qrCode')" @click="isDialogQRCode = true">
+            <template #input>
+              <!-- {{ unit ? unit.name : $t('global.inputPlaceholder') }} -->
+            </template>
+          </van-field>
+          <van-field v-model="form.barcode" name="barcode" :label="$t('qrCode.barCode')" is-link
+            :placeholder="$t('qrCode.barCode')" @click="isDialogBarCode = true">
+            <template #input>
+              <!-- {{ unit ? unit.name : $t('global.inputPlaceholder') }} -->
+            </template>
+          </van-field>
           <van-field name="flag" :label="$t('global.status')">
             <template #input>
               <van-switch v-model="flag" />
             </template>
           </van-field>
-          <van-field v-model="form.desc" type="textarea" rows="1" autosize name="note" :label="$t('global.note')"
-            :placeholder="$t('global.inputPlaceholder')" />
         </van-cell-group>
       </van-tab>
       <!-- <van-tab :title="$t('tabs.price')" name="priceInf">
@@ -225,6 +256,16 @@ const onSubmit = async () => {
             :lbl-cancel="$t('global.back')" />
         </div>
       </van-tab>
+      <van-tab :title="$t('global.content')" name="content">
+        <van-field v-model="form.desc" type="textarea" rows="1" autosize name="note" :label="$t('global.note')"
+          :placeholder="$t('global.inputPlaceholder')" />
+        <van-field v-model="form.content" name="content" :label="$t('global.content')"
+          :placeholder="$t('global.inputPlaceholder')">
+          <template #input>
+            <MdEditor v-model="form.content" :preview="false" :theme="appStore.darkMode ? 'dark' : 'light'" />
+          </template>
+        </van-field>
+      </van-tab>
       <van-tab :title="$t('global.attributes')" name="attributes">
         <van-cell-group inset>
           <van-field name="brand" :label="$t('product.brand')" :placeholder="$t('global.inputPlaceholder')" />
@@ -236,14 +277,6 @@ const onSubmit = async () => {
           <van-field name="tags" :label="$t('global.tags')" :placeholder="$t('global.inputPlaceholder')" />
           <van-field name="meta" label="Meta" :placeholder="$t('global.inputPlaceholder')" />
         </van-cell-group>
-      </van-tab>
-      <van-tab :title="$t('global.content')" name="content">
-        <van-field v-model="form.content" name="content" :label="$t('global.content')"
-          :placeholder="$t('global.inputPlaceholder')">
-          <template #input>
-            <MdEditor v-model="form.content" :preview="false" :theme="appStore.darkMode ? 'dark' : 'light'" />
-          </template>
-        </van-field>
       </van-tab>
     </van-tabs>
     <van-action-bar placeholder>
@@ -269,8 +302,8 @@ const onSubmit = async () => {
   <van-dialog v-model:show="isDialogTypes" :title="$t('global.unit')" class="full-screen footer" close-on-click-overlay
     :show-confirm-button="false" :show-cancel-button="false">
     <template #title></template>
-    <component-types :types="form.types" :typeData="form.typeData" v-model:typeView="typeView"
-      @on-close="isDialogTypes = false" @on-update="isDialogTypes = false" />
+    <component-types v-model="form" v-model:typeView="typeView" @on-close="isDialogTypes = false"
+      @on-update="isDialogTypes = false" />
     <template #footer></template>
   </van-dialog>
   <van-dialog v-model:show="isDialogDrive" title="Drive" class="full-screen" :show-cancel-button="false"
@@ -289,6 +322,22 @@ const onSubmit = async () => {
     </van-uploader> -->
     <google-drive-upload v-model="fileUploadList" multiple parent="1A4_7e1ElUPhwbHrKm12I7VU_9CwnChHV"
       @on-uploaded="onFileUploaded" />
+  </van-dialog>
+  <van-dialog v-model:show="isDialogQRCode" :title="$t('qrCode.qrCode')" close-on-click-overlay
+    :show-cancel-button="false" :show-confirm-button="false" close-on-click-action>
+    <qrcode-generator v-model="form.qrcode" :default-value="form.code" :lbl-scanner="$t('qrCode.qrCodeScanner')"
+      :lbl-submit="$t('global.update')" :lbl-cancel="$t('global.back')" @on-scanner="isDialogQRCodeScanner = true"
+      @on-cancel="isDialogQRCode = false" @on-submit="isDialogQRCode = false" />
+  </van-dialog>
+  <van-dialog v-model:show="isDialogBarCode" :title="$t('qrCode.barCode')" close-on-click-overlay
+    :show-cancel-button="false" :show-confirm-button="false" close-on-click-action>
+    <barcode-generator v-model="form.qrcode" :default-value="form.code" :lbl-submit="$t('global.update')"
+      :lbl-cancel="$t('global.back')" @on-cancel="isDialogBarCode = false" @on-submit="isDialogBarCode = false" />
+  </van-dialog>
+  <van-dialog v-model:show="isDialogQRCodeScanner" :title="$t('qrCode.qrCodeScanner')" class="full-screen"
+    :show-cancel-button="false" :show-confirm-button="false" close-on-click-action>
+    <vueQrcodeReader :lbl-cancel="$t('global.back')" @on-cancel="isDialogQRCodeScanner = false"
+      @on-detect="onQRCodeDetect" @on-error="onQRCodeError" />
   </van-dialog>
 </template>
 <style>

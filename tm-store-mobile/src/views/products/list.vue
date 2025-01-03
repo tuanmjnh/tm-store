@@ -4,8 +4,7 @@ import componentGroup from "@/views/groups/groups.vue"
 import router from '@/router'
 import delay from 'delay'
 import { $t } from '@/i18n'
-import { useGroupStore, useProductStore } from '@/store'
-const groupStore = useGroupStore()
+import { useProductStore } from '@/store'
 const productStore = useProductStore()
 
 const filter = ref({
@@ -26,6 +25,7 @@ const isFinished = ref(false)
 const isRefresh = ref(false)
 const isShowFilter = ref(false)
 const isShowDelete = ref(false)
+const isShowDuplicate = ref(false)
 const isDialogGroup = ref(false)
 onMounted(() => {
   // groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
@@ -80,6 +80,16 @@ const onConfirmFlag = async () => {
   const rs = await productStore.updateFlag(selected.value.map(x => { return { _id: x._id, flag: filter.value.flag ? false : true } }))
   if (rs.status) productStore.removeItems(rs.success, items.value)
 }
+const onToggleDuplicate = async (item) => {
+  selected.value = [toRaw(item)]
+  isShowDuplicate.value = true
+}
+const onConfirmDuplicate = async () => {
+  if (selected.value && selected.value.length) {
+    const rs = await productStore.duplicate(selected.value[0])
+    router.push(`edit/${rs.data._id}`)
+  }
+}
 const onGetRoles = (item) => {
   if (!item) return ''
   const rs = []
@@ -123,6 +133,7 @@ const onGetRoles = (item) => {
           <van-button square icon="edit" type="success" @click="onEdit(item)" class="h-full" />
           <van-button v-if="filter.flag" square icon="close" type="danger" @click="onToggleFlag(item)" />
           <van-button v-else square icon="replay" type="warning" @click="onToggleFlag(item)" />
+          <van-button square icon="description-o" color="#7232dd" @click="onToggleDuplicate(item)" class="h-full" />
         </template>
       </van-swipe-cell>
     </van-list>
@@ -154,7 +165,9 @@ const onGetRoles = (item) => {
   <van-action-sheet v-model:show="isShowDelete" :cancel-text="$t('global.cancel')" close-on-click-action
     :actions="[{ name: filter.flag ? $t('global.delete') : $t('global.recover'), color: filter.flag ? '#f56c6c' : '#e6a23c' }]"
     @select="onConfirmFlag">
-    <!-- <van-cell :title="$t('global.accept')" /> -->
+  </van-action-sheet>
+  <van-action-sheet v-model:show="isShowDuplicate" :cancel-text="$t('global.cancel')" close-on-click-action
+    :actions="[{ name: $t('global.duplicate'), color: '#7232dd' }]" @select="onConfirmDuplicate">
   </van-action-sheet>
   <van-dialog v-model:show="isDialogGroup" :title="$t('group.titleproduct')" :show-cancel-button="false"
     :show-confirm-button="false">

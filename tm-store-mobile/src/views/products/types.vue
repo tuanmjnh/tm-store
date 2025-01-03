@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { IProductType, IProductTypeOption, IProductTypeData } from '@/store/interfaces/product'
+import { IModelProduct } from '@/store/products'
 import { useProductStore } from '@/store'
-const productStore = useProductStore()
-const typeOneSelected = ref(null)
-const formUpdateAll = ref({ price: 0, priceImport: 0, quantity: 0 })
 const emit = defineEmits<{
   (e: 'onClose', value: any): any,
   (e: 'onUpdate', value: any): any,
@@ -11,10 +8,14 @@ const emit = defineEmits<{
   (e: 'update:typeView', value: number): number
 }>()
 const props = defineProps<{
-  types: Array<any>,//IProductType[],
-  typeData: Object,
+  modelValue: IModelProduct
   typeView: number
 }>()
+
+const productStore = useProductStore()
+const typeSelected = ref(null)
+const formUpdateAll = ref({ price: 0, priceImport: 0, quantity: 0 })
+
 const onClose = async () => {
   const v = props.typeView - 1
   if (v < 0) emit('onClose', true)
@@ -25,19 +26,22 @@ const onChangeTypeView = (arg) => {
 }
 const onSelectTypeOption = (arg, index) => {
   if (arg && arg.length && index > -1) {
-    for (let i = 0; i < arg.length; i++) {
-      if (i === index) arg[i].selected = true
-      else arg[i].selected = false
-    }
-    typeOneSelected.value = arg[index]
+    // for (let i = 0; i < arg.length; i++) {
+    //   if (i === index) arg[i].selected = true
+    //   else arg[i].selected = false
+    // }
+    typeSelected.value = arg[index]
   }
 }
-onSelectTypeOption(props.types[0].options, 0)
+watch(() => props.modelValue.types, n => {
+  if (props.modelValue.types && props.modelValue.types.length) onSelectTypeOption(props.modelValue.types[0].options, 0)
+}, { immediate: true, deep: true })
+
 const onUpdate = (arg) => {
   emit('onUpdate', true)
 }
 const onUpdateAll = () => {
-  productStore.updateAllTypeData(props.types, props.typeData, formUpdateAll.value).then(x => {
+  productStore.updateAllTypeData(props.modelValue.types, props.modelValue.typeData, formUpdateAll.value).then(x => {
     formUpdateAll.value = { price: 0, priceImport: 0, quantity: 0 }
     emit('onUpdateAll', true)
     onClose()
@@ -59,18 +63,18 @@ const onUpdateAll = () => {
     </div>
     <div class="overscroll-none overflow-auto content">
       <div class="pl-6 pr-6">
-        <div class="pt-5 pb-8" v-for="(e, i) in types">
+        <div class="pt-5 pb-8" v-for="(e, i) in modelValue.types">
           <div class="flex justify-between pb-5">
             <input type="text" v-model="e.label" :placeholder="$t('product.typeGroup')"
               class="block p-2 text-gray-900 text-xs bg-transparent dark:text-sky-500">
             <div class="flex space-x-3">
               <svg class="text-sky-600" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"
-                @click="productStore.addTypeOption(e.options)">
+                @click="productStore.addTypeOptionItem(modelValue, i, $t('product.typeOption'))">
                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
                   d="m24.06 10l-.036 28M10 24h28" />
               </svg>
               <svg class="text-rose-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"
-                @click="productStore.removeTypeGroup(types, i)">
+                @click="productStore.removeTypeGroup(modelValue, i)">
                 <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
                   <path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Z" />
                   <path stroke-linecap="round" d="M29.657 18.343L18.343 29.657m0-11.314l11.314 11.314" />
@@ -79,11 +83,11 @@ const onUpdateAll = () => {
             </div>
           </div>
           <div class="flex justify-between pb-5" v-for="(o, j) in e.options">
-            <input type="text" :value="o.label" :placeholder="$t('product.typeOption')"
+            <input type="text" v-model="o.label" :placeholder="$t('product.typeOption')"
               class="block p-2 text-gray-900 border border-gray-300 rounded-lg bg-transparent text-xs focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <div class="flex space-x-3">
               <svg class="text-rose-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"
-                @click="productStore.removeTypeOption(e.options, o.id)">
+                @click="productStore.removeTypeOptionItem(modelValue, i, o.id)">
                 <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
                   <path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Z" />
                   <path stroke-linecap="round" d="M29.657 18.343L18.343 29.657m0-11.314l11.314 11.314" />
@@ -94,8 +98,9 @@ const onUpdateAll = () => {
           <hr class="border-gray-300 dark:border-gray-100">
         </div>
       </div>
-      <div v-if="types.length < 2" class="flex justify-center mt-6">
-        <button type="button" @click="productStore.addTypeGroup(types)"
+      <div v-if="!modelValue.types || modelValue.types.length < 2" class="flex justify-center mt-6">
+        <button type="button"
+          @click="productStore.addTypeGroup(modelValue, !modelValue.types ? $t('product.typeOne') : $t('product.typeTwo'), $t('product.typeOption'))"
           class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg dark:bg-blue-600">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
@@ -107,7 +112,7 @@ const onUpdateAll = () => {
     </div>
     <div class="footer pt-2 fixed right-0 left-0 bottom-0">
       <div class="flex justify-center">
-        <button v-if="types.length" type="button" @click="onChangeTypeView(1)"
+        <button v-if="modelValue.types && modelValue.types.length" type="button" @click="onChangeTypeView(1)"
           class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-sky-500 dark:bg-sky-600">
           <span class="mr-2">{{ $t('global.next') }}</span>
           <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
@@ -129,10 +134,12 @@ const onUpdateAll = () => {
         <div>{{ $t('product.typeUpdate') }}</div>
         <div class="mr-5"></div>
       </div>
-      <div v-if="types && types.length > 1" class="flex justify-center pt-5">
-        <div v-if="types[0] && types[0].options.length" class="inline-flex rounded-md shadow-sm" role="group">
-          <button type="button" v-for="(e, i) in types[0].options" @click="onSelectTypeOption(types[0].options, i)"
-            :class="['px-2 py-1 text-xs font-medium text-gray-900 bg-white border dark:bg-gray-800  dark:text-white', e.selected ? 'border-blue-500' : ' border-gray-500 dark:border-gray-800']">
+      <div v-if="modelValue.types && modelValue.types.length > 1" class="flex justify-center pt-5">
+        <div v-if="modelValue.types[0] && modelValue.types[0].options.length" class="inline-flex rounded-md shadow-sm"
+          role="group">
+          <button type="button" v-for="(e, i) in modelValue.types[0].options"
+            @click="onSelectTypeOption(modelValue.types[0].options, i)"
+            :class="['px-2 py-1 text-xs font-medium text-gray-900 bg-white border dark:bg-gray-800  dark:text-white', typeSelected.id && e.id == typeSelected.id ? 'border-blue-500' : ' border-gray-500 dark:border-gray-800']">
             {{ e.label }}
           </button>
         </div>
@@ -141,8 +148,8 @@ const onUpdateAll = () => {
     </div>
     <div class="overscroll-none overflow-auto content2">
       <div class="pl-6 pr-6">
-        <div v-if="types && types.length == 1" class="pt-5">
-          <div v-for="(e, i) in types[0].options" class="pb-5">
+        <div v-if="modelValue.types && modelValue.types.length == 1" class="pt-5">
+          <div v-for="(e, i) in modelValue.types[0].options" class="pb-5">
             <div class="relative inline-flex items-center w-full py-2 text-sm font-medium">
               <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="20" height="20" viewBox="0 0 48 48">
                 <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
@@ -156,7 +163,8 @@ const onUpdateAll = () => {
             <div class="flex-row">
               <div class="flex justify-center justify-items-center content-center items-center">
                 <!-- <span>{{ typeData[e.id].priceImport }}</span> -->
-                <input type="number" v-model="typeData[e.id].priceImport" :placeholder="$t('product.priceImport')"
+                <input type="number" v-model="modelValue.typeData[e.id].priceImport"
+                  :placeholder="$t('product.priceImport')"
                   class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
                 <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
                   <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
@@ -166,18 +174,18 @@ const onUpdateAll = () => {
                 </svg> -->
               </div>
               <div class="flex justify-center justify-items-center content-center items-center">
-                <input type="number" v-model="typeData[e.id].price" :placeholder="$t('product.priceSale')"
+                <input type="number" v-model="modelValue.typeData[e.id].price" :placeholder="$t('product.priceSale')"
                   class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
               </div>
               <div class="flex justify-center justify-items-center content-center items-center">
-                <input type="number" v-model="typeData[e.id].quantity" :placeholder="$t('product.quantity')"
+                <input type="number" v-model="modelValue.typeData[e.id].quantity" :placeholder="$t('product.quantity')"
                   class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
               </div>
             </div>
           </div>
         </div>
-        <div v-if="types && types.length > 1" class="pt-5">
-          <div v-for="(e, i) in types[1].options" class="pb-5">
+        <div v-if="modelValue.types && modelValue.types.length > 1" class="pt-5">
+          <div v-for="(e, i) in modelValue.types[1].options" class="pb-5">
             <div class="relative inline-flex items-center w-full py-2 text-sm font-medium">
               <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="20" height="20" viewBox="0 0 48 48">
                 <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
@@ -190,7 +198,7 @@ const onUpdateAll = () => {
             </div>
             <div class="flex-row pt-2">
               <div class="relative z-0 w-full mb-5 group">
-                <input type="number" v-model="typeData[typeOneSelected.id][e.id].priceImport"
+                <input type="number" v-model="modelValue.typeData[typeSelected.id][e.id].priceImport"
                   class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required />
                 <label for="floating_email"
@@ -199,7 +207,7 @@ const onUpdateAll = () => {
                 </label>
               </div>
               <div class="relative z-0 w-full mb-5 group">
-                <input type="number" v-model="typeData[typeOneSelected.id][e.id].price"
+                <input type="number" v-model="modelValue.typeData[typeSelected.id][e.id].price"
                   class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required />
                 <label for="floating_email"
@@ -208,7 +216,7 @@ const onUpdateAll = () => {
                 </label>
               </div>
               <div class="relative z-0 w-full mb-5 group">
-                <input type="number" v-model="typeData[typeOneSelected.id][e.id].quantity"
+                <input type="number" v-model="modelValue.typeData[typeSelected.id][e.id].quantity"
                   class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required />
                 <label for="floating_email"
@@ -227,11 +235,11 @@ const onUpdateAll = () => {
           class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-sky-500 rounded-lg dark:bg-sky-600">
           <span class="mr-2">{{ $t('global.update') }}</span>
         </button> -->
-        <button v-if="types.length" type="button" @click="onChangeTypeView(2)"
+        <button v-if="modelValue.types && modelValue.types.length" type="button" @click="onChangeTypeView(2)"
           class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-indigo-500 dark:bg-indigo-600">
           <span class="mr-2">{{ $t('product.typeUpdates') }}</span>
         </button>
-        <button v-if="types.length" type="button" @click="onUpdate"
+        <button v-if="modelValue.types && modelValue.types.length" type="button" @click="onUpdate"
           class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-sky-500 dark:bg-sky-600">
           <span class="mr-2">{{ $t('global.update') }}</span>
         </button>
@@ -286,7 +294,7 @@ const onUpdateAll = () => {
     </div>
     <div class="footer pt-2 fixed right-0 left-0 bottom-0">
       <div class="flex justify-center">
-        <button v-if="types.length" type="button" @click="onUpdateAll"
+        <button v-if="modelValue.types && modelValue.types.length" type="button" @click="onUpdateAll"
           class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-sky-500 dark:bg-sky-600">
           <span class="mr-2">{{ $t('global.update') }}</span>
         </button>

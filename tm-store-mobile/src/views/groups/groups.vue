@@ -41,7 +41,6 @@ const items = ref(arrayToTree(all.value.filter(x => x.flag == props.flag && x.ty
 const groupRoot = groupStore.root
 groupRoot.title = $t('group.root', 'Root')
 if (props.root) items.value.unshift(groupRoot)
-
 const onSelect = async (arg) => {
   emit('onSelect', arg)
 }
@@ -63,9 +62,17 @@ const onCancel = async (arg) => {
     </tree-view>
   </div>
   <hr class="border-gray-300 dark:border-gray-100">
-  <div v-if="isBot" class="flex justify-center mb-3 mt-3">
-    <van-button type="primary" square size="small" @click="onSubmit">{{ lblSubmit }}</van-button>
+  <div v-if="isBot" class="flex justify-center">
+    <!-- <van-button type="primary" square size="small" @click="onSubmit">{{ lblSubmit }}</van-button>
     <div class="w-6"></div>
-    <van-button type="default" square size="small" @click="onCancel">{{ lblCancel }}</van-button>
+    <van-button type="default" square size="small" @click="onCancel">{{ lblCancel }}</van-button> -->
+    <button type="button" @click="onCancel"
+      class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white">
+      <span class="mr-2">{{ lblCancel }}</span>
+    </button>
+    <button type="button" @click="onSubmit"
+      class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-sky-500 dark:bg-sky-600">
+      <span class="mr-2">{{ lblSubmit }}</span>
+    </button>
   </div>
 </template>

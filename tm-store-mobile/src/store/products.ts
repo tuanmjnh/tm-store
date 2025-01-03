@@ -36,10 +36,10 @@ export interface IModelProduct {
 
 const constant = {
   code: null,
-  groups: null,
+  groups: [],
   title: null,
   desc: null,
-  content: null,
+  content: '',
   types: null,
   typeData: null,
   quantity: null,
@@ -116,6 +116,12 @@ export const useProductStore = defineStore('productStore', {
         return rs
       } catch (e) { throw e }
     },
+    async duplicate(arg?: any) {
+      try {
+        const rs: IResponseItem = await http.axiosInstance.post(`/${API_PATH}/duplicate`, arg)
+        return rs
+      } catch (e) { throw e }
+    },
     async update(arg?: any) {
       try {
         const rs: IResponseItem = await http.axiosInstance.put(`/${API_PATH}`, arg)
@@ -188,78 +194,100 @@ export const useProductStore = defineStore('productStore', {
       const ids = options.map(x => x.id)
       return ids.max() + 1
     },
-    addTypeGroup(types: IProductType[], typeLabel?: string, optionLabel?: string) {
-      if (!types) types = []
+    addTypeGroup(item: IModelProduct, typeLabel?: string, optionLabel?: string) {
+      if (!item.types) item.types = []
       const option: IProductTypeOption = { id: 1, label: optionLabel }
-      types.push({ label: typeLabel, options: [option] })
-      return { types, option }
+      item.types.push({ label: typeLabel, options: [option] })
+      this.pushTypeDataOption(item, item.types.length - 1, option)
+      return item
     },
-    removeTypeGroup(types: IProductType[], indexGroup: number) {
-      types.splice(indexGroup, 1)
-      if (types.length < 1) types = null
-      return types
+    removeTypeGroup(item: IModelProduct, indexGroup: number) {
+      item.types.splice(indexGroup, 1)
+      if (item.types.length < 1) item.types = null
+      this.removeTypeDataGroup(item)
+      return item.types
     },
     addTypeOption(options: IProductTypeOption[], optionLabel?: string) {
       const option = { id: this.generatorIdType(options), label: optionLabel }
       options.push(option)
       return { options, option }
     },
+    addTypeOptionItem(item: IModelProduct, indexType: number, optionLabel?: string) {
+      const option = { id: this.generatorIdType(item.types[indexType].options), label: optionLabel }
+      item.types[indexType].options.push(option)
+      this.pushTypeDataOption(item, indexType, option)
+      return { options: item.types[indexType].options, option }
+    },
     removeTypeOption(options: IProductTypeOption[], optionId: number) {
       const index = options.findIndex(x => x.id === optionId)
       if (index > -1) options.splice(index, 1)
       return options
     },
-    pushTypeDataOption(types: IProductType[], typeData?: IProductTypeData, indexGroup?: number, option?: IProductTypeOption) {
-      if (!typeData) typeData = { price: 0, priceImport: 0, quantity: 0 } as IProductTypeData
-      if (indexGroup === 0) {
-        if (types.length === 1) {
-          typeData[option.id] = this.typeData
+    removeTypeOptionItem(item: IModelProduct, indexType: number, optionId: number) {
+      const index = item.types[indexType].options.findIndex(x => x.id === optionId)
+      if (index > -1) item.types[indexType].options.splice(index, 1)
+      this.removeTypeDataOption(item, optionId)
+      return item.types[indexType].options
+    },
+    pushTypeData(item: IModelProduct, option: IProductTypeOption) {
+      if (!item.typeData) item.typeData = {} as any
+      if (item.types.length == 1) {
+        item.typeData[option.id] = { ...{}, ...this.typeData }
+      } else {
+        item.typeData[option.id] = {}
+        for (let i = 0; i < item.types[1].options.length; i++) {
+          item.typeData[option.id][item.types[1].options[i].id] = { ...{}, ...this.typeData }
+        }
+      }
+    },
+    pushTypeDataOption(item: IModelProduct, indexGroup?: number, option?: IProductTypeOption) {
+      if (!item.typeData) item.typeData = {} as any
+      if (indexGroup < 1) {
+        if (item.types.length === 1) {
+          item.typeData[option.id] = { ...{}, ...this.typeData }
         } else {
-          typeData[option.id] = {}
-          for (let i = 0; i < types[1].options.length; i++) {
-            typeData[option.id][types[1].options[i].id] = this.typeData
+          item.typeData[option.id] = {}
+          for (let i = 0; i < item.types[1].options.length; i++) {
+            item.typeData[option.id][item.types[1].options[i].id] = { ...{}, ...this.typeData }
           }
         }
       } else {
         // Check first push type 2
-        if (types[1].options.length === 1) {
+        if (item.types[1].options.length === 1) {
           const cloneTypeData = {} as IProductTypeData
-          for (const e in typeData) {
+          for (const e in item.typeData) {
             cloneTypeData[e] = {}
             // cloneTypeData[e][option.id] = Object.keys(typeData[e]).length ? new TypeData(typeData[e].price, typeData[e].priceImport, typeData[e].quantity) : new TypeData()// Object.keys(typeData[e]).length ? { ...typeData[e] } : new TypeData()
-            cloneTypeData[e][option.id] = Object.keys(typeData[e]).length ? { ...{}, ...typeData[e] } : { ...{}, ...this.TypeData }
+            cloneTypeData[e][option.id] = Object.keys(item.typeData[e]).length ? { ...{}, ...item.typeData[e] } : { ...{}, ...this.TypeData }
           }
-          typeData = cloneTypeData
+          item.typeData = cloneTypeData
         } else {
-          for (const e in typeData) {
-            typeData[e][option.id] = this.typeData
-          }
+          for (const e in item.typeData)
+            item.typeData[e][option.id] = { ...{}, ...this.typeData }
         }
       }
-      return typeData
+      return item.typeData
     },
-    removeTypeDataGroup(types: IProductType[], typeData: IProductTypeData, indexGroup: number) {
-      if (!types || types.length < 1) return null
-      if (indexGroup === 0) {
-        return Object.values(typeData)[0]
+    removeTypeDataGroup(item: IModelProduct) {
+      if (!item.types || item.types.length < 1) return null
+      if (item.types.length === 1) {
+        item.typeData = Object.values(item.typeData)[0]
       } else {
         const cloneTypeData = {}
-        for (const e in typeData) {
-          const item = Object.values(typeData[e]) as Array<any>
-          cloneTypeData[e] = { ...item[0] }
-        }
-        return cloneTypeData
+        for (const e in item.typeData)
+          cloneTypeData[e] = Object.values(item.typeData[e][0])
+        item.typeData = cloneTypeData
       }
     },
-    removeTypeDataOption(typeData: IProductTypeData, indexGroup: number, optionId: number) {
-      if (indexGroup === 0) {
-        delete typeData[optionId]
+    removeTypeDataOption(item: IModelProduct, optionId: number) {
+      if (item.types.length === 1) {
+        delete item.typeData[optionId]
       } else {
-        for (const e in typeData) {
-          delete typeData[e][optionId]
+        for (const e in item.typeData) {
+          delete item.typeData[e][optionId]
         }
       }
-      return typeData
+      return item.typeData
     },
     async updateAllTypeData(types: IProductType[], typeData: Object, quickConfig: IProductTypeData) {
       if (types.length < 2) {

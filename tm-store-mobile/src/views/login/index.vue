@@ -12,13 +12,13 @@ const storeAuth = useAuthStore()
 // Data
 const AppName = import.meta.env.VITE_APP_TITLE
 const data = ref({
-  username: 'admin',
-  password: 'Bk123456@',
+  username: '',//'admin',
+  password: '',//'Bk123456@',
   remember: true
 })
 const isPassword = ref(true)
 const isCapsTooltip = ref(false)
-
+const isLoading = ref(false)
 // Return data for html
 const onSetGlobalData = () => {
   return new Promise(async (resolve, reject) => {
@@ -37,12 +37,15 @@ const onCheckCapslock = ({ shiftKey, key } = {} as any) => {
   if (key === 'CapsLock' && isCapsTooltip.value === true) isCapsTooltip.value = false
 }
 const onSubmit = async () => {
+  isLoading.value = true
   storeAuth.verify(toRaw(data.value)).then(async rs => {
     if (rs) {
       const redirect = $route.query && $route.query.redirect ? $route.query.redirect : '/'
       $router.push(redirect.toString()).catch((e) => { })
       await onSetGlobalData()
     }
+  }).finally(() => {
+    isLoading.value = false
   })
 }
 </script>
@@ -80,8 +83,7 @@ const onSubmit = async () => {
         </van-field>
       </van-cell-group>
       <div style="margin: 16px;">
-        <van-button round block type="primary" native-type="submit" :loading="storeApp.loading.post"
-          :disable="storeApp.loading.post">
+        <van-button round block type="primary" native-type="submit" :loading="isLoading" :disable="isLoading">
           {{ $t('login.signIn') }}
         </van-button>
       </div>
