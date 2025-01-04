@@ -40,19 +40,40 @@ const QRCodeOptions = ref<IQRCodeOptions>({
   torchNotSupported: false,
   showScanConfirmation: false
 })
+/*** barcode formats ***/
+const barcodeFormats = ref({
+  aztec: true,
+  code_128: true,
+  code_39: true,
+  code_93: true,
+  codabar: true,
+  databar: true,
+  databar_expanded: true,
+  data_matrix: true,
+  dx_film_edge: true,
+  ean_13: true,
+  ean_8: true,
+  itf: true,
+  maxi_code: true,
+  micro_qr_code: true,
+  pdf417: true,
+  qr_code: true,
+  rm_qr_code: true,
+  upc_a: true,
+  upc_e: true,
+  linear_codes: true,
+  matrix_codes: true
+})
+const selectedBarcodeFormats = computed(() => {
+  return Object.keys(barcodeFormats.value).filter((format) => barcodeFormats.value[format])
+})
 const qrcodeCaptureRef = ref(null)
 const selected = ref(null as MediaDeviceInfo | null)
 const devices = ref([] as MediaDeviceInfo[])
 onMounted(async () => {
   devices.value = (await navigator.mediaDevices.enumerateDevices()).filter(({ kind }) => kind === 'videoinput')
-  if (devices.value.length > 0)
-    selected.value = devices.value[0]
-  if (qrcodeCaptureRef.value) {
-    qrcodeCaptureRef.value.$el.removeAttribute('capture')
-    console.log(qrcodeCaptureRef.value.$el)
-  }
-  //const input = document.getElementById('qrcode-capture')
-  //input.removeAttribute('capture')
+  if (devices.value.length > 0) selected.value = devices.value[0]
+  if (qrcodeCaptureRef.value) qrcodeCaptureRef.value.$el.removeAttribute('capture')
 })
 const timeout = (ms) => {
   return new Promise((resolve) => {
@@ -75,7 +96,7 @@ const onQRCodeDetect = async (detectedCodes) => {
   QRCodeOptions.value.paused = true
   await timeout(500)
   QRCodeOptions.value.paused = false
-  window.alert(QRCodeOptions.value.code)
+  // window.alert(QRCodeOptions.value.code)
   emit('onDetect', QRCodeOptions.value)
 }
 const onQRCodeSwitchCamera = () => {
@@ -126,8 +147,8 @@ const onCancel = () => {
 </script>
 <template>
   <qrcode-stream class="mt-3" :constraints="QRCodeOptions" :paused="QRCodeOptions.paused"
-    :torch="QRCodeOptions.torchActive" :track="paintBoundingBox" @detect="onQRCodeDetect" @camera-on="onQRCodeCameraOn"
-    @camera-off="onQRCodeCameraOff" @error="onQRCodeError">
+    :torch="QRCodeOptions.torchActive" :track="paintBoundingBox" :formats="selectedBarcodeFormats"
+    @detect="onQRCodeDetect" @camera-on="onQRCodeCameraOn" @camera-off="onQRCodeCameraOff" @error="onQRCodeError">
     <div class="absolute top-full w-full text-center mt-16">
       <button @click="onQRCodeSwitchCamera">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 48 48">

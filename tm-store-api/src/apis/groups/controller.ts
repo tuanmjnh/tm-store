@@ -22,11 +22,11 @@ export class GroupController {
       if (queries.flag) conditions.$and.push({ flag: parseInt(queries.flag) })
       if (queries.type) conditions.$and.push({ type: queries.type })
       else conditions.$and.push({ type: 'product' })
-      if (queries.filter) {
+      if (queries.text) {
         conditions.$and = []
         conditions.$and.push({
           $or: [
-            { title: new RegExp(queries.filter, 'i') }
+            { title: new RegExp(queries.text, 'i') }
           ]
         })
       }

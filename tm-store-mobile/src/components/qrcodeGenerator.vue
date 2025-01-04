@@ -192,6 +192,7 @@ onMounted(() => {
 })
 const onChangeCodeInput = debounce((event) => {
   onInit(event.target.value)
+  emit('update:modelValue', event.target.value)
 }, 300)
 const onQRcodeScanner = () => {
   emit('onScanner', true)

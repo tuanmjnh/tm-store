@@ -19,12 +19,11 @@ export class ProductController {
       queries.rowsPerPage = queries.rowsPerPage ? parseInt(queries.rowsPerPage) : 10
       const rs = { data: [] as IProduct[], rowsNumber: 0, status: false, message: 'find' }
       const conditions = { $and: [{ flag: queries.flag ? parseInt(queries.flag) : 1 }] } as any
-      if (queries.filter) conditions.$and.push({ $text: { $search: queries.filter } })
+      if (queries.text) conditions.$and.push({ $text: { $search: queries.text } })
       if (!queries.sortBy) queries.sortBy = 'order'
       rs.rowsNumber = (await MProduct.countDocuments(conditions))
       if (queries.groups && queries.groups.length) {
         queries.groups = JSON.parse(queries.groups as any)
-        console.log(queries.groups)
         if (queries.groups) conditions.$and.push({ groups: { $in: queries.groups } })
       }
       if (queries.quantity !== undefined) conditions.$and.push({ quantity: { $gt: parseInt(queries.quantity) } })
@@ -81,12 +80,12 @@ export class ProductController {
           const conditions = { $or: [{ qrcode: { $in: queries.qrcode } }, { barcode: { $in: queries.qrcode } }] }
           const rs = await this.product.FindAll(conditions)
           if (!rs) return res.status(404).send('no_exist')
-          return res.status(200).json(rs)
+          return res.status(200).json({ data: rs, message: 'findByQRCode' })
         } else {
           const conditions = { $or: [{ qrcode: queries.qrcode }, { barcode: queries.qrcode }] }
           const rs = await this.product.FindOne(conditions)
           if (!rs) return res.status(404).send('no_exist')
-          return res.status(200).json(rs[0])
+          return res.status(200).json({ data: rs, message: 'findByQRCode' })
         }
       }
     } catch (error) {

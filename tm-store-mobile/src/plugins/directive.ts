@@ -29,16 +29,39 @@ export const lowerCase = {
   //   }, true)
   // }
 
-  mounted(el, binding) {
-    const vm = binding.instance
-    el.addEventListener('keyup', (e) => {
+  // mounted(el, binding) {
+  //   const vm = binding.instance
+  //   el.addEventListener('keyup', (e) => {
+  //     e.target.value = e.target.value.toLowerCase()
+  //     vm.$emit('onUpdate:modelValue', e.target.value)
+  //   }, true)
+  // }
+
+  updated(el) {
+    el.addEventListener('keydown', (e) => {
+      // console.log(e.target.value.toUpperCase())
       e.target.value = e.target.value.toLowerCase()
-      vm.$emit('onUpdate:modelValue', e.target.value)
-    }, true)
+      e.target.style.textTransform = 'lowerCase'
+    })
   }
 }
 
 export const uppercase = {
+  updated(el) {
+    el.addEventListener('keydown', (e) => {
+      // console.log(e.target.value.toUpperCase())
+      e.target.value = e.target.value.toUpperCase()
+      e.target.style.textTransform = 'uppercase'
+    })
+  }
+  // bind(el, binding, vnode) {
+  //   el.style.textTransform = 'uppercase';
+  //   console.log(el)
+  // },
+  // updated(el, binding, vnode) {
+  //   el.style.textTransform = 'uppercase';
+  //   console.log(el)
+  // }
   // mounted (el, binding) {
   //   const vm = binding.instance
   //   let target = null
@@ -49,15 +72,16 @@ export const uppercase = {
   //     vm.$emit('onUpdate:modelValue', e.target.value)
   //   }, true)
   // },
-  mounted(el, binding, vnode) {
-    // let vm = vnode.context;
-    const vm = binding.instance
-    // el.dispatchEvent('update:modelValue', 'sdg')
-    el.addEventListener('keyup', (e) => {
-      // e.target.value = e.target.value.toUpperCase()
-      // vm.$emit('update:modelValue', 'sdg')
-    })
-  }
+  // mounted(el, binding, vnode) {
+  //   // let vm = vnode.context;
+  //   const vm = binding.instance
+  //   // el.dispatchEvent('update:modelValue', 'sdg')
+  //   el.addEventListener('keyup', (e) => {
+  //     // console.log(e.target.value.toUpperCase())
+  //     // e.target.value = e.target.value.toUpperCase()
+  //     vm.$emit('update:modelValue', e.target.value.toUpperCase())
+  //   })
+  // }
 }
 
 export const upperCaseFirst = {

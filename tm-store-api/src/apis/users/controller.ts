@@ -17,13 +17,13 @@ export class UserController {
       queries.rowsPerPage = queries.rowsPerPage ? parseInt(queries.rowsPerPage) : 10
       const rs = { data: [] as IUser[], rowsNumber: 0, status: false, message: 'find' }
       const conditions = { $and: [{ enable: queries.enable && queries.enable === 'true' ? true : false }] } as any
-      if (queries.filter) {
+      if (queries.text) {
         conditions.$and.push({
           $or: [
-            { email: new RegExp(queries.filter, 'i') },
-            { fullName: new RegExp(queries.filter, 'i') },
-            { personNumber: new RegExp(queries.filter, 'i') },
-            { phone: new RegExp(queries.filter, 'i') }
+            { email: new RegExp(queries.text, 'i') },
+            { fullName: new RegExp(queries.text, 'i') },
+            { personNumber: new RegExp(queries.text, 'i') },
+            { phone: new RegExp(queries.text, 'i') }
           ]
         })
       }

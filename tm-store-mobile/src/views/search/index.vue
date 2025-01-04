@@ -1,16 +1,27 @@
 <script setup lang="ts">
 import vueQrcodeReader from '@/components/vueQrcodeReader.vue'
-import { useAppStore } from '@/store'
+import { useAppStore, useProductStore } from '@/store'
 import { showNotify } from 'vant'
+
 const storeApp = useAppStore()
+const productStore = useProductStore()
+const router = useRouter()
 const filterSearch = ref(storeApp.filter)
 const isDialogQRCode = ref(false)
+
 watch(filterSearch, val => { storeApp.filter = val }, { immediate: true })
-const result = ref('')
+// const result = ref('')
 const onQRCodeDetect = async (args) => {
   // console.log(code)
   // window.alert(code.result)
-  result.value = args.code
+  // result.value = args.code
+  if (args.code) {
+    args.code = JSON.parse(args.code)
+    if (args.code && args.code.length) {
+      const p = await productStore.find({ qrcode: args.code[0] })
+      if (p && p.data) router.push(`/product/edit/${p.data._id}`)
+    }
+  }
 }
 const onQRCodeError = async (args) => {
   // console.log(args)
@@ -22,7 +33,7 @@ const onQRCodeError = async (args) => {
     @click-right-icon="isDialogQRCode = true" />
   <van-dialog v-model:show="isDialogQRCode" :title="$t('qrCode.qrCodeScanner')" class="full-screen"
     :show-cancel-button="false" :show-confirm-button="false" close-on-click-action>
-    {{ result }}
+    <!-- {{ result }} -->
     <vueQrcodeReader :lbl-cancel="$t('global.back')" @on-cancel="isDialogQRCode = false" @on-detect="onQRCodeDetect"
       @on-error="onQRCodeError" />
   </van-dialog>

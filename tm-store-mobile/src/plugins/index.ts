@@ -1,7 +1,7 @@
 import type { App } from 'vue'
 import moment from 'moment'
 // import { axios, api } from './axios'
-// import * as directives from './directive'
+import * as directives from './directive'
 import './prototypes'
 
 declare module '@vue/runtime-core' {
@@ -37,10 +37,10 @@ declare module '@vue/runtime-core' {
 // }
 
 export function installPlugins(app: App) {
-  //directives
-  //   Object.keys(directives).forEach(key => {
-  //     app.directive(key, directives[key])
-  //   })
+  // directives
+  Object.keys(directives).forEach(key => {
+    app.directive(key, directives[key])
+  })
   // app.provide('$moment', moment)
   app.config.globalProperties.$moment = moment
   app.config.globalProperties.$createdAt = (dateTime: string, strict?: boolean) => { return moment(dateTime, strict || false).format('DD/MM/YYYY - hh:mm') }

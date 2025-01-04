@@ -57,6 +57,11 @@ const onFilterFetch = async () => {
   isShowFilter.value = false
   await onFetch()
 }
+const onSearch = async (args) => {
+  isRefresh.value = true
+  isShowFilter.value = false
+  await onFetch()
+}
 const onFilterChangeGroup = async () => {
   isRefresh.value = true
   isShowFilter.value = false
@@ -147,7 +152,7 @@ const onGetRoles = (item) => {
   </tab-bar-view>
 
   <van-popup v-model:show="isShowFilter" position="bottom" :style="{ height: '30%' }">
-    <van-search v-model="filter.text" :placeholder="$t('global.search')" />
+    <van-search v-model="filter.text" :placeholder="$t('global.search')" @search="onSearch" />
     <van-cell title="Cell title" is-link @click="isDialogGroup = true">
       <template #title>Nhóm</template>
     </van-cell>

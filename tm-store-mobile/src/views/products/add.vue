@@ -84,8 +84,10 @@ const onFileUploaded = (args) => {
   }
 }
 const onQRCodeDetect = (args) => {
-  if (args)
-    form.value.qrcode = args.code
+  if (args) {
+    form.value.qrcode = JSON.parse(args.code)
+    if (form.value.qrcode && form.value.qrcode.length) form.value.qrcode = form.value.qrcode[0]
+  }
   else
     showNotify({ type: 'warning', message: $t('error.qrError') })
   isDialogQRCodeScanner.value = false
@@ -98,7 +100,7 @@ const onSubmit = async () => {
   try {
     if (form.value._id) {
       form.value.flag = flag.value ? 1 : 0
-      // console.log(form.value)
+      form.value.code = form.value.code?.toUpperCase()
       const rs = await productStore.update(form.value)
       if (rs.data) showNotify({ type: 'success', message: $t('success.update') })
     } else {
@@ -128,7 +130,7 @@ const onSubmit = async () => {
               {{ groups && groups.length ? groups.map(x => x.title).join(', ') : $t('group.select') }}
             </template>
           </van-field>
-          <van-field v-model="form.code" name="code" :label="$t('global.code')" :disabled="!!form._id"
+          <van-field v-model="form.code" name="code" :label="$t('global.code')" :disabled="!!form._id" v-uppercase
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
           <van-field v-model="form.title" name="title" :label="$t('global.title')"
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
@@ -331,7 +333,7 @@ const onSubmit = async () => {
   </van-dialog>
   <van-dialog v-model:show="isDialogBarCode" :title="$t('qrCode.barCode')" close-on-click-overlay
     :show-cancel-button="false" :show-confirm-button="false" close-on-click-action>
-    <barcode-generator v-model="form.qrcode" :default-value="form.code" :lbl-submit="$t('global.update')"
+    <barcode-generator v-model="form.barcode" :default-value="form.code" :lbl-submit="$t('global.update')"
       :lbl-cancel="$t('global.back')" @on-cancel="isDialogBarCode = false" @on-submit="isDialogBarCode = false" />
   </van-dialog>
   <van-dialog v-model:show="isDialogQRCodeScanner" :title="$t('qrCode.qrCodeScanner')" class="full-screen"

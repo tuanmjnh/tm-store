@@ -18,12 +18,12 @@ export class ConfigController {
       queries.rowsPerPage = queries.rowsPerPage ? parseInt(queries.rowsPerPage) : 10
       const rs = { data: [] as IRole[], rowsNumber: 0, status: false, message: 'find' }
       const conditions = { $and: [{ flag: queries.flag ? parseInt(queries.flag) : 1 }] } as any
-      if (queries.filter) {
+      if (queries.text) {
         conditions.$and = []
         conditions.$and.push({
           $or: [
-            { key: new RegExp(queries.filter, 'i') },
-            { name: new RegExp(queries.filter, 'i') }
+            { key: new RegExp(queries.text, 'i') },
+            { name: new RegExp(queries.text, 'i') }
           ]
         })
       }

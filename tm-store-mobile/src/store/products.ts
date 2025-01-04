@@ -110,6 +110,13 @@ export const useProductStore = defineStore('productStore', {
         return rs
       } catch (e) { throw e }
     },
+    async find(arg?: any): Promise<IResponseItem> {
+      try {
+        const rs: IResponseItem = await http.axiosInstance.get(`/${API_PATH}/find`, { params: arg })
+        this.item = rs.data
+        return rs
+      } catch (e) { throw e }
+    },
     async create(arg?: any) {
       try {
         const rs: IResponseItem = await http.axiosInstance.post(`/${API_PATH}`, arg)
