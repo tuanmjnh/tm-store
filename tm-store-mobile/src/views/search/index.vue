@@ -3,7 +3,7 @@ import vueQrcodeReader from '@/components/vueQrcodeReader.vue'
 import productsView from '@/views/products/view.vue'
 import { useAppStore, useProductStore } from '@/store'
 import { showNotify } from 'vant'
-import { debounce, filter } from 'lodash'
+import { debounce } from 'lodash'
 
 const storeApp = useAppStore()
 const productStore = useProductStore()
@@ -25,8 +25,10 @@ const onQRCodeDetect = async (args) => {
   if (args.code) {
     args.code = JSON.parse(args.code)
     if (args.code && args.code.length) {
-      const p = await productStore.find({ qrcode: args.code[0] })
-      if (p && p.data) router.push(`/product/edit/${p.data._id}`)
+      form.value.text = args.code[0]
+      isDialogQRCode.value = false
+      // const p = await productStore.find({ qrcode: args.code[0] })
+      // if (p && p.data) router.push(`/product/edit/${p.data._id}`)
     }
   }
 }
@@ -35,7 +37,6 @@ const onQRCodeError = async (args) => {
   showNotify({ type: 'danger', message: `[${args.name}] - ${args.value}` })
 }
 const onSearch = debounce((args) => {
-  console.log(args)
   form.value.text = args
 }, 600)
 const onClear = debounce((args) => {

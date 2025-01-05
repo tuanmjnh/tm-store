@@ -4,6 +4,7 @@ import componentGroup from "@/views/groups/groups.vue"
 import router from '@/router'
 import delay from 'delay'
 import { $t } from '@/i18n'
+import { debounce } from 'lodash'
 import { useProductStore } from '@/store'
 const productStore = useProductStore()
 
@@ -57,11 +58,12 @@ const onFilterFetch = async () => {
   isShowFilter.value = false
   await onFetch()
 }
-const onSearch = async (args) => {
+const onSearch = debounce(async (args) => {
   isRefresh.value = true
   isShowFilter.value = false
   await onFetch()
-}
+}, 600)
+
 const onFilterChangeGroup = async () => {
   isRefresh.value = true
   isShowFilter.value = false
@@ -152,7 +154,7 @@ const onGetRoles = (item) => {
   </tab-bar-view>
 
   <van-popup v-model:show="isShowFilter" position="bottom" :style="{ height: '30%' }">
-    <van-search v-model="filter.text" :placeholder="$t('global.search')" @search="onSearch" />
+    <van-search v-model="filter.text" :placeholder="$t('global.search')" @update:model-value="onSearch" />
     <van-cell title="Cell title" is-link @click="isDialogGroup = true">
       <template #title>Nhóm</template>
     </van-cell>

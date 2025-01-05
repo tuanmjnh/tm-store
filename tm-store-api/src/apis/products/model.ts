@@ -87,4 +87,4 @@ const schema: Schema = new Schema({
 })
 
 export const MProduct = model<IProduct & Document>('products', schema)
-schema.index({ key: 'text', name: 'text' })
+schema.index({ code: 'text', title: 'text', brand: 'text', qrcode: 'text', barcode: 'text' })

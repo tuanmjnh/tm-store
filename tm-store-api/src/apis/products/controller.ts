@@ -19,7 +19,18 @@ export class ProductController {
       queries.rowsPerPage = queries.rowsPerPage ? parseInt(queries.rowsPerPage) : 10
       const rs = { data: [] as IProduct[], rowsNumber: 0, status: false, message: 'find' }
       const conditions = { $and: [{ flag: queries.flag ? parseInt(queries.flag) : 1 }] } as any
-      if (queries.text) conditions.$and.push({ $text: { $search: queries.text } })
+      // if (queries.text) conditions.$and.push({ $text: { $search: queries.text } })
+      if (queries.text) {
+        conditions.$and.push({
+          $or: [
+            { code: new RegExp(queries.text, 'i') },
+            { title: new RegExp(queries.text, 'i') },
+            { brand: new RegExp(queries.text, 'i') },
+            { qrcode: new RegExp(queries.text, 'i') },
+            { barcode: new RegExp(queries.text, 'i') }
+          ]
+        })
+      }
       if (!queries.sortBy) queries.sortBy = 'order'
       rs.rowsNumber = (await MProduct.countDocuments(conditions))
       if (queries.groups && queries.groups.length) {

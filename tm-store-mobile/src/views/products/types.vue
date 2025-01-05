@@ -25,13 +25,8 @@ const onChangeTypeView = (arg) => {
   emit('update:typeView', arg)
 }
 const onSelectTypeOption = (arg, index) => {
-  if (arg && arg.length && index > -1) {
-    // for (let i = 0; i < arg.length; i++) {
-    //   if (i === index) arg[i].selected = true
-    //   else arg[i].selected = false
-    // }
+  if (arg && arg.length && index > -1)
     typeSelected.value = arg[index]
-  }
 }
 watch(() => props.modelValue.types, n => {
   if (props.modelValue.types && props.modelValue.types.length) onSelectTypeOption(props.modelValue.types[0].options, 0)
@@ -160,26 +155,33 @@ const onUpdateAll = () => {
               </svg>
               <span class="text-gray-900 dark:text-white"> {{ e.label }}</span>
             </div>
-            <div class="flex-row">
-              <div class="flex justify-center justify-items-center content-center items-center">
-                <!-- <span>{{ typeData[e.id].priceImport }}</span> -->
+            <div class="flex-row pt-2">
+              <div class="relative z-0 w-full mb-5 group">
                 <input type="number" v-model="modelValue.typeData[e.id].priceImport"
-                  :placeholder="$t('product.priceImport')"
-                  class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
-                <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
-                  <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
-                    <path stroke-linecap="round" d="M42 26v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h14" />
-                    <path d="M14 26.72V34h7.317L42 13.308L34.695 6z" />
-                  </g>
-                </svg> -->
+                  class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  required />
+                <label for="floating_email"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  {{ $t('product.priceImport') }}
+                </label>
               </div>
-              <div class="flex justify-center justify-items-center content-center items-center">
-                <input type="number" v-model="modelValue.typeData[e.id].price" :placeholder="$t('product.priceSale')"
-                  class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
+              <div class="relative z-0 w-full mb-5 group">
+                <input type="number" v-model="modelValue.typeData[e.id].price"
+                  class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  required />
+                <label for="floating_email"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  {{ $t('product.priceSale') }}
+                </label>
               </div>
-              <div class="flex justify-center justify-items-center content-center items-center">
-                <input type="number" v-model="modelValue.typeData[e.id].quantity" :placeholder="$t('product.quantity')"
-                  class="block w-full p-2 mb-1 text-gray-900 text-xs bg-transparent dark:text-sky-500 border border-gray-300">
+              <div class="relative z-0 w-full mb-5 group">
+                <input type="number" v-model="modelValue.typeData[e.id].quantity"
+                  class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  required />
+                <label for="floating_email"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  {{ $t('product.quantity') }}
+                </label>
               </div>
             </div>
           </div>
