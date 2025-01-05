@@ -11,7 +11,7 @@ const storeApp = useAppStore()
 const storeAuth = useAuthStore()
 // Data
 const AppName = import.meta.env.VITE_APP_TITLE
-const data = ref({
+const form = ref({
   username: '',//'admin',
   password: '',//'Bk123456@',
   remember: true
@@ -38,7 +38,8 @@ const onCheckCapslock = ({ shiftKey, key } = {} as any) => {
 }
 const onSubmit = async () => {
   isLoading.value = true
-  storeAuth.verify(toRaw(data.value)).then(async rs => {
+  form.value.username = form.value.username.toLowerCase()
+  storeAuth.verify(toRaw(form.value)).then(async rs => {
     if (rs) {
       const redirect = $route.query && $route.query.redirect ? $route.query.redirect : '/'
       $router.push(redirect.toString()).catch((e) => { })
@@ -63,9 +64,9 @@ const onSubmit = async () => {
       </div>
       <van-cell-group inset>
         <!-- <van-field :label="AppName"></van-field> -->
-        <van-field v-model="data.username" name="Username" :label="$t('login.username')"
+        <van-field v-model="form.username" name="Username" :label="$t('login.username')"
           :placeholder="$t('login.username')" :rules="[{ required: true, message: 'Username is required' }]" />
-        <van-field v-model="data.password" :type="isPassword ? 'password' : 'text'" name="Password"
+        <van-field v-model="form.password" :type="isPassword ? 'password' : 'text'" name="Password"
           :label="$t('login.password')" :placeholder="$t('login.password')"
           :rules="[{ required: true, message: 'Password is required' }]">
           <template #right-icon>
@@ -75,7 +76,7 @@ const onSubmit = async () => {
         </van-field>
         <van-field name="checkbox" :label="$t('login.remember')">
           <template #input>
-            <van-checkbox v-model="data.remember" shape="square" />
+            <van-checkbox v-model="form.remember" shape="square" />
           </template>
           <template #right-icon>
             <van-icon name="warning-o" />

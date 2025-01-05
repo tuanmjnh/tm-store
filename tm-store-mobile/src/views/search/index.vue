@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import vueQrcodeReader from '@/components/vueQrcodeReader.vue'
+import productsView from '@/views/products/view.vue'
 import { useAppStore, useProductStore } from '@/store'
 import { showNotify } from 'vant'
+import { debounce, filter } from 'lodash'
 
 const storeApp = useAppStore()
 const productStore = useProductStore()
 const router = useRouter()
-const filterSearch = ref(storeApp.filter)
+// const filterSearch = ref(storeApp.filter)
 const isDialogQRCode = ref(false)
-
-watch(filterSearch, val => { storeApp.filter = val }, { immediate: true })
+const textSearch = ref(null)
+const form = ref({
+  text: '',
+  code: '',
+  flag: 1
+})
+// watch(filterSearch, val => { storeApp.filter = val }, { immediate: true })
 // const result = ref('')
 const onQRCodeDetect = async (args) => {
   // console.log(code)
@@ -27,10 +34,18 @@ const onQRCodeError = async (args) => {
   // console.log(args)
   showNotify({ type: 'danger', message: `[${args.name}] - ${args.value}` })
 }
+const onSearch = debounce((args) => {
+  console.log(args)
+  form.value.text = args
+}, 600)
+const onClear = debounce((args) => {
+  form.value.text = ''
+}, 200)
 </script>
 <template>
-  <van-search v-model="filterSearch" right-icon="qr" :placeholder="$t('global.inputPlaceholder')"
-    @click-right-icon="isDialogQRCode = true" />
+  <van-search v-model="textSearch" right-icon="qr" :placeholder="$t('global.inputPlaceholder')"
+    @click-right-icon="isDialogQRCode = true" @update:model-value="onSearch" @clear="onClear" />
+  <productsView v-model="form.text" />
   <van-dialog v-model:show="isDialogQRCode" :title="$t('qrCode.qrCodeScanner')" class="full-screen"
     :show-cancel-button="false" :show-confirm-button="false" close-on-click-action>
     <!-- {{ result }} -->
