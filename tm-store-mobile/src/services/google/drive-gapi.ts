@@ -9,6 +9,8 @@ export interface IGoogleFile extends gapi.client.drive.File {
 interface IAgrument {
   trashed?: boolean
   fields?: string
+  id?: string
+  ids?: Array<string>
   name?: string
   parents?: string
   pageSize?: number
@@ -22,7 +24,7 @@ interface IAgrument {
 
 export class GoogleDrive {
   constructor(args?: any) {
-    this.DEFAULTS.FOLDER_ROOT = args.root
+    this.DEFAULTS.FOLDER_ROOT = args && args.root ? args.root : this.DEFAULTS.FOLDER_ROOT
     this.initialize()
   }
   public googleConnect = get('connectsStore.google')
@@ -35,7 +37,7 @@ export class GoogleDrive {
     FIELDS_FILE: 'id,name,mimeType,size,parents,imageMediaMetadata,webViewLink,webContentLink,thumbnailLink'
   }
   private initialize() {
-    console.log(this.DEFAULTS.FOLDER_ROOT)
+    // console.log(this.DEFAULTS.FOLDER_ROOT)
     return (async () => {
       window.gapi.load('client', {
         callback: async (e) => {
@@ -176,7 +178,39 @@ export class GoogleDrive {
       return rs
     } catch (e) { throw new Error(e) }
   }
-  public GetFile = async (args?: IAgrument) => {
+  public GetFileById = async (args?: IAgrument) => {
+    try {
+      if (!args || !args.id) throw new Error('404')
+      args.trashed = args.trashed || false
+      const isReady = await this.CheckClient()
+      if (!isReady) throw new Error('Error Client')
+      const opts = {
+        spaces: 'drive',
+        supportsAllDrives: true,
+        fileId: args.id,
+        q: `trashed=${args.trashed}`,
+        fields: args.fields || this.DEFAULTS.FIELDS_FILE
+      }
+      // console.log(opts.q)
+      // const fileMetadata = []
+      // const fileIds = ['1hOwbxDy41ce9seTEXW2g_pl5J1nzkP8M', "1Ms0MJzt_hnpaXieyzLdDuD2BXqE1Kb2K", "1EPRVwTU7FEuWVjZ_RtI8uEOrz0kD1SMf"]
+      const res = await window.gapi.client.drive.files.get(opts)
+      return res.result
+    } catch (e) { throw new Error(e) }
+  }
+  public GetFilesById = async (args?: IAgrument) => {
+    try {
+      const fileMetadata = []
+      for (const fid of args.ids) {
+        args.id = fid
+        const res = await this.GetFileById(args)
+        if (res) fileMetadata.push(res)
+        delay(100)
+      }
+      return fileMetadata
+    } catch (e) { throw new Error(e) }
+  }
+  public GetFileByName = async (args?: IAgrument) => {
     try {
       if (!args) args = {}
       args.trashed = args.trashed || false

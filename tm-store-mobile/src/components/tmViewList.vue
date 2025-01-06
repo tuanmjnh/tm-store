@@ -19,6 +19,7 @@ const props = withDefaults(
     multiple?: boolean
     isDelete?: boolean
     isTooltip?: boolean
+    isLoading?: boolean
     thumbnailView?: boolean
     thumbnailSize?: string
     isTrashed?: boolean

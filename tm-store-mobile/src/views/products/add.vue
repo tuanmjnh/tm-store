@@ -4,6 +4,7 @@ import { historyBack } from '@/router'
 import { $t } from '@/i18n'
 import { showNotify } from 'vant'
 import { MdEditor } from 'md-editor-v3'
+import { GoogleDrive } from '@/services/google/drive-gapi'
 import componentGroup from "@/views/groups/groups.vue"
 import googleDriveUpload from "@/components/google-drive-upload.vue"
 import vueQrcodeReader from '@/components/vueQrcodeReader.vue'
@@ -17,12 +18,14 @@ const appStore = useAppStore()
 const typeStore = useTypeStore()
 const groupStore = useGroupStore()
 const productStore = useProductStore()
+const GDrive = new GoogleDrive()
 const form = computed(() => productStore.item)
 const isDialogGroup = ref(false)
 const isDialogUnits = ref(false)
 const isDialogTypes = ref(false)
 const isDialogDrive = ref(false)
 const isDialogUpload = ref(false)
+const isImagesLoading = ref(false)
 const isDialogQRCode = ref(false)
 const isDialogQRCodeScanner = ref(false)
 const isDialogBarCode = ref(false)
@@ -41,6 +44,11 @@ const initForm = async () => {
   if (form.value.groups && form.value.groups.length) groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
   flag.value = form.value.flag ? true : false
   unit.value = units.value.find(x => x.code === form.value.unit)
+  isImagesLoading.value = true
+  if (form.value.images) {
+    form.value.images = await GDrive.GetFilesById({ ids: form.value.images.map(x => x.id) })
+    isImagesLoading.value = false
+  }
   console.log(form.value)
   // console.log(form.value.groups)
 }
@@ -251,11 +259,12 @@ const onSubmit = async () => {
         </div>
         <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
           <tm-view-box v-if="mediaView == 0" v-model="form.images" border="" v-model:selected="imagesSelected"
-            is-preview multiple is-delete is-trashed :title-delete="$t('messageBox.delete')"
-            :lbl-ok="$t('messageBox.confirm')" :lbl-cancel="$t('global.back')" />
-          <tm-view-list v-else v-model="form.images" v-model:selected="imagesSelected" multiple is-preview is-delete
-            is-trashed :title-delete="$t('messageBox.delete')" :lbl-ok="$t('messageBox.confirm')"
+            is-preview multiple is-delete is-trashed v-model:is-loading="isImagesLoading"
+            :title-delete="$t('messageBox.delete')" :lbl-ok="$t('messageBox.confirm')"
             :lbl-cancel="$t('global.back')" />
+          <tm-view-list v-else v-model="form.images" v-model:selected="imagesSelected" multiple is-preview is-delete
+            is-trashed v-model:is-loading="isImagesLoading" :title-delete="$t('messageBox.delete')"
+            :lbl-ok="$t('messageBox.confirm')" :lbl-cancel="$t('global.back')" />
         </div>
       </van-tab>
       <van-tab :title="$t('global.content')" name="content">

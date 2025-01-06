@@ -4,6 +4,7 @@ import { historyBack } from '@/router'
 import { $t } from '@/i18n'
 import { showImagePreview } from 'vant'
 import { showNotify } from 'vant'
+import { GoogleDrive } from '@/services/google/drive-gapi'
 // const tmFileList = defineAsyncComponent(() => import('@/components/tm-file-list/index.vue'))
 // const tmFileManager = defineAsyncComponent(() => import('@/components/tm-file-manager/index.vue'))
 // const tmUpload = defineAsyncComponent(() => import('@/components/tm-upload/index.vue'))
@@ -16,6 +17,7 @@ const appStore = useAppStore()
 const typeStore = useTypeStore()
 const roleStore = useRoleStore()
 const userStore = useUserStore()
+const GDrive = new GoogleDrive()
 const genders = ref(
   typeStore.getByKey('gender').map((x) => {
     return { text: x.name, value: x.code }
@@ -32,10 +34,18 @@ const active = ref('basicInf')
 const showGender = ref(false)
 const showDatePicker = ref(false)
 const isDialogDrive = ref(false)
+const isImagesLoading = ref(false)
 
 const initForm = async () => {
   if (route.params.id && !form.value._id) await userStore.getItem(route.params)
   formDate.value.dateBirth = appStore.formatDateToArray(form.value.dateBirth)
+  if (form.value.avatar) {
+    images.value = await GDrive.GetFilesById({
+      ids: form.value.avatar.map(x => x.id),
+      fields: 'id,thumbnailLink,webContentLink'
+    })
+    isImagesLoading.value = false
+  }
 }
 initForm()
 
@@ -204,7 +214,8 @@ const onSelectDriveImage = (arg) => {
             :src="images && images.length ? images[0]?.thumbnail : ''" @click="onPreview" />
         </div> -->
         <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
-          <tm-view-box v-model="form.avatar" border="" :isPreview="false" is-center @onClick="onSelectAvatar" />
+          <tm-view-box v-model="form.avatar" border="" :isPreview="false" is-center v-model:is-loading="isImagesLoading"
+            @onClick="onSelectAvatar" />
           <!-- <tm-view-list v-model="images" v-model:selected="imagesSelected" multiple :is-trashed="true"
             @onDelete="onDeleteIamge" /> -->
         </div>

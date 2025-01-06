@@ -7,6 +7,7 @@ const emit = defineEmits<{
   (e: 'onDeleted', value: any): any
   (e: 'update:selected', value: any[]): any
   (e: 'update:modelValue', value: any[]): any
+  (e: 'update:isLoading', value: boolean): any
 }>()//defineEmits(['onSelect', 'onPreview', 'onDelete'])
 const props = withDefaults(
   defineProps<{
@@ -20,6 +21,7 @@ const props = withDefaults(
     isDelete?: boolean
     isTooltip?: boolean
     isCenter?: boolean
+    isLoading?: boolean
     thumbnailView?: boolean
     thumbnailSize?: string
     isTrashed?: boolean
@@ -48,7 +50,9 @@ const props = withDefaults(
     lblCancel: 'Cancel'
   })
 
-onMounted(() => { lazyLoadImage('tm-view-box-gallery') })
+onMounted(() => {
+  lazyLoadImage('tm-view-box-gallery')
+})
 watch(() => props.modelValue, n => {
   lazyLoadImage('tm-view-box-gallery')
 }, { immediate: true, deep: true })
@@ -108,15 +112,36 @@ const onHidePreview = () => {
     :class="['-m-1 flex flex-wrap md:-m-2', isCenter ? 'content-center justify-center' : '']">
     <div v-for="(e, i) in modelValue" :key="i" class="flex w-1/2 min-h-48 flex-wrap">
       <div class="relative w-full h-48 p-1 md:p-2">
-        <template v-if="selected != undefined">
+        <div v-if="isLoading"
+          class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
+          <div class="flex items-center justify-center w-full h-44 bg-gray-300 sm:w-96 dark:bg-gray-700 rounded">
+            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+              <path
+                d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+            </svg>
+          </div>
+        </div>
+        <template v-else-if="selected != undefined">
           <img v-if="e.src || e.thumbnailLink" :alt="e.alt || e.name" @click="onToggleSelect(e)"
             :class="['lazy-image block h-full w-full object-cover object-center border-2 border-solid', rounded, height,
               selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']" :data-src="e.src || e.thumbnailLink"
             onerror="this.src='/src/assets/svg/image.svg'" src="/src/assets/svg/image.svg" />
-          <img v-else=" e.alt || ''" @click=" onToggleSelect(e)"
+          <!-- <img v-else @click=" onToggleSelect(e)"
             :class="['lazy-image block h-full w-full object-cover object-center border-2 border-solid dark:border-slate-700 border-slate-800/30', rounded, height,
               selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']"
-            :data-src="imageError" src="/src/assets/svg/image.svg" />
+            :data-src="imageError" src="/src/assets/svg/image.svg" /> -->
+          <div v-else @click=" onToggleSelect(e)"
+            class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
+            <div
+              :class="['flex items-center justify-center w-full h-44 bg-gray-300 sm:w-96 dark:bg-gray-700', rounded, selected.indexOf(e) > -1 ? 'border-blue-900 dark:border-blue-700 shadow shadow-blue-500/50' : 'border-slate-800/30 dark:border-slate-700']">
+              <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                <path
+                  d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+              </svg>
+            </div>
+          </div>
           <div @click="onClick(e, i)"
             :class="['absolute top-1 right-7 bg-sky-600/50 hover:bg-sky-700/50 rounded-tl-none rounded-tr-none rounded-br-none', rounded]">
             <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -127,7 +152,17 @@ const onHidePreview = () => {
           </div>
         </template>
         <template v-else>
-          <img v-if="e.src || e.thumbnailLink" :alt="e.alt || e.name" @click="onClick(e, i)"
+          <div v-if="isLoading"
+            class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
+            <div class="flex items-center justify-center w-full h-44 bg-gray-300 sm:w-96 dark:bg-gray-700 rounded">
+              <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                <path
+                  d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+              </svg>
+            </div>
+          </div>
+          <img v-else-if="e.src || e.thumbnailLink" :alt="e.alt || e.name" @click="onClick(e, i)"
             :class="['lazy-image block h-full w-full object-cover object-center dark:border-slate-700 border-slate-800/30', border, rounded, height]"
             :data-src="e.src || e.thumbnailLink" src="/src/assets/svg/image.svg"
             onerror="this.src='/src/assets/svg/image.svg'" />
