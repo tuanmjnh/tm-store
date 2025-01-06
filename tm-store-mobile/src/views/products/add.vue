@@ -49,7 +49,7 @@ const initForm = async () => {
     form.value.images = await GDrive.GetFilesById({ ids: form.value.images.map(x => x.id) })
     isImagesLoading.value = false
   }
-  console.log(form.value)
+  // console.log(form.value)
   // console.log(form.value.groups)
 }
 initForm()

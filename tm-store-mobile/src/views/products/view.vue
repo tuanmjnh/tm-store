@@ -2,8 +2,10 @@
 import delay from 'delay'
 import { $t } from '@/i18n'
 import { useGroupStore, useProductStore, IModelProduct } from '@/store'
+import { GoogleDrive } from '@/services/google/drive-gapi'
 const productStore = useProductStore()
 const groupStore = useGroupStore()
+const GDrive = new GoogleDrive()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: any[]): any
 }>()//defineEmits(['onSelect', 'onPreview', 'onDelete'])
@@ -38,14 +40,15 @@ const isFinished = ref(false)
 const isDialogPrice = ref(false)
 const isDialogDetails = ref(false)
 const isRefresh = ref(false)
+const isImagesLoading = ref(false)
 const isShowImagePreview = ref(false)
 const itemSelected = ref<IModelProduct>(null)
 const typeSelected = ref(null)
 const groups = ref([])
 const images = ref([
-  'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-  'https://fastly.jsdelivr.net/npm/@vant/assets/apple-1.jpeg',
-  'https://fastly.jsdelivr.net/npm/@vant/assets/apple-2.jpeg',
+  // 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+  // 'https://fastly.jsdelivr.net/npm/@vant/assets/apple-1.jpeg',
+  // 'https://fastly.jsdelivr.net/npm/@vant/assets/apple-2.jpeg',
 ])
 
 watch(() => itemSelected.value, n => {
@@ -53,11 +56,18 @@ watch(() => itemSelected.value, n => {
     onSelectTypeOption(itemSelected.value.types[0].options, 0)
   if (itemSelected.value.groups && itemSelected.value.groups.length)
     groups.value = groupStore.all.filter(x => itemSelected.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
-  if (itemSelected.value.images && itemSelected.value.images.length) {
-    images.value = itemSelected.value.images.map(x => x.thumbnailLink)
-  } else {
-    images.value = []
-  }
+
+  if (itemSelected.value.images) {
+    isImagesLoading.value = true
+    GDrive.GetFilesById({ ids: itemSelected.value.images.map(x => x.id) })
+      .then(x => { images.value = x.map(x => x.thumbnailLink) })
+      .finally(() => isImagesLoading.value = false)
+  } else images.value = []
+  // if (itemSelected.value.images && itemSelected.value.images.length) {
+  //   images.value = itemSelected.value.images.map(x => x.thumbnailLink)
+  // } else {
+  //   images.value = []
+  // }
 }, { deep: true })
 // onMounted(() => {
 //   if (itemSelected.value && itemSelected.value.types && itemSelected.value.types.length) onSelectTypeOption(itemSelected.value.types[0].options, 0)
@@ -100,6 +110,7 @@ const onShowPrice = (args) => {
   isDialogPrice.value = true
 }
 const onShowDetails = (args) => {
+  // console.log(args)
   itemSelected.value = args
   isDialogDetails.value = true
 }
@@ -324,7 +335,19 @@ const onSelectTypeOption = (arg, index) => {
       <div class="overscroll-none overflow-auto" style="height: calc(100vh - 125px);">
         <div class="pl-6 pr-6">
           <div class="flex flex-wrap md:-m-2 content-center justify-center mb-5">
-            <div v-if="images && images.length" class="relative w-full h-48 p-1 md:p-2">
+            <div v-if="isImagesLoading" class="w-full h-48">
+              <div
+                class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
+                <div class="flex items-center justify-center w-full h-44 bg-gray-300 sm:w-96 dark:bg-gray-700 rounded">
+                  <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                    <path
+                      d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div v-else-if="images && images.length" class="relative w-full h-48 p-1 md:p-2">
               <img class="block h-full w-full object-cover object-center border-2 border-solid" :src="images[0]"
                 alt="image description" onerror="this.src='/src/assets/svg/image.svg'"
                 @click="isShowImagePreview = true">

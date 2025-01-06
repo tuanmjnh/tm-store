@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import vueQrcodeReader from '@/components/vueQrcodeReader.vue'
 import productsView from '@/views/products/view.vue'
-import { useAppStore, useProductStore } from '@/store'
 import { showNotify } from 'vant'
 import { debounce } from 'lodash'
-
-const storeApp = useAppStore()
-const productStore = useProductStore()
-const router = useRouter()
 // const filterSearch = ref(storeApp.filter)
 const isDialogQRCode = ref(false)
 const textSearch = ref(null)
