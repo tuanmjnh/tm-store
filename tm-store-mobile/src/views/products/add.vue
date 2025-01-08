@@ -8,10 +8,19 @@ import { GoogleDrive } from '@/services/google/drive-gapi'
 import componentGroup from "@/views/groups/groups.vue"
 import googleDriveUpload from "@/components/google-drive-upload.vue"
 import vueQrcodeReader from '@/components/vueQrcodeReader.vue'
+import { NewGuid } from '@/utils/tm-crypto'
 const googleDrive = defineAsyncComponent(() => import('@/components/google-drive.vue'))
 const componentTypes = defineAsyncComponent(() => import('./types.vue'))
 const qrcodeGenerator = defineAsyncComponent(() => import('@/components/qrcodeGenerator.vue'))
 const barcodeGenerator = defineAsyncComponent(() => import('@/components/barcodeGenerator.vue'))
+
+const emit = defineEmits<{
+  (e: 'onClose', value: any): any,
+}>()
+const props = defineProps<{
+  isDialog?: boolean
+}>()
+
 
 const route = useRoute()
 const appStore = useAppStore()
@@ -100,9 +109,16 @@ const onQRCodeDetect = (args) => {
     showNotify({ type: 'warning', message: $t('error.qrError') })
   isDialogQRCodeScanner.value = false
 }
-const onQRCodeError = async (args) => {
+const onQRCodeError = (args) => {
   // console.log(args)
   showNotify({ type: 'danger', message: `[${args.name}] - ${args.value}` })
+}
+const onChangeCode = () => {
+  form.value.code = NewGuid().split('-')[0].toUpperCase()
+}
+const onBack = () => {
+  if (props.isDialog) emit('onClose', true)
+  else historyBack()
 }
 const onSubmit = async () => {
   try {
@@ -130,6 +146,11 @@ const onSubmit = async () => {
     <van-tabs v-model:active="activeTab">
       <van-tab :title="$t('tabs.basicInf')" name="basicInf">
         <van-cell-group inset>
+          <van-field v-model="form.title" name="title" :label="$t('global.title')"
+            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
+          <van-field v-model="form.code" name="code" :label="$t('global.code')" v-uppercase right-icon="exchange"
+            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]"
+            @click-right-icon="onChangeCode" />
           <van-field v-model="groups.length" name="groups" :label="$t('group.title')" readonly is-link
             :placeholder="$t('global.inputPlaceholder')"
             :rules="[{ required: true, message: $t('error.required') }, { validator: (v) => !!v, message: $t('error.required') }]"
@@ -138,10 +159,6 @@ const onSubmit = async () => {
               {{ groups && groups.length ? groups.map(x => x.title).join(', ') : $t('group.select') }}
             </template>
           </van-field>
-          <van-field v-model="form.code" name="code" :label="$t('global.code')" :disabled="!!form._id" v-uppercase
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
-          <van-field v-model="form.title" name="title" :label="$t('global.title')"
-            :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
           <van-field v-model="form.unit" name="unit" :label="$t('global.unit')" is-link
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]"
             @click="isDialogUnits = true">
@@ -149,22 +166,28 @@ const onSubmit = async () => {
               {{ unit ? unit.name : $t('global.inputPlaceholder') }}
             </template>
           </van-field>
-          <van-field name="unit" :label="$t('product.type')" is-link :placeholder="$t('global.inputPlaceholder')"
+          <van-field name="types" :label="$t('product.type')" is-link :placeholder="$t('global.inputPlaceholder')"
             @click="onEditType(0)">
             <template #input>
               {{ form.types && form.types.length ? form.types.map(x => x.label).join(', ') :
-                $t('global.inputPlaceholder') }}
+                $t('product.addGroupType') }}
               <!-- {{ form.types.length ? form.types.map(x => x.label).join(', ') : $t('global.updating') }} -->
             </template>
           </van-field>
-          <van-field name="unit" :label="$t('product.price')" is-link :placeholder="$t('global.inputPlaceholder')"
+          <van-field name="priceImport" :label="$t('product.priceImport')" is-link
+            :placeholder="$t('global.inputPlaceholder')" @click="onEditType(1)">
+            <template #input>
+              {{ productStore.getValueType(form, 'priceImport', ' - ', true) }}
+            </template>
+          </van-field>
+          <van-field name="price" :label="$t('product.priceSale')" is-link :placeholder="$t('global.inputPlaceholder')"
             @click="onEditType(1)">
             <template #input>
               {{ productStore.getValueType(form, 'price', ' - ', true) }}
             </template>
           </van-field>
-          <van-field name="unit" :label="$t('product.quantity')" is-link :placeholder="$t('global.inputPlaceholder')"
-            @click="onEditType(1)">
+          <van-field name="quantity" :label="$t('product.quantity')" is-link
+            :placeholder="$t('global.inputPlaceholder')" @click="onEditType(1)">
             <template #input>
               {{ productStore.getValueType(form, 'quantity', ' - ', true) }}
             </template>
@@ -257,7 +280,7 @@ const onSubmit = async () => {
             </svg>
           </div>
         </div>
-        <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
+        <div class="container mx-auto px-2 py-2 lg:px-32 lg:pt-12">
           <tm-view-box v-if="mediaView == 0" v-model="form.images" border="" v-model:selected="imagesSelected"
             is-preview multiple is-delete is-trashed v-model:is-loading="isImagesLoading"
             :title-delete="$t('messageBox.delete')" :lbl-ok="$t('messageBox.confirm')"
@@ -279,11 +302,14 @@ const onSubmit = async () => {
       </van-tab>
       <van-tab :title="$t('global.attributes')" name="attributes">
         <van-cell-group inset>
-          <van-field name="brand" :label="$t('product.brand')" :placeholder="$t('global.inputPlaceholder')" />
-          <van-field name="originName" :label="$t('product.originName')" :placeholder="$t('global.inputPlaceholder')" />
-          <van-field name="originAddress" :label="$t('product.originAddress')"
+          <van-field v-model="form.brand" name="brand" :label="$t('product.brand')"
             :placeholder="$t('global.inputPlaceholder')" />
-          <van-field name="date" :label="$t('product.date')" :placeholder="$t('global.inputPlaceholder')" />
+          <van-field v-model="form.originName" name="originName" :label="$t('product.originName')"
+            :placeholder="$t('global.inputPlaceholder')" />
+          <van-field v-model="form.originAddress" name="originAddress" :label="$t('product.originAddress')"
+            :placeholder="$t('global.inputPlaceholder')" />
+          <van-field v-model="form.date" name="date" :label="$t('product.date')"
+            :placeholder="$t('global.inputPlaceholder')" />
           <van-field name="attr" :label="$t('global.attributes')" :placeholder="$t('global.inputPlaceholder')" />
           <van-field name="tags" :label="$t('global.tags')" :placeholder="$t('global.inputPlaceholder')" />
           <van-field name="meta" label="Meta" :placeholder="$t('global.inputPlaceholder')" />
@@ -291,15 +317,15 @@ const onSubmit = async () => {
       </van-tab>
     </van-tabs>
     <van-action-bar placeholder>
-      <van-action-bar-icon icon="arrow-left" @click="historyBack()" />
+      <van-action-bar-icon icon="arrow-left" @click="onBack" />
       <van-action-bar-icon />
       <!-- <van-action-bar-button type="success" text="Copy" /> -->
       <van-action-bar-button v-if="form._id" type="success" native-type="submit" :text="$t('global.update')" />
       <van-action-bar-button v-else type="primary" native-type="submit" :text="$t('global.add')" />
     </van-action-bar>
   </van-form>
-  <van-dialog v-model:show="isDialogGroup" :title="$t('group.titleproduct')" :show-cancel-button="false"
-    :show-confirm-button="false">
+  <van-dialog v-model:show="isDialogGroup" :title="$t('group.titleproduct')" class="full-screen footer"
+    :show-cancel-button="false" :show-confirm-button="false">
     <componentGroup :flag="1" text="" type="product" :root="false" :selected="form.groups"
       :lbl-submit="$t('global.confirm')" :lbl-cancel="$t('global.back')" is-bot @on-submit="onSelectGroup"
       @on-cancel="isDialogGroup = false" />

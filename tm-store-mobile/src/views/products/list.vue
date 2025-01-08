@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import tabBarView from "@/components/tabBarView.vue"
 import componentGroup from "@/views/groups/groups.vue"
+import componentAdd from "./add.vue"
 import router from '@/router'
 import delay from 'delay'
 import { $t } from '@/i18n'
@@ -13,13 +14,15 @@ const filter = ref({
   groups: [],
   flag: 1,
   page: 1,
-  rowsPerPage: 15
+  rowsPerPage: 15,
+  concat: true
 })
+// const filter = computed(() => productStore.filter)
 const optionFlag = [
   { text: $t(`global.activite`), value: 1 },
   { text: $t(`global.inactivite`), value: 0 },
 ]
-const items = ref([])
+const items = computed(() => productStore.items) //ref([])
 const selected = ref([])
 const isLoading = ref(false)
 const isFinished = ref(false)
@@ -28,6 +31,7 @@ const isShowFilter = ref(false)
 const isShowDelete = ref(false)
 const isShowDuplicate = ref(false)
 const isDialogGroup = ref(false)
+const isDialogAdd = ref(false)
 onMounted(() => {
   // groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
 })
@@ -36,12 +40,14 @@ const onFetch = async () => {
   await delay(600)
   if (isRefresh.value) {
     filter.value.page = 1
-    items.value = []
+    // items.value = []
+    productStore.setItems()
     isRefresh.value = false
   }
   //Get and push row to data
   const { data, rowsNumber } = await productStore.getItems(filter.value)
-  items.value = items.value.concat(data)
+  // items.value = items.value.concat(data)
+  productStore.setItems(items.value.concat(data))
   filter.value.page++
   isLoading.value = false
   //Load all row Finished
@@ -68,16 +74,18 @@ const onFilterChangeGroup = async () => {
   isRefresh.value = true
   isShowFilter.value = false
   isDialogGroup.value = false
-  console.log(filter.value)
+  // console.log(filter.value)
   await onFetch()
 }
 const onAdd = async () => {
   await productStore.setItem()
-  router.push('add')
+  // router.push('add')
+  isDialogAdd.value = true
 }
 const onEdit = async (item) => {
   await productStore.setItem(item)
-  router.push(`edit/${item._id}`)
+  // router.push(`edit/${item._id}`)
+  isDialogAdd.value = true
 }
 const onToggleFlag = async (item) => {
   selected.value = [toRaw(item)]
@@ -94,7 +102,9 @@ const onToggleDuplicate = async (item) => {
 const onConfirmDuplicate = async () => {
   if (selected.value && selected.value.length) {
     const rs = await productStore.duplicate(selected.value[0])
-    router.push(`edit/${rs.data._id}`)
+    await productStore.setItem(rs.data)
+    isDialogAdd.value = true
+    // router.push(`edit/${rs.data._id}`)
   }
 }
 const onGetRoles = (item) => {
@@ -115,7 +125,7 @@ const onGetRoles = (item) => {
         <template #left>
           <van-button square icon="passed" type="primary" />
         </template>
-        <van-cell :title="item.title" :value="onGetRoles(item.userRoles)" :label="item.fullName">
+        <van-cell :title="item.title">
           <template #title>
             <span class="mr-2 block overflow-hidden truncate w-52">{{ item.title }}</span>
           </template>
@@ -176,10 +186,14 @@ const onGetRoles = (item) => {
   <van-action-sheet v-model:show="isShowDuplicate" :cancel-text="$t('global.cancel')" close-on-click-action
     :actions="[{ name: $t('global.duplicate'), color: '#7232dd' }]" @select="onConfirmDuplicate">
   </van-action-sheet>
-  <van-dialog v-model:show="isDialogGroup" :title="$t('group.titleproduct')" :show-cancel-button="false"
-    :show-confirm-button="false">
+  <van-dialog v-model:show="isDialogGroup" class="full-screen footer" :title="$t('group.titleproduct')"
+    :show-cancel-button="false" :show-confirm-button="false">
     <componentGroup :flag="1" text="" type="product" :root="false" selectionMode="independent"
       v-model:selected="filter.groups" :lbl-submit="$t('global.confirm')" :lbl-cancel="$t('global.back')" is-bot
       @on-submit="onFilterChangeGroup" @on-cancel="isDialogGroup = false" />
+  </van-dialog>
+  <van-dialog v-model:show="isDialogAdd" class="full-screen footer" :title="$t('group.titleproduct')"
+    :show-cancel-button="false" :show-confirm-button="false">
+    <componentAdd is-dialog @on-close="isDialogAdd = false" />
   </van-dialog>
 </template>

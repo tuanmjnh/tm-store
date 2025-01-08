@@ -67,6 +67,7 @@ export class ProductService {
     if (data.qrcode !== undefined) set.qrcode = data.qrcode
     if (data.barcode !== undefined) set.barcode = data.barcode
     if (data.order !== undefined) set.order = data.order
+    if (data.flag !== undefined) set.flag = data.flag
 
     const rs = session ?
       await MProduct.findByIdAndUpdate(data._id, { $set: set }, { session: session, new: true }) :

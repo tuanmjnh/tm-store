@@ -50,7 +50,7 @@ export interface IProduct {
 const schema: Schema = new Schema({
   // _id: { type: String },
   // type: { type: String, default: null },
-  code: { type: String, required: true, uppercase: true },
+  code: { type: String, required: true, uppercase: true, unique: true },
   groups: { type: Array, default: null },
   // categories: { type: mongoose.Schema.Types.ObjectId, ref: 'categories', required: true },
   // subCategory: { type: mongoose.Schema.Types.ObjectId, ref: 'subCategory', required: true },

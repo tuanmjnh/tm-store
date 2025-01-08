@@ -53,7 +53,7 @@ const onCancel = async (arg) => {
 }
 </script>
 <template>
-  <div class="overscroll-none overflow-auto h-96">
+  <div class="overscroll-none overflow-auto content mt-3">
     <tree-view v-model="treeSelected" :items="items" id-key="_id" name-key="title" dense open-all
       :selectable="selected ? true : false" :selection-mode="selectionMode" color="blue" @on-click="onSelect">
       <!-- <template #append="props">
@@ -61,18 +61,20 @@ const onCancel = async (arg) => {
       </template> -->
     </tree-view>
   </div>
-  <hr class="border-gray-300 dark:border-gray-100">
-  <div v-if="isBot" class="flex justify-center">
-    <!-- <van-button type="primary" square size="small" @click="onSubmit">{{ lblSubmit }}</van-button>
+  <!-- <hr class="border-gray-300 dark:border-gray-100"> -->
+  <div v-if="isBot" class="footer pt-2 fixed right-0 left-0 bottom-0">
+    <div class="flex justify-center">
+      <!-- <van-button type="primary" square size="small" @click="onSubmit">{{ lblSubmit }}</van-button>
     <div class="w-6"></div>
     <van-button type="default" square size="small" @click="onCancel">{{ lblCancel }}</van-button> -->
-    <button type="button" @click="onCancel"
-      class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white">
-      <span class="mr-2">{{ lblCancel }}</span>
-    </button>
-    <button type="button" @click="onSubmit"
-      class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-sky-500 dark:bg-sky-600">
-      <span class="mr-2">{{ lblSubmit }}</span>
-    </button>
+      <button type="button" @click="onCancel"
+        class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white">
+        <span class="mr-2">{{ lblCancel }}</span>
+      </button>
+      <button type="button" @click="onSubmit"
+        class="w-full items-center text-center content-center px-3 py-3 text-xs font-medium text-white bg-sky-500 dark:bg-sky-600">
+        <span class="mr-2">{{ lblSubmit }}</span>
+      </button>
+    </div>
   </div>
 </template>

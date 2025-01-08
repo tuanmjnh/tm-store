@@ -32,13 +32,12 @@ export class ProductController {
         })
       }
       if (!queries.sortBy) queries.sortBy = 'order'
-      rs.rowsNumber = (await MProduct.countDocuments(conditions))
       if (queries.groups && queries.groups.length) {
         queries.groups = JSON.parse(queries.groups as any)
         if (queries.groups) conditions.$and.push({ groups: { $in: queries.groups } })
       }
       if (queries.quantity !== undefined) conditions.$and.push({ quantity: { $gt: parseInt(queries.quantity) } })
-
+      rs.rowsNumber = (await MProduct.countDocuments(conditions))
       rs.data = await this.product.FindAll(conditions)
         .skip((parseInt(queries.page) - 1) * parseInt(queries.rowsPerPage))
         .limit(parseInt(queries.rowsPerPage))
@@ -164,6 +163,8 @@ export class ProductController {
       const body: IProduct = req.body
       const rs = { data: null as IProduct, status: false, message: 'created' }
       body.created = { at: new Date(), by: req.verify._id.toString() || null, ip: getIp(req) }
+      body.qrcode = body.qrcode || body.code
+      body.barcode = body.barcode || body.code
       rs.data = await this.product.Create(body)
       if (rs.data) rs.status = true
       res.status(201).json(rs)
@@ -179,6 +180,8 @@ export class ProductController {
       body.code = NewGuid().split('-')[0]
       body.flag = 0
       body.title = `${body.title} - duplicate`
+      body.qrcode = body.code
+      body.barcode = body.code
       if (body._id) delete body._id
       body.created = { at: new Date(), by: req.verify._id.toString() || null, ip: getIp(req) }
       rs.data = await this.product.Create(body)

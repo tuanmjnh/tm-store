@@ -33,6 +33,13 @@ export interface IModelProduct {
   flag: number
   created: ICreated
 }
+export interface IProductFilter {
+  text: string
+  groups: Array<string>
+  flag: number
+  page: number
+  rowsPerPage: number
+}
 
 const constant = {
   code: null,
@@ -72,6 +79,7 @@ export const useProductStore = defineStore('productStore', {
     items: IModelProduct[]
     item: IModelProduct
     typeData: IProductTypeData
+    filter: IProductFilter
     // metaKeys: []
     // metaValues: []
   } => ({
@@ -81,6 +89,13 @@ export const useProductStore = defineStore('productStore', {
       price: 0,
       priceImport: 0,
       quantity: 0
+    },
+    filter: {
+      text: '',
+      groups: [],
+      flag: 1,
+      page: 1,
+      rowsPerPage: 15
     }
   }),
   getters: {
@@ -98,7 +113,7 @@ export const useProductStore = defineStore('productStore', {
         const params = { ...{}, ...arg }
         if (params.groups && params.groups.length) params.groups = JSON.stringify(params.groups)
         const rs: IResponseList = await http.axiosInstance.get(`/${API_PATH}`, { params: params })
-        this.items = rs.data
+        if (!arg.concat) this.items = rs.data
         this.rowsNumber = rs.rowsNumber
         return rs
       } catch (e) { throw e }
@@ -120,18 +135,21 @@ export const useProductStore = defineStore('productStore', {
     async create(arg?: any) {
       try {
         const rs: IResponseItem = await http.axiosInstance.post(`/${API_PATH}`, arg)
+        if (rs.status) this.addItems(rs.data)
         return rs
       } catch (e) { throw e }
     },
     async duplicate(arg?: any) {
       try {
         const rs: IResponseItem = await http.axiosInstance.post(`/${API_PATH}/duplicate`, arg)
+        if (rs.status) this.addItems(rs.data)
         return rs
       } catch (e) { throw e }
     },
     async update(arg?: any) {
       try {
         const rs: IResponseItem = await http.axiosInstance.put(`/${API_PATH}`, arg)
+        if (rs.status) this.updateItems(rs.data)
         return rs
       } catch (e) { throw e }
     },
@@ -143,6 +161,9 @@ export const useProductStore = defineStore('productStore', {
     },
     async setItem(arg?: any) {
       this.item = arg ? { ...arg } : JSON.parse(JSON.stringify(constant))
+    },
+    async setItems(arg?: any) {
+      this.items = arg ? arg : []
     },
     async addItems(arg: any, items?: IModelProduct[]) {
       try {

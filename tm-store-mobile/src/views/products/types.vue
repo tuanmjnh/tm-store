@@ -129,9 +129,9 @@ const onUpdateAll = () => {
         <div>{{ $t('product.typeUpdate') }}</div>
         <div class="mr-5"></div>
       </div>
-      <div v-if="modelValue.types && modelValue.types.length > 1" class="flex justify-center pt-5">
-        <div v-if="modelValue.types[0] && modelValue.types[0].options.length" class="inline-flex rounded-md shadow-sm"
-          role="group">
+      <div v-if="modelValue.types && modelValue.types.length > 1" class="flex justify-center p-5">
+        <div v-if="modelValue.types[0] && modelValue.types[0].options.length"
+          class="flex flex-wrap rounded-md shadow-sm gap-2" role="group">
           <button type="button" v-for="(e, i) in modelValue.types[0].options"
             @click="onSelectTypeOption(modelValue.types[0].options, i)"
             :class="['px-2 py-1 text-xs font-medium text-gray-900 bg-white border dark:bg-gray-800  dark:text-white', typeSelected.id && e.id == typeSelected.id ? 'border-blue-500' : ' border-gray-500 dark:border-gray-800']">
@@ -139,7 +139,7 @@ const onUpdateAll = () => {
           </button>
         </div>
       </div>
-      <hr class="border-gray-300 dark:border-gray-100 mt-5">
+      <hr class="border-gray-300 dark:border-gray-100">
     </div>
     <div class="overscroll-none overflow-auto content2">
       <div class="pl-6 pr-6">
@@ -160,27 +160,30 @@ const onUpdateAll = () => {
                 <input type="number" v-model="modelValue.typeData[e.id].priceImport"
                   class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required />
-                <label for="floating_email"
+                <label
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                  {{ $t('product.priceImport') }}
+                  {{ $t('product.priceImport') }} -
+                  {{ modelValue.typeData[e.id].priceImport.format() }}
                 </label>
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <input type="number" v-model="modelValue.typeData[e.id].price"
                   class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required />
-                <label for="floating_email"
+                <label
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                  {{ $t('product.priceSale') }}
+                  {{ $t('product.priceSale') }} -
+                  {{ modelValue.typeData[e.id].price.format() }}
                 </label>
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <input type="number" v-model="modelValue.typeData[e.id].quantity"
                   class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required />
-                <label for="floating_email"
+                <label
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                  {{ $t('product.quantity') }}
+                  {{ $t('product.quantity') }} -
+                  {{ modelValue.typeData[e.id].quantity.format() }}
                 </label>
               </div>
             </div>
@@ -203,27 +206,30 @@ const onUpdateAll = () => {
                 <input type="number" v-model="modelValue.typeData[typeSelected.id][e.id].priceImport"
                   class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required />
-                <label for="floating_email"
+                <label
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                  {{ $t('product.priceImport') }}
+                  {{ $t('product.priceImport') }} -
+                  {{ modelValue.typeData[typeSelected.id][e.id].priceImport.format() }}
                 </label>
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <input type="number" v-model="modelValue.typeData[typeSelected.id][e.id].price"
                   class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required />
-                <label for="floating_email"
+                <label
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                  {{ $t('product.priceSale') }}
+                  {{ $t('product.priceSale') }} -
+                  {{ modelValue.typeData[typeSelected.id][e.id].price.format() }}
                 </label>
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <input type="number" v-model="modelValue.typeData[typeSelected.id][e.id].quantity"
                   class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required />
-                <label for="floating_email"
+                <label
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                  {{ $t('product.quantity') }}
+                  {{ $t('product.quantity') }} -
+                  {{ modelValue.typeData[typeSelected.id][e.id].quantity.format() }}
                 </label>
               </div>
             </div>
@@ -268,27 +274,27 @@ const onUpdateAll = () => {
             <input type="number" v-model="formUpdateAll.priceImport"
               class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               required />
-            <label for="floating_email"
+            <label
               class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              {{ $t('product.priceImport') }}
+              {{ $t('product.priceImport') }} - {{ formUpdateAll.priceImport.format() }}
             </label>
           </div>
           <div class="relative z-0 w-full mb-5 group">
             <input type="number" v-model="formUpdateAll.price"
               class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               required />
-            <label for="floating_email"
+            <label
               class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              {{ $t('product.priceSale') }}
+              {{ $t('product.priceSale') }} - {{ formUpdateAll.price.format() }}
             </label>
           </div>
           <div class="relative z-0 w-full mb-5 group">
             <input type="number" v-model="formUpdateAll.quantity"
               class="block py-2 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               required />
-            <label for="floating_email"
+            <label
               class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              {{ $t('product.quantity') }}
+              {{ $t('product.quantity') }} - {{ formUpdateAll.quantity.format() }}
             </label>
           </div>
         </div>
