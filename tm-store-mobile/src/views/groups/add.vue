@@ -6,17 +6,25 @@ import { historyBack } from '@/router'
 import { $t } from '@/i18n'
 import { MdEditor } from 'md-editor-v3'
 
+const emit = defineEmits<{
+  (e: 'onClose', value: any): any,
+}>()
+const props = defineProps<{
+  isDialog?: boolean
+}>()
+
 const $route = useRoute()
 const appStore = useAppStore()
 const groupStore = useGroupStore()
 const form = computed(() => groupStore.item)
 const isDialogGroup = ref(false)
 const groupParent = ref(groupStore.root)
-const onInit = async () => {
-  if (form.value.parent != null)
-    groupParent.value = groupStore.all.find(x => x._id == form.value.parent)
-}
-onInit()
+
+watch(() => form.value.parent, n => {
+  if (form.value.parent) groupParent.value = groupStore.all.find(x => x._id == form.value.parent)
+  else groupParent.value = { ...{}, ...groupStore.root }
+}, { immediate: true,deep:true })
+
 const onSelectParent = async (arg) => {
   try {
     isDialogGroup.value = false
@@ -26,9 +34,14 @@ const onSelectParent = async (arg) => {
     else showNotify({ type: 'danger', message: $t(`http.${error.status}`) })
   }
 }
+const onBack = () => {
+  if (props.isDialog) emit('onClose', true)
+  else historyBack()
+}
 const onSubmit = async () => {
   try {
     form.value.parent = groupParent.value._id
+    form.value.type = $route.meta.module
     if (form.value._id) {
       const rs = await groupStore.update(form.value)
       if (rs.data) showNotify({ type: 'success', message: $t('success.update') })
@@ -63,6 +76,7 @@ const onSubmit = async () => {
         :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
       <van-field v-model="form.order" name="order" :label="$t('global.order')" type="number"
         :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
+      <van-field v-model="form.icon" name="icon" :label="$t('global.icon')" :placeholder="$t('global.inputPlaceholder')" />
       <van-field v-model="form.url" name="url" :label="$t('files.url')" :placeholder="$t('global.inputPlaceholder')" />
       <van-field v-model="form.content" name="content" :label="$t('global.content')"
         :placeholder="$t('global.inputPlaceholder')">
@@ -85,7 +99,7 @@ const onSubmit = async () => {
       <componentGroup :flag="1" text="" :type="$route.meta.module" @on-select="onSelectParent" />
     </van-dialog>
     <van-action-bar placeholder>
-      <van-action-bar-icon icon="arrow-left" @click="historyBack()" />
+      <van-action-bar-icon icon="arrow-left" @click="onBack" />
       <van-action-bar-icon />
       <!-- <van-action-bar-button type="success" text="Copy" /> -->
       <van-action-bar-button v-if="form._id" type="success" native-type="submit" :text="$t('global.update')" />

@@ -84,6 +84,7 @@ const onAdd = async () => {
 }
 const onEdit = async (item) => {
   await productStore.setItem(item)
+  console.log(item)
   // router.push(`edit/${item._id}`)
   isDialogAdd.value = true
 }
@@ -192,7 +193,7 @@ const onGetRoles = (item) => {
       v-model:selected="filter.groups" :lbl-submit="$t('global.confirm')" :lbl-cancel="$t('global.back')" is-bot
       @on-submit="onFilterChangeGroup" @on-cancel="isDialogGroup = false" />
   </van-dialog>
-  <van-dialog v-model:show="isDialogAdd" class="full-screen footer" :title="$t('group.titleproduct')"
+  <van-dialog v-model:show="isDialogAdd" class="full-screen footer" :title="productStore.item._id ? $t('global.update') : $t('global.add')"
     :show-cancel-button="false" :show-confirm-button="false">
     <componentAdd is-dialog @on-close="isDialogAdd = false" />
   </van-dialog>

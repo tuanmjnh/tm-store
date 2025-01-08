@@ -21,7 +21,6 @@ const props = defineProps<{
   isDialog?: boolean
 }>()
 
-
 const route = useRoute()
 const appStore = useAppStore()
 const typeStore = useTypeStore()
@@ -146,7 +145,7 @@ const onSubmit = async () => {
     <van-tabs v-model:active="activeTab">
       <van-tab :title="$t('tabs.basicInf')" name="basicInf">
         <van-cell-group inset>
-          <van-field v-model="form.title" name="title" :label="$t('global.title')"
+          <van-field v-model="form.title" name="title" :label="$t('global.name')"
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]" />
           <van-field v-model="form.code" name="code" :label="$t('global.code')" v-uppercase right-icon="exchange"
             :placeholder="$t('global.inputPlaceholder')" :rules="[{ required: true, message: $t('error.required') }]"

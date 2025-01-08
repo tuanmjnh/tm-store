@@ -38,7 +38,7 @@ const constant = {
   quantity: null,
   position: null,
   tags: null,
-  icon: null,
+  icon: 'spa',
   color: null,
   meta: null,
   startAt: null,

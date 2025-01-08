@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import tabBarView from "@/components/tabBarView.vue"
 import treeView from '@/components/tree-view/index.vue'
+import componentAdd from "./add.vue"
 import router from '@/router'
 import delay from 'delay'
 import { $t } from '@/i18n'
@@ -20,12 +21,13 @@ const optionFlag = [
   { text: $t(`global.inactivite`), value: 0 },
 ]
 const all = computed(() => groupStore.all)
-const items = ref(arrayToTree(all.value.filter(x => x.flag == filter.value.flag && x.type == filter.value.type), { parentProperty: 'parent', customID: '_id' }))
+const items = ref(arrayToTree(all.value.filter(x => x.flag == filter.value.flag && x.type == filter.value.type), { parentProperty: 'parent', customID: '_id', order: 'order' }))
 const selected = ref([])
 const isLoading = ref(false)
 const isRefresh = ref(false)
 const isShowFilter = ref(false)
 const isShowDelete = ref(false)
+const isDialogAdd = ref(false)
 const onFetch = async () => {
   await delay(600)
   // items.value = arrayToTree(items.value, { parentProperty: 'parent', customID: 'id' })
@@ -39,11 +41,13 @@ const onFilterFetch = async () => {
 }
 const onAdd = async () => {
   await groupStore.setItem()
-  router.push('add')
+  isDialogAdd.value = true
+  // router.push('add')
 }
 const onEdit = async (item) => {
   await groupStore.setItem(item)
-  router.push(`edit/${item._id}`)
+  isDialogAdd.value = true
+  // router.push(`edit/${item._id}`)
 }
 const onToggleFlag = async (item) => {
   selected.value = [toRaw(item)]
@@ -94,4 +98,9 @@ const onGetRoles = (item) => {
     @select="onConfirmFlag">
     <!-- <van-cell :title="$t('global.accept')" /> -->
   </van-action-sheet>
+  <van-dialog v-model:show="isDialogAdd" class="full-screen footer"
+    :title="groupStore.item._id ? $t('global.update') : $t('global.add')" :show-cancel-button="false"
+    :show-confirm-button="false">
+    <componentAdd is-dialog @on-close="isDialogAdd = false" />
+  </van-dialog>
 </template>

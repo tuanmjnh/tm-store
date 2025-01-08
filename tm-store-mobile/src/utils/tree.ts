@@ -1,14 +1,15 @@
-import property from 'nested-property';
-import keyBy from 'lodash.keyby';
+import property from 'nested-property'
+import keyBy from 'lodash.keyby'
 
-function createTree(array, rootNodes, customID, childrenProperty) {
-  const tree = [];
+function createTree(array, rootNodes, customID, childrenProperty, order) {
+  const tree = []
+  // if (order) array = array.sort((a, b) => a[order] - b[order])
+  // console.log(array)
   for (const rootNode of rootNodes) {
-    // const node = rootNodes[rootNode];
-    const childNode = array[rootNode[customID]];
-
+    // const node = rootNodes[rootNode]
+    const childNode = array[rootNode[customID]]
     if (!rootNode && !rootNodes.hasOwnProperty(rootNode)) {
-      continue;
+      continue
     }
 
     if (childNode) {
@@ -16,48 +17,49 @@ function createTree(array, rootNodes, customID, childrenProperty) {
         array,
         childNode,
         customID,
-        childrenProperty
-      );
+        childrenProperty,
+        order
+      )
     }
 
-    tree.push(rootNode);
+    tree.push(rootNode)
   }
-  return tree;
+  return order ? tree.sort((a, b) => a[order] - b[order]) : tree
 }
 
 function groupByParents(array, options) {
-  const arrayByID = keyBy(array, options.customID);
+  const arrayByID = keyBy(array, options.customID)
 
   return array.reduce(function (prev, item) {
-    let parentID = property.get(item, options.parentProperty);
+    let parentID = property.get(item, options.parentProperty)
     if (!parentID || !arrayByID.hasOwnProperty(parentID)) {
-      parentID = options.rootID;
+      parentID = options.rootID
     }
 
     if (parentID && prev.hasOwnProperty(parentID)) {
-      prev[parentID].push(item);
-      return prev;
+      prev[parentID].push(item)
+      return prev
     }
 
-    prev[parentID] = [item];
-    return prev;
-  }, {});
+    prev[parentID] = [item]
+    return prev
+  }, {})
 }
 
 function isObject(o) {
-  return Object.prototype.toString.call(o) === '[object Object]';
+  return Object.prototype.toString.call(o) === '[object Object]'
 }
 
 function deepClone(data) {
   if (Array.isArray(data)) {
-    return data.map(deepClone);
+    return data.map(deepClone)
   } else if (isObject(data)) {
     return Object.keys(data).reduce(function (o, k) {
-      o[k] = deepClone(data[k]);
-      return o;
-    }, {});
+      o[k] = deepClone(data[k])
+      return o
+    }, {})
   } else {
-    return data;
+    return data
   }
 }
 
@@ -87,19 +89,21 @@ export const arrayToTree = (data, options) => {
       parentProperty: 'parent_id',
       childrenProperty: 'children',
       customID: 'id',
-      rootID: '0'
+      rootID: '0',
+      order: null
     },
     options
-  );
+  )
   if (!Array.isArray(data)) {
-    throw new TypeError('Expected an array but got an invalid argument');
+    throw new TypeError('Expected an array but got an invalid argument')
   }
 
-  const grouped = groupByParents(deepClone(data), options);
+  const grouped = groupByParents(deepClone(data), options)
   return createTree(
     grouped,
     grouped[options.rootID],
     options.customID,
-    options.childrenProperty
-  );
-};
+    options.childrenProperty,
+    options.order
+  )
+}

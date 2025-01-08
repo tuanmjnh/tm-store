@@ -37,7 +37,7 @@ const props = withDefaults(
   })
 const treeSelected = ref(props.selected ? props.selected : [])
 const all = computed(() => groupStore.all)
-const items = ref(arrayToTree(all.value.filter(x => x.flag == props.flag && x.type == props.type), { parentProperty: 'parent', customID: '_id' }).sort((a, b) => a.order - b.order))
+const items = ref(arrayToTree(all.value.filter(x => x.flag == props.flag && x.type == props.type), { parentProperty: 'parent', customID: '_id', order: 'order' }))
 const groupRoot = groupStore.root
 groupRoot.title = $t('group.root', 'Root')
 if (props.root) items.value.unshift(groupRoot)
