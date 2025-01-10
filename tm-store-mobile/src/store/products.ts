@@ -296,6 +296,26 @@ export const useProductStore = defineStore('productStore', {
       }
       return item.typeData
     },
+    fixTypeData(item: IModelProduct) {
+      if (!item.types || !item.types.length || !item.typeData) return false
+      if (item.types.length == 1) {
+        const cloneTypeData = {} as IProductTypeData
+        for (const e of item.types[0].options) {
+          cloneTypeData[e.id] = item.typeData[e.id]
+        }
+        item.typeData = cloneTypeData
+      } else if (item.types.length > 1) {
+        const cloneTypeData = {} as IProductTypeData
+        for (const e of item.types[0].options) {
+          cloneTypeData[e.id] = {}
+          for (const i of item.types[1].options) {
+            cloneTypeData[e.id][i.id] = item.typeData[e.id][i.id]
+          }
+        }
+        item.typeData = cloneTypeData
+      }
+      return item.typeData
+    },
     removeTypeDataGroup(item: IModelProduct) {
       if (!item.types || item.types.length < 1) return null
       if (item.types.length === 1) {

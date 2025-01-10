@@ -14,8 +14,8 @@ declare global {
     format(): string;
   }
   interface Array<T> {
-    pushIfNotExist<T>(element: any, key: any): void;
-    pushIfNotExistUpdate<T>(element: any, key: any): void;
+    pushIfNotExist<T>(element: any, key?: any): void;
+    pushIfNotExistUpdate<T>(element: any, key?: any): void;
     distinctArray<T>(): Array<T>;
     distinctArrayObject<T>(key: string): Array<T>;
     sum<T>(obj?: any): number;
@@ -115,7 +115,7 @@ Number.prototype.format = function (language = 'en-US') {
 }
 
 // Array
-Array.prototype.pushIfNotExist = function (element, key) {
+Array.prototype.pushIfNotExist = function (element, key?) {
   if (Array.isArray(element)) {
     element.forEach(e => {
       if (key) {
@@ -132,7 +132,7 @@ Array.prototype.pushIfNotExist = function (element, key) {
     }
   }
 }
-Array.prototype.pushIfNotExistUpdate = function (element, key) {
+Array.prototype.pushIfNotExistUpdate = function (element, key?) {
   if (Array.isArray(element)) {
     element.forEach(e => {
       if (key) {

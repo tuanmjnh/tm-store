@@ -9,8 +9,9 @@ import componentGroup from "@/views/groups/groups.vue"
 import googleDriveUpload from "@/components/google-drive-upload.vue"
 import vueQrcodeReader from '@/components/vueQrcodeReader.vue'
 import { NewGuid } from '@/utils/tm-crypto'
-const googleDrive = defineAsyncComponent(() => import('@/components/google-drive.vue'))
 const componentTypes = defineAsyncComponent(() => import('./types.vue'))
+const googleDrive = defineAsyncComponent(() => import('@/components/google-drive.vue'))
+const uploadImageLinks = defineAsyncComponent(() => import('@/components/upload-image-links.vue'))
 const qrcodeGenerator = defineAsyncComponent(() => import('@/components/qrcodeGenerator.vue'))
 const barcodeGenerator = defineAsyncComponent(() => import('@/components/barcodeGenerator.vue'))
 
@@ -33,6 +34,7 @@ const isDialogUnits = ref(false)
 const isDialogTypes = ref(false)
 const isDialogDrive = ref(false)
 const isDialogUpload = ref(false)
+const isUploadLink = ref(false)
 const isImagesLoading = ref(false)
 const isDialogQRCode = ref(false)
 const isDialogQRCodeScanner = ref(false)
@@ -45,6 +47,7 @@ const unit = ref(null)
 const groups = ref([])
 const flag = ref(false)
 const imagesSelected = ref([])
+const imagesUploadLink = ref([])
 const activeTab = ref('basicInf')
 
 const initForm = async () => {
@@ -52,13 +55,14 @@ const initForm = async () => {
   if (form.value.groups && form.value.groups.length) groups.value = groupStore.all.filter(x => form.value.groups.includes(x._id)).sort((a, b) => a.level - b.level)
   flag.value = form.value.flag ? true : false
   unit.value = units.value.find(x => x.code === form.value.unit)
-  isImagesLoading.value = true
   if (form.value.images) {
-    form.value.images = await GDrive.GetFilesById({ ids: form.value.images.map(x => x.id) })
+    const ids = []
+    for (const img of form.value.images)
+      if (img.id) ids.push(img.id)
+    isImagesLoading.value = true
+    if (ids && ids.length) form.value.images = await GDrive.GetFilesById({ ids: ids })
     isImagesLoading.value = false
   }
-  // console.log(form.value)
-  // console.log(form.value.groups)
 }
 initForm()
 
@@ -93,11 +97,20 @@ const onEditType = (arg) => {
   isDialogTypes.value = true
   typeView.value = arg
 }
+const onUpdateTypes = (arg) => {
+  productStore.fixTypeData(form.value)
+  isDialogTypes.value = false
+}
 const onFileUploaded = (args) => {
   if (args && args.length) {
     form.value.images = !form.value.images || !form.value.images.length ? args : form.value.images.concat(args)
     isDialogUpload.value = false
   }
+}
+const onImagesUploadLink = () => {
+  if (!form.value.images) form.value.images = []
+  form.value.images = form.value.images.concat(imagesUploadLink.value)
+  isDialogUpload.value = false
 }
 const onQRCodeDetect = (args) => {
   if (args) {
@@ -173,23 +186,32 @@ const onSubmit = async () => {
               <!-- {{ form.types.length ? form.types.map(x => x.label).join(', ') : $t('global.updating') }} -->
             </template>
           </van-field>
-          <van-field name="priceImport" :label="$t('product.priceImport')" is-link
-            :placeholder="$t('global.inputPlaceholder')" @click="onEditType(1)">
+          <van-field v-if="form.types && form.types.length" name="priceImport" :label="$t('product.priceImport')"
+            is-link :placeholder="$t('global.inputPlaceholder')" @click="onEditType(1)">
             <template #input>
               {{ productStore.getValueType(form, 'priceImport', ' - ', true) }}
             </template>
           </van-field>
-          <van-field name="price" :label="$t('product.priceSale')" is-link :placeholder="$t('global.inputPlaceholder')"
-            @click="onEditType(1)">
+          <van-field v-else v-model="form.priceImport" type="number" name="priceImport"
+            :label="$t('product.priceImport')" :placeholder="$t('global.inputPlaceholder')">
+          </van-field>
+          <van-field v-if="form.types && form.types.length" name="price" :label="$t('product.priceSale')" is-link
+            :placeholder="$t('global.inputPlaceholder')" @click="onEditType(1)">
             <template #input>
               {{ productStore.getValueType(form, 'price', ' - ', true) }}
             </template>
           </van-field>
-          <van-field name="quantity" :label="$t('product.quantity')" is-link
+          <van-field v-else v-model="form.price" type="number" name="price" :label="$t('product.priceSale')"
+            :placeholder="$t('global.inputPlaceholder')">
+          </van-field>
+          <van-field v-if="form.types && form.types.length" name="quantity" :label="$t('product.quantity')" is-link
             :placeholder="$t('global.inputPlaceholder')" @click="onEditType(1)">
             <template #input>
               {{ productStore.getValueType(form, 'quantity', ' - ', true) }}
             </template>
+          </van-field>
+          <van-field v-else v-model="form.quantity" type="number" name="quantity" :label="$t('product.quantity')"
+            :placeholder="$t('global.inputPlaceholder')">
           </van-field>
           <van-field name="weight" :label="$t('product.weight')">
             <template #input>
@@ -339,7 +361,7 @@ const onSubmit = async () => {
     :show-confirm-button="false" :show-cancel-button="false">
     <template #title></template>
     <component-types v-model="form" v-model:typeView="typeView" @on-close="isDialogTypes = false"
-      @on-update="isDialogTypes = false" />
+      @on-update="onUpdateTypes" />
     <template #footer></template>
   </van-dialog>
   <van-dialog v-model:show="isDialogDrive" title="Drive" class="full-screen" :show-cancel-button="false"
@@ -350,13 +372,31 @@ const onSubmit = async () => {
   </van-dialog>
   <van-dialog v-model:show="isDialogUpload" title="Upload" close-on-click-overlay :show-cancel-button="false"
     :show-confirm-button="false" @close="fileUploadList = []">
-    <template #title>{{ $t('files.upload') }}</template>
-    <!-- <van-uploader multiple :after-read="onAfterReadFileUpload">
-      <template #preview-cover="{ file }">
-        <div class="preview-cover van-ellipsis">{{ file.name }}</div>
-      </template>
-    </van-uploader> -->
-    <google-drive-upload v-model="fileUploadList" multiple parent="1A4_7e1ElUPhwbHrKm12I7VU_9CwnChHV"
+    <template #title>
+      <div class="flex">
+        <div class="flex-none w-14 h-14">
+        </div>
+        <div class="grow h-14 ...">
+          {{ $t('files.upload') }}
+        </div>
+        <div class="flex-none w-14 h-14">
+          <svg @click="isUploadLink = !isUploadLink" :class="isUploadLink ? 'text-sky-600' : ''"
+            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
+            <g fill="none" stroke="currentColor" stroke-width="4">
+              <path d="M12 9.927V7a3 3 0 0 1 3-3h26a3 3 0 0 1 3 3v26a3 3 0 0 1-3 3h-2.983" />
+              <rect width="34" height="34" x="4" y="10" stroke-linejoin="round" rx="3" />
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="m18.44 23.11l5.292-5.51c1.451-1.451 3.837-1.42 5.328.072s1.523 3.877.072 5.328l-1.91 2.023m-13.756 3.724c-.51.51-1.565 1.53-1.565 1.53c-1.452 1.451-1.492 4.038 0 5.53c1.49 1.49 3.876 1.523 5.328.071l5.164-4.688" />
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M18.663 28.328a3.86 3.86 0 0 1-1.131-2.473A3.67 3.67 0 0 1 18.592 23m3.729 2.861c1.491 1.491 1.523 3.877.072 5.329" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </template>
+    <upload-image-links v-if="isUploadLink" v-model="imagesUploadLink" :txt-placeholder="$t('global.inputPlaceholder')"
+      @on-submit="onImagesUploadLink" />
+    <google-drive-upload v-else v-model="fileUploadList" multiple parent="1A4_7e1ElUPhwbHrKm12I7VU_9CwnChHV"
       @on-uploaded="onFileUploaded" />
   </van-dialog>
   <van-dialog v-model:show="isDialogQRCode" :title="$t('qrCode.qrCode')" close-on-click-overlay
